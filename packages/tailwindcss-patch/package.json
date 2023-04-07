@@ -2,14 +2,24 @@
   "name": "tailwindcss-patch",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
   "bin": {
     "tw-patch": "bin/tw-patch.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=development rollup -cw",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "dev:tsc": "tsc -p tsconfig.json --sourceMap",
+    "build:tsc": "tsc -p tsconfig.json",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

@@ -1,0 +1,10 @@
+{
+  "extends": "@icebreakers/tsconfig/tsconfig.cjs.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declarationDir": "types"
+  },
+  "include": [
+    "src"
+  ]
+}
