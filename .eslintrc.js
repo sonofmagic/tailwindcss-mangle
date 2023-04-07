@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: []
+  extends: ["@icebreakers/eslint-config-ts"]
 }

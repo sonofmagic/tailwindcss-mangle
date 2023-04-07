@@ -1,5 +1,5 @@
 {
-  "name": "pnpm-turbo-monorepo-template",
+  "name": "tailwindcss-mangle",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -13,6 +13,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@icebreakers/eslint-config-ts": "^1.0.4",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "eslint": "^8.37.0",
+    "jest": "^29.5.0",
     "prettier": "^2.8.7",
     "turbo": "^1.8.8"
   },
