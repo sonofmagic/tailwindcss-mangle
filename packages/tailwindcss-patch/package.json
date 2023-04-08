@@ -8,6 +8,9 @@
   "bin": {
     "tw-patch": "bin/tw-patch.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development rollup -cw",
     "build": "cross-env NODE_ENV=production rollup -c",
