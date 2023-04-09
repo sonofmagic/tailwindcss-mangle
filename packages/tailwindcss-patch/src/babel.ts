@@ -1,5 +1,5 @@
 import generate from '@babel/generator'
-import { parse, parseExpression } from '@babel/parser'
+import { parse } from '@babel/parser'
 import traverse from '@babel/traverse'
 
-export { generate, parseExpression, parse, traverse }
+export { generate, parse, traverse }

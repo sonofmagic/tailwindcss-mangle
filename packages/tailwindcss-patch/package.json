@@ -1,25 +1,32 @@
 {
   "name": "tailwindcss-patch",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "patch tailwindcss for exposing context",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "bin": {
-    "tw-patch": "bin/tw-patch.js"
+    "tw-patch": "bin/tw-patch.js",
+    "tailwindcss-patch": "bin/tw-patch.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development rollup -cw",
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "echo prepare",
+    "postinstall": "echo postinstall"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "tailwindcss",
+    "patch"
+  ],
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
