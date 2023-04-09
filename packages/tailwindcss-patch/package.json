@@ -26,12 +26,16 @@
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.4",
-    "@types/babel__traverse": "^7.18.3"
+    "@types/babel__traverse": "^7.18.3",
+    "@types/semver": "^7.3.13",
+    "pkg-types": "^1.0.2",
+    "postcss": "^8.4.21"
   },
   "dependencies": {
     "@babel/generator": "^7.21.4",
     "@babel/parser": "^7.21.4",
     "@babel/traverse": "^7.21.4",
-    "@babel/types": "^7.21.4"
+    "@babel/types": "^7.21.4",
+    "semver": "^7.3.8"
   }
 }
