@@ -1,14 +1,14 @@
 import path from 'path'
 import fs from 'fs'
-import { gte as semverGte } from 'semver'
-
-import type { PackageJson } from 'pkg-types'
-
+import { gte } from 'semver'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
+import type { PatchOptions, InternalPatchOptions } from './type'
+import type { PackageJson } from 'pkg-types'
+import { defu } from 'defu'
+import { defaultOptions } from './defaults'
+import { ensureFileContent } from './utils'
 
-function noop() {}
-
-export function getInstalledPkgJsonPath(options: any) {
+export function getInstalledPkgJsonPath(options: PatchOptions) {
   try {
     // const cwd = process.cwd()
     const tmpJsonPath = require.resolve(`tailwindcss/package.json`, {
@@ -18,7 +18,7 @@ export function getInstalledPkgJsonPath(options: any) {
     const pkgJson = require(tmpJsonPath) as PackageJson
     // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin
 
-    if (semverGte(pkgJson.version!, '3.0.0')) {
+    if (gte(pkgJson.version!, '3.0.0')) {
       return tmpJsonPath
     }
   } catch (error) {
@@ -28,43 +28,25 @@ export function getInstalledPkgJsonPath(options: any) {
   }
 }
 
-export function createPatch(options: any) {
-  if (options === false) {
-    return noop
-  }
+export function createPatch(options: PatchOptions) {
+  const opt = defu(options, defaultOptions) as InternalPatchOptions
   return () => {
     try {
-      return internalPatch(getInstalledPkgJsonPath(options), options)
+      return internalPatch(getInstalledPkgJsonPath(options), opt)
     } catch (error) {
       console.warn(`patch tailwindcss failed:` + (<Error>error).message)
     }
   }
 }
 
-function ensureFileContent(filepaths: string | string[]) {
-  if (typeof filepaths === 'string') {
-    filepaths = [filepaths]
-  }
-  let content
-  for (let i = 0; i < filepaths.length; i++) {
-    const filepath = filepaths[i]
-    if (fs.existsSync(filepath)) {
-      content = fs.readFileSync(filepath, {
-        encoding: 'utf-8'
-      })
-      break
-    }
-  }
-  return content
-}
-export function monkeyPatchForExposingContext(rootDir: string, overwrite: boolean) {
+export function monkeyPatchForExposingContext(rootDir: string, opt: InternalPatchOptions) {
   const processTailwindFeaturesFilePath = path.resolve(rootDir, 'lib/processTailwindFeatures.js')
 
   const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
   const result: { processTailwindFeatures?: string; plugin?: string } = {}
   if (processTailwindFeaturesContent) {
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
-    if (!hasPatched && overwrite) {
+    if (!hasPatched && opt.overwrite) {
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
         encoding: 'utf-8'
       })
@@ -77,23 +59,22 @@ export function monkeyPatchForExposingContext(rootDir: string, overwrite: boolea
   const indexFilePath = path.resolve(rootDir, 'lib/index.js')
   const pluginContent = ensureFileContent([pluginFilePath, indexFilePath])
   if (pluginContent) {
-    const { code: code0, hasPatched: hasPatched0 } = inspectPostcssPlugin(pluginContent)
-    if (!hasPatched0 && overwrite) {
-      fs.writeFileSync(pluginFilePath, code0, {
+    const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
+    if (!hasPatched && opt.overwrite) {
+      fs.writeFileSync(pluginFilePath, code, {
         encoding: 'utf-8'
       })
       console.log('patch tailwindcss for expose runtime content successfully!')
     }
-    result.plugin = code0
+    result.plugin = code
   }
   return result
 }
 
-export function internalPatch(pkgJsonPath: string | undefined, options: any, overwrite: boolean = true): any | undefined {
+export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
     const rootDir = path.dirname(pkgJsonPath)
-
-    const result = monkeyPatchForExposingContext(rootDir, overwrite)
+    const result = monkeyPatchForExposingContext(rootDir, options)
     return result
   }
 }

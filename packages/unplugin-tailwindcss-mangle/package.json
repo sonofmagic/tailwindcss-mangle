@@ -8,7 +8,8 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "preinstall": "npx only-allow pnpm"
   },
   "files": [
     "dist"
