@@ -1,5 +1,5 @@
 import { createRollupConfig, legacyOutputOptions } from '@icebreakers/rollup'
-
+const isDev = process.env.NODE_ENV === 'development'
 export default createRollupConfig({
   input: {
     index: 'src/index.ts',
@@ -15,11 +15,13 @@ export default createRollupConfig({
       format: 'cjs',
       entryFileNames: '[name].cjs',
       chunkFileNames: '[name]-[hash].cjs',
+      sourcemap: isDev,
       ...legacyOutputOptions
     },
     {
       dir: 'dist',
       format: 'esm',
+      sourcemap: isDev,
       ...legacyOutputOptions
     }
   ]
