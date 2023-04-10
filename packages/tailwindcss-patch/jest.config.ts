@@ -3,7 +3,8 @@ import baseConfig from '../../jest.config'
 const config: Config = {
   projects: [
     {
-      ...baseConfig
+      ...baseConfig,
+      modulePathIgnorePatterns: ['<rootDir>/test/fixtures']
     }
   ]
 }

@@ -24,7 +24,9 @@ describe('versions-patch', () => {
   it.each(versions)('patch %s', (version) => {
     const v = getTailwindcssVersion(version)
 
-    const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {}, false)
+    const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
+      overwrite: false
+    })
     expect(res).toMatchSnapshot()
   })
 })
