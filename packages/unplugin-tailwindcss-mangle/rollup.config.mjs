@@ -13,14 +13,16 @@ export default createRollupConfig({
     {
       dir: 'dist',
       format: 'cjs',
-      entryFileNames: '[name].cjs',
-      chunkFileNames: '[name]-[hash].cjs',
+      // entryFileNames: '[name].cjs',
+      // chunkFileNames: '[name]-[hash].cjs',
       sourcemap: isDev,
       ...legacyOutputOptions
     },
     {
       dir: 'dist',
       format: 'esm',
+      entryFileNames: '[name].mjs',
+      chunkFileNames: '[name]-[hash].mjs',
       sourcemap: isDev,
       ...legacyOutputOptions
     }
