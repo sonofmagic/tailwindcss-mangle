@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`common usage hello-world 1`] = `
+".text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem
+}
+.font-bold {
+    font-weight: 700
+}
+.underline {
+    text-decoration-line: underline
+}"
+`;
+
+exports[`common usage hello-world with js 1`] = `
+".bg-\\[\\#123456\\] {
+    --tw-bg-opacity: 1;
+    background-color: rgb(18 52 86 / var(--tw-bg-opacity))
+}
+.text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem
+}
+.font-bold {
+    font-weight: 700
+}
+.underline {
+    text-decoration-line: underline
+}"
+`;
