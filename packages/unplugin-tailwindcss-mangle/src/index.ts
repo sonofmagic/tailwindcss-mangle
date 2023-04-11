@@ -1,28 +1,80 @@
 import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 import { pluginName } from './constants'
-
+import { getClassCacheSet } from 'tailwindcss-patch'
+import { parse, serialize, parseFragment } from 'parse5'
+import { traverse } from '@parse5/tools'
 const unplugin = createUnplugin((options: Options) => {
   const wholeModule: string[] = []
   const filterResource: string[] = []
+  let classSet = new Set()
   return {
     name: pluginName,
+    enforce: 'post',
+    resolveId(source) {
+      if (source === 'virtual-module') {
+        // this signals that rollup should not ask other plugins or check
+        // the file system to find this id
+        return source
+      }
+      return source
+    },
+    buildStart() {
+      // this.emitFile({
+      //   type: 'asset',
+      //   fileName: 'tw_mangle_tmp.css',
+      //   source: ''
+      // })
+    },
     // webpack's id filter is outside of loader logic,
     // an additional hook is needed for better perf on webpack
     transformInclude(id) {
       wholeModule.push(id)
-      return /\.(?:html?|vue|[jt]sx?|(?:c|le|s[ac])ss)$/.test(id)
+      const set = getClassCacheSet()
+      if (set.size) {
+        classSet = set
+      }
+      return true
+      // return /\.(?:html?|vue|[jt]sx?|(?:c|le|s[ac])ss)$/.test(id)
     },
+    // writeBundle() {},
     // just like rollup transform
     transform(code, id) {
-      // if (/\.(?:html?|vue|[jt]sx?|(?:c|le|s[ac])ss)^/.test(id)) {
-      //   filterResource.push(id)
-      //   return code
-      // }
-      filterResource.push(id)
+      console.log(classSet.size)
+      if (/\.html?$/.test(id)) {
+        // console.log('html', id)
+        const fragment = parseFragment(code)
+        traverse(fragment, {
+          element(node, parent) {
+            console.log(node)
+          }
+        })
+        // serialize(fragment)
+        filterResource.push(id)
+        return code
+      }
+      if (/\.(?:vue|pug|svelte|[jt]sx?)$/.test(id)) {
+        // console.log('js', id)
+        const ast = this.parse(code)
+        filterResource.push(id)
+        return code
+      }
+
+      if (/\.((?:c|le|s[ac])ss|styl)$/.test(id)) {
+        // const classSet = getClassCacheSet()
+        // console.log(classSet)
+        // console.log('css', id)
+        const classSet = getClassCacheSet()
+        console.log(classSet.size)
+        filterResource.push(id)
+
+        return code
+      }
       return code
     },
     buildEnd() {
+      const classSet = getClassCacheSet()
+      console.log(classSet)
       console.log(wholeModule, filterResource)
     }
     // more hooks coming

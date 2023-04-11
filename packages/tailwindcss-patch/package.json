@@ -17,7 +17,7 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "jest",
+    "test": "npm run patch && jest",
     "prepare": "echo prepare",
     "postinstall": "echo postinstall",
     "preinstall": "npx only-allow pnpm",
