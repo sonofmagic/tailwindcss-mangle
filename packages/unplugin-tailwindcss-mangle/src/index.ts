@@ -2,86 +2,80 @@ import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 import { pluginName } from './constants'
 import { getClassCacheSet } from 'tailwindcss-patch'
-import { parse, serialize, parseFragment } from 'parse5'
+import { parse, serialize } from 'parse5'
 import { traverse } from '@parse5/tools'
-const unplugin = createUnplugin((options: Options, meta) => {
-  const wholeModule: string[] = []
-  const filterResource: string[] = []
-  let classSet = new Set()
+import { getGroupedEntries } from './utils'
+import { OutputAsset, OutputChunk } from 'rollup'
+import ClassGenerator from './classGenerator'
+import { jsHandler } from './handlers/js'
+const unplugin = createUnplugin((options: Options = {}, meta) => {
+  let classSet: Set<string>
+  let cached: boolean
+  const clsGen = new ClassGenerator()
+  function getCachedClassSet() {
+    if (cached) {
+      return classSet
+    }
+    const set = getClassCacheSet()
+    classSet = set
+    cached = true
+    return classSet
+  }
   return {
     name: pluginName,
     enforce: 'post',
-    // vite: {},
-    // rollup: {
-    //   options: {
-    //     order: 'post'
-    //   }
-    // },
-    buildStart() {
-      // this.emitFile({
-      //   type: 'asset',
-      //   fileName: 'tw_mangle_tmp.css',
-      //   source: ''
-      // })
-    },
-    // webpack's id filter is outside of loader logic,
-    // an additional hook is needed for better perf on webpack
-    transformInclude(id) {
-      wholeModule.push(id)
-      const set = getClassCacheSet()
-      if (set.size) {
-        classSet = set
-      }
-      return true
-      // return /\.(?:html?|vue|[jt]sx?|(?:c|le|s[ac])ss)$/.test(id)
-    },
-    // writeBundle() {},
-    // just like rollup transform
-    transform(code, id) {
-      console.log(classSet.size)
-      if (/\.html?$/.test(id)) {
-        // console.log('html', id)
-        const fragment = parseFragment(code)
-        traverse(fragment, {
-          element(node, parent) {
-            console.log(node)
+    vite: {
+      generateBundle: {
+        handler(options, bundle, isWrite) {
+          const runtimeSet = getCachedClassSet()
+          const groupedEntries = getGroupedEntries(Object.entries(bundle))
+
+          if (groupedEntries.html.length) {
+            for (let i = 0; i < groupedEntries.html.length; i++) {
+              const [, asset] = groupedEntries.html[i] as [string, OutputAsset]
+              const fragment = parse(asset.source.toString())
+              traverse(fragment, {
+                element(node, parent) {
+                  const attr = node.attrs.find((x) => x.name === 'class')
+                  if (attr) {
+                    const arr = attr.value.split(/\s/).filter((x) => x)
+                    attr.value = arr
+                      .map((x) => {
+                        if (runtimeSet.has(x)) {
+                          return clsGen.generateClassName(x).name
+                        }
+                        return x
+                      })
+                      .join(' ')
+                  }
+                }
+              })
+              const newCode = serialize(fragment)
+              asset.source = newCode
+            }
           }
-        })
-        // serialize(fragment)
-        filterResource.push(id)
-        return code
-      }
-      if (/\.(?:vue|pug|svelte|[jt]sx?)$/.test(id)) {
-        // console.log('js', id)
-        const ast = this.parse(code)
-        filterResource.push(id)
-        return code
-      }
+          if (groupedEntries.js.length) {
+            for (let i = 0; i < groupedEntries.js.length; i++) {
+              const [, chunk] = groupedEntries.js[i] as [string, OutputChunk]
+              const newCode = jsHandler(chunk.code, {
+                set: runtimeSet,
+                classGenerator: clsGen
+              }).code
+              chunk.code = newCode
+            }
+          }
 
-      if (/\.((?:c|le|s[ac])ss|styl)$/.test(id)) {
-        // const classSet = getClassCacheSet()
-        // console.log(classSet)
-        // console.log('css', id)
-        const classSet = getClassCacheSet()
-        console.log(classSet.size)
-        filterResource.push(id)
-
-        return code
+          if (groupedEntries.css.length) {
+          }
+        }
       }
-      return code
-    },
-    buildEnd() {
-      const classSet = getClassCacheSet()
-      console.log(classSet)
-      console.log(wholeModule, filterResource)
     }
-    // more hooks coming
   }
 })
 export default unplugin
-// export const vitePlugin = unplugin.vite
+export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
-// export const webpackPlugin = unplugin.webpack
+export const webpackPlugin = unplugin.webpack
 // export const rspackPlugin = unplugin.rspack
 // export const esbuildPlugin = unplugin.esbuild
 // export const vitePlugin = unplugin.vite

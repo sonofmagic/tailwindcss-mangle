@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import unplugin from 'unplugin-tailwindcss-mangle'
+import { vitePlugin } from 'unplugin-tailwindcss-mangle'
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), unplugin.vite()]
+  plugins: [vue(), vitePlugin()]
 })

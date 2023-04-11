@@ -48,5 +48,10 @@
     "@babel/traverse": "^7.21.4",
     "@babel/types": "^7.21.4",
     "semver": "^7.3.8"
+  },
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
   }
 }
