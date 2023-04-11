@@ -4,21 +4,19 @@ import { pluginName } from './constants'
 import { getClassCacheSet } from 'tailwindcss-patch'
 import { parse, serialize, parseFragment } from 'parse5'
 import { traverse } from '@parse5/tools'
-const unplugin = createUnplugin((options: Options) => {
+const unplugin = createUnplugin((options: Options, meta) => {
   const wholeModule: string[] = []
   const filterResource: string[] = []
   let classSet = new Set()
   return {
     name: pluginName,
     enforce: 'post',
-    resolveId(source) {
-      if (source === 'virtual-module') {
-        // this signals that rollup should not ask other plugins or check
-        // the file system to find this id
-        return source
-      }
-      return source
-    },
+    // vite: {},
+    // rollup: {
+    //   options: {
+    //     order: 'post'
+    //   }
+    // },
     buildStart() {
       // this.emitFile({
       //   type: 'asset',
