@@ -3,6 +3,7 @@ import { parse, traverse, generate } from '../lib/babel'
 import type { Node } from '@babel/types'
 import type { TraverseOptions, IJsHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
+import { splitCode } from './split'
 
 export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
   const ast = parse(rawSource)
@@ -13,7 +14,7 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
     StringLiteral: {
       enter(p) {
         const n = p.node
-        const arr = n.value.split(/\s/).filter((x) => x)
+        const arr = splitCode(n.value) // .split(/\s/).filter((x) => x)
         let rawStr = n.value
         for (let i = 0; i < arr.length; i++) {
           const v = arr[i]

@@ -13,6 +13,8 @@ export default createRollupConfig({
     {
       dir: 'dist',
       format: 'cjs',
+      exports: 'auto',
+      interop: 'auto',
       // entryFileNames: '[name].cjs',
       // chunkFileNames: '[name]-[hash].cjs',
       sourcemap: isDev,

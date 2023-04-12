@@ -8,7 +8,9 @@ import { getGroupedEntries } from './utils'
 import { OutputAsset, OutputChunk } from 'rollup'
 import ClassGenerator from './classGenerator'
 import { jsHandler } from './handlers/js'
-const unplugin = createUnplugin((options: Options = {}, meta) => {
+
+const preserveClass = ['filter']
+const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
   let classSet: Set<string>
   let cached: boolean
   const clsGen = new ClassGenerator()
@@ -17,6 +19,9 @@ const unplugin = createUnplugin((options: Options = {}, meta) => {
       return classSet
     }
     const set = getClassCacheSet()
+    preserveClass.forEach((c) => {
+      set.delete(c)
+    })
     classSet = set
     cached = true
     return classSet
