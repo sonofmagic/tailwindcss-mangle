@@ -1,13 +1,13 @@
 import { parse, traverse, generate } from '../lib/babel'
 
 import type { Node } from '@babel/types'
-import type { TraverseOptions, IJsHandlerOptions } from '../types'
+import type { TraverseOptions, IHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
 import { splitCode } from './split'
 
-export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
+export function jsHandler(rawSource: string, options: IHandlerOptions) {
   const ast = parse(rawSource)
-  const set = options.set
+  const set = options.runtimeSet
   const clsGen = options.classGenerator
   // 这样搞会把原先所有的 children 含有相关的 也都转义了
   const topt: TraverseOptions<Node> = {
