@@ -77,13 +77,62 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
         }
       }
     },
-    webpack(compiler) {}
+    webpack(compiler) {
+      const Compilation = compiler.webpack.Compilation
+      const { ConcatSource } = compiler.webpack.sources
+      compiler.hooks.compilation.tap(pluginName, (compilation) => {
+        compilation.hooks.processAssets.tap(
+          {
+            name: pluginName,
+            stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
+          },
+          (assets) => {
+            const runtimeSet = getCachedClassSet()
+            const groupedEntries = getGroupedEntries(Object.entries(assets))
+            if (groupedEntries.html.length) {
+              for (let i = 0; i < groupedEntries.html.length; i++) {
+                const [file, asset] = groupedEntries.html[i]
+                const html = htmlHandler(asset.source().toString(), {
+                  classGenerator,
+                  runtimeSet
+                })
+                const source = new ConcatSource(html)
+                compilation.updateAsset(file, source)
+              }
+            }
+            if (groupedEntries.js.length) {
+              for (let i = 0; i < groupedEntries.js.length; i++) {
+                const [file, chunk] = groupedEntries.js[i]
+                const code = jsHandler(chunk.source().toString(), {
+                  runtimeSet,
+                  classGenerator
+                }).code
+                const source = new ConcatSource(code)
+                compilation.updateAsset(file, source)
+              }
+            }
+
+            if (groupedEntries.css.length) {
+              for (let i = 0; i < groupedEntries.css.length; i++) {
+                const [file, css] = groupedEntries.css[i]
+                const newCss = cssHandler(css.source().toString(), {
+                  classGenerator,
+                  runtimeSet
+                })
+                const source = new ConcatSource(newCss)
+                compilation.updateAsset(file, source)
+              }
+            }
+          }
+        )
+      })
+    }
   }
 })
 export default unplugin
-export const vitePlugin = unplugin.vite
+// export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
-export const webpackPlugin = unplugin.webpack
+// export const webpackPlugin = unplugin.webpack
 // export const rspackPlugin = unplugin.rspack
 // export const esbuildPlugin = unplugin.esbuild
 // export const vitePlugin = unplugin.vite
