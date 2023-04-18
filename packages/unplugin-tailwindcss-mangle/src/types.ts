@@ -19,6 +19,7 @@ export interface IMangleOptions {
   exclude?: (string | RegExp)[]
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
+  classPrefix?: string
 }
 
 export interface IClassGenerator {
@@ -29,7 +30,7 @@ export interface IClassGenerator {
 
 export type { TraverseOptions } from '@babel/traverse'
 
-export interface IJsHandlerOptions {
-  set: Set<string>
+export interface IHandlerOptions {
+  runtimeSet: Set<string>
   classGenerator: ClassGenerator
 }

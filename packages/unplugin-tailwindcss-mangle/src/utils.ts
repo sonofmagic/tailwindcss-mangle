@@ -54,9 +54,7 @@ export function getGroupedEntries<T>(
   return groupedEntries as Record<'css' | 'html' | 'js' | 'other', [string, T][]>
 }
 
-export const acceptPrefix = 'abcdefghijklmnopqrstuvwxyz_'.split('')
-
-export const acceptChars = 'abcdefghijklmnopqrstuvwxyz_-0123456789'.split('')
+export const acceptChars = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 export function stripEscapeSequence(words: string) {
   return words.replace(/\\/g, '')
