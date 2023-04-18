@@ -15,26 +15,27 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
     // ignore className like 'filter','container'
     // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
     // bg-[#123456] w-1 etc...
-    return /-/.test(className)
+    return /[-:]/.test(className)
   }
   let classSet: Set<string>
-  let cached: boolean
+  // let cached: boolean
   const classGenerator = new ClassGenerator()
   function getCachedClassSet() {
-    if (cached) {
-      return classSet
-    }
+    // if (cached) {
+    //   return classSet
+    // }
     const set = getClassCacheSet()
     set.forEach((c) => {
       if (!mangleClass(c)) {
         set.delete(c)
+        // console.log(c)
       }
     })
     // preserveClass.forEach((c) => {
     //   set.delete(c)
     // })
     classSet = set
-    cached = true
+    // cached = true
     return classSet
   }
   return {

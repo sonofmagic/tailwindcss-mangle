@@ -17,12 +17,12 @@ export function jsHandler(rawSource: string, options: IHandlerOptions) {
   const ast = parse(rawSource)
   const set = options.runtimeSet
   const clsGen = options.classGenerator
-  // 这样搞会把原先所有的 children 含有相关的 也都转义了
+
   const topt: TraverseOptions<Node> = {
     StringLiteral: {
       enter(p) {
         const n = p.node
-        const arr = splitCode(n.value) // .split(/\s/).filter((x) => x)
+        const arr = splitCode(n.value)
         let rawStr = n.value
         for (let i = 0; i < arr.length; i++) {
           const v = arr[i]

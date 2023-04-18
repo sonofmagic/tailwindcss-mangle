@@ -1,7 +1,7 @@
 // import chalk from 'chalk'
 import type { IMangleOptions, IMangleContextClass, IClassGenerator } from './types'
 
-import { acceptChars, acceptPrefix, stripEscapeSequence, regExpTest } from './utils'
+import { acceptChars, stripEscapeSequence, regExpTest } from './utils'
 
 class ClassGenerator implements IClassGenerator {
   public newClassMap: Record<string, IMangleContextClass>
@@ -19,7 +19,7 @@ class ClassGenerator implements IClassGenerator {
 
   defaultClassGenerator() {
     const chars = []
-    let rest = (this.newClassSize - (this.newClassSize % acceptPrefix.length)) / acceptPrefix.length
+    let rest = (this.newClassSize - (this.newClassSize % acceptChars.length)) / acceptChars.length
     if (rest > 0) {
       while (true) {
         rest -= 1
@@ -33,9 +33,9 @@ class ClassGenerator implements IClassGenerator {
         rest /= acceptChars.length
       }
     }
-    const prefixIndex = this.newClassSize % acceptPrefix.length
+    const prefixIndex = this.newClassSize % acceptChars.length
 
-    const newClassName = `${this.classPrefix}${acceptPrefix[prefixIndex]}${chars.join('')}`
+    const newClassName = `${this.classPrefix}${acceptChars[prefixIndex]}${chars.join('')}`
     return newClassName
   }
 
