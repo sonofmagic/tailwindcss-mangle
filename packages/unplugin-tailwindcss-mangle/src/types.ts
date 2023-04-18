@@ -19,6 +19,7 @@ export interface IMangleOptions {
   exclude?: (string | RegExp)[]
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
+  classPrefix?: string
 }
 
 export interface IClassGenerator {

@@ -8,11 +8,13 @@ class ClassGenerator implements IClassGenerator {
   public newClassSize: number
   public context: Record<string, any>
   public opts: IMangleOptions
+  public classPrefix: string
   constructor(opts: IMangleOptions = {}) {
     this.newClassMap = {}
     this.newClassSize = 0
     this.context = {}
     this.opts = opts
+    this.classPrefix = opts.classPrefix ?? 'tw-'
   }
 
   defaultClassGenerator() {
@@ -33,7 +35,7 @@ class ClassGenerator implements IClassGenerator {
     }
     const prefixIndex = this.newClassSize % acceptPrefix.length
 
-    const newClassName = `${acceptPrefix[prefixIndex]}${chars.join('')}`
+    const newClassName = `${this.classPrefix}${acceptPrefix[prefixIndex]}${chars.join('')}`
     return newClassName
   }
 

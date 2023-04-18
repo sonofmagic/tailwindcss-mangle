@@ -1,9 +1,17 @@
-import { parse, traverse, generate } from '../lib/babel'
+import _generate from '@babel/generator'
+import { parse } from '@babel/parser'
+import _traverse from '@babel/traverse'
 
 import type { Node } from '@babel/types'
 import type { TraverseOptions, IHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
 import { splitCode } from './split'
+
+function getDefaultExportFromNamespaceIfPresent(n: any) {
+  return n && Object.prototype.hasOwnProperty.call(n, 'default') ? n.default : n
+}
+const generate = getDefaultExportFromNamespaceIfPresent(_generate) as typeof _generate
+const traverse = getDefaultExportFromNamespaceIfPresent(_traverse) as typeof _traverse
 
 export function jsHandler(rawSource: string, options: IHandlerOptions) {
   const ast = parse(rawSource)

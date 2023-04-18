@@ -61,7 +61,6 @@
     "@babel/parser": "^7.21.4",
     "@babel/traverse": "^7.21.4",
     "@babel/types": "^7.21.4",
-    "@parse5/tools": "^0.1.0",
     "acorn-walk": "^8.2.0",
     "escodegen": "^2.0.0",
     "parse5": "^7.1.2",
@@ -76,6 +75,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@parse5/tools": "^0.1.0",
     "@types/babel__generator": "^7.6.4",
     "@types/babel__traverse": "^7.18.3",
     "@types/escodegen": "^0.0.7",

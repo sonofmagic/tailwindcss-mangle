@@ -46,7 +46,7 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
           const runtimeSet = getCachedClassSet()
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
 
-          if (groupedEntries.html.length) {
+          if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
             for (let i = 0; i < groupedEntries.html.length; i++) {
               const [, asset] = groupedEntries.html[i] as [string, OutputAsset]
               asset.source = htmlHandler(asset.source.toString(), {
@@ -55,7 +55,7 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
               })
             }
           }
-          if (groupedEntries.js.length) {
+          if (Array.isArray(groupedEntries.js) && groupedEntries.js.length) {
             for (let i = 0; i < groupedEntries.js.length; i++) {
               const [, chunk] = groupedEntries.js[i] as [string, OutputChunk]
               chunk.code = jsHandler(chunk.code, {
@@ -65,7 +65,7 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
             }
           }
 
-          if (groupedEntries.css.length) {
+          if (Array.isArray(groupedEntries.css) && groupedEntries.css.length) {
             for (let i = 0; i < groupedEntries.css.length; i++) {
               const [, css] = groupedEntries.css[i] as [string, OutputAsset]
               css.source = cssHandler(css.source.toString(), {
@@ -87,9 +87,11 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
             stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
           },
           (assets) => {
+            // const resolvePath = require.resolve('tailwindcss')
+            // console.log(resolvePath)
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
-            if (groupedEntries.html.length) {
+            if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
                 const html = htmlHandler(asset.source().toString(), {
@@ -100,7 +102,7 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
                 compilation.updateAsset(file, source)
               }
             }
-            if (groupedEntries.js.length) {
+            if (Array.isArray(groupedEntries.js) && groupedEntries.js.length) {
               for (let i = 0; i < groupedEntries.js.length; i++) {
                 const [file, chunk] = groupedEntries.js[i]
                 const code = jsHandler(chunk.source().toString(), {
@@ -112,7 +114,7 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
               }
             }
 
-            if (groupedEntries.css.length) {
+            if (Array.isArray(groupedEntries.css) && groupedEntries.css.length) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, css] = groupedEntries.css[i]
                 const newCss = cssHandler(css.source().toString(), {
