@@ -1,15 +1,15 @@
-import { IMangleContextClass } from '@/types'
+import { IClassGeneratorContextItem } from '@/types'
 import type { PluginCreator } from 'postcss'
 import parser from 'postcss-selector-parser'
 export type PostcssMangleTailwindcssPlugin = PluginCreator<{
-  newClassMap: Record<string, IMangleContextClass>
+  newClassMap: Record<string, IClassGeneratorContextItem>
 }>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
 
 const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options) => {
   // must set newClassMap options
-  let newClassMap: Record<string, IMangleContextClass> = {}
+  let newClassMap: Record<string, IClassGeneratorContextItem> = {}
   if (options) {
     if (options.newClassMap) {
       newClassMap = options.newClassMap

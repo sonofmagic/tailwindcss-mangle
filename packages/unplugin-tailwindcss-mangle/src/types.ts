@@ -1,16 +1,16 @@
 import type ClassGenerator from './classGenerator'
 
-export interface IMangleContextClass {
+export interface IClassGeneratorContextItem {
   name: string
   usedBy: any[]
 }
 
-export interface IMangleOptions {
+export interface IClassGeneratorOptions {
   // classNameRegExp?: string
   reserveClassName?: (string | RegExp)[]
   // ignorePrefix?: string[]
   // ignorePrefixRegExp?: string
-  customGenerate?: (original: string, opts: IMangleOptions, context: Record<string, any>) => string | undefined
+  customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
   log?: boolean
   exclude?: (string | RegExp)[]
   include?: (string | RegExp)[]
@@ -19,7 +19,7 @@ export interface IMangleOptions {
 }
 
 export interface IClassGenerator {
-  newClassMap: Record<string, IMangleContextClass>
+  newClassMap: Record<string, IClassGeneratorContextItem>
   newClassSize: number
   context: Record<string, any>
 }
@@ -32,5 +32,5 @@ export interface IHandlerOptions {
 }
 
 export interface Options {
-  classGenerator?: IMangleOptions
+  classGenerator?: IClassGeneratorOptions
 }

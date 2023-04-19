@@ -1,4 +1,4 @@
-import type { IMangleOptions, IClassGenerator } from './types'
+import type { IClassGeneratorOptions, IClassGenerator } from './types'
 
 export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]> {
   if (!Array.isArray(arr)) {
@@ -60,7 +60,7 @@ export function stripEscapeSequence(words: string) {
   return words.replace(/\\/g, '')
 }
 
-export const validate = (opts: IMangleOptions, classGenerator: IClassGenerator) => {
+export const validate = (opts: IClassGeneratorOptions, classGenerator: IClassGenerator) => {
   if (!opts.log) return
   for (const className in classGenerator.newClassMap) {
     const c = classGenerator.newClassMap[className]

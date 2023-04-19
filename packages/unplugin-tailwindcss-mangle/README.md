@@ -13,6 +13,8 @@ mangle tailwindcss utilities plugin
     - [4. register this plugin](#4-register-this-plugin)
       - [vite](#vite)
       - [webpack](#webpack)
+  - [Options](#options)
+    - [classGenerator](#classgenerator)
   - [Notice](#notice)
 
 ## Features
@@ -74,6 +76,8 @@ You will see all class was renamed to `tw-*`
 
 #### webpack
 
+> Experiment, not work right now
+
 ```js
 // esm
 import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
@@ -81,6 +85,24 @@ import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
 const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 // use this webpack plugin
 utwm()
+```
+
+## Options
+
+### classGenerator
+
+custom class generator, if you want to custom class name (default 'tw-*'), use this options
+
+```js
+export interface IClassGeneratorOptions {
+  reserveClassName?: (string | RegExp)[]
+  customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
+  log?: boolean
+  exclude?: (string | RegExp)[]
+  include?: (string | RegExp)[]
+  ignoreClass?: (string | RegExp)[]
+  classPrefix?: string
+}
 ```
 
 ## Notice
