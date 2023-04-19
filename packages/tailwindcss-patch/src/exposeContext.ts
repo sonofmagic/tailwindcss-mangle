@@ -1,12 +1,19 @@
 import path from 'path'
 import fs from 'fs'
 import type { Rule } from 'postcss'
+import { requireResolve } from './utils'
 
-export function getContexts() {
-  // const cwd = process.cwd()
-  const distPath = path.dirname(require.resolve('tailwindcss/lib')) //  path.join(cwd, 'node_modules', 'tailwindcss/lib')
-  // index.js
-  // plugin.js
+export function getTailwindcssEntry(basedir: string = process.cwd()) {
+  return requireResolve('tailwindcss', {
+    basedir
+  })
+}
+
+export function getContexts(basedir?: string) {
+  const twPath = getTailwindcssEntry(basedir)
+
+  const distPath = path.dirname(twPath)
+
   let injectFilePath = path.join(distPath, 'plugin.js')
   if (!fs.existsSync(injectFilePath)) {
     injectFilePath = path.join(distPath, 'index.js')
@@ -23,10 +30,10 @@ export function getClassCaches(): Map<
   string,
   (
     | {
-        layer: string
-        options: Record<string, any>
-        sort: Record<string, any>
-      }
+      layer: string
+      options: Record<string, any>
+      sort: Record<string, any>
+    }
     | Rule
   )[]
 >[] {

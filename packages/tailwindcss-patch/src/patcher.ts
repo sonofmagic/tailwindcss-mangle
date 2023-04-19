@@ -6,13 +6,14 @@ import type { PatchOptions, InternalPatchOptions } from './type'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
 import { defaultOptions } from './defaults'
-import { ensureFileContent } from './utils'
+import { ensureFileContent, requireResolve } from './utils'
 
 export function getInstalledPkgJsonPath(options: PatchOptions) {
   try {
     // const cwd = process.cwd()
-    const tmpJsonPath = require.resolve(`tailwindcss/package.json`, {
-      paths: options.paths
+    const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
+      paths: options.paths,
+      basedir: options.basedir ?? process.cwd()
     })
 
     const pkgJson = require(tmpJsonPath) as PackageJson
@@ -23,7 +24,7 @@ export function getInstalledPkgJsonPath(options: PatchOptions) {
     }
   } catch (error) {
     if ((<Error & { code: string }>error).code === 'MODULE_NOT_FOUND') {
-      console.warn('没有找到`tailwindcss`包，请确认是否安装。')
+      console.warn('Can\'t find npm pkg: `tailwindcss`, Please ensure it has been installed!')
     }
   }
 }

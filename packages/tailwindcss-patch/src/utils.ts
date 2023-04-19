@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { sync, type SyncOpts } from 'resolve'
 
 export function ensureFileContent(filepaths: string | string[]) {
   if (typeof filepaths === 'string') {
@@ -15,4 +16,8 @@ export function ensureFileContent(filepaths: string | string[]) {
     }
   }
   return content
+}
+
+export function requireResolve(id: string, opts?: SyncOpts) {
+  return sync(id, opts)
 }
