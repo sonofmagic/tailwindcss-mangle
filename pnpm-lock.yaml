@@ -104,8 +104,11 @@ importers:
     specifiers:
       '@sveltejs/vite-plugin-svelte': ^2.0.3
       '@tsconfig/svelte': ^3.0.0
+      autoprefixer: ^10.4.14
+      postcss: ^8.4.22
       svelte: ^3.55.1
       svelte-check: ^2.10.3
+      tailwindcss: ^3.3.1
       tailwindcss-patch: workspace:*
       tslib: ^2.5.0
       typescript: ^4.9.3
@@ -114,8 +117,11 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte': 2.0.4_svelte@3.58.0+vite@4.2.2
       '@tsconfig/svelte': 3.0.0
+      autoprefixer: 10.4.14_postcss@8.4.22
+      postcss: 8.4.22
       svelte: 3.58.0
-      svelte-check: 2.10.3_svelte@3.58.0
+      svelte-check: 2.10.3_bafhujc2cbpwtmcqmh7alvqarq
+      tailwindcss: 3.3.1_postcss@8.4.22
       tailwindcss-patch: link:../../packages/tailwindcss-patch
       tslib: 2.5.0
       typescript: 4.9.5
@@ -10010,7 +10016,7 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check/2.10.3_svelte@3.58.0:
+  /svelte-check/2.10.3_bafhujc2cbpwtmcqmh7alvqarq:
     resolution: {integrity: sha512-Nt1aWHTOKFReBpmJ1vPug0aGysqPwJh2seM1OvICfM2oeyaA62mOiy5EvkXhltGfhCcIQcq2LoE0l1CwcWPjlw==}
     hasBin: true
     peerDependencies:
@@ -10023,7 +10029,7 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 3.58.0
-      svelte-preprocess: 4.10.7_kxq5ayp4qfv2n6flkngpsntzw4
+      svelte-preprocess: 4.10.7_ya7ux77m4y6dr5ryopvq3m2l2i
       typescript: 5.0.4
     transitivePeerDependencies:
       - '@babel/core'
@@ -10047,7 +10053,7 @@ packages:
       svelte: 3.58.0
     dev: true
 
-  /svelte-preprocess/4.10.7_kxq5ayp4qfv2n6flkngpsntzw4:
+  /svelte-preprocess/4.10.7_ya7ux77m4y6dr5ryopvq3m2l2i:
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -10092,6 +10098,7 @@ packages:
       '@types/sass': 1.45.0
       detect-indent: 6.1.0
       magic-string: 0.25.9
+      postcss: 8.4.22
       sorcery: 0.10.0
       strip-indent: 3.0.0
       svelte: 3.58.0
