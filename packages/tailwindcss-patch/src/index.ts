@@ -1,3 +1,5 @@
 export * from './exposeContext'
 export * from './inspector'
 export * from './patcher'
+export * from './utils'
+export * from './type'

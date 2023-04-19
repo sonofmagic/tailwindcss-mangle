@@ -6,44 +6,46 @@ import type { PatchOptions, InternalPatchOptions } from './type'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
 import { defaultOptions } from './defaults'
-import { ensureFileContent } from './utils'
+import { ensureFileContent, requireResolve } from './utils'
 
-export function getInstalledPkgJsonPath(options: PatchOptions) {
+export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   try {
     // const cwd = process.cwd()
-    const tmpJsonPath = require.resolve(`tailwindcss/package.json`, {
-      paths: options.paths
+    const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
+      paths: options.paths,
+      basedir: options.basedir ?? process.cwd()
     })
 
     const pkgJson = require(tmpJsonPath) as PackageJson
     // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin
-
+    // only tailwindcss version > 3.0.0
     if (gte(pkgJson.version!, '3.0.0')) {
       return tmpJsonPath
     }
   } catch (error) {
     if ((<Error & { code: string }>error).code === 'MODULE_NOT_FOUND') {
-      console.warn('没有找到`tailwindcss`包，请确认是否安装。')
+      console.warn('Can\'t find npm pkg: `tailwindcss`, Please ensure it has been installed!')
     }
   }
 }
 
-export function createPatch(options: PatchOptions) {
+export function createPatch(options: PatchOptions = {}) {
   const opt = defu(options, defaultOptions) as InternalPatchOptions
   return () => {
     try {
-      return internalPatch(getInstalledPkgJsonPath(options), opt)
+      const pkgJsonPath = getInstalledPkgJsonPath(options)
+      return internalPatch(pkgJsonPath, opt)
     } catch (error) {
       console.warn(`patch tailwindcss failed:` + (<Error>error).message)
     }
   }
 }
 
-export function monkeyPatchForExposingContext(rootDir: string, opt: InternalPatchOptions) {
-  const processTailwindFeaturesFilePath = path.resolve(rootDir, 'lib/processTailwindFeatures.js')
+export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchOptions) {
+  const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/processTailwindFeatures.js')
 
   const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
-  const result: { processTailwindFeatures?: string; plugin?: string } = {}
+  const result: { processTailwindFeatures?: string; plugin?: string } & Record<string, any> = {}
   if (processTailwindFeaturesContent) {
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
     if (!hasPatched && opt.overwrite) {
@@ -55,8 +57,8 @@ export function monkeyPatchForExposingContext(rootDir: string, opt: InternalPatc
     result.processTailwindFeatures = code
   }
 
-  const pluginFilePath = path.resolve(rootDir, 'lib/plugin.js')
-  const indexFilePath = path.resolve(rootDir, 'lib/index.js')
+  const pluginFilePath = path.resolve(twDir, 'lib/plugin.js')
+  const indexFilePath = path.resolve(twDir, 'lib/index.js')
   const pluginContent = ensureFileContent([pluginFilePath, indexFilePath])
   if (pluginContent) {
     const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
@@ -68,13 +70,15 @@ export function monkeyPatchForExposingContext(rootDir: string, opt: InternalPatc
     }
     result.plugin = code
   }
+
+  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
   return result
 }
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
-    const rootDir = path.dirname(pkgJsonPath)
-    const result = monkeyPatchForExposingContext(rootDir, options)
+    const twDir = path.dirname(pkgJsonPath)
+    const result = monkeyPatchForExposingContext(twDir, options)
     return result
   }
 }

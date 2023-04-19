@@ -8,10 +8,10 @@ import ClassGenerator from './classGenerator'
 import { htmlHandler } from './html'
 import { jsHandler } from './js'
 import { cssHandler } from './css'
-import type {} from 'webpack'
-const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  // const preserveClass = ['filter']
-  const mangleClass = (className: string) => {
+import type { } from 'webpack'
+export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
+
+  const isMangleClass = (className: string) => {
     // ignore className like 'filter','container'
     // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
     // bg-[#123456] w-1 etc...
@@ -21,21 +21,16 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
   // let cached: boolean
   const classGenerator = new ClassGenerator()
   function getCachedClassSet() {
-    // if (cached) {
-    //   return classSet
-    // }
+
     const set = getClassCacheSet()
     set.forEach((c) => {
-      if (!mangleClass(c)) {
+      if (!isMangleClass(c)) {
         set.delete(c)
-        // console.log(c)
       }
     })
-    // preserveClass.forEach((c) => {
-    //   set.delete(c)
-    // })
+
     classSet = set
-    // cached = true
+
     return classSet
   }
   return {
@@ -45,6 +40,9 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
       generateBundle: {
         handler(options, bundle, isWrite) {
           const runtimeSet = getCachedClassSet()
+          if (!runtimeSet.size) {
+            return
+          }
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
 
           if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
@@ -91,6 +89,9 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
             // const resolvePath = require.resolve('tailwindcss')
             // console.log(resolvePath)
             const runtimeSet = getCachedClassSet()
+            if (!runtimeSet.size) {
+              return
+            }
             const groupedEntries = getGroupedEntries(Object.entries(assets))
             if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
@@ -132,7 +133,10 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
     }
   }
 })
-export default unplugin
+
+export const vitePlugin = unplugin.vite
+export const webpackPlugin = unplugin.webpack
+// export default unplugin
 // export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
 // export const webpackPlugin = unplugin.webpack

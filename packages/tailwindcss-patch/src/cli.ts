@@ -1,3 +1,3 @@
 import { createPatch } from './patcher'
-const patch = createPatch({})
+const patch = createPatch()
 patch()
