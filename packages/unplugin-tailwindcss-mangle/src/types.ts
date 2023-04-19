@@ -1,9 +1,5 @@
 import type ClassGenerator from './classGenerator'
 
-export interface Options {
-  // define your plugin options here
-}
-
 export interface IMangleContextClass {
   name: string
   usedBy: any[]
@@ -14,7 +10,7 @@ export interface IMangleOptions {
   reserveClassName?: (string | RegExp)[]
   // ignorePrefix?: string[]
   // ignorePrefixRegExp?: string
-  classGenerator?: (original: string, opts: IMangleOptions, context: Record<string, any>) => string | undefined
+  customGenerate?: (original: string, opts: IMangleOptions, context: Record<string, any>) => string | undefined
   log?: boolean
   exclude?: (string | RegExp)[]
   include?: (string | RegExp)[]
@@ -33,4 +29,8 @@ export type { TraverseOptions } from '@babel/traverse'
 export interface IHandlerOptions {
   runtimeSet: Set<string>
   classGenerator: ClassGenerator
+}
+
+export interface Options {
+  classGenerator?: IMangleOptions
 }

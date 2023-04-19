@@ -8,9 +8,8 @@ import ClassGenerator from './classGenerator'
 import { htmlHandler } from './html'
 import { jsHandler } from './js'
 import { cssHandler } from './css'
-import type { } from 'webpack'
+import type {} from 'webpack'
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-
   const isMangleClass = (className: string) => {
     // ignore className like 'filter','container'
     // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
@@ -19,9 +18,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
   }
   let classSet: Set<string>
   // let cached: boolean
-  const classGenerator = new ClassGenerator()
+  const classGenerator = new ClassGenerator(options.classGenerator)
   function getCachedClassSet() {
-
     const set = getClassCacheSet()
     set.forEach((c) => {
       if (!isMangleClass(c)) {

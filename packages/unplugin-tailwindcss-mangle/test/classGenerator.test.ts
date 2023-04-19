@@ -5,7 +5,7 @@ describe('classGenerator', () => {
     const result: string[] = []
     const clsGen = new ClassGenerator()
     for (let i = 0; i < 26 * 27 + 1; i++) {
-      result.push(clsGen.defaultClassGenerator())
+      result.push(clsGen.defaultClassGenerate())
       clsGen.newClassSize++
     }
     expect(result).toMatchSnapshot()
@@ -14,6 +14,6 @@ describe('classGenerator', () => {
   it('26*27+1', () => {
     const clsGen = new ClassGenerator()
     clsGen.newClassSize = 26 * 27
-    expect(clsGen.defaultClassGenerator()).toBe('tw-aaa')
+    expect(clsGen.defaultClassGenerate()).toBe('tw-aaa')
   })
 })

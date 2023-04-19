@@ -17,7 +17,7 @@ class ClassGenerator implements IClassGenerator {
     this.classPrefix = opts.classPrefix ?? 'tw-'
   }
 
-  defaultClassGenerator() {
+  defaultClassGenerate() {
     const chars = []
     let rest = (this.newClassSize - (this.newClassSize % acceptChars.length)) / acceptChars.length
     if (rest > 0) {
@@ -80,11 +80,11 @@ class ClassGenerator implements IClassGenerator {
     if (cn) return cn
 
     let newClassName
-    if (opts.classGenerator) {
-      newClassName = opts.classGenerator(original, opts, this.context)
+    if (opts.customGenerate && typeof opts.customGenerate === 'function') {
+      newClassName = opts.customGenerate(original, opts, this.context)
     }
     if (!newClassName) {
-      newClassName = this.defaultClassGenerator()
+      newClassName = this.defaultClassGenerate()
     }
 
     if (opts.reserveClassName && regExpTest(opts.reserveClassName, newClassName)) {
