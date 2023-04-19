@@ -57,7 +57,9 @@
     "tailwindcss",
     "utilities",
     "mangle",
-    "class"
+    "class",
+    "obfuscator",
+    "obfuscation"
   ],
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
