@@ -54,10 +54,10 @@ npx tw-patch
 // for example: vue vite project
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import utwm from 'unplugin-tailwindcss-mangle'
+import { vitePlugin as utwm } from 'unplugin-tailwindcss-mangle'
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), utwm.vite()]
+  plugins: [vue(), utwm()]
 })
 ```
 
@@ -75,9 +75,12 @@ You will see all class was renamed to `tw-*`
 #### webpack
 
 ```js
-import utwm from 'unplugin-tailwindcss-mangle'
+// esm
+import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
+// or cjs
+const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 // use this webpack plugin
-utwm.webpack()
+utwm()
 ```
 
 ## Notice

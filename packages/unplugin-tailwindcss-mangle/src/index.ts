@@ -9,7 +9,7 @@ import { htmlHandler } from './html'
 import { jsHandler } from './js'
 import { cssHandler } from './css'
 import type { } from 'webpack'
-const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
+export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
 
   const isMangleClass = (className: string) => {
     // ignore className like 'filter','container'
@@ -133,7 +133,10 @@ const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
     }
   }
 })
-export default unplugin
+
+export const vitePlugin = unplugin.vite
+export const webpackPlugin = unplugin.webpack
+// export default unplugin
 // export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
 // export const webpackPlugin = unplugin.webpack

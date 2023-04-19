@@ -8,7 +8,7 @@ import { defu } from 'defu'
 import { defaultOptions } from './defaults'
 import { ensureFileContent, requireResolve } from './utils'
 
-export function getInstalledPkgJsonPath(options: PatchOptions) {
+export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   try {
     // const cwd = process.cwd()
     const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
