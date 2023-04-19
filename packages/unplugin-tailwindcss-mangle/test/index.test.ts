@@ -1,27 +1,4 @@
-import postcss from 'postcss'
-import tailwindcss from 'tailwindcss'
-import fs from 'fs'
-import path from 'path'
-
-function getTestCase(caseName: string) {
-  return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf-8')
-}
-// @tailwind base;
-// @tailwind components;
-function getCss(raw: string | string[]) {
-  if (typeof raw === 'string') {
-    raw = [raw]
-  }
-  return postcss([
-    tailwindcss({
-      content: raw.map((x) => {
-        return {
-          raw: x
-        }
-      })
-    })
-  ]).process('@tailwind utilities;').css
-}
+import { getCss, getTestCase } from './utils'
 
 describe('common usage', () => {
   it('hello-world', () => {

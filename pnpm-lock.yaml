@@ -71,6 +71,27 @@ importers:
       tailwindcss-patch: link:../../packages/tailwindcss-patch
       unplugin-tailwindcss-mangle: link:../../packages/unplugin-tailwindcss-mangle
 
+  apps/vite-lit:
+    specifiers:
+      autoprefixer: ^10.4.14
+      lit: ^2.6.1
+      postcss: ^8.4.21
+      tailwindcss: ^3.3.1
+      tailwindcss-patch: workspace:*
+      typescript: ^4.9.3
+      unplugin-tailwindcss-mangle: workspace:*
+      vite: ^4.2.0
+    dependencies:
+      lit: 2.7.2
+    devDependencies:
+      autoprefixer: 10.4.14_postcss@8.4.22
+      postcss: 8.4.22
+      tailwindcss: 3.3.1_postcss@8.4.22
+      tailwindcss-patch: link:../../packages/tailwindcss-patch
+      typescript: 4.9.5
+      unplugin-tailwindcss-mangle: link:../../packages/unplugin-tailwindcss-mangle
+      vite: 4.2.2
+
   apps/vite-react:
     specifiers:
       '@types/react': ^18.0.28
@@ -124,6 +145,24 @@ importers:
       tailwindcss: 3.3.1_postcss@8.4.22
       tailwindcss-patch: link:../../packages/tailwindcss-patch
       tslib: 2.5.0
+      typescript: 4.9.5
+      unplugin-tailwindcss-mangle: link:../../packages/unplugin-tailwindcss-mangle
+      vite: 4.2.2
+
+  apps/vite-vanilla:
+    specifiers:
+      autoprefixer: ^10.4.14
+      postcss: ^8.4.21
+      tailwindcss: ^3.3.1
+      tailwindcss-patch: workspace:*
+      typescript: ^4.9.3
+      unplugin-tailwindcss-mangle: workspace:*
+      vite: ^4.2.0
+    devDependencies:
+      autoprefixer: 10.4.14_postcss@8.4.22
+      postcss: 8.4.22
+      tailwindcss: 3.3.1_postcss@8.4.22
+      tailwindcss-patch: link:../../packages/tailwindcss-patch
       typescript: 4.9.5
       unplugin-tailwindcss-mangle: link:../../packages/unplugin-tailwindcss-mangle
       vite: 4.2.2
@@ -2172,6 +2211,16 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
 
+  /@lit-labs/ssr-dom-shim/1.1.0:
+    resolution: {integrity: sha512-92uQ5ARf7UXYrzaFcAX3T2rTvaS9Z1//ukV+DqjACM4c8s0ZBQd7ayJU5Dh2AFLD/Ayuyz4uMmxQec8q3U4Ong==}
+    dev: false
+
+  /@lit/reactive-element/1.6.1:
+    resolution: {integrity: sha512-va15kYZr7KZNNPZdxONGQzpUr+4sxVu7V/VG7a8mRfPPXUyhEYj5RzXCQmGrlP3tAh0L3HHm5AjBMFYRqlM9SA==}
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.1.0
+    dev: false
+
   /@next/env/13.3.0:
     resolution: {integrity: sha512-AjppRV4uG3No7L1plinoTQETH+j2F10TEnrMfzbTUYwze5sBUPveeeBAPZPm8OkJZ1epq9OyYKhZrvbD6/9HCQ==}
     dev: false
@@ -2778,6 +2827,10 @@ packages:
   /@types/stack-utils/2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
     dev: true
+
+  /@types/trusted-types/2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+    dev: false
 
   /@types/webpack-env/1.18.0:
     resolution: {integrity: sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==}
@@ -7734,6 +7787,28 @@ packages:
 
   /lines-and-columns/1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  /lit-element/3.3.1:
+    resolution: {integrity: sha512-Gl+2409uXWbf7n6cCl7Kzasm7zjT9xmdwi2BhLNi70sRKAgRkqueDu5mSIH3hPYMM0/vqBCdPXod3NbGkRA2ww==}
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.1.0
+      '@lit/reactive-element': 1.6.1
+      lit-html: 2.7.2
+    dev: false
+
+  /lit-html/2.7.2:
+    resolution: {integrity: sha512-ZJCfKlA2XELu5tn7XuzOziGFGvf1SeQm+ngLWoJ8bXtSkRrrR3ms6SWy+gsdxeYwySLij5xAhdd2C3EX0ftxdQ==}
+    dependencies:
+      '@types/trusted-types': 2.0.3
+    dev: false
+
+  /lit/2.7.2:
+    resolution: {integrity: sha512-9QnZmG5mIKPRja96cpndMclLSi0Qrz2BXD6EbqNqCKMMjOWVm/BwAeXufFk2jqFsNmY07HOzU8X+8aTSVt3yrA==}
+    dependencies:
+      '@lit/reactive-element': 1.6.1
+      lit-element: 3.3.1
+      lit-html: 2.7.2
+    dev: false
 
   /loader-runner/4.3.0:
     resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}

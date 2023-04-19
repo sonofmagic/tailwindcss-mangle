@@ -2,7 +2,7 @@ import _generate from '@babel/generator'
 import { parse } from '@babel/parser'
 import _traverse from '@babel/traverse'
 
-import type { Node } from '@babel/types'
+import type { Node, StringLiteral, TemplateElement } from '@babel/types'
 import type { TraverseOptions, IHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
 import { splitCode } from './split'
@@ -13,31 +13,41 @@ function getDefaultExportFromNamespaceIfPresent(n: any) {
 const generate = getDefaultExportFromNamespaceIfPresent(_generate) as typeof _generate
 const traverse = getDefaultExportFromNamespaceIfPresent(_traverse) as typeof _traverse
 
-export function jsHandler(rawSource: string, options: IHandlerOptions) {
-  const ast = parse(rawSource)
+export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IHandlerOptions) {
   const set = options.runtimeSet
   const clsGen = options.classGenerator
+  const arr = splitCode(str)
+  let rawStr = str
+  for (let i = 0; i < arr.length; i++) {
+    const v = arr[i]
+    if (set.has(v)) {
+      let ignoreFlag = false
+      if (Array.isArray(node.leadingComments)) {
+        ignoreFlag = node.leadingComments.findIndex((x) => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
+      }
+
+      if (!ignoreFlag) {
+        rawStr = rawStr.replace(new RegExp('(?<="|\\s)' + escapeStringRegexp(v), 'g'), clsGen.generateClassName(v).name)
+      }
+    }
+  }
+  return rawStr
+}
+
+export function jsHandler(rawSource: string, options: IHandlerOptions) {
+  const ast = parse(rawSource)
 
   const topt: TraverseOptions<Node> = {
     StringLiteral: {
       enter(p) {
         const n = p.node
-        const arr = splitCode(n.value)
-        let rawStr = n.value
-        for (let i = 0; i < arr.length; i++) {
-          const v = arr[i]
-          if (set.has(v)) {
-            let ignoreFlag = false
-            if (Array.isArray(n.leadingComments)) {
-              ignoreFlag = n.leadingComments.findIndex((x) => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
-            }
-
-            if (!ignoreFlag) {
-              rawStr = rawStr.replace(new RegExp(escapeStringRegexp(v), 'g'), clsGen.generateClassName(v).name)
-            }
-          }
-        }
-        n.value = rawStr
+        n.value = handleValue(n.value, n, options)
+      }
+    },
+    TemplateElement: {
+      enter(p) {
+        const n = p.node
+        n.value.raw = handleValue(n.value.raw, n, options)
       }
     },
     noScope: true
