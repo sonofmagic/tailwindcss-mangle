@@ -51,6 +51,18 @@ export function getGroupedEntries<T>(
       return 'other'
     }
   })
+  if (!groupedEntries.css) {
+    groupedEntries.css = []
+  }
+  if (!groupedEntries.html) {
+    groupedEntries.html = []
+  }
+  if (!groupedEntries.js) {
+    groupedEntries.js = []
+  }
+  if (!groupedEntries.other) {
+    groupedEntries.other = []
+  }
   return groupedEntries as Record<'css' | 'html' | 'js' | 'other', [string, T][]>
 }
 

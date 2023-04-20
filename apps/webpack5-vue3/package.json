@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "preview": "vite preview",
     "lint": "vue-cli-service lint",
     "prepare": "tw-patch"
   },

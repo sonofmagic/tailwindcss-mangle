@@ -8,7 +8,22 @@ import ClassGenerator from './classGenerator'
 import { htmlHandler } from './html'
 import { jsHandler } from './js'
 import { cssHandler } from './css'
-import type {} from 'webpack'
+import type { sources } from 'webpack'
+import path from 'path'
+
+// const cachedHtmlSource = new Map<string, sources.Source | OutputAsset>()
+// const cachedJsSource = new Map<string, sources.Source | OutputChunk>()
+// const cachedCssSource = new Map<string, sources.Source | OutputAsset>()
+
+const outputCachedMap = new Map<
+  string,
+  {
+    html: Map<string, sources.Source | OutputAsset>
+    js: Map<string, sources.Source | OutputChunk>
+    css: Map<string, sources.Source | OutputAsset>
+  }
+>()
+
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
   const isMangleClass = (className: string) => {
     // ignore className like 'filter','container'
@@ -31,6 +46,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
     return classSet
   }
+
   return {
     name: pluginName,
     enforce: 'post',
@@ -77,6 +93,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
     webpack(compiler) {
       const Compilation = compiler.webpack.Compilation
       const { ConcatSource } = compiler.webpack.sources
+
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         compilation.hooks.processAssets.tap(
           {
@@ -84,14 +101,36 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
           },
           (assets) => {
+            // nextjs webpack build multiple times
+            // server / manifest / client
             // const resolvePath = require.resolve('tailwindcss')
             // console.log(resolvePath)
+            // console.log(compiler.outputPath)
             const runtimeSet = getCachedClassSet()
+            const groupedEntries = getGroupedEntries(Object.entries(assets))
+
             if (!runtimeSet.size) {
+              const css = new Map()
+              const html = new Map()
+              const js = new Map()
+              groupedEntries.css.forEach(([file, source]) => {
+                css.set(file, source)
+              })
+              groupedEntries.html.forEach(([file, source]) => {
+                html.set(file, source)
+              })
+              groupedEntries.js.forEach(([file, source]) => {
+                js.set(file, source)
+              })
+              outputCachedMap.set(compiler.outputPath, {
+                css,
+                html,
+                js
+              })
               return
             }
-            const groupedEntries = getGroupedEntries(Object.entries(assets))
-            if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
+
+            if (groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
                 const html = htmlHandler(asset.source().toString(), {
@@ -102,7 +141,21 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 compilation.updateAsset(file, source)
               }
             }
-            if (Array.isArray(groupedEntries.js) && groupedEntries.js.length) {
+            outputCachedMap.forEach(({ html }, key) => {
+              if (html.size) {
+                html.forEach((asset, file) => {
+                  const html = htmlHandler((asset as sources.Source).source().toString(), {
+                    classGenerator,
+                    runtimeSet
+                  })
+                  const source = new ConcatSource(html)
+                  compilation.emitAsset(path.resolve(key, file), source)
+                })
+                html.clear()
+              }
+            })
+
+            if (groupedEntries.js.length) {
               for (let i = 0; i < groupedEntries.js.length; i++) {
                 const [file, chunk] = groupedEntries.js[i]
                 const code = jsHandler(chunk.source().toString(), {
@@ -114,7 +167,21 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               }
             }
 
-            if (Array.isArray(groupedEntries.css) && groupedEntries.css.length) {
+            outputCachedMap.forEach(({ js }, key) => {
+              if (js.size) {
+                js.forEach((chunk, file) => {
+                  const code = jsHandler((chunk as sources.Source).source().toString(), {
+                    runtimeSet,
+                    classGenerator
+                  }).code
+                  const source = new ConcatSource(code)
+                  compilation.emitAsset(path.resolve(key, file), source)
+                })
+                js.clear()
+              }
+            })
+
+            if (groupedEntries.css.length) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, css] = groupedEntries.css[i]
                 const newCss = cssHandler(css.source().toString(), {
@@ -125,6 +192,20 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 compilation.updateAsset(file, source)
               }
             }
+
+            outputCachedMap.forEach(({ css }, key) => {
+              if (css.size) {
+                css.forEach((style, file) => {
+                  const newCss = cssHandler((style as sources.Source).source().toString(), {
+                    classGenerator,
+                    runtimeSet
+                  })
+                  const source = new ConcatSource(newCss)
+                  compilation.emitAsset(path.resolve(key, file), source)
+                })
+                css.clear()
+              }
+            })
           }
         )
       })
