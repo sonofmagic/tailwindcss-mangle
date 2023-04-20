@@ -93,7 +93,9 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
     webpack(compiler) {
       const Compilation = compiler.webpack.Compilation
       const { ConcatSource } = compiler.webpack.sources
-
+      function getEmitAssetPath(outputPath: string, file: string) {
+        return path.relative(compiler.context, path.resolve(outputPath, file))
+      }
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         compilation.hooks.processAssets.tap(
           {
@@ -122,11 +124,14 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               groupedEntries.js.forEach(([file, source]) => {
                 js.set(file, source)
               })
-              outputCachedMap.set(compiler.outputPath, {
-                css,
-                html,
-                js
-              })
+              if (js.size || css.size || html.size) {
+                outputCachedMap.set(compiler.outputPath, {
+                  css,
+                  html,
+                  js
+                })
+              }
+
               return
             }
 
@@ -149,7 +154,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     runtimeSet
                   })
                   const source = new ConcatSource(html)
-                  compilation.emitAsset(path.resolve(key, file), source)
+                  compilation.emitAsset(getEmitAssetPath(key, file), source)
                 })
                 html.clear()
               }
@@ -175,7 +180,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     classGenerator
                   }).code
                   const source = new ConcatSource(code)
-                  compilation.emitAsset(path.resolve(key, file), source)
+                  compilation.emitAsset(getEmitAssetPath(key, file), source)
                 })
                 js.clear()
               }
@@ -201,7 +206,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     runtimeSet
                   })
                   const source = new ConcatSource(newCss)
-                  compilation.emitAsset(path.resolve(key, file), source)
+                  compilation.emitAsset(getEmitAssetPath(key, file), source)
                 })
                 css.clear()
               }
