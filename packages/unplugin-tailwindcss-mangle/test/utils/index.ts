@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 
 export function getTestCase(caseName: string) {
-  return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf-8')
+  return fs.readFileSync(path.resolve(__dirname, '../fixtures', caseName), 'utf-8')
 }
 // @tailwind base;
 // @tailwind components;
