@@ -5,7 +5,7 @@
 </script>
 
 <main>
-  <div>
+  <div class="flex justify-between">
     <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
       <img src={viteLogo} class="logo" alt="Vite Logo" />
     </a>
@@ -13,7 +13,7 @@
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>Vite + Svelte</h1>
+  <h1 class="text-[40px]">Vite + Svelte</h1>
 
   <div class="card">
     <Counter />
