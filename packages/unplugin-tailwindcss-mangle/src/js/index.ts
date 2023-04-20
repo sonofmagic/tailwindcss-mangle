@@ -13,6 +13,10 @@ function getDefaultExportFromNamespaceIfPresent(n: any) {
 const generate = getDefaultExportFromNamespaceIfPresent(_generate) as typeof _generate
 const traverse = getDefaultExportFromNamespaceIfPresent(_traverse) as typeof _traverse
 
+export function makeRegex(str: string) {
+  return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str), 'g')
+}
+
 export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IHandlerOptions) {
   const set = options.runtimeSet
   const clsGen = options.classGenerator
@@ -27,7 +31,7 @@ export function handleValue(str: string, node: StringLiteral | TemplateElement, 
       }
 
       if (!ignoreFlag) {
-        rawStr = rawStr.replace(new RegExp('(?<="|\\s)' + escapeStringRegexp(v), 'g'), clsGen.generateClassName(v).name)
+        rawStr = rawStr.replace(makeRegex(v), clsGen.generateClassName(v).name)
       }
     }
   }
