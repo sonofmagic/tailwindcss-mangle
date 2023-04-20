@@ -2,7 +2,7 @@
 
 mangle tailwindcss utilities plugin
 
-> Now Support `vite` and `webpack`
+> Now Support `vite` and `webpack`(Experiment!)
 
 - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
   - [Features](#features)

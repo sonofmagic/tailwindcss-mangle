@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`regex z-10 regex 1`] = `
+[
+  [
+    "z-10",
+  ],
+]
+`;

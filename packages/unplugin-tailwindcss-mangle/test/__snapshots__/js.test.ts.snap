@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`js handler common StringLiteral 1`] = `"element.innerHTML = "<div class=\\"tw-a tw-b\\">count is counter</div>";"`;
+
+exports[`js handler common TemplateElement 1`] = `
+"const counter = 0;
+element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`;"
+`;
+
+exports[`js handler z-10 not transform 1`] = `
+"{
+  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
+}"
+`;
