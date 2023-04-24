@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '../src/inspector'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
-const twltsLibPath = path.resolve(tailwindcssCasePath, 'versions/lts/lib')
+const twltsLibPath = path.resolve(tailwindcssCasePath, 'versions/3.3.1/lib')
 
 describe('inspector', () => {
   it('inspectPostcssPlugin patch snap', () => {
