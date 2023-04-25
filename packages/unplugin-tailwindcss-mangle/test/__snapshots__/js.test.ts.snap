@@ -7,6 +7,219 @@ exports[`js handler common TemplateElement 1`] = `
 element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`;"
 `;
 
+exports[`js handler nextjs server side mangle 1`] = `
+""use strict";
+
+(() => {
+  var exports = {};
+  exports.id = 405;
+  exports.ids = [405];
+  exports.modules = {
+    /***/957: /***/(__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export */
+      __webpack_require__.d(__webpack_exports__, {
+        /* harmony export */"default": () => /* binding */Home
+        /* harmony export */
+      });
+      /* harmony import */
+      var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
+      /* harmony import */
+      var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+      /* harmony import */
+      var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(941);
+      /* harmony import */
+      var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__);
+      /* harmony import */
+      var next_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
+      /* harmony import */
+      var next_image__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_image__WEBPACK_IMPORTED_MODULE_1__);
+      function Home() {
+        return /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("main", {
+          className: "flex tw-a tw-b tw-c tw-d tw-e",
+          children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k",
+            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+              className: "fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea",
+              children: ["Get started by editing\\xa0", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("code", {
+                className: "tw-i tw-fa",
+                children: "pages/index.tsx"
+              })]
+            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+              className: "fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa",
+              children: /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                className: "tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va",
+                href: "https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                children: ["By ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
+                  src: "/vercel.svg",
+                  alt: "Vercel Logo",
+                  className: "tw-wa",
+                  width: 100,
+                  height: 24,
+                  priority: true
+                })]
+              })
+            })]
+          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+            className: "relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb",
+            children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
+              className: "relative tw-xb tw-wa",
+              src: "/next.svg",
+              alt: "Next.js Logo",
+              width: 180,
+              height: 37,
+              priority: true
+            })
+          }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "tw-yb grid tw-zb tw-ac tw-bc tw-cc",
+            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
+                children: ["Docs ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
+                })]
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
+                children: "Find in-depth information about Next.js features and API."
+              })]
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
+                children: ["Learn ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
+                })]
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
+                children: "Learn about Next.js in an interactive course with\\xa0quizzes!"
+              })]
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
+                children: ["Templates ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
+                })]
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
+                children: "Discover and deploy boilerplate example Next.js\\xa0projects."
+              })]
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
+                children: ["Deploy ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
+                })]
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
+                children: "Instantly deploy your Next.js site to a shareable URL with Vercel."
+              })]
+            })]
+          })]
+        });
+      }
+
+      /***/
+    },
+
+    /***/918: /***/module => {
+      module.exports = require("next/dist/shared/lib/amp-context.js");
+
+      /***/
+    },
+
+    /***/732: /***/module => {
+      module.exports = require("next/dist/shared/lib/amp-mode.js");
+
+      /***/
+    },
+
+    /***/796: /***/module => {
+      module.exports = require("next/dist/shared/lib/head-manager-context.js");
+
+      /***/
+    },
+
+    /***/486: /***/module => {
+      module.exports = require("next/dist/shared/lib/image-blur-svg.js");
+
+      /***/
+    },
+
+    /***/744: /***/module => {
+      module.exports = require("next/dist/shared/lib/image-config-context.js");
+
+      /***/
+    },
+
+    /***/843: /***/module => {
+      module.exports = require("next/dist/shared/lib/image-config.js");
+
+      /***/
+    },
+
+    /***/552: /***/module => {
+      module.exports = require("next/dist/shared/lib/image-loader");
+
+      /***/
+    },
+
+    /***/470: /***/module => {
+      module.exports = require("next/dist/shared/lib/side-effect.js");
+
+      /***/
+    },
+
+    /***/618: /***/module => {
+      module.exports = require("next/dist/shared/lib/utils/warn-once.js");
+
+      /***/
+    },
+
+    /***/689: /***/module => {
+      module.exports = require("react");
+
+      /***/
+    },
+
+    /***/997: /***/module => {
+      module.exports = require("react/jsx-runtime");
+
+      /***/
+    }
+  };
+
+  ;
+
+  // load runtime
+  var __webpack_require__ = require("../webpack-runtime.js");
+  __webpack_require__.C(exports);
+  var __webpack_exec__ = moduleId => __webpack_require__(__webpack_require__.s = moduleId);
+  var __webpack_exports__ = __webpack_require__.X(0, [463, 262], () => __webpack_exec__(957));
+  module.exports = __webpack_exports__;
+})();"
+`;
+
 exports[`js handler z-10 not transform 1`] = `
 "{
   className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";

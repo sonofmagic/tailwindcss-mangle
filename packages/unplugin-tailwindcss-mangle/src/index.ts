@@ -10,6 +10,7 @@ import { jsHandler } from './js'
 import { cssHandler } from './css'
 import type { sources } from 'webpack'
 import path from 'path'
+import fs from 'fs'
 
 // const cachedHtmlSource = new Map<string, sources.Source | OutputAsset>()
 // const cachedJsSource = new Map<string, sources.Source | OutputChunk>()
@@ -135,6 +136,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               return
             }
 
+            // fs.writeFileSync('./tw-class-set.json', JSON.stringify(Array.from(runtimeSet)), 'utf-8')
+
             if (groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
@@ -175,10 +178,13 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             outputCachedMap.forEach(({ js }, key) => {
               if (js.size) {
                 js.forEach((chunk, file) => {
-                  const code = jsHandler((chunk as sources.Source).source().toString(), {
+                  const rawCode = (chunk as sources.Source).source().toString()
+                  const code = jsHandler(rawCode, {
                     runtimeSet,
                     classGenerator
                   }).code
+                  // fs.writeFileSync(path.basename(file), rawCode)
+                  // fs.writeFileSync(path.basename(file) + '.out', code)
                   const source = new ConcatSource(code)
                   compilation.emitAsset(getEmitAssetPath(key, file), source)
                 })
