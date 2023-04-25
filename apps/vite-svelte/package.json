@@ -17,10 +17,10 @@
     "svelte": "^3.55.1",
     "svelte-check": "^2.10.3",
     "tailwindcss": "^3.3.1",
-    "tailwindcss-patch": "workspace:*",
+    "tailwindcss-patch": "*",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
-    "unplugin-tailwindcss-mangle": "workspace:*",
+    "unplugin-tailwindcss-mangle": "*",
     "vite": "^4.2.0"
   }
 }

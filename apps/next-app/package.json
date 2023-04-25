@@ -24,7 +24,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "tailwindcss-patch": "workspace:*",
-    "unplugin-tailwindcss-mangle": "workspace:*"
+    "tailwindcss-patch": "*",
+    "unplugin-tailwindcss-mangle": "*"
   }
 }

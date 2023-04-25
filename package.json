@@ -14,7 +14,7 @@
     "dev:pkg": "turbo run dev --parallel --filter=./packages/*",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preinstall": "npx only-allow pnpm"
+    "patch": "tw-patch"
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",

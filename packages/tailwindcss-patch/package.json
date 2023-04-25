@@ -20,7 +20,6 @@
     "test": "npm run patch && jest",
     "prepare": "echo prepare",
     "postinstall": "echo postinstall",
-    "preinstall": "npx only-allow pnpm",
     "patch": "ts-node src/cli.ts"
   },
   "keywords": [
