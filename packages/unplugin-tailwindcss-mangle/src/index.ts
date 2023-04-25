@@ -186,6 +186,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                   // fs.writeFileSync(path.basename(file), rawCode)
                   // fs.writeFileSync(path.basename(file) + '.out', code)
                   const source = new ConcatSource(code)
+                  // can not overwrite webpack server side output
                   compilation.emitAsset(getEmitAssetPath(key, file), source)
                 })
                 js.clear()
