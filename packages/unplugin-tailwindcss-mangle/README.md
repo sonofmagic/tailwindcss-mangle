@@ -2,7 +2,7 @@
 
 mangle tailwindcss utilities plugin
 
-> Now Support `vite` and `webpack`(Experiment!)
+> Now Support `vite` and `webpack`
 
 - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
   - [Features](#features)
@@ -15,6 +15,7 @@ mangle tailwindcss utilities plugin
       - [webpack](#webpack)
   - [Options](#options)
     - [classGenerator](#classgenerator)
+    - [include / exclude](#include--exclude)
   - [Notice](#notice)
 
 ## Features
@@ -76,15 +77,23 @@ You will see all class was renamed to `tw-*`
 
 #### webpack
 
-> Experiment, not work right now
-
 ```js
 // esm
 import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
 // or cjs
 const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 // use this webpack plugin
-utwm()
+// for example next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  webpack: (config) => {
+    config.plugins.push(utwm())
+    return config
+  }
+}
+
+module.exports = nextConfig
 ```
 
 ## Options
@@ -104,6 +113,12 @@ export interface IClassGeneratorOptions {
   classPrefix?: string
 }
 ```
+
+### include / exclude
+
+type: glob string
+
+allow you to control the mangle range of bundles.
 
 ## Notice
 

@@ -12,14 +12,14 @@
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
           target="_blank" rel="noopener noreferrer">
           By
-          <img src="./assets/logo.png" alt="Vercel Logo" class="dark:invert" priority />
+          <img src="./assets/vercel.svg" alt="Vercel Logo" class="dark:invert" priority />
         </a>
       </div>
     </div>
 
     <div
       class="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-      <img class="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert" src="./assets/logo.png" alt="Next.js Logo"
+      <img class="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert" src="./assets/next.svg" alt="Next.js Logo"
         priority />
     </div>
 
@@ -70,30 +70,3 @@
     </div>
   </main>
 </template>
-
-<style lang="scss">
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>

@@ -227,6 +227,21 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
 export const vitePlugin = unplugin.vite
 export const webpackPlugin = unplugin.webpack
+
+// export const nuxtPlugin = function (options: Options = {}, nuxt: any) {
+//   // install webpack plugin
+//   nuxt.hook('webpack:config', async (config: any) => {
+//     config.plugins = config.plugins || []
+//     config.plugins.unshift(unplugin.webpack(options))
+//   })
+
+//   // install vite plugin
+//   nuxt.hook('vite:extendConfig', async (config: any) => {
+//     config.plugins = config.plugins || []
+//     config.plugins.push(unplugin.vite(options))
+//   })
+// }
+
 // export default unplugin
 // export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
