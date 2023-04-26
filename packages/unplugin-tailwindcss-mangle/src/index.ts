@@ -1,17 +1,17 @@
 import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 import { pluginName } from './constants'
-import { getClassCacheSet } from 'tailwindcss-patch'
 import { getGroupedEntries } from './utils'
-import { OutputAsset, OutputChunk } from 'rollup'
-import ClassGenerator from './classGenerator'
+import type { OutputAsset, OutputChunk } from 'rollup'
 import { htmlHandler } from './html'
 import { jsHandler } from './js'
 import { cssHandler } from './css'
 import type { sources } from 'webpack'
 import path from 'path'
 import fs from 'fs'
+import { getOptions } from './options'
 
+// cache map
 const outputCachedMap = new Map<
   string,
   {
@@ -22,27 +22,7 @@ const outputCachedMap = new Map<
 >()
 
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  const isMangleClass = (className: string) => {
-    // ignore className like 'filter','container'
-    // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
-    // bg-[#123456] w-1 etc...
-    return /[-:]/.test(className)
-  }
-  let classSet: Set<string>
-  // let cached: boolean
-  const classGenerator = new ClassGenerator(options.classGenerator)
-  function getCachedClassSet() {
-    const set = getClassCacheSet()
-    set.forEach((c) => {
-      if (!isMangleClass(c)) {
-        set.delete(c)
-      }
-    })
-
-    classSet = set
-
-    return classSet
-  }
+  const { classGenerator, getCachedClassSet, isInclude } = getOptions(options)
 
   return {
     name: pluginName,
@@ -58,30 +38,36 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
           if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
             for (let i = 0; i < groupedEntries.html.length; i++) {
-              const [, asset] = groupedEntries.html[i] as [string, OutputAsset]
-              asset.source = htmlHandler(asset.source.toString(), {
-                classGenerator,
-                runtimeSet
-              })
+              const [file, asset] = groupedEntries.html[i] as [string, OutputAsset]
+              if (isInclude(file)) {
+                asset.source = htmlHandler(asset.source.toString(), {
+                  classGenerator,
+                  runtimeSet
+                })
+              }
             }
           }
           if (Array.isArray(groupedEntries.js) && groupedEntries.js.length) {
             for (let i = 0; i < groupedEntries.js.length; i++) {
-              const [, chunk] = groupedEntries.js[i] as [string, OutputChunk]
-              chunk.code = jsHandler(chunk.code, {
-                runtimeSet,
-                classGenerator
-              }).code
+              const [file, chunk] = groupedEntries.js[i] as [string, OutputChunk]
+              if (isInclude(file)) {
+                chunk.code = jsHandler(chunk.code, {
+                  runtimeSet,
+                  classGenerator
+                }).code
+              }
             }
           }
 
           if (Array.isArray(groupedEntries.css) && groupedEntries.css.length) {
             for (let i = 0; i < groupedEntries.css.length; i++) {
-              const [, css] = groupedEntries.css[i] as [string, OutputAsset]
-              css.source = cssHandler(css.source.toString(), {
-                classGenerator,
-                runtimeSet
-              })
+              const [file, css] = groupedEntries.css[i] as [string, OutputAsset]
+              if (isInclude(file)) {
+                css.source = cssHandler(css.source.toString(), {
+                  classGenerator,
+                  runtimeSet
+                })
+              }
             }
           }
         }
@@ -120,7 +106,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             // console.log(compiler.outputPath)
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
-
+            // cache result
             if (!runtimeSet.size) {
               const css = new Map()
               const html = new Map()
@@ -150,75 +136,84 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             if (groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
-                const html = htmlHandler(asset.source().toString(), {
-                  classGenerator,
-                  runtimeSet
-                })
-                const source = new ConcatSource(html)
-                compilation.updateAsset(file, source)
-              }
-            }
-            outputCachedMap.forEach(({ html }, key) => {
-              if (html.size) {
-                html.forEach((asset, file) => {
-                  const html = htmlHandler((asset as sources.Source).source().toString(), {
+                if (isInclude(file)) {
+                  const html = htmlHandler(asset.source().toString(), {
                     classGenerator,
                     runtimeSet
                   })
-                  overwriteServerSideAsset(key, file, html)
-                })
-                html.clear()
+                  const source = new ConcatSource(html)
+                  compilation.updateAsset(file, source)
+                }
               }
-            })
+            }
 
             if (groupedEntries.js.length) {
               for (let i = 0; i < groupedEntries.js.length; i++) {
                 const [file, chunk] = groupedEntries.js[i]
-                const code = jsHandler(chunk.source().toString(), {
-                  runtimeSet,
-                  classGenerator
-                }).code
-                const source = new ConcatSource(code)
-                compilation.updateAsset(file, source)
-              }
-            }
-
-            outputCachedMap.forEach(({ js }, key) => {
-              if (js.size) {
-                js.forEach((chunk, file) => {
-                  const rawCode = (chunk as sources.Source).source().toString()
-                  const code = jsHandler(rawCode, {
+                if (isInclude(file)) {
+                  const code = jsHandler(chunk.source().toString(), {
                     runtimeSet,
                     classGenerator
                   }).code
-
-                  overwriteServerSideAsset(key, file, code)
-                })
-                js.clear()
+                  const source = new ConcatSource(code)
+                  compilation.updateAsset(file, source)
+                }
               }
-            })
+            }
 
             if (groupedEntries.css.length) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, css] = groupedEntries.css[i]
-                const newCss = cssHandler(css.source().toString(), {
-                  classGenerator,
-                  runtimeSet
-                })
-                const source = new ConcatSource(newCss)
-                compilation.updateAsset(file, source)
-              }
-            }
-
-            outputCachedMap.forEach(({ css }, key) => {
-              if (css.size) {
-                css.forEach((style, file) => {
-                  const newCss = cssHandler((style as sources.Source).source().toString(), {
+                if (isInclude(file)) {
+                  const newCss = cssHandler(css.source().toString(), {
                     classGenerator,
                     runtimeSet
                   })
+                  const source = new ConcatSource(newCss)
+                  compilation.updateAsset(file, source)
+                }
+              }
+            }
+            // overwrite ssr server side chunk
+            outputCachedMap.forEach(({ js, html, css }, key) => {
+              if (html.size) {
+                html.forEach((asset, file) => {
+                  if (isInclude(file)) {
+                    const html = htmlHandler((asset as sources.Source).source().toString(), {
+                      classGenerator,
+                      runtimeSet
+                    })
+                    overwriteServerSideAsset(key, file, html)
+                  }
+                })
+                html.clear()
+              }
 
-                  overwriteServerSideAsset(key, file, newCss)
+              if (js.size) {
+                js.forEach((chunk, file) => {
+                  if (isInclude(file)) {
+                    const rawCode = (chunk as sources.Source).source().toString()
+                    const code = jsHandler(rawCode, {
+                      runtimeSet,
+                      classGenerator
+                    }).code
+
+                    overwriteServerSideAsset(key, file, code)
+                  }
+                })
+                js.clear()
+              }
+
+              if (css.size) {
+                css.forEach((style, file) => {
+                  if (isInclude(file)) {
+                    const newCss = cssHandler((style as sources.Source).source().toString(), {
+                      classGenerator,
+                      runtimeSet
+                    })
+
+                    overwriteServerSideAsset(key, file, newCss)
+                  }
                 })
                 css.clear()
               }

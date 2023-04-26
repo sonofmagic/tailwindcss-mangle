@@ -1,5 +1,5 @@
 import type { IClassGeneratorOptions, IClassGenerator } from './types'
-
+import { isMatch } from 'micromatch'
 export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]> {
   if (!Array.isArray(arr)) {
     throw new Error('expected an array for first argument')
@@ -120,4 +120,15 @@ export function escapeStringRegexp(str: string) {
     throw new TypeError('Expected a string')
   }
   return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d')
+}
+
+export function createGlobMatcher(pattern: string | string[] | undefined, fallbackValue: boolean = false) {
+  if (typeof pattern === 'undefined') {
+    return function (file: string) {
+      return fallbackValue
+    }
+  }
+  return function (file: string) {
+    return isMatch(file, pattern)
+  }
 }
