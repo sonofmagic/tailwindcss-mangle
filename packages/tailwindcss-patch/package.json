@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "patch tailwindcss for exposing context",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",

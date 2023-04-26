@@ -5,7 +5,7 @@ describe('patcher', () => {
   it('getInstalledPkgJsonPath common options', () => {
     const pkgJsonPath = getInstalledPkgJsonPath()
     expect(pkgJsonPath).toBeTruthy()
-    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath)).toMatchSnapshot()
+    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath).replace(/\\/g, '/')).toMatchSnapshot()
   })
 
   it('getInstalledPkgJsonPath baseDir options', () => {
