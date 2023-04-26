@@ -6,10 +6,7 @@ export interface IClassGeneratorContextItem {
 }
 
 export interface IClassGeneratorOptions {
-  // classNameRegExp?: string
   reserveClassName?: (string | RegExp)[]
-  // ignorePrefix?: string[]
-  // ignorePrefixRegExp?: string
   customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
   log?: boolean
   exclude?: (string | RegExp)[]
@@ -33,4 +30,6 @@ export interface IHandlerOptions {
 
 export interface Options {
   classGenerator?: IClassGeneratorOptions
+  exclude?: string[]
+  include?: string[]
 }

@@ -1,5 +1,8 @@
 import { jsHandler } from '../src/js/index'
 import ClassGenerator from '../src/classGenerator'
+import { getCss, getTestCase } from './utils'
+// import { getClassCacheSet } from 'tailwindcss-patch'
+
 describe('js handler', () => {
   it('common StringLiteral', () => {
     const classGenerator = new ClassGenerator()
@@ -32,13 +35,25 @@ describe('js handler', () => {
   it('z-10 not transform', () => {
     const classGenerator = new ClassGenerator()
     const runtimeSet = new Set<string>()
-    const arr = 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')
-    for (let i = 0; i < arr.length; i++) {
-      const element = arr[i]
-      runtimeSet.add(element)
-    }
+    'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ').forEach((cls) => {
+      runtimeSet.add(cls)
+    })
 
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('nextjs server side mangle', () => {
+    const classGenerator = new ClassGenerator()
+    const testCase = getTestCase('next-server-page.js')
+    getCss(testCase)
+    const runtimeSet = new Set(require('./fixtures/tw-class-set.json') as string[]) // getClassCacheSet()
+    expect(runtimeSet.size).toBeGreaterThan(0)
+
     const code = jsHandler(testCase, {
       classGenerator,
       runtimeSet

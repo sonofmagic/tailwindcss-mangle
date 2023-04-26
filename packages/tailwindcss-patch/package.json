@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "patch tailwindcss for exposing context",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -35,13 +35,13 @@
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.4",
-    "@types/babel__traverse": "^7.18.3",
+    "@types/babel__traverse": "^7.18.4",
     "@types/resolve": "^1.20.2",
     "@types/semver": "^7.3.13",
     "defu": "^6.1.2",
     "pkg-types": "^1.0.2",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.1"
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2"
   },
   "dependencies": {
     "@babel/generator": "^7.21.4",
@@ -49,7 +49,7 @@
     "@babel/traverse": "^7.21.4",
     "@babel/types": "^7.21.4",
     "resolve": "^1.22.2",
-    "semver": "^7.4.0"
+    "semver": "^7.5.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

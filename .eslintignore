@@ -1,0 +1,2 @@
+packages/unplugin-tailwindcss-mangle/test/fixtures/**/*
+packages/tailwindcss-patch/test/fixtures/**/*

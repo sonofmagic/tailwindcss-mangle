@@ -3,6 +3,6 @@ const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: (config) => {
-    config.plugins.push(utwm)
+    config.plugins.push(utwm())
   }
 })

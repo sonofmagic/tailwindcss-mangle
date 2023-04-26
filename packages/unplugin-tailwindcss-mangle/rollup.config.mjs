@@ -9,6 +9,7 @@ export default createRollupConfig({
     vite: 'src/vite.ts',
     webpack: 'src/webpack.ts'
   },
+  // external: ['tailwindcss'],
   output: [
     {
       ...legacyOutputOptions,
