@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`patcher getInstalledPkgJsonPath baseDir options 1`] = `"node_modules\\tailwindcss\\package.json"`;
+
+exports[`patcher getInstalledPkgJsonPath common options 1`] = `"node_modules\\tailwindcss\\package.json"`;

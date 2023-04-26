@@ -16,15 +16,12 @@ export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
       basedir: options.basedir ?? process.cwd()
     })
 
-    const pkgJson = require(tmpJsonPath) as PackageJson
+    return tmpJsonPath
     // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin
     // only tailwindcss version > 3.0.0
-    if (gte(pkgJson.version!, '3.0.0')) {
-      return tmpJsonPath
-    }
   } catch (error) {
     if ((<Error & { code: string }>error).code === 'MODULE_NOT_FOUND') {
-      console.warn('Can\'t find npm pkg: `tailwindcss`, Please ensure it has been installed!')
+      console.warn("Can't find npm pkg: `tailwindcss`, Please ensure it has been installed!")
     }
   }
 }
@@ -77,8 +74,12 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
+    const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
-    const result = monkeyPatchForExposingContext(twDir, options)
-    return result
+    if (gte(pkgJson.version!, '3.0.0')) {
+      const result = monkeyPatchForExposingContext(twDir, options)
+      return result
+    }
+    // no sth
   }
 }
