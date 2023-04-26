@@ -12,10 +12,6 @@ import type { sources } from 'webpack'
 import path from 'path'
 import fs from 'fs'
 
-// const cachedHtmlSource = new Map<string, sources.Source | OutputAsset>()
-// const cachedJsSource = new Map<string, sources.Source | OutputChunk>()
-// const cachedCssSource = new Map<string, sources.Source | OutputAsset>()
-
 const outputCachedMap = new Map<
   string,
   {
@@ -94,8 +90,21 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
     webpack(compiler) {
       const Compilation = compiler.webpack.Compilation
       const { ConcatSource } = compiler.webpack.sources
-      function getEmitAssetPath(outputPath: string, file: string) {
-        return path.relative(compiler.context, path.resolve(outputPath, file))
+      function getAssetPath(outputPath: string, file: string, abs: boolean = true) {
+        const fn = abs ? path.resolve : path.relative
+        return fn(compiler.context, path.resolve(outputPath, file))
+      }
+
+      function overwriteServerSideAsset(outputPath: string, file: string, data: string) {
+        const abs = getAssetPath(outputPath, file)
+        const rel = getAssetPath(outputPath, file, false)
+        try {
+          fs.writeFileSync(abs, data, 'utf-8')
+          console.log('[tailwindcss-mangle]: ' + rel + ' overwrited successfully')
+        } catch (error) {
+          console.log('[tailwindcss-mangle]: ' + rel + ' overwrited fail!')
+          console.log(error)
+        }
       }
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         compilation.hooks.processAssets.tap(
@@ -156,8 +165,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     classGenerator,
                     runtimeSet
                   })
-                  const source = new ConcatSource(html)
-                  compilation.emitAsset(getEmitAssetPath(key, file), source)
+                  overwriteServerSideAsset(key, file, html)
                 })
                 html.clear()
               }
@@ -183,11 +191,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     runtimeSet,
                     classGenerator
                   }).code
-                  // fs.writeFileSync(path.basename(file), rawCode)
-                  // fs.writeFileSync(path.basename(file) + '.out', code)
-                  const source = new ConcatSource(code)
-                  // can not overwrite webpack server side output
-                  compilation.emitAsset(getEmitAssetPath(key, file), source)
+
+                  overwriteServerSideAsset(key, file, code)
                 })
                 js.clear()
               }
@@ -212,8 +217,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     classGenerator,
                     runtimeSet
                   })
-                  const source = new ConcatSource(newCss)
-                  compilation.emitAsset(getEmitAssetPath(key, file), source)
+
+                  overwriteServerSideAsset(key, file, newCss)
                 })
                 css.clear()
               }
