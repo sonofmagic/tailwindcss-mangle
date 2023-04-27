@@ -26,8 +26,13 @@ export interface IHandlerOptions {
   classGenerator: ClassGenerator
 }
 
+export interface ClassSetOutputOptions {
+  filename: string
+  type: 'all' | 'partial'
+}
 export interface Options {
   classGenerator?: IClassGeneratorOptions
   exclude?: string[]
   include?: string[]
+  classSetOutput?: boolean | ClassSetOutputOptions
 }
