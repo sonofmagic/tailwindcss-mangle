@@ -36,7 +36,7 @@ export function getGroupedEntries<T>(
       return /\.html?$/.test(file)
     },
     jsMatcher(file: string) {
-      return /\.js$/.test(file)
+      return /\.[cm]?js$/.test(file)
     }
   }
 ) {

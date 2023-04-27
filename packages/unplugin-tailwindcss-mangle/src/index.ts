@@ -51,10 +51,13 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             for (let i = 0; i < groupedEntries.js.length; i++) {
               const [file, chunk] = groupedEntries.js[i] as [string, OutputChunk]
               if (isInclude(file)) {
-                chunk.code = jsHandler(chunk.code, {
+                const code = jsHandler(chunk.code, {
                   runtimeSet,
                   classGenerator
                 }).code
+                if (code) {
+                  chunk.code = code
+                }
               }
             }
           }
@@ -155,8 +158,10 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     runtimeSet,
                     classGenerator
                   }).code
-                  const source = new ConcatSource(code)
-                  compilation.updateAsset(file, source)
+                  if (code) {
+                    const source = new ConcatSource(code)
+                    compilation.updateAsset(file, source)
+                  }
                 }
               }
             }
@@ -197,8 +202,9 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                       runtimeSet,
                       classGenerator
                     }).code
-
-                    overwriteServerSideAsset(key, file, code)
+                    if (code) {
+                      overwriteServerSideAsset(key, file, code)
+                    }
                   }
                 })
                 js.clear()
@@ -228,26 +234,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 export const vitePlugin = unplugin.vite
 export const webpackPlugin = unplugin.webpack
 
-// export const nuxtPlugin = function (options: Options = {}, nuxt: any) {
-//   // install webpack plugin
-//   nuxt.hook('webpack:config', async (config: any) => {
-//     config.plugins = config.plugins || []
-//     config.plugins.unshift(unplugin.webpack(options))
-//   })
-
-//   // install vite plugin
-//   nuxt.hook('vite:extendConfig', async (config: any) => {
-//     config.plugins = config.plugins || []
-//     config.plugins.push(unplugin.vite(options))
-//   })
-// }
-
 // export default unplugin
-// export const vitePlugin = unplugin.vite
-// export const rollupPlugin = unplugin.rollup
-// export const webpackPlugin = unplugin.webpack
-// export const rspackPlugin = unplugin.rspack
-// export const esbuildPlugin = unplugin.esbuild
 // export const vitePlugin = unplugin.vite
 // export const rollupPlugin = unplugin.rollup
 // export const webpackPlugin = unplugin.webpack
