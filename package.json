@@ -12,6 +12,7 @@
     "build:app": "turbo run build --filter=./apps/*",
     "dev": "turbo run dev --parallel",
     "dev:pkg": "turbo run dev --parallel --filter=./packages/*",
+    "test": "turbo run test --filter=./packages/*",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm"
