@@ -1,17 +1,8 @@
-import _generate from '@babel/generator'
-import { parse } from '@babel/parser'
-import _traverse from '@babel/traverse'
-
-import type { Node, StringLiteral, TemplateElement } from '@babel/types'
-import type { TraverseOptions, IHandlerOptions } from '../types'
+import type { StringLiteral, TemplateElement } from '@babel/types'
+import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
+import type { IHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
 import { splitCode } from './split'
-
-function getDefaultExportFromNamespaceIfPresent(n: any) {
-  return n && Object.prototype.hasOwnProperty.call(n, 'default') ? n.default : n
-}
-const generate = getDefaultExportFromNamespaceIfPresent(_generate) as typeof _generate
-const traverse = getDefaultExportFromNamespaceIfPresent(_traverse) as typeof _traverse
 
 export function makeRegex(str: string) {
   return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str), 'g')
@@ -39,25 +30,33 @@ export function handleValue(str: string, node: StringLiteral | TemplateElement, 
 }
 
 export function jsHandler(rawSource: string, options: IHandlerOptions) {
-  const ast = parse(rawSource)
-
-  const topt: TraverseOptions<Node> = {
-    StringLiteral: {
-      enter(p) {
-        const n = p.node
-        n.value = handleValue(n.value, n, options)
+  const result = transformSync(rawSource, {
+    babelrc: false,
+    ast: true,
+    plugins: [
+      () => {
+        return {
+          visitor: {
+            StringLiteral: {
+              enter(p: NodePath<StringLiteral>) {
+                const n = p.node
+                n.value = handleValue(n.value, n, options)
+              }
+            },
+            TemplateElement: {
+              enter(p: NodePath<TemplateElement>) {
+                const n = p.node
+                n.value.raw = handleValue(n.value.raw, n, options)
+              }
+            }
+            // noScope: true
+          }
+        }
       }
-    },
-    TemplateElement: {
-      enter(p) {
-        const n = p.node
-        n.value.raw = handleValue(n.value.raw, n, options)
-      }
-    },
-    noScope: true
-  }
+    ],
+    sourceMaps: false,
+    configFile: false
+  })
 
-  traverse(ast, topt)
-
-  return generate(ast)
+  return result as BabelFileResult
 }

@@ -21,8 +21,6 @@ export interface IClassGenerator {
   context: Record<string, any>
 }
 
-export type { TraverseOptions } from '@babel/traverse'
-
 export interface IHandlerOptions {
   runtimeSet: Set<string>
   classGenerator: ClassGenerator

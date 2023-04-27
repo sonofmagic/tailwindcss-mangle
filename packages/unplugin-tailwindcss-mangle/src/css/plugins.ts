@@ -20,13 +20,29 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
     postcssPlugin,
     Rule(rule, helper) {
       rule.selector = parser((selectors) => {
-        selectors.walk((s) => {
+        selectors.walkClasses((s) => {
           if (s.value) {
             const hit = newClassMap[s.value]
             if (hit) {
               // console.log(s.value, hit.name)
               s.value = hit.name
             }
+            // for vue scoped gap-y-4[data-v-0f84999b]
+            // const idx = s.value.indexOf('[data-v-')
+            // const isVueScoped = idx > -1
+            // if (isVueScoped) {
+            //   const prefixCls = s.value.substring(0, idx)
+            //   const hit = newClassMap[prefixCls]
+            //   if (hit) {
+            //     s.value = hit.name + s.value.substring(idx)
+            //   }
+            // } else {
+            //   const hit = newClassMap[s.value]
+            //   if (hit) {
+            //     // console.log(s.value, hit.name)
+            //     s.value = hit.name
+            //   }
+            // }
           }
         })
       }).processSync(rule.selector)

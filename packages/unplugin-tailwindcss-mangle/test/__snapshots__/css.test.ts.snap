@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`css vue scoped .gap-y-4[data-v-0f84999b] 1`] = `
+"@media (min-width: 768px) {
+      .tw-a[data-v-0f84999b] {
+      }
+    }"
+`;

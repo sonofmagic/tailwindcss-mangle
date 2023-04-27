@@ -1,5 +1,6 @@
 import type { IClassGeneratorOptions, IClassGenerator } from './types'
-import { isMatch } from 'micromatch'
+import micromatch from 'micromatch'
+const { isMatch } = micromatch
 export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]> {
   if (!Array.isArray(arr)) {
     throw new Error('expected an array for first argument')
@@ -35,7 +36,7 @@ export function getGroupedEntries<T>(
       return /\.html?$/.test(file)
     },
     jsMatcher(file: string) {
-      return /\.js$/.test(file)
+      return /\.[cm]?js$/.test(file)
     }
   }
 ) {
