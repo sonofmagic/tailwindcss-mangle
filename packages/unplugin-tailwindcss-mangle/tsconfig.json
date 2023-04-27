@@ -1,7 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
     "outDir": "dist",
+    "moduleResolution":"nodenext",
     "declarationDir": "dist",
     "baseUrl": ".",
     "paths": {

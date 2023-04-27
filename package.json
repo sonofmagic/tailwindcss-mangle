@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",
-    "@icebreakers/rollup": "^0.3.0",
+    "@icebreakers/rollup": "^0.4.0",
     "@icebreakers/tsconfig": "^0.0.6",
     "@tsconfig/recommended": "^1.0.2",
     "@types/jest": "^29.5.1",

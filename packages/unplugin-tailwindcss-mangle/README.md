@@ -116,9 +116,11 @@ export interface IClassGeneratorOptions {
 
 ### include / exclude
 
-type: glob string
+Type: `string | string[]`  
 
-allow you to control the mangle range of bundles.
+Default: `undefined`
+
+`glob string` allow you to control the mangle range of bundles.
 
 ## Notice
 

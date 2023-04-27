@@ -69,9 +69,7 @@
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/generator": "^7.21.4",
-    "@babel/parser": "^7.21.4",
-    "@babel/traverse": "^7.21.4",
+    "@babel/core": "^7.21.4",
     "@babel/types": "^7.21.4",
     "micromatch": "^4.0.5",
     "parse5": "^7.1.2",
@@ -87,16 +85,15 @@
   },
   "devDependencies": {
     "@parse5/tools": "^0.1.0",
-    "@types/babel__generator": "^7.6.4",
-    "@types/babel__traverse": "^7.18.4",
+    "@types/babel__core": "^7.20.0",
     "@types/escodegen": "^0.0.7",
     "@types/micromatch": "^4.0.2",
     "@types/semver": "^7.3.13",
     "pkg-types": "^1.0.2",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.5.0",
-    "vite": "^4.3.2",
-    "webpack": "^5.80.0"
+    "vite": "^4.3.3",
+    "webpack": "^5.81.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {
