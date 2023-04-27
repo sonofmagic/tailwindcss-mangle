@@ -52,8 +52,7 @@
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
     "test": "jest",
-    "preinstall": "npx only-allow pnpm",
-    "prepare": "tw-patch"
+    "_prepare": "tw-patch"
   },
   "files": [
     "dist"
