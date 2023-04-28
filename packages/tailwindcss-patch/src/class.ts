@@ -1,42 +1,44 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions, PatchOptions, InternalCacheOptions } from './type'
+import type { CacheOptions, PatchOptions, InternalCacheOptions, InternalPatchOptions } from './type'
 import { writeCache, readCache } from './cache'
-import { createPatch } from './patcher'
+import { createPatch, getPatchOptions } from './patcher'
 
 export interface TailwindcssPatcherOptions {
   cache?: CacheOptions
   patch?: PatchOptions
 }
-
+export function getCacheOptions(options?: CacheOptions) {
+  let cache: InternalCacheOptions
+  switch (typeof options) {
+    case 'undefined': {
+      cache = {
+        enable: false
+      }
+      break
+    }
+    case 'boolean': {
+      cache = {
+        enable: options
+      }
+      break
+    }
+    case 'object': {
+      cache = { ...options, enable: true }
+      break
+    }
+  }
+  return cache
+}
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
-  public patchOptions?: PatchOptions
+  public patchOptions: InternalPatchOptions
   public patch: () => void
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
-    let cache: InternalCacheOptions
-    switch (typeof options.cache) {
-      case 'undefined': {
-        cache = {
-          enable: false
-        }
-        break
-      }
-      case 'boolean': {
-        cache = {
-          enable: options.cache
-        }
-        break
-      }
-      case 'object': {
-        cache = { ...options.cache, enable: true }
-        break
-      }
-    }
-    this.cacheOptions = cache
-    this.patchOptions = options.patch
-    this.patch = createPatch(options.patch)
+    this.cacheOptions = getCacheOptions(options.cache)
+    this.patchOptions = getPatchOptions(options.patch)
+    this.patch = createPatch(this.patchOptions)
   }
 
   getPkgEntry(basedir?: string) {

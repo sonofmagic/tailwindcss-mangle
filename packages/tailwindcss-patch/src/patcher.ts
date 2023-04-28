@@ -26,14 +26,17 @@ export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   }
 }
 
-export function createPatch(options: PatchOptions = {}) {
-  const opt = defu(
+export function getPatchOptions(options: PatchOptions = {}) {
+  return defu(
     options,
     {
       basedir: process.cwd()
     },
     defaultOptions
   ) as InternalPatchOptions
+}
+
+export function createPatch(opt: InternalPatchOptions) {
   return () => {
     try {
       const pkgJsonPath = getInstalledPkgJsonPath(opt)
