@@ -12,7 +12,6 @@ export interface PatchOptions {
   paths?: string[]
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
-  cache?: boolean | CacheOptions
 }
 
 export interface InternalPatchOptions {
@@ -20,5 +19,4 @@ export interface InternalPatchOptions {
   paths?: string[]
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
-  cache?: CacheOptions
 }

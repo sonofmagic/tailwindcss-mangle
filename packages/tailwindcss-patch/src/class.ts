@@ -1,14 +1,17 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions } from './type'
+import type { InternalCacheOptions, PatchOptions } from './type'
 import { writeCache, readCache } from './cache'
+import { createPatch } from './patcher'
 
 export interface TailwindcssPatcherOptions {
   cache?: InternalCacheOptions
+  patch?: PatchOptions
 }
 
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cache: InternalCacheOptions
+  public patch: Function
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
     let cache: InternalCacheOptions
@@ -31,6 +34,7 @@ export class TailwindcssPatcher {
       }
     }
     this.cache = cache
+    this.patch = createPatch(options.patch)
   }
 
   getPkgEntry(basedir?: string) {
