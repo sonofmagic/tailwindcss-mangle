@@ -15,7 +15,8 @@
     "test": "turbo run test --filter=./packages/*",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle"
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",
