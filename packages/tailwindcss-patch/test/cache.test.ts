@@ -19,14 +19,15 @@ describe('cache', () => {
 
   it('write and read cache default option', () => {
     // const opt = getCacheOptions()
-    let cache: Set<string> | undefined
-    cache = readCache()
-    // expect(cache).toBe(undefined)
-    writeCache(new Set(['a', 'b', 'c']), {
+    const opt = {
       dir: path.resolve(__dirname, 'fixtures/cache'),
       file: 'raw-method.json'
-    })
-    cache = readCache()
+    }
+    let cache: Set<string> | undefined
+    cache = readCache(opt)
+    // expect(cache).toBe(undefined)
+    writeCache(new Set(['a', 'b', 'c']), opt)
+    cache = readCache(opt)
     expect(cache).toBeDefined()
     if (cache) {
       expect(cache.size).toBe(3)
