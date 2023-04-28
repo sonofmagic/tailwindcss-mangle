@@ -4,7 +4,8 @@ module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: (config) => {
     config.plugins.push(utwm({
-      classSetOutput: true
+      classSetOutput: true,
+      classMapOutput: true
     }))
   }
 })

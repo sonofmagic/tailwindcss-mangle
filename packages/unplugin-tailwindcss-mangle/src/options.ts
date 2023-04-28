@@ -1,22 +1,7 @@
-import type { Options, ClassSetOutputOptions } from './types'
+import type { Options, ClassSetOutputOptions, ClassMapOutputOptions } from './types'
 import { getClassCacheSet } from 'tailwindcss-patch'
 import ClassGenerator from './classGenerator'
-import { createGlobMatcher } from './utils'
-import fs from 'fs'
-import path from 'path'
-import { pluginName } from './constants'
-
-export function mkCacheDirectory(cwd = process.cwd()) {
-  const cacheDirectory = path.resolve(cwd, 'node_modules', '.cache', pluginName)
-
-  const exists = fs.existsSync(cacheDirectory)
-  if (!exists) {
-    fs.mkdirSync(cacheDirectory, {
-      recursive: true
-    })
-  }
-  return cacheDirectory
-}
+import { createGlobMatcher, isMangleClass, cacheDump } from './utils'
 
 export function getOptions(options: Options | undefined = {}) {
   const includeMatcher = createGlobMatcher(options.include, true)
@@ -26,40 +11,39 @@ export function getOptions(options: Options | undefined = {}) {
     return includeMatcher(file) && !excludeMatcher(file)
   }
 
-  const isMangleClass = (className: string) => {
-    // ignore className like 'filter','container'
-    // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
-    // bg-[#123456] w-1 etc...
-    return /[-:]/.test(className)
-  }
   let classSet: Set<string>
 
   const classSetOutputOptions: ClassSetOutputOptions = {
-    filename: path.resolve(process.cwd(), 'node_modules', '.cache', pluginName, 'classSet.json'),
+    filename: 'classSet.json',
     type: 'partial'
   }
+
+  const classMapOutputOptions: ClassMapOutputOptions = {
+    filename: 'classMap.json'
+  }
+
   if (typeof options.classSetOutput === 'object') {
     Object.assign(classSetOutputOptions, options.classSetOutput)
   }
-
-  function writeClassSetJson(set: Set<string>) {
-    mkCacheDirectory()
-    fs.writeFileSync(classSetOutputOptions.filename, JSON.stringify(Array.from(set), null, 2), 'utf-8')
+  if (typeof options.classMapOutput === 'object') {
+    Object.assign(classMapOutputOptions, options.classMapOutput)
   }
+
   // let cached: boolean
   const classGenerator = new ClassGenerator(options.classGenerator)
   function getCachedClassSet() {
     const set = getClassCacheSet()
-    if (set.size && options.classSetOutput && classSetOutputOptions.type === 'all') {
-      writeClassSetJson(set)
+    const isOutput = set.size && options.classSetOutput
+    if (isOutput && classSetOutputOptions.type === 'all') {
+      cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
     }
     set.forEach((c) => {
       if (!isMangleClass(c)) {
         set.delete(c)
       }
     })
-    if (set.size && options.classSetOutput && classSetOutputOptions.type === 'partial') {
-      writeClassSetJson(set)
+    if (isOutput && classSetOutputOptions.type === 'partial') {
+      cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
     }
 
     classSet = set
@@ -72,6 +56,8 @@ export function getOptions(options: Options | undefined = {}) {
     classGenerator,
     includeMatcher,
     excludeMatcher,
-    isInclude
+    isInclude,
+    classSetOutputOptions,
+    classMapOutputOptions
   }
 }

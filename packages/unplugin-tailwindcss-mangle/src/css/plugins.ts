@@ -24,25 +24,18 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
           if (s.value) {
             const hit = newClassMap[s.value]
             if (hit) {
-              // console.log(s.value, hit.name)
+              // vue scoped
+              if (s.parent) {
+                const idx = s.parent.nodes.indexOf(s)
+                if (idx > -1) {
+                  const nextNode = s.parent.nodes[idx + 1]
+                  if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.indexOf('data-v-') > -1) {
+                    return
+                  }
+                }
+              }
               s.value = hit.name
             }
-            // for vue scoped gap-y-4[data-v-0f84999b]
-            // const idx = s.value.indexOf('[data-v-')
-            // const isVueScoped = idx > -1
-            // if (isVueScoped) {
-            //   const prefixCls = s.value.substring(0, idx)
-            //   const hit = newClassMap[prefixCls]
-            //   if (hit) {
-            //     s.value = hit.name + s.value.substring(idx)
-            //   }
-            // } else {
-            //   const hit = newClassMap[s.value]
-            //   if (hit) {
-            //     // console.log(s.value, hit.name)
-            //     s.value = hit.name
-            //   }
-            // }
           }
         })
       }).processSync(rule.selector)

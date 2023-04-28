@@ -12,9 +12,8 @@ export default defineNuxtConfig({
     [
       nuxtPlugin,
       {
-        classSetOutput: {
-          type: 'all'
-        }
+        classSetOutput: true,
+        classMapOutput: true
       }
     ]
   ]

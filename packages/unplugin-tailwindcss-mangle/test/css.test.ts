@@ -6,6 +6,22 @@ describe('css', () => {
   beforeEach(() => {
     classGenerator = new ClassGenerator()
   })
+
+  it('vue scoped .gap-y-4', () => {
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('gap-y-4')
+    classGenerator.generateClassName('gap-y-4')
+    const testCase = `@media (min-width: 768px) {
+      .gap-y-4 {
+      }
+    }`
+
+    const css = cssHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    })
+    expect(css).toMatchSnapshot()
+  })
   it('vue scoped .gap-y-4[data-v-0f84999b]', () => {
     const runtimeSet = new Set<string>()
     runtimeSet.add('gap-y-4')

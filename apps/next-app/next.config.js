@@ -5,7 +5,10 @@ const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
-    config.plugins.push(utwm())
+    config.plugins.push(utwm({
+      classSetOutput: true,
+      classMapOutput: true
+    }))
     return config
   }
 }

@@ -1,6 +1,18 @@
 import type { IClassGeneratorOptions, IClassGenerator } from './types'
 import micromatch from 'micromatch'
+import fs from 'fs'
+import path from 'path'
+
+import { pluginName } from './constants'
 const { isMatch } = micromatch
+
+export const isMangleClass = (className: string) => {
+  // ignore className like 'filter','container'
+  // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
+  // bg-[#123456] w-1 etc...
+  return /[-:]/.test(className)
+}
+
 export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]> {
   if (!Array.isArray(arr)) {
     throw new Error('expected an array for first argument')
@@ -131,5 +143,30 @@ export function createGlobMatcher(pattern: string | string[] | undefined, fallba
   }
   return function (file: string) {
     return isMatch(file, pattern)
+  }
+}
+
+export function getCacheDir(basedir = process.cwd()) {
+  return path.resolve(basedir, 'node_modules/.cache', pluginName)
+}
+
+export function mkCacheDirectory(cwd = process.cwd()) {
+  const cacheDirectory = getCacheDir(cwd)
+
+  const exists = fs.existsSync(cacheDirectory)
+  if (!exists) {
+    fs.mkdirSync(cacheDirectory, {
+      recursive: true
+    })
+  }
+  return cacheDirectory
+}
+
+export function cacheDump(filename: string, data: any[] | Set<any>, basedir?: string) {
+  try {
+    const dir = mkCacheDirectory(basedir)
+    fs.writeFileSync(path.resolve(dir, filename), JSON.stringify(Array.from(data), null, 2), 'utf-8')
+  } catch (error) {
+    console.log(error)
   }
 }

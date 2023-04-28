@@ -28,11 +28,18 @@ export interface IHandlerOptions {
 
 export interface ClassSetOutputOptions {
   filename: string
+  dir?: string
   type: 'all' | 'partial'
+}
+
+export interface ClassMapOutputOptions {
+  filename: string
+  dir?: string
 }
 export interface Options {
   classGenerator?: IClassGeneratorOptions
   exclude?: string[]
   include?: string[]
   classSetOutput?: boolean | ClassSetOutputOptions
+  classMapOutput?: boolean | ClassMapOutputOptions
 }
