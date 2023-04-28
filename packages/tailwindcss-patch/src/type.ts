@@ -20,3 +20,8 @@ export interface InternalPatchOptions {
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
 }
+
+export interface TailwindcssPatcherOptions {
+  cache?: CacheOptions | boolean
+  patch?: PatchOptions
+}

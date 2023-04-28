@@ -1,13 +1,9 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions, PatchOptions, InternalCacheOptions, InternalPatchOptions } from './type'
+import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions } from './type'
 import { writeCache, readCache } from './cache'
 import { createPatch, getPatchOptions } from './patcher'
 
-export interface TailwindcssPatcherOptions {
-  cache?: CacheOptions
-  patch?: PatchOptions
-}
-export function getCacheOptions(options?: CacheOptions) {
+export function getCacheOptions(options?: CacheOptions | boolean) {
   let cache: InternalCacheOptions
   switch (typeof options) {
     case 'undefined': {
