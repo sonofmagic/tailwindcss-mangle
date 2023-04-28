@@ -10,8 +10,9 @@ export interface TailwindcssPatcherOptions {
 
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
-  public cache: InternalCacheOptions
-  public patch: Function
+  public cacheOptions: InternalCacheOptions
+  public patchOptions?: PatchOptions
+  public patch: () => void
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
     let cache: InternalCacheOptions
@@ -33,7 +34,8 @@ export class TailwindcssPatcher {
         break
       }
     }
-    this.cache = cache
+    this.cacheOptions = cache
+    this.patchOptions = options.patch
     this.patch = createPatch(options.patch)
   }
 
@@ -42,14 +44,14 @@ export class TailwindcssPatcher {
   }
 
   setCache(set: Set<string>) {
-    if (this.cache.enable) {
-      return writeCache(set, this.cache)
+    if (this.cacheOptions.enable) {
+      return writeCache(set, this.cacheOptions)
     }
   }
 
   getCache() {
     // if(this.cache.enable){
-    return readCache(this.cache)
+    return readCache(this.cacheOptions)
     // }
   }
 

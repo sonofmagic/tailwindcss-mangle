@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { pkgName } from './constants'
 import type { CacheOptions } from './type'
-
+import { log } from './logger'
 export function mkCacheDirectory(cacheDirectory: string) {
   const exists = fs.existsSync(cacheDirectory)
   if (!exists) {
@@ -15,7 +15,7 @@ export function mkCacheDirectory(cacheDirectory: string) {
 
 export function getCacheOptions(options: CacheOptions = {}): Required<CacheOptions> & { filename: string } {
   const cwd = options.cwd ?? process.cwd()
-  const dir = options.dir ?? path.resolve(cwd, 'node_modules', '.cache', pkgName)
+  const dir = options.dir ?? path.resolve(cwd, 'node_modules/.cache', pkgName)
   const file = options.file ?? 'index.json'
   const filename = path.resolve(dir, file)
   return {
@@ -33,7 +33,7 @@ export function writeCache(data: Set<string>, options: CacheOptions = {}) {
     fs.writeFileSync(filename, JSON.stringify(Array.from(data), null, 2), 'utf-8')
     return filename
   } catch (error) {
-    console.log(error)
+    log('write cache file fail!')
   }
 }
 
@@ -45,11 +45,11 @@ export function readCache(options: CacheOptions = {}) {
       return new Set<string>(JSON.parse(data))
     }
   } catch (error) {
-    console.log(error)
+    log('parse cache content fail! path:' + filename)
     try {
       fs.unlinkSync(filename)
     } catch (error) {
-      console.log(error)
+      log('delete cache file fail! path:' + filename)
     }
   }
 }

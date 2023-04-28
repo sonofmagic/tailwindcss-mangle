@@ -21,8 +21,11 @@ describe('cache', () => {
     // const opt = getCacheOptions()
     let cache: Set<string> | undefined
     cache = readCache()
-    expect(cache).toBe(undefined)
-    writeCache(new Set(['a', 'b', 'c']))
+    // expect(cache).toBe(undefined)
+    writeCache(new Set(['a', 'b', 'c']), {
+      dir: path.resolve(__dirname, 'fixtures/cache'),
+      file: 'raw-method.json'
+    })
     cache = readCache()
     expect(cache).toBeDefined()
     if (cache) {

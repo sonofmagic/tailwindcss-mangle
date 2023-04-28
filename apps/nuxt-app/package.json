@@ -10,7 +10,7 @@
     "prepare": "tw-patch"
   },
   "devDependencies": {
-    "@types/node": "^18",
+    "@types/node": "^18.16.2",
     "autoprefixer": "^10.4.14",
     "nuxt": "^3.4.2",
     "postcss": "^8.4.23",
