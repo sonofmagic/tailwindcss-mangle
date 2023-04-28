@@ -1,7 +1,6 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions } from './type'
-
-type InternalCacheOptions = CacheOptions & { enable: boolean }
+import type { InternalCacheOptions } from './type'
+import { writeCache, readCache } from './cache'
 
 export interface TailwindcssPatcherOptions {
   cache?: InternalCacheOptions
@@ -28,7 +27,6 @@ export class TailwindcssPatcher {
       }
       case 'object': {
         cache = { ...options.cache, enable: true }
-
         break
       }
     }
@@ -39,8 +37,21 @@ export class TailwindcssPatcher {
     return getTailwindcssEntry(basedir)
   }
 
+  setCache(set: Set<string>) {
+    if (this.cache.enable) {
+      return writeCache(set, this.cache)
+    }
+  }
+
+  getCache() {
+    // if(this.cache.enable){
+    return readCache(this.cache)
+    // }
+  }
+
   getClassSet(basedir?: string) {
     const set = getClassCacheSet(basedir)
+    set.size && this.setCache(set)
     return set
   }
 

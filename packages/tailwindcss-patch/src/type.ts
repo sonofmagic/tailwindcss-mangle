@@ -5,6 +5,8 @@ export interface CacheOptions {
   file?: string
 }
 
+export type InternalCacheOptions = CacheOptions & { enable: boolean }
+
 export interface PatchOptions {
   overwrite?: boolean
   paths?: string[]
