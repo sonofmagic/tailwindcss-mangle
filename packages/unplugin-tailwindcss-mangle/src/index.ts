@@ -1,7 +1,7 @@
 import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 import { pluginName } from './constants'
-import { getGroupedEntries } from './utils'
+import { getGroupedEntries, cacheDump } from './utils'
 import type { OutputAsset, OutputChunk } from 'rollup'
 import { htmlHandler } from './html'
 import { jsHandler } from './js'
@@ -22,7 +22,7 @@ const outputCachedMap = new Map<
 >()
 
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  const { classGenerator, getCachedClassSet, isInclude } = getOptions(options)
+  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions } = getOptions(options)
 
   return {
     name: pluginName,
@@ -227,6 +227,18 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           }
         )
       })
+    },
+    writeBundle() {
+      const entries = Object.entries(classGenerator.newClassMap)
+      if (entries.length && classMapOutputOptions) {
+        cacheDump(
+          classMapOutputOptions.filename,
+          entries.map((x) => {
+            return [x[0], x[1].name]
+          }),
+          classMapOutputOptions.dir
+        )
+      }
     }
   }
 })

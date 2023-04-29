@@ -26,11 +26,20 @@ export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   }
 }
 
-export function createPatch(options: PatchOptions = {}) {
-  const opt = defu(options, defaultOptions) as InternalPatchOptions
+export function getPatchOptions(options: PatchOptions = {}) {
+  return defu(
+    options,
+    {
+      basedir: process.cwd()
+    },
+    defaultOptions
+  ) as InternalPatchOptions
+}
+
+export function createPatch(opt: InternalPatchOptions) {
   return () => {
     try {
-      const pkgJsonPath = getInstalledPkgJsonPath(options)
+      const pkgJsonPath = getInstalledPkgJsonPath(opt)
       return internalPatch(pkgJsonPath, opt)
     } catch (error) {
       console.warn(`patch tailwindcss failed:` + (<Error>error).message)

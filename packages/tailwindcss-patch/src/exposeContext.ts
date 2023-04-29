@@ -26,23 +26,23 @@ export function getContexts(basedir?: string) {
   return []
 }
 
-export function getClassCaches(): Map<
+export function getClassCaches(basedir?: string): Map<
   string,
   (
     | {
-      layer: string
-      options: Record<string, any>
-      sort: Record<string, any>
-    }
+        layer: string
+        options: Record<string, any>
+        sort: Record<string, any>
+      }
     | Rule
   )[]
 >[] {
-  const contexts = getContexts()
+  const contexts = getContexts(basedir)
   return (contexts as any[]).map((x) => x.classCache)
 }
 
-export function getClassCacheSet(): Set<string> {
-  const classCaches = getClassCaches()
+export function getClassCacheSet(basedir?: string): Set<string> {
+  const classCaches = getClassCaches(basedir)
   const classSet = new Set<string>()
   for (let i = 0; i < classCaches.length; i++) {
     const classCacheMap = classCaches[i]

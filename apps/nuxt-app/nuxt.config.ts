@@ -8,5 +8,13 @@ export default defineNuxtConfig({
       autoprefixer: {}
     }
   },
-  modules: [nuxtPlugin]
+  modules: [
+    [
+      nuxtPlugin,
+      {
+        classSetOutput: true,
+        classMapOutput: true
+      }
+    ]
+  ]
 })

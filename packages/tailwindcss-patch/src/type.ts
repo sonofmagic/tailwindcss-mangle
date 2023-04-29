@@ -1,7 +1,16 @@
+export interface CacheOptions {
+  // enable?: boolean
+  dir?: string
+  cwd?: string
+  file?: string
+}
+
+export type InternalCacheOptions = CacheOptions & { enable?: boolean }
+
 export interface PatchOptions {
   overwrite?: boolean
   paths?: string[]
-  basedir?: string,
+  basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
 }
 
@@ -10,4 +19,9 @@ export interface InternalPatchOptions {
   paths?: string[]
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
+}
+
+export interface TailwindcssPatcherOptions {
+  cache?: CacheOptions | boolean
+  patch?: PatchOptions
 }

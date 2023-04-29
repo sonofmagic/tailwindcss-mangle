@@ -15,7 +15,8 @@
     "test": "turbo run test --filter=./packages/*",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle"
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",
@@ -23,7 +24,7 @@
     "@icebreakers/tsconfig": "^0.0.6",
     "@tsconfig/recommended": "^1.0.2",
     "@types/jest": "^29.5.1",
-    "@types/node": "^18.16.1",
+    "@types/node": "^18.16.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.39.0",
     "jest": "^29.5.0",
