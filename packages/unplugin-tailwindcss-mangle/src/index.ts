@@ -103,10 +103,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           },
           (assets) => {
             // nextjs webpack build multiple times
-            // server / manifest / client
-            // const resolvePath = require.resolve('tailwindcss')
-            // console.log(resolvePath)
-            // console.log(compiler.outputPath)
+            // server -> manifest -> client
+
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
             // cache result
@@ -133,8 +131,6 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
               return
             }
-
-            // fs.writeFileSync('./tw-class-set.json', JSON.stringify(Array.from(runtimeSet)), 'utf-8')
 
             if (groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
