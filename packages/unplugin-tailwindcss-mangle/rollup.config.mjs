@@ -8,7 +8,8 @@ export default createRollupConfig({
     rollup: 'src/rollup.ts',
     vite: 'src/vite.ts',
     webpack: 'src/webpack.ts',
-    loader: 'src/loader.ts'
+    'twm-css': 'src/loader/twm-css.ts',
+    'twm-js': 'src/loader/twm-js.ts'
   },
   // external: ['tailwindcss'],
   output: [

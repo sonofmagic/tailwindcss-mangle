@@ -1,8 +1,8 @@
 import * as webpack from 'webpack'
-import ClassGenerator from './classGenerator'
-import { cssHandler } from './css'
+import ClassGenerator from '../classGenerator'
+import { jsHandler } from '../js'
 
-export default function loader(
+export default function cssloader(
   this: webpack.LoaderContext<{
     classGenerator: ClassGenerator
     getCachedClassSet: (() => Set<string>) | undefined
@@ -13,11 +13,13 @@ export default function loader(
   const opt = this.getOptions()
   if (opt.getCachedClassSet) {
     const runtimeSet = opt.getCachedClassSet()
-    return cssHandler(content, {
-      classGenerator: opt.classGenerator,
+    const code = jsHandler(content, {
       runtimeSet,
-      scene: 'loader'
-    })
+      classGenerator: opt.classGenerator
+    }).code
+    if (code) {
+      return code
+    }
   }
 
   return content

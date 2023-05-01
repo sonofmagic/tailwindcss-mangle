@@ -32,6 +32,22 @@ describe('js handler', () => {
     expect(code).toMatchSnapshot()
   })
 
+  it('text-[red]', () => {
+    const classGenerator = new ClassGenerator()
+    const runtimeSet = new Set<string>()
+
+    // eslint-disable-next-line no-template-curly-in-string
+    const testCase = ''
+    testCase.split(' ').forEach((x) => {
+      runtimeSet.add(x)
+    })
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
   it('z-10 not transform', () => {
     const classGenerator = new ClassGenerator()
     const runtimeSet = new Set<string>()

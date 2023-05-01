@@ -22,7 +22,7 @@ const outputCachedMap = new Map<
 >()
 
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, twPatcher } = getOptions(options)
+  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions } = getOptions(options)
 
   return {
     name: pluginName,
@@ -96,8 +96,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
         }
       }
 
-      const loader = path.resolve(__dirname, 'loader.js')
-
+      const twmCssloader = path.resolve(__dirname, 'twm-css.js')
+      // const twmJsloader = path.resolve(__dirname, 'twm-js.js')
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (loaderContext, module) => {
           const idx = module.loaders.findIndex((x) => x.loader.includes('css-loader'))
@@ -105,7 +105,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           // vue-style-loader
           if (idx > -1) {
             module.loaders.splice(idx + 1, 0, {
-              loader,
+              loader: twmCssloader,
               options: {
                 classGenerator,
                 getCachedClassSet
@@ -113,13 +113,21 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               ident: null,
               type: null
             })
-
-            // console.log(module.resource, module.loaders.map(x => x.loader))
-            // if(/css/.test(module.resource)){
-            //   const idx = module.loaders.findIndex((x) => x.loader === 'style-loader')
-            //   console.log(idx)
-            // }
           }
+
+          // idx = module.loaders.findIndex((x) => x.loader.includes('babel-loader'))
+
+          // if (idx > -1) {
+          //   module.loaders.splice(idx + 1, 0, {
+          //     loader: twmJsloader,
+          //     options: {
+          //       classGenerator,
+          //       getCachedClassSet
+          //     },
+          //     ident: null,
+          //     type: null
+          //   })
+          // }
         })
         compilation.hooks.processAssets.tap(
           {
