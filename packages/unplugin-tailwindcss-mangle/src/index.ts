@@ -10,7 +10,6 @@ import type { sources } from 'webpack'
 import path from 'path'
 import fs from 'fs'
 import { getOptions } from './options'
-const { createLoader } = require('simple-functional-loader')
 
 // cache map
 const outputCachedMap = new Map<
@@ -23,7 +22,7 @@ const outputCachedMap = new Map<
 >()
 
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions } = getOptions(options)
+  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, twPatcher } = getOptions(options)
 
   return {
     name: pluginName,
@@ -96,29 +95,31 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           console.log(error)
         }
       }
-      const customLoader = {
-        ...createLoader(function (source: string) {
-          return source
-        }),
-        ident: null,
-        type: null
-      }
+
+      const loader = path.resolve(__dirname, 'loader.js')
+
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (loaderContext, module) => {
           const idx = module.loaders.findIndex((x) => x.loader.includes('css-loader'))
           // vue-loader/dist/stylePostLoader.
           // vue-style-loader
           if (idx > -1) {
-            module.loaders.splice(idx, 0, customLoader)
+            module.loaders.splice(idx + 1, 0, {
+              loader,
+              options: {
+                classGenerator,
+                getCachedClassSet
+              },
+              ident: null,
+              type: null
+            })
+
             // console.log(module.resource, module.loaders.map(x => x.loader))
             // if(/css/.test(module.resource)){
             //   const idx = module.loaders.findIndex((x) => x.loader === 'style-loader')
             //   console.log(idx)
             // }
           }
-
-
-
         })
         compilation.hooks.processAssets.tap(
           {

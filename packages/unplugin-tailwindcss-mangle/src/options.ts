@@ -58,6 +58,7 @@ export function getOptions(options: Options | undefined = {}) {
     excludeMatcher,
     isInclude,
     classSetOutputOptions,
-    classMapOutputOptions
+    classMapOutputOptions,
+    twPatcher
   }
 }
