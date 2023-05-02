@@ -1,6 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
