@@ -77,7 +77,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
       }
     },
     webpack(compiler) {
-      const Compilation = compiler.webpack.Compilation
+      const { NormalModule, Compilation } = compiler.webpack
       const { ConcatSource } = compiler.webpack.sources
       function getAssetPath(outputPath: string, file: string, abs: boolean = true) {
         const fn = abs ? path.resolve : path.relative
@@ -95,7 +95,40 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           console.log(error)
         }
       }
+
+      const twmCssloader = path.resolve(__dirname, 'twm-css.js')
+      // const twmJsloader = path.resolve(__dirname, 'twm-js.js')
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
+        NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (loaderContext, module) => {
+          const idx = module.loaders.findIndex((x) => x.loader.includes('css-loader'))
+          // vue-loader/dist/stylePostLoader.
+          // vue-style-loader
+          if (idx > -1) {
+            module.loaders.splice(idx + 1, 0, {
+              loader: twmCssloader,
+              options: {
+                classGenerator,
+                getCachedClassSet
+              },
+              ident: null,
+              type: null
+            })
+          }
+
+          // idx = module.loaders.findIndex((x) => x.loader.includes('babel-loader'))
+
+          // if (idx > -1) {
+          //   module.loaders.splice(idx + 1, 0, {
+          //     loader: twmJsloader,
+          //     options: {
+          //       classGenerator,
+          //       getCachedClassSet
+          //     },
+          //     ident: null,
+          //     type: null
+          //   })
+          // }
+        })
         compilation.hooks.processAssets.tap(
           {
             name: pluginName,
@@ -103,10 +136,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
           },
           (assets) => {
             // nextjs webpack build multiple times
-            // server / manifest / client
-            // const resolvePath = require.resolve('tailwindcss')
-            // console.log(resolvePath)
-            // console.log(compiler.outputPath)
+            // server -> manifest -> client
+
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
             // cache result
@@ -133,8 +164,6 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
               return
             }
-
-            // fs.writeFileSync('./tw-class-set.json', JSON.stringify(Array.from(runtimeSet)), 'utf-8')
 
             if (groupedEntries.html.length) {
               for (let i = 0; i < groupedEntries.html.length; i++) {

@@ -26,6 +26,10 @@ export interface IHandlerOptions {
   classGenerator: ClassGenerator
 }
 
+export interface ICssHandlerOptions extends IHandlerOptions {
+  scene?: 'loader' | 'process'
+}
+
 export interface ClassSetOutputOptions {
   filename: string
   dir?: string

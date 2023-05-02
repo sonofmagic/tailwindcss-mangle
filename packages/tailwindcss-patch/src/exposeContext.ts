@@ -4,9 +4,7 @@ import type { Rule } from 'postcss'
 import { requireResolve } from './utils'
 
 export function getTailwindcssEntry(basedir: string = process.cwd()) {
-  return requireResolve('tailwindcss', {
-    basedir
-  })
+  return requireResolve('tailwindcss')
 }
 
 export function getContexts(basedir?: string) {

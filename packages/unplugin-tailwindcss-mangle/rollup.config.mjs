@@ -7,7 +7,9 @@ export default createRollupConfig({
     nuxt: 'src/nuxt.ts',
     rollup: 'src/rollup.ts',
     vite: 'src/vite.ts',
-    webpack: 'src/webpack.ts'
+    webpack: 'src/webpack.ts',
+    'twm-css': 'src/loader/twm-css.ts',
+    'twm-js': 'src/loader/twm-js.ts'
   },
   // external: ['tailwindcss'],
   output: [

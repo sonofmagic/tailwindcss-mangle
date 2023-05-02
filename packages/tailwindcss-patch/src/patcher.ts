@@ -12,8 +12,7 @@ export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   try {
     // const cwd = process.cwd()
     const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
-      paths: options.paths,
-      basedir: options.basedir ?? process.cwd()
+      paths: options.paths
     })
 
     return tmpJsonPath

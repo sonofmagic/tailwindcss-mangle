@@ -1,11 +1,8 @@
 import postcss from 'postcss'
 import { postcssMangleTailwindcssPlugin } from './plugins'
-import { IHandlerOptions } from '@/types'
+import { ICssHandlerOptions } from '@/types'
 
-export function cssHandler(rawSource: string, options: IHandlerOptions) {
-  return postcss([
-    postcssMangleTailwindcssPlugin({
-      newClassMap: options.classGenerator.newClassMap
-    })
-  ]).process(rawSource).css
+export function cssHandler(rawSource: string, options: ICssHandlerOptions) {
+  const acceptedPlugins = [postcssMangleTailwindcssPlugin(options)]
+  return postcss(acceptedPlugins).process(rawSource).css
 }
