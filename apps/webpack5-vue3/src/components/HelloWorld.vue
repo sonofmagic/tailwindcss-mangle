@@ -1,6 +1,6 @@
 <template>
-  <div class="text-[#dc3b3b]">
-    hello world red
+  <div class="text-[#dc3b3b] dark:text-slate-400 bg-white dark:bg-slate-900 px-4 sm:px-3 md:px-5">
+    HelloWorld
   </div>
 </template>
 
@@ -20,15 +20,17 @@ export default defineComponent({
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
-}
-</style>
+}</style>
