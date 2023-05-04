@@ -105,11 +105,13 @@ custom class generator, if you want to custom class name (default 'tw-*'), use t
 ```js
 export interface IClassGeneratorOptions {
   reserveClassName?: (string | RegExp)[]
+  // custom generate class name
   customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
   log?: boolean
   exclude?: (string | RegExp)[]
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
+  // default 'tw-',for example: tw-a,tw-b, you can set any you want, like '','ice-'
   classPrefix?: string
 }
 ```
