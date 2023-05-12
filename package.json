@@ -7,13 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "build:pkg": "turbo run build --filter=./packages/*",
-    "build:app": "turbo run build --filter=./apps/*",
-    "dev": "turbo run dev --parallel",
-    "dev:pkg": "turbo run dev --parallel --filter=./packages/*",
-    "test": "turbo run test --filter=./packages/*",
-    "lint": "turbo run lint",
+    "build": "pnpm run -r build",
+    "build:pkg": "pnpm run -r --filter ./packages/* build",
+    "build:app": "pnpm run -r --filter ./apps/* build ",
+    "dev": "pnpm run -r --parallel dev",
+    "dev:pkg": "pnpm run -r --parallel --filter ./packages/* dev  ",
+    "test": "pnpm run -r --filter ./packages/* test ",
+    "lint": "pnpm run -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle"
@@ -33,7 +33,6 @@
     "rollup": "^3.21.6",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "turbo": "^1.9.4",
     "typescript": "^5.0.4"
   },
   "engines": {

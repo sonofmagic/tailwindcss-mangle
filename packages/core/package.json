@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The core of tailwindcss-mangle",
   "main": "dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
