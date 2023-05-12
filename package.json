@@ -16,7 +16,7 @@
     "lint": "pnpm run -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
-    "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle"
+    "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle tailwindcss-mangle-core"
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",
