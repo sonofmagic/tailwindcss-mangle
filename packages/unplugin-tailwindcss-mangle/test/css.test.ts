@@ -1,5 +1,4 @@
-import ClassGenerator from '../src/classGenerator'
-import { cssHandler } from '../src/css/index'
+import { ClassGenerator, cssHandler } from 'tailwindcss-mangle-core'
 import { getTestCase } from './utils'
 describe('css', () => {
   let classGenerator: ClassGenerator

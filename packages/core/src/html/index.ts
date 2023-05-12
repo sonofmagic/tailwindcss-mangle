@@ -1,6 +1,6 @@
 import { parse, serialize } from 'parse5'
 import { traverse } from '@parse5/tools'
-import { IHandlerOptions } from '@/types'
+import { IHandlerOptions } from '../types'
 
 export function htmlHandler(rawSource: string, options: IHandlerOptions) {
   const { runtimeSet, classGenerator } = options

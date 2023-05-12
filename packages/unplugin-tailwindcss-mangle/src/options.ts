@@ -1,6 +1,6 @@
 import type { Options, ClassSetOutputOptions, ClassMapOutputOptions } from './types'
 import { TailwindcssPatcher } from 'tailwindcss-patch'
-import ClassGenerator from './classGenerator'
+import { ClassGenerator } from 'tailwindcss-mangle-core'
 import { createGlobMatcher, isMangleClass, cacheDump } from './utils'
 
 export function getOptions(options: Options | undefined = {}) {

@@ -1,4 +1,4 @@
-import type { ClassGenerator } from 'tailwindcss-mangle-core'
+import ClassGenerator from './classGenerator'
 
 export interface IClassGeneratorContextItem {
   name: string
