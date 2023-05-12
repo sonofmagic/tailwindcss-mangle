@@ -1,4 +1,4 @@
-import { ClassGenerator } from 'tailwindcss-mangle-core'
+import ClassGenerator from '../src/classGenerator'
 
 describe('classGenerator', () => {
   it('size 26*27+1', () => {

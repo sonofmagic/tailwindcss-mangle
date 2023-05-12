@@ -329,31 +329,19 @@ importers:
       '@babel/types': ^7.21.5
       '@parse5/tools': ^0.1.0
       '@types/babel__core': ^7.20.0
-      '@types/escodegen': ^0.0.7
-      '@types/micromatch': ^4.0.2
-      '@types/semver': ^7.5.0
-      micromatch: ^4.0.5
       parse5: ^7.1.2
-      pkg-types: ^1.0.3
       postcss: ^8.4.23
       postcss-selector-parser: ^6.0.12
-      semver: ^7.5.0
       tslib: ^2.5.0
     dependencies:
       '@babel/core': 7.21.8
       '@babel/types': 7.21.5
-      micromatch: 4.0.5
       parse5: 7.1.2
       postcss: 8.4.23
       postcss-selector-parser: 6.0.12
-      semver: 7.5.0
     devDependencies:
       '@parse5/tools': 0.1.0
       '@types/babel__core': 7.20.0
-      '@types/escodegen': 0.0.7
-      '@types/micromatch': 4.0.2
-      '@types/semver': 7.5.0
-      pkg-types: 1.0.3
       tslib: 2.5.0
 
   packages/tailwindcss-patch:
@@ -391,19 +379,7 @@ importers:
 
   packages/unplugin-tailwindcss-mangle:
     specifiers:
-      '@babel/core': ^7.21.8
-      '@babel/types': ^7.21.5
-      '@parse5/tools': ^0.1.0
-      '@types/babel__core': ^7.20.0
-      '@types/escodegen': ^0.0.7
-      '@types/micromatch': ^4.0.2
-      '@types/semver': ^7.5.0
       micromatch: ^4.0.5
-      parse5: ^7.1.2
-      pkg-types: ^1.0.3
-      postcss: ^8.4.23
-      postcss-selector-parser: ^6.0.12
-      semver: ^7.5.0
       simple-functional-loader: ^1.2.1
       tailwindcss: ^3.3.2
       tailwindcss-mangle-core: workspace:^
@@ -413,23 +389,11 @@ importers:
       vite: ^4.3.5
       webpack: ^5.82.1
     dependencies:
-      '@babel/core': 7.21.8
-      '@babel/types': 7.21.5
       micromatch: 4.0.5
-      parse5: 7.1.2
-      postcss: 8.4.23
-      postcss-selector-parser: 6.0.12
-      semver: 7.5.0
       tailwindcss-mangle-core: link:../core
       tailwindcss-patch: link:../tailwindcss-patch
       unplugin: 1.3.1
     devDependencies:
-      '@parse5/tools': 0.1.0
-      '@types/babel__core': 7.20.0
-      '@types/escodegen': 0.0.7
-      '@types/micromatch': 4.0.2
-      '@types/semver': 7.5.0
-      pkg-types: 1.0.3
       simple-functional-loader: 1.2.1
       tailwindcss: 3.3.2
       tslib: 2.5.0
@@ -4556,10 +4520,6 @@ packages:
       '@types/node': 20.1.3
     dev: true
 
-  /@types/braces/3.0.1:
-    resolution: {integrity: sha512-+euflG6ygo4bn0JHtn4pYqcXwRtLvElQ7/nnjDu7iYG56H0+OhCd7d6Ug0IE3WcFpZozBKW2+80FUbv5QGk5AQ==}
-    dev: true
-
   /@types/cacheable-request/6.0.3:
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
     dependencies:
@@ -4586,10 +4546,6 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
-    dev: true
-
-  /@types/escodegen/0.0.7:
-    resolution: {integrity: sha512-46oENdSRNEJXCNrPJoC3vRolZJpfeEm7yvATkd2bCncKFG0PUEyfBCaoacfpcXH4Y5RRuqdVj3J7TI+wwn2SbQ==}
     dev: true
 
   /@types/eslint-scope/3.7.4:
@@ -4716,12 +4672,6 @@ packages:
 
   /@types/mdurl/1.0.2:
     resolution: {integrity: sha512-eC4U9MlIcu2q0KQmXszyn5Akca/0jrQmwDRgpAMJai7qBWq4amIQhZyNau4VYGtCeALvW1/NtjzJJ567aZxfKA==}
-    dev: true
-
-  /@types/micromatch/4.0.2:
-    resolution: {integrity: sha512-oqXqVb0ci19GtH0vOA/U2TmHTcRY9kuZl4mqUxe0QmJAlIW13kzhuK5pi1i9+ngav8FjpSb9FVS/GE00GLX1VA==}
-    dependencies:
-      '@types/braces': 3.0.1
     dev: true
 
   /@types/mime/3.0.1:

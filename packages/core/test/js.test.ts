@@ -1,5 +1,6 @@
-import { ClassGenerator, jsHandler } from 'tailwindcss-mangle-core'
+import { jsHandler } from '../src/js'
 import { getCss, getTestCase } from './utils'
+import ClassGenerator from '../src/classGenerator'
 // import { getClassCacheSet } from 'tailwindcss-patch'
 
 describe('js handler', () => {

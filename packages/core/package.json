@@ -29,19 +29,13 @@
   "dependencies": {
     "@babel/core": "^7.21.8",
     "@babel/types": "^7.21.5",
-    "micromatch": "^4.0.5",
     "parse5": "^7.1.2",
     "postcss": "^8.4.23",
-    "postcss-selector-parser": "^6.0.12",
-    "semver": "^7.5.0"
+    "postcss-selector-parser": "^6.0.12"
   },
   "devDependencies": {
     "@parse5/tools": "^0.1.0",
     "@types/babel__core": "^7.20.0",
-    "@types/escodegen": "^0.0.7",
-    "@types/micromatch": "^4.0.2",
-    "@types/semver": "^7.5.0",
-    "pkg-types": "^1.0.3",
     "tslib": "^2.5.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",

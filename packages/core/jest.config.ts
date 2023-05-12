@@ -4,6 +4,7 @@ const config: Config = {
   projects: [
     {
       ...baseConfig
+      // transformIgnorePatterns: ['/node_modules/(?!(@parse5/)/tools)']
     }
   ]
 }
