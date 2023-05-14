@@ -17,7 +17,7 @@ click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
 
 The core of tailwindcss-mangle
 
-click [tailwindcss-mangle-core](./packages/tailwindcss-mangle-core) for more details.
+click [tailwindcss-mangle-core](./packages/core) for more details.
 
 ## unplugin-tailwindcss-mangle
 
