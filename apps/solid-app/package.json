@@ -18,10 +18,10 @@
     "tailwindcss-patch": "workspace:*",
     "typescript": "^5.0.4",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^4.3.3",
+    "vite": "^4.3.5",
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
-    "solid-js": "^1.6.10"
+    "solid-js": "^1.7.5"
   }
 }

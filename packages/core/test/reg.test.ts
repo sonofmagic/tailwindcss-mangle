@@ -1,5 +1,6 @@
 // import { escapeStringRegexp } from '../src/utils'
-import { makeRegex } from '../src/js/index'
+import { makeRegex } from '../src/js'
+
 describe('regex', () => {
   it('z-10 regex', () => {
     const testCase = 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'

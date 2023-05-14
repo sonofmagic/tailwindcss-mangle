@@ -22,6 +22,13 @@ exports[`css vue scoped .gap-y-4[data-v-0f84999b] 1`] = `
     }"
 `;
 
+exports[`css vue scoped no ignore .gap-y-4[data-v-0f84999b] 1`] = `
+"@media (min-width: 768px) {
+      .tw-a[data-v-0f84999b] {
+      }
+    }"
+`;
+
 exports[`css vue.scoped.css 1`] = `
 ".flex[data-v-0f84999b] {
   display: flex;

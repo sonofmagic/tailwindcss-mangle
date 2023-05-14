@@ -1,6 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -51,7 +51,7 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "jest",
+    "_test": "jest",
     "_prepare": "tw-patch"
   },
   "files": [
@@ -68,13 +68,8 @@
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.21.5",
-    "@babel/types": "^7.21.5",
     "micromatch": "^4.0.5",
-    "parse5": "^7.1.2",
-    "postcss": "^8.4.23",
-    "postcss-selector-parser": "^6.0.12",
-    "semver": "^7.5.0",
+    "tailwindcss-mangle-core": "workspace:^",
     "tailwindcss-patch": "workspace:^",
     "unplugin": "^1.3.1"
   },
@@ -83,17 +78,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@parse5/tools": "^0.1.0",
-    "@types/babel__core": "^7.20.0",
-    "@types/escodegen": "^0.0.7",
     "@types/micromatch": "^4.0.2",
-    "@types/semver": "^7.3.13",
-    "pkg-types": "^1.0.2",
     "simple-functional-loader": "^1.2.1",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.5.0",
-    "vite": "^4.3.3",
-    "webpack": "^5.81.0"
+    "vite": "^4.3.5",
+    "webpack": "^5.82.1"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

@@ -1,6 +1,6 @@
-import { jsHandler } from '../src/js/index'
-import ClassGenerator from '../src/classGenerator'
+import { jsHandler } from '../src/js'
 import { getCss, getTestCase } from './utils'
+import ClassGenerator from '../src/classGenerator'
 // import { getClassCacheSet } from 'tailwindcss-patch'
 
 describe('js handler', () => {
@@ -17,6 +17,20 @@ describe('js handler', () => {
     const code = jsHandler(testCase, {
       classGenerator,
       runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('common StringLiteral with splitQuote false', () => {
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('dark:bg-zinc-800/30')
+    runtimeSet.add('lg:dark:bg-zinc-800/30')
+    // eslint-disable-next-line no-template-curly-in-string
+    const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet,
+      splitQuote: false
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -59,6 +73,21 @@ describe('js handler', () => {
     const code = jsHandler(testCase, {
       classGenerator,
       runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('z-10 not transform with splitQuote false', () => {
+    const runtimeSet = new Set<string>()
+    'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ').forEach((cls) => {
+      runtimeSet.add(cls)
+    })
+
+    const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet,
+      splitQuote: false
     }).code
     expect(code).toMatchSnapshot()
   })

@@ -1,4 +1,4 @@
-import type { ClassGenerator } from 'tailwindcss-mangle-core'
+import ClassGenerator from './classGenerator'
 
 export interface IClassGeneratorContextItem {
   name: string
@@ -26,8 +26,15 @@ export interface IHandlerOptions {
   classGenerator: ClassGenerator
 }
 
+export interface IHtmlHandlerOptions extends IHandlerOptions {}
+
+export interface IJsHandlerOptions extends IHandlerOptions {
+  splitQuote?: boolean
+}
+
 export interface ICssHandlerOptions extends IHandlerOptions {
   scene?: 'loader' | 'process'
+  ignoreVueScoped?: boolean
 }
 
 export interface ClassSetOutputOptions {

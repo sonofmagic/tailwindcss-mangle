@@ -2,6 +2,8 @@
 
 exports[`js handler common StringLiteral 1`] = `"element.innerHTML = "<div class=\\"tw-a tw-b\\">count is counter</div>";"`;
 
+exports[`js handler common StringLiteral with splitQuote false 1`] = `"element.innerHTML = '<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>';"`;
+
 exports[`js handler common TemplateElement 1`] = `
 "const counter = 0;
 element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`;"
@@ -229,6 +231,12 @@ exports[`js handler nextjs server side mangle 1`] = `
 `;
 
 exports[`js handler z-10 not transform 1`] = `
+"{
+  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
+}"
+`;
+
+exports[`js handler z-10 not transform with splitQuote false 1`] = `
 "{
   className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
 }"
