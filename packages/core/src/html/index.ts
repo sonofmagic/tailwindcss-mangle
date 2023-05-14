@@ -1,8 +1,8 @@
 import { parse, serialize } from 'parse5'
 import { traverse } from '@parse5/tools'
-import { IHandlerOptions } from '../types'
+import { IHtmlHandlerOptions } from '../types'
 
-export function htmlHandler(rawSource: string, options: IHandlerOptions) {
+export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
   const { runtimeSet, classGenerator } = options
   const fragment = parse(rawSource)
   traverse(fragment, {

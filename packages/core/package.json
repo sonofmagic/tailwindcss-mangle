@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-mangle-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The core of tailwindcss-mangle",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
@@ -13,7 +13,7 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "jest"
+    "test": "yarn build && jest"
   },
   "keywords": [
     "tailwindcss",

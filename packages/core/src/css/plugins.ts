@@ -1,12 +1,28 @@
 import { IClassGeneratorContextItem, ICssHandlerOptions } from '@/types'
 import type { PluginCreator } from 'postcss'
-
+import defu from 'defu'
 import parser from 'postcss-selector-parser'
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
 
+export function isVueScoped(s: parser.ClassName): boolean {
+  if (s.parent) {
+    const idx = s.parent.nodes.indexOf(s)
+    if (idx > -1) {
+      const nextNode = s.parent.nodes[idx + 1]
+      if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.indexOf('data-v-') > -1) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options) => {
+  const { ignoreVueScoped } = defu(options, {
+    ignoreVueScoped: true
+  })
   if (options?.scene === 'loader') {
     // must set newClassMap options
     let set: Set<string> = new Set()
@@ -25,15 +41,8 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
               const existed = set.has(s.value)
 
               if (existed) {
-                // vue scoped
-                if (s.parent) {
-                  const idx = s.parent.nodes.indexOf(s)
-                  if (idx > -1) {
-                    const nextNode = s.parent.nodes[idx + 1]
-                    if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.indexOf('data-v-') > -1) {
-                      return
-                    }
-                  }
+                if (ignoreVueScoped && isVueScoped(s)) {
+                  return
                 }
                 s.value = options.classGenerator.generateClassName(s.value).name
               }
@@ -61,15 +70,8 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
               const existed = Boolean(hit)
 
               if (existed) {
-                // vue scoped
-                if (s.parent) {
-                  const idx = s.parent.nodes.indexOf(s)
-                  if (idx > -1) {
-                    const nextNode = s.parent.nodes[idx + 1]
-                    if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.indexOf('data-v-') > -1) {
-                      return
-                    }
-                  }
+                if (ignoreVueScoped && isVueScoped(s)) {
+                  return
                 }
                 s.value = hit.name
               }

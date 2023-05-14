@@ -1,7 +1,7 @@
 import type { StringLiteral, TemplateElement, CallExpression } from '@babel/types'
 import * as t from '@babel/types'
 import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
-import type { IHandlerOptions } from '../types'
+import type { IJsHandlerOptions } from '../types'
 import { escapeStringRegexp } from '../utils'
 import { splitCode } from './split'
 
@@ -9,10 +9,12 @@ export function makeRegex(str: string) {
   return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str), 'g')
 }
 
-export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IHandlerOptions) {
-  const set = options.runtimeSet
-  const clsGen = options.classGenerator
-  const arr = splitCode(str)
+export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
+  const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
+
+  const arr = splitCode(str, {
+    splitQuote
+  })
   let rawStr = str
   for (let i = 0; i < arr.length; i++) {
     const v = arr[i]
@@ -30,7 +32,7 @@ export function handleValue(str: string, node: StringLiteral | TemplateElement, 
   return rawStr
 }
 
-export function jsHandler(rawSource: string, options: IHandlerOptions) {
+export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
   const result = transformSync(rawSource, {
     babelrc: false,
     ast: true,
