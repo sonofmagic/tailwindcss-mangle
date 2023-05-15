@@ -1,5 +1,4 @@
-// import { escapeStringRegexp } from '../src/utils'
-import { makeRegex } from '../src/js'
+import { makeRegex } from '../src/regex'
 
 describe('regex', () => {
   it('z-10 regex', () => {

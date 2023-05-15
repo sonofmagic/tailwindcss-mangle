@@ -121,10 +121,3 @@ export function regExpTest(arr: (string | RegExp)[] = [], str: string) {
   }
   throw new TypeError("paramater 'arr' should be a Array of Regexp | String !")
 }
-
-export function escapeStringRegexp(str: string) {
-  if (typeof str !== 'string') {
-    throw new TypeError('Expected a string')
-  }
-  return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d')
-}
