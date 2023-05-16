@@ -1,10 +1,5 @@
 import type { ClassGenerator } from 'tailwindcss-mangle-core'
 
-export interface IClassGeneratorContextItem {
-  name: string
-  usedBy: any[]
-}
-
 export interface IClassGeneratorOptions {
   reserveClassName?: (string | RegExp)[]
   customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
@@ -13,12 +8,6 @@ export interface IClassGeneratorOptions {
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
   classPrefix?: string
-}
-
-export interface IClassGenerator {
-  newClassMap: Record<string, IClassGeneratorContextItem>
-  newClassSize: number
-  context: Record<string, any>
 }
 
 export interface IHandlerOptions {
