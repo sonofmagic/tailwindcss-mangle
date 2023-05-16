@@ -1,0 +1,37 @@
+{
+  "name": "tailwindcss-mangle-shared",
+  "version": "0.0.1",
+  "description": "The shared utils of tailwindcss-mangle",
+  "main": "dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development rollup -cw",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "dev:tsc": "tsc -p tsconfig.json --sourceMap",
+    "build:tsc": "tsc -p tsconfig.json",
+    "test": "yarn build && jest"
+  },
+  "keywords": [
+    "tailwindcss",
+    "patch",
+    "core",
+    "mangle"
+  ],
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+  }
+}

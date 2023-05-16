@@ -342,6 +342,12 @@ importers:
       '@types/babel__core': 7.20.0
       tslib: 2.5.0
 
+  packages/shared:
+    specifiers:
+      tslib: ^2.5.0
+    devDependencies:
+      tslib: 2.5.0
+
   packages/tailwindcss-patch:
     specifiers:
       '@babel/generator': ^7.21.5
