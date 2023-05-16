@@ -2,8 +2,7 @@ import type { StringLiteral, TemplateElement, CallExpression } from '@babel/type
 import * as t from '@babel/types'
 import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
-import { makeRegex } from '../regex'
-import { splitCode } from '../split'
+import { makeRegex, splitCode } from '../shared'
 
 export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options

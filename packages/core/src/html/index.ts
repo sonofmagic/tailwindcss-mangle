@@ -1,8 +1,8 @@
 import { parse, serialize } from 'parse5'
 import { traverse } from '@parse5/tools'
 import { IHtmlHandlerOptions } from '../types'
-import { splitCode } from '../split'
-import { makeRegex } from '../regex'
+import { makeRegex, splitCode } from '../shared'
+
 export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
   const { runtimeSet, classGenerator } = options
   const fragment = parse(rawSource)

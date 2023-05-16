@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-mangle-shared",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "The shared utils of tailwindcss-mangle",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
@@ -19,7 +19,9 @@
     "tailwindcss",
     "patch",
     "core",
-    "mangle"
+    "mangle",
+    "shared",
+    "utils"
   ],
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",

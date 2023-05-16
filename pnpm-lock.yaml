@@ -330,6 +330,7 @@ importers:
       parse5: ^7.1.2
       postcss: ^8.4.23
       postcss-selector-parser: ^6.0.12
+      tailwindcss-mangle-shared: workspace:^
       tslib: ^2.5.0
     dependencies:
       '@babel/core': 7.21.8
@@ -337,16 +338,14 @@ importers:
       parse5: 7.1.2
       postcss: 8.4.23
       postcss-selector-parser: 6.0.12
+      tailwindcss-mangle-shared: link:../shared
     devDependencies:
       '@parse5/tools': 0.1.0
       '@types/babel__core': 7.20.0
       tslib: 2.5.0
 
   packages/shared:
-    specifiers:
-      tslib: ^2.5.0
-    devDependencies:
-      tslib: 2.5.0
+    specifiers: {}
 
   packages/tailwindcss-patch:
     specifiers:
