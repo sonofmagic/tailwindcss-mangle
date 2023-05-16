@@ -17,7 +17,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "release": "bumpp -r",
-    "sync": "cnpm sync tailwindcss-patch unplugin-tailwindcss-mangle tailwindcss-mangle-core"
+    "sync": "cnpm sync tailwindcss-mangle-shared tailwindcss-patch unplugin-tailwindcss-mangle tailwindcss-mangle-core"
   },
   "devDependencies": {
     "@icebreakers/eslint-config-ts": "^1.0.4",
