@@ -13,7 +13,7 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "yarn build && jest"
+    "test": "jest"
   },
   "keywords": [
     "tailwindcss",
