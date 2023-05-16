@@ -1,6 +1,6 @@
 import type { IClassGeneratorOptions, IClassGenerator } from './types'
 
-export const isMangleClass = (className: string) => {
+export const defaultMangleClassFilter = (className: string) => {
   // ignore className like 'filter','container'
   // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
   // bg-[#123456] w-1 etc...
@@ -30,47 +30,6 @@ export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]
   }
 
   return result
-}
-
-export function getGroupedEntries<T>(
-  entries: [string, T][],
-  options = {
-    cssMatcher(file: string) {
-      return /\.css$/.test(file)
-    },
-    htmlMatcher(file: string) {
-      return /\.html?$/.test(file)
-    },
-    jsMatcher(file: string) {
-      return /\.[cm]?js$/.test(file)
-    }
-  }
-) {
-  const { cssMatcher, htmlMatcher, jsMatcher } = options
-  const groupedEntries = groupBy(entries, ([file]) => {
-    if (cssMatcher(file)) {
-      return 'css'
-    } else if (htmlMatcher(file)) {
-      return 'html'
-    } else if (jsMatcher(file)) {
-      return 'js'
-    } else {
-      return 'other'
-    }
-  })
-  if (!groupedEntries.css) {
-    groupedEntries.css = []
-  }
-  if (!groupedEntries.html) {
-    groupedEntries.html = []
-  }
-  if (!groupedEntries.js) {
-    groupedEntries.js = []
-  }
-  if (!groupedEntries.other) {
-    groupedEntries.other = []
-  }
-  return groupedEntries as Record<'css' | 'html' | 'js' | 'other', [string, T][]>
 }
 
 export const acceptChars = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -120,11 +79,4 @@ export function regExpTest(arr: (string | RegExp)[] = [], str: string) {
     return false
   }
   throw new TypeError("paramater 'arr' should be a Array of Regexp | String !")
-}
-
-export function escapeStringRegexp(str: string) {
-  if (typeof str !== 'string') {
-    throw new TypeError('Expected a string')
-  }
-  return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d')
 }

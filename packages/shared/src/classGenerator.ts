@@ -1,4 +1,3 @@
-// import chalk from 'chalk'
 import type { IClassGeneratorOptions, IClassGeneratorContextItem, IClassGenerator } from './types'
 
 import { acceptChars, stripEscapeSequence, regExpTest } from './utils'

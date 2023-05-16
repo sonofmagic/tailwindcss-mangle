@@ -1,4 +1,4 @@
-import ClassGenerator from './classGenerator'
+import { ClassGenerator } from './shared'
 
 export interface IClassGeneratorContextItem {
   name: string
@@ -13,12 +13,6 @@ export interface IClassGeneratorOptions {
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
   classPrefix?: string
-}
-
-export interface IClassGenerator {
-  newClassMap: Record<string, IClassGeneratorContextItem>
-  newClassSize: number
-  context: Record<string, any>
 }
 
 export interface IHandlerOptions {

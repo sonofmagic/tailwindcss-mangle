@@ -1,12 +1,12 @@
 import type { Options, ClassSetOutputOptions, ClassMapOutputOptions } from './types'
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 import { ClassGenerator } from 'tailwindcss-mangle-core'
-import { createGlobMatcher, isMangleClass, cacheDump } from './utils'
+import { createGlobMatcher, defaultMangleClassFilter, cacheDump } from './utils'
 
 export function getOptions(options: Options | undefined = {}) {
   const includeMatcher = createGlobMatcher(options.include, true)
   const excludeMatcher = createGlobMatcher(options.exclude, false)
-
+  const currentMangleClassFilter = options.mangleClassFilter ?? defaultMangleClassFilter
   function isInclude(file: string) {
     return includeMatcher(file) && !excludeMatcher(file)
   }
@@ -38,7 +38,7 @@ export function getOptions(options: Options | undefined = {}) {
       cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
     }
     set.forEach((c) => {
-      if (!isMangleClass(c)) {
+      if (!currentMangleClassFilter(c)) {
         set.delete(c)
       }
     })
