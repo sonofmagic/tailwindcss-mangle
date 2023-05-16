@@ -5,6 +5,7 @@ A util for mangle tailwindcss
 - [tailwindcss-mangle](#tailwindcss-mangle)
   - [tailwindcss-patch](#tailwindcss-patch)
   - [tailwindcss-mangle-core](#tailwindcss-mangle-core)
+  - [tailwindcss-mangle-shared](#tailwindcss-mangle-shared)
   - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
 
 ## tailwindcss-patch
@@ -18,6 +19,12 @@ click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
 The core of tailwindcss-mangle
 
 click [tailwindcss-mangle-core](./packages/core) for more details.
+
+## tailwindcss-mangle-shared
+
+The shared utils of tailwindcss-mangle
+
+click [tailwindcss-mangle-shared](./packages/shared) for more details.
 
 ## unplugin-tailwindcss-mangle
 
