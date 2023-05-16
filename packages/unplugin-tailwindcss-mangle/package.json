@@ -71,7 +71,8 @@
     "micromatch": "^4.0.5",
     "tailwindcss-mangle-core": "workspace:^",
     "tailwindcss-patch": "workspace:^",
-    "unplugin": "^1.3.1"
+    "unplugin": "^1.3.1",
+    "tailwindcss-mangle-shared": "workspace:^"
   },
   "publishConfig": {
     "access": "public",

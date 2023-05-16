@@ -30,6 +30,7 @@ export interface ClassMapOutputOptions {
   dir?: string
 }
 export interface Options {
+  mangleClassFilter?: (className: string) => boolean
   classGenerator?: IClassGeneratorOptions
   exclude?: string[]
   include?: string[]
