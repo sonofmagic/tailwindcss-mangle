@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-mangle-core",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "The core of tailwindcss-mangle",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
