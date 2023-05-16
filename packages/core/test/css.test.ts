@@ -1,5 +1,5 @@
 import { cssHandler } from '../src/css'
-import ClassGenerator from '../src/classGenerator'
+import { ClassGenerator } from '../src/shared'
 import { getTestCase } from './utils'
 describe('css', () => {
   let classGenerator: ClassGenerator
