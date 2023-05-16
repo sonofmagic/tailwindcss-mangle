@@ -12,7 +12,7 @@
     "build:app": "pnpm run -r --filter=./apps/* build ",
     "dev": "pnpm -r --parallel run dev",
     "dev:pkg": "pnpm -r --filter=./packages/* --parallel run dev",
-    "test": "pnpm run build:pkg && pnpm run -r --filter=./packages/* test ",
+    "test": "pnpm run -r --filter=./packages/* test ",
     "lint": "pnpm run -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
