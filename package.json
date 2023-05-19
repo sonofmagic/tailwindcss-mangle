@@ -35,7 +35,11 @@
     "rollup": "^3.22.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "tailwindcss-mangle-core": "workspace:*",
+    "tailwindcss-mangle-shared": "workspace:*",
+    "tailwindcss-patch": "workspace:*",
+    "unplugin-tailwindcss-mangle": "workspace:*"
   },
   "engines": {
     "node": ">=14.0.0"
