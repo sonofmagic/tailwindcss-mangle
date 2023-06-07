@@ -161,4 +161,17 @@ describe('js handler', () => {
     }).code
     expect(code).toMatchSnapshot()
   })
+
+  it('trailing slash case 1', () => {
+    const testCase = getTestCase('trailing-slash-1.js')
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('bg-red-500/50')
+    runtimeSet.add('bg-red-500')
+
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
 })
