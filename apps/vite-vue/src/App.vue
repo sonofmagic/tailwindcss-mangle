@@ -75,6 +75,39 @@
   </main>
 </template>
 
+<script lang="ts">
+import { onMounted, defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {
+    onMounted(() => {
+      const clipPath = '';
+      document.documentElement.animate(
+        {
+          clipPath
+        },
+        {
+          duration: 500,
+          easing: /* tw-mangle ignore */ 'ease-out',
+          pseudoElement: '::view-transition-new(root)'
+        })
+      document.documentElement.animate(
+        {
+          clipPath
+        },
+        {
+          duration: 500,
+          easing: 'ease-out',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      )
+    })
+    return {}
+  }
+})
+
+</script>
+
 <style scoped>
 .logo {
   height: 6em;
