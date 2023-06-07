@@ -9,6 +9,8 @@ import path from 'path'
 import fs from 'fs'
 import { getOptions } from './options'
 
+export { defaultMangleClassFilter } from 'tailwindcss-mangle-shared'
+
 // cache map
 const outputCachedMap = new Map<
   string,
@@ -20,7 +22,7 @@ const outputCachedMap = new Map<
 >()
 
 export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
-  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions } = getOptions(options)
+  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, htmlHandlerOptions, jsHandlerOptions, cssHandlerOptions } = getOptions(options)
 
   return {
     name: pluginName,
@@ -39,6 +41,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               const [file, asset] = groupedEntries.html[i] as [string, OutputAsset]
               if (isInclude(file)) {
                 asset.source = htmlHandler(asset.source.toString(), {
+                  ...htmlHandlerOptions,
                   classGenerator,
                   runtimeSet
                 })
@@ -50,6 +53,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               const [file, chunk] = groupedEntries.js[i] as [string, OutputChunk]
               if (isInclude(file)) {
                 const code = jsHandler(chunk.code, {
+                  ...jsHandlerOptions,
                   runtimeSet,
                   classGenerator
                 }).code
@@ -65,6 +69,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               const [file, css] = groupedEntries.css[i] as [string, OutputAsset]
               if (isInclude(file)) {
                 css.source = cssHandler(css.source.toString(), {
+                  ...cssHandlerOptions,
                   classGenerator,
                   runtimeSet
                 })
@@ -168,6 +173,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 const [file, asset] = groupedEntries.html[i]
                 if (isInclude(file)) {
                   const html = htmlHandler(asset.source().toString(), {
+                    ...htmlHandlerOptions,
                     classGenerator,
                     runtimeSet
                   })
@@ -182,6 +188,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 const [file, chunk] = groupedEntries.js[i]
                 if (isInclude(file)) {
                   const code = jsHandler(chunk.source().toString(), {
+                    ...jsHandlerOptions,
                     runtimeSet,
                     classGenerator
                   }).code
@@ -198,6 +205,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 const [file, css] = groupedEntries.css[i]
                 if (isInclude(file)) {
                   const newCss = cssHandler(css.source().toString(), {
+                    ...cssHandlerOptions,
                     classGenerator,
                     runtimeSet
                   })
@@ -212,6 +220,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 html.forEach((asset, file) => {
                   if (isInclude(file)) {
                     const html = htmlHandler((asset as sources.Source).source().toString(), {
+                      ...htmlHandlerOptions,
                       classGenerator,
                       runtimeSet
                     })
@@ -226,6 +235,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                   if (isInclude(file)) {
                     const rawCode = (chunk as sources.Source).source().toString()
                     const code = jsHandler(rawCode, {
+                      ...jsHandlerOptions,
                       runtimeSet,
                       classGenerator
                     }).code
@@ -241,6 +251,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                 css.forEach((style, file) => {
                   if (isInclude(file)) {
                     const newCss = cssHandler((style as sources.Source).source().toString(), {
+                      ...cssHandlerOptions,
                       classGenerator,
                       runtimeSet
                     })
