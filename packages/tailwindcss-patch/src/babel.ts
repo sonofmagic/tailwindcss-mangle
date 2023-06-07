@@ -1,5 +1,3 @@
-import generate from '@babel/generator'
-import { parse } from '@babel/parser'
-import traverse from '@babel/traverse'
-
-export { generate, parse, traverse }
+export { default as generate } from '@babel/generator'
+export { default as traverse } from '@babel/traverse'
+export { parse } from '@babel/parser'

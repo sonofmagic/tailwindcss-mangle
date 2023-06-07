@@ -34,15 +34,15 @@ export function getOptions(options: Options | undefined = {}) {
   const classGenerator = new ClassGenerator(options.classGenerator)
   function getCachedClassSet() {
     const set = twPatcher.getClassSet()
-    const isOutput = set.size && options.classSetOutput
+    const isOutput = set.size > 0 && options.classSetOutput
     if (isOutput && classSetOutputOptions.type === 'all') {
       cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
     }
-    set.forEach((c) => {
+    for (const c of set) {
       if (!currentMangleClassFilter(c)) {
         set.delete(c)
       }
-    })
+    }
     if (isOutput && classSetOutputOptions.type === 'partial') {
       cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
     }

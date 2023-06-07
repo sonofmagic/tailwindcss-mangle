@@ -8,15 +8,14 @@ export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
   const fragment = parse(rawSource)
   traverse(fragment, {
     element(node, parent) {
-      const attr = node.attrs.find((x) => x.name === 'class')
-      if (attr) {
-        const arr = splitCode(attr.value, {
+      const attribute = node.attrs.find((x) => x.name === 'class')
+      if (attribute) {
+        const array = splitCode(attribute.value, {
           splitQuote: false
         })
-        for (let i = 0; i < arr.length; i++) {
-          const v = arr[i]
+        for (const v of array) {
           if (runtimeSet.has(v)) {
-            attr.value = attr.value.replace(makeRegex(v), classGenerator.generateClassName(v).name)
+            attribute.value = attribute.value.replace(makeRegex(v), classGenerator.generateClassName(v).name)
           }
         }
       }

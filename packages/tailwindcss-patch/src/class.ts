@@ -55,7 +55,7 @@ export class TailwindcssPatcher {
 
   getClassSet(basedir?: string) {
     const set = getClassCacheSet(basedir)
-    set.size && this.setCache(set)
+    set.size > 0 && this.setCache(set)
     return set
   }
 

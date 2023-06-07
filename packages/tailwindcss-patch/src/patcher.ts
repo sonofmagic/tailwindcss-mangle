@@ -1,5 +1,5 @@
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import { gte } from 'semver'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
 import type { PatchOptions, InternalPatchOptions } from './type'
@@ -55,7 +55,7 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
     if (!hasPatched && opt.overwrite) {
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       })
       console.log('patch tailwindcss processTailwindFeatures for return content successfully!')
     }
@@ -69,7 +69,7 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
     const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
     if (!hasPatched && opt.overwrite) {
       fs.writeFileSync(pluginFilePath, code, {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       })
       console.log('patch tailwindcss for expose runtime content successfully!')
     }

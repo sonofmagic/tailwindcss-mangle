@@ -1,5 +1,5 @@
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import type { Rule } from 'postcss'
 import { requireResolve } from './utils'
 
@@ -42,8 +42,7 @@ export function getClassCaches(basedir?: string): Map<
 export function getClassCacheSet(basedir?: string): Set<string> {
   const classCaches = getClassCaches(basedir)
   const classSet = new Set<string>()
-  for (let i = 0; i < classCaches.length; i++) {
-    const classCacheMap = classCaches[i]
+  for (const classCacheMap of classCaches) {
     const keys = classCacheMap.keys()
     for (const key of keys) {
       classSet.add(key)

@@ -1,4 +1,4 @@
-export const validateFilterRE = /[\w\u00A0-\uFFFF-_:%-?]/
+export const validateFilterRE = /[\w%-?\u00A0-\uFFFF-]/
 
 export function isValidSelector(selector = ''): selector is string {
   return validateFilterRE.test(selector)
@@ -10,6 +10,6 @@ export const splitCode = (
     splitQuote?: boolean
   } = { splitQuote: true }
 ) => {
-  const regex = options.splitQuote ? /[\s"]+/ : /[\s]+/
-  return code.split(regex).filter(isValidSelector)
+  const regex = options.splitQuote ? /[\s"]+/ : /\s+/
+  return code.split(regex).filter((x) => isValidSelector(x))
 }

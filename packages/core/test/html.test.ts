@@ -10,9 +10,9 @@ describe('html handler', () => {
   it('common usage', () => {
     const runtimeSet = new Set<string>()
 
-    splitCode('text-3xl font-bold underline').forEach((x) => {
+    for (const x of splitCode('text-3xl font-bold underline')) {
       runtimeSet.add(x)
-    })
+    }
     const res = htmlHandler(getTestCase('hello-world.html'), {
       classGenerator,
       runtimeSet
@@ -23,9 +23,9 @@ describe('html handler', () => {
   it('trailing slash case', () => {
     const runtimeSet = new Set<string>()
 
-    splitCode('bg-red-500 bg-red-500/50').forEach((x) => {
+    for (const x of splitCode('bg-red-500 bg-red-500/50')) {
       runtimeSet.add(x)
-    })
+    }
     const res = htmlHandler(getTestCase('trailing-slash.html'), {
       classGenerator,
       runtimeSet

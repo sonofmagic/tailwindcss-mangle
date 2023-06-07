@@ -44,20 +44,12 @@ class ClassGenerator implements IClassGenerator {
 
   includeFilePath(filePath: string): boolean {
     const { include } = this.opts
-    if (Array.isArray(include)) {
-      return regExpTest(include, filePath)
-    } else {
-      return true
-    }
+    return Array.isArray(include) ? regExpTest(include, filePath) : true
   }
 
   excludeFilePath(filePath: string): boolean {
     const { exclude } = this.opts
-    if (Array.isArray(exclude)) {
-      return regExpTest(exclude, filePath)
-    } else {
-      return false
-    }
+    return Array.isArray(exclude) ? regExpTest(exclude, filePath) : false
   }
 
   isFileIncluded(filePath: string) {

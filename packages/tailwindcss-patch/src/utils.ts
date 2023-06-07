@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import { sync, type SyncOpts } from 'resolve'
 
 export function ensureFileContent(filepaths: string | string[]) {
@@ -6,11 +6,10 @@ export function ensureFileContent(filepaths: string | string[]) {
     filepaths = [filepaths]
   }
   let content
-  for (let i = 0; i < filepaths.length; i++) {
-    const filepath = filepaths[i]
+  for (const filepath of filepaths) {
     if (fs.existsSync(filepath)) {
       content = fs.readFileSync(filepath, {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       })
       break
     }

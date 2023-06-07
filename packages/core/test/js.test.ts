@@ -65,9 +65,9 @@ describe('js handler', () => {
 
   it('z-10 not transform', () => {
     const runtimeSet = new Set<string>()
-    'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ').forEach((cls) => {
+    for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
       runtimeSet.add(cls)
-    })
+    }
 
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
     const code = jsHandler(testCase, {
@@ -79,9 +79,9 @@ describe('js handler', () => {
 
   it('z-10 not transform with splitQuote false', () => {
     const runtimeSet = new Set<string>()
-    'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ').forEach((cls) => {
+    for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
       runtimeSet.add(cls)
-    })
+    }
 
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
     const code = jsHandler(testCase, {
