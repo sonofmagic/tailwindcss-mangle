@@ -1,6 +1,7 @@
 import type { Options, ClassSetOutputOptions, ClassMapOutputOptions } from './types'
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 import { ClassGenerator } from 'tailwindcss-mangle-core'
+import type { IHtmlHandlerOptions, IJsHandlerOptions, ICssHandlerOptions } from 'tailwindcss-mangle-core'
 import { createGlobMatcher, defaultMangleClassFilter, cacheDump } from './utils'
 
 export function getOptions(options: Options | undefined = {}) {
@@ -59,6 +60,9 @@ export function getOptions(options: Options | undefined = {}) {
     isInclude,
     classSetOutputOptions,
     classMapOutputOptions,
-    twPatcher
+    twPatcher,
+    jsHandlerOptions: <IJsHandlerOptions>(options.jsHandlerOptions ?? {}),
+    htmlHandlerOptions: <IHtmlHandlerOptions>(options.htmlHandlerOptions ?? {}),
+    cssHandlerOptions: <ICssHandlerOptions>(options.cssHandlerOptions ?? {})
   }
 }

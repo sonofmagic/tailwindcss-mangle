@@ -1,4 +1,9 @@
-import type { ClassGenerator } from 'tailwindcss-mangle-core'
+import type {
+  ClassGenerator,
+  IHtmlHandlerOptions, // as InternalHtmlHandlerOptions,
+  IJsHandlerOptions, // as InternalJsHandlerOptions,
+  ICssHandlerOptions // as InternalCssHandlerOptions
+} from 'tailwindcss-mangle-core'
 
 export interface IClassGeneratorOptions {
   reserveClassName?: (string | RegExp)[]
@@ -13,10 +18,6 @@ export interface IClassGeneratorOptions {
 export interface IHandlerOptions {
   runtimeSet: Set<string>
   classGenerator: ClassGenerator
-}
-
-export interface ICssHandlerOptions extends IHandlerOptions {
-  scene?: 'loader' | 'process'
 }
 
 export interface ClassSetOutputOptions {
@@ -36,4 +37,7 @@ export interface Options {
   include?: string[]
   classSetOutput?: boolean | ClassSetOutputOptions
   classMapOutput?: boolean | ClassMapOutputOptions
+  htmlHandlerOptions?: IHtmlHandlerOptions
+  jsHandlerOptions?: IJsHandlerOptions
+  cssHandlerOptions?: ICssHandlerOptions
 }

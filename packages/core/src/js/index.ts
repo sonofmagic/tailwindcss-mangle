@@ -3,6 +3,7 @@ import * as t from '@babel/types'
 import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
+import { isProd } from '../env'
 
 export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
@@ -66,6 +67,7 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
         }
       }
     ],
+    minified: options.minified ?? isProd(),
     sourceMaps: false,
     configFile: false
   })
