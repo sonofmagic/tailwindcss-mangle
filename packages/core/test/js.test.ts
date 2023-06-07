@@ -114,4 +114,39 @@ describe('js handler', () => {
     }).code
     expect(code).toMatchSnapshot()
   })
+
+  it('comment-ignore case', () => {
+    const testCase = getTestCase('comment-ignore.js')
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('ease-out')
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('minified js true', () => {
+    const testCase = getTestCase('comment-ignore.js')
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('ease-out')
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet,
+      minified: true
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('minified js with NODE_ENV', () => {
+    process.env.NODE_ENV = 'production'
+    const testCase = getTestCase('comment-ignore.js')
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('ease-out')
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
 })

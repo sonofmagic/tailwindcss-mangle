@@ -24,6 +24,7 @@ export interface IHtmlHandlerOptions extends IHandlerOptions {}
 
 export interface IJsHandlerOptions extends IHandlerOptions {
   splitQuote?: boolean
+  minified?: boolean
 }
 
 export interface ICssHandlerOptions extends IHandlerOptions {
