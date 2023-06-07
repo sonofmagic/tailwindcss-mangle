@@ -66,6 +66,7 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
         }
       }
     ],
+    minified: true,
     sourceMaps: false,
     configFile: false
   })
