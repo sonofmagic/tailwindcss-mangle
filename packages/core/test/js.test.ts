@@ -149,4 +149,16 @@ describe('js handler', () => {
     }).code
     expect(code).toMatchSnapshot()
   })
+  // https://github.com/sonofmagic/tailwindcss-mangle/issues/24
+  it('trailing slash case 0', () => {
+    const testCase = getTestCase('trailing-slash-0.js')
+    const runtimeSet = new Set<string>()
+    runtimeSet.add('bg-red-500')
+    runtimeSet.add('bg-red-500/50')
+    const code = jsHandler(testCase, {
+      classGenerator,
+      runtimeSet
+    }).code
+    expect(code).toMatchSnapshot()
+  })
 })

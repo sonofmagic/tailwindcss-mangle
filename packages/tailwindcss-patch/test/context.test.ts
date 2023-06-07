@@ -32,4 +32,15 @@ describe('common usage', () => {
     expect(Array.from(set.values())[1]).toBe("bg-[url('https://xxx.webp')]")
     //
   })
+
+  it('trailing slash', () => {
+    getCss([getTestCase('trailing-slash.vue')])
+    const ctxs = getContexts()
+    expect(ctxs).toBeTruthy()
+    const set = getClassCacheSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(4)
+    expect(set.has('bg-red-500')).toBe(true)
+    expect(set.has('bg-red-500/50')).toBe(true)
+  })
 })

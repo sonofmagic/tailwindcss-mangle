@@ -3,7 +3,8 @@ import baseConfig from '../../jest.config'
 const config: Config = {
   projects: [
     {
-      ...baseConfig
+      ...baseConfig,
+      modulePathIgnorePatterns: ['test/html.test.ts']
       // transformIgnorePatterns: ['/node_modules/(?!(@parse5/)/tools)']
     }
   ]

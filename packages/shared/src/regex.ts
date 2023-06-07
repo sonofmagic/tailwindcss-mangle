@@ -5,6 +5,13 @@ export function escapeStringRegexp(str: string) {
   return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d')
 }
 
-export function makeRegex(str: string) {
-  return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str), 'g')
+export function makeRegex(
+  str: string,
+  options: {
+    exact: boolean
+  } = {
+    exact: true
+  }
+) {
+  return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str) + (options.exact ? '(?=$|[\\s"])' : ''), 'g')
 }

@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`regex trailing slash should exact match case 0 1`] = `
+[
+  [
+    "bg-red-500",
+  ],
+  [
+    "bg-red-500",
+  ],
+]
+`;
+
+exports[`regex trailing slash should exact match case 1 1`] = `
+[
+  [
+    "bg-red-500",
+  ],
+]
+`;
+
 exports[`regex z-10 regex 1`] = `
 [
   [
