@@ -254,7 +254,9 @@ exports[`js handler nextjs server side mangle 1`] = `
 
 exports[`js handler trailing slash case 0 1`] = `"document.getElementById("#app").classList.add("tw-a tw-b");"`;
 
-exports[`js handler trailing slash case 1 1`] = `"document.querySelector('##app').classList.add("tw-a tw-b");"`;
+exports[`js handler trailing slash case 1 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b");"`;
+
+exports[`js handler trailing slash case 2 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b tw-a s tw-a");"`;
 
 exports[`js handler z-10 not transform 1`] = `
 "{

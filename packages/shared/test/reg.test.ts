@@ -26,4 +26,12 @@ describe('regex', () => {
     expect(arr.length).toBe(1)
     expect(arr).toMatchSnapshot()
   })
+
+  it('trailing slash should exact match case 2', () => {
+    const testCase = 's bg-red-500 bg-red-500/50 bg-red-500'
+    const regex = makeRegex('bg-red-500')
+    const arr = [...testCase.matchAll(regex)]
+    expect(arr.length).toBe(2)
+    expect(arr).toMatchSnapshot()
+  })
 })

@@ -19,6 +19,17 @@ exports[`regex trailing slash should exact match case 1 1`] = `
 ]
 `;
 
+exports[`regex trailing slash should exact match case 2 1`] = `
+[
+  [
+    "bg-red-500",
+  ],
+  [
+    "bg-red-500",
+  ],
+]
+`;
+
 exports[`regex z-10 regex 1`] = `
 [
   [
