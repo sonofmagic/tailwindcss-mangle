@@ -13,7 +13,10 @@ export default defineConfig({
         return defaultMangleClassFilter(className)
       },
       classSetOutput: true,
-      classMapOutput: true
+      classMapOutput: true,
+      jsHandlerOptions: {
+        minified: true
+      }
     })
   ]
 })

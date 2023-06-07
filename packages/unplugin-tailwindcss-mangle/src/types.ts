@@ -1,5 +1,5 @@
 import type {
-  ClassGenerator,
+  IHandlerOptions,
   IHtmlHandlerOptions, // as InternalHtmlHandlerOptions,
   IJsHandlerOptions, // as InternalJsHandlerOptions,
   ICssHandlerOptions // as InternalCssHandlerOptions
@@ -15,11 +15,6 @@ export interface IClassGeneratorOptions {
   classPrefix?: string
 }
 
-export interface IHandlerOptions {
-  runtimeSet: Set<string>
-  classGenerator: ClassGenerator
-}
-
 export interface ClassSetOutputOptions {
   filename: string
   dir?: string
@@ -30,6 +25,9 @@ export interface ClassMapOutputOptions {
   filename: string
   dir?: string
 }
+
+export type PartialHandlerOptions<T extends IHandlerOptions> = Partial<Omit<T, 'runtimeSet' | 'classGenerator'>>
+
 export interface Options {
   mangleClassFilter?: (className: string) => boolean
   classGenerator?: IClassGeneratorOptions
@@ -37,7 +35,7 @@ export interface Options {
   include?: string[]
   classSetOutput?: boolean | ClassSetOutputOptions
   classMapOutput?: boolean | ClassMapOutputOptions
-  htmlHandlerOptions?: IHtmlHandlerOptions
-  jsHandlerOptions?: IJsHandlerOptions
-  cssHandlerOptions?: ICssHandlerOptions
+  htmlHandlerOptions?: PartialHandlerOptions<IHtmlHandlerOptions>
+  jsHandlerOptions?: PartialHandlerOptions<IJsHandlerOptions>
+  cssHandlerOptions?: PartialHandlerOptions<ICssHandlerOptions>
 }
