@@ -1,12 +1,10 @@
 import micromatch from 'micromatch'
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import { pluginName } from './constants'
-import { defaultMangleClassFilter, groupBy, isMap, isRegexp } from 'tailwindcss-mangle-shared'
+import { groupBy } from 'tailwindcss-mangle-shared'
 const { isMatch } = micromatch
-
-export { defaultMangleClassFilter, isMap, isRegexp }
 
 export function getGroupedEntries<T>(
   entries: [string, T][],
@@ -50,7 +48,7 @@ export function getGroupedEntries<T>(
 }
 
 export function createGlobMatcher(pattern: string | string[] | undefined, fallbackValue: boolean = false) {
-  if (typeof pattern === 'undefined') {
+  if (pattern === undefined) {
     return function (file: string) {
       return fallbackValue
     }
@@ -79,8 +77,10 @@ export function mkCacheDirectory(cwd = process.cwd()) {
 export function cacheDump(filename: string, data: any[] | Set<any>, basedir?: string) {
   try {
     const dir = mkCacheDirectory(basedir)
-    fs.writeFileSync(path.resolve(dir, filename), JSON.stringify(Array.from(data), null, 2), 'utf-8')
+    fs.writeFileSync(path.resolve(dir, filename), JSON.stringify([...data], undefined, 2), 'utf8')
   } catch (error) {
     console.log(error)
   }
 }
+
+export { defaultMangleClassFilter, isMap, isRegexp } from 'tailwindcss-mangle-shared'

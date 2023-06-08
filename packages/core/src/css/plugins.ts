@@ -8,10 +8,10 @@ const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
 
 export function isVueScoped(s: parser.ClassName): boolean {
   if (s.parent) {
-    const idx = s.parent.nodes.indexOf(s)
-    if (idx > -1) {
-      const nextNode = s.parent.nodes[idx + 1]
-      if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.indexOf('data-v-') > -1) {
+    const index = s.parent.nodes.indexOf(s)
+    if (index > -1) {
+      const nextNode = s.parent.nodes[index + 1]
+      if (nextNode && nextNode.type === 'attribute' && nextNode.attribute.includes('data-v-')) {
         return true
       }
     }
@@ -27,10 +27,8 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
     // must set newClassMap options
     let set: Set<string> = new Set()
 
-    if (options) {
-      if (options.runtimeSet) {
-        set = options.runtimeSet
-      }
+    if (options && options.runtimeSet) {
+      set = options.runtimeSet
     }
     return {
       postcssPlugin,
@@ -54,10 +52,8 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
   } else {
     let newClassMap: Record<string, IClassGeneratorContextItem> = {}
 
-    if (options) {
-      if (options.classGenerator) {
-        newClassMap = options.classGenerator.newClassMap
-      }
+    if (options && options.classGenerator) {
+      newClassMap = options.classGenerator.newClassMap
     }
 
     return {

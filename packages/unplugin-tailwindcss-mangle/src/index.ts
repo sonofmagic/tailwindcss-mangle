@@ -5,8 +5,8 @@ import { getGroupedEntries, cacheDump } from './utils'
 import type { OutputAsset, OutputChunk } from 'rollup'
 import { cssHandler, htmlHandler, jsHandler } from 'tailwindcss-mangle-core'
 import type { sources } from 'webpack'
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import { getOptions } from './options'
 
 export { defaultMangleClassFilter } from 'tailwindcss-mangle-shared'
@@ -31,12 +31,12 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
       generateBundle: {
         handler(options, bundle, isWrite) {
           const runtimeSet = getCachedClassSet()
-          if (!runtimeSet.size) {
+          if (runtimeSet.size === 0) {
             return
           }
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
 
-          if (Array.isArray(groupedEntries.html) && groupedEntries.html.length) {
+          if (Array.isArray(groupedEntries.html) && groupedEntries.html.length > 0) {
             for (let i = 0; i < groupedEntries.html.length; i++) {
               const [file, asset] = groupedEntries.html[i] as [string, OutputAsset]
               if (isInclude(file)) {
@@ -48,7 +48,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               }
             }
           }
-          if (Array.isArray(groupedEntries.js) && groupedEntries.js.length) {
+          if (Array.isArray(groupedEntries.js) && groupedEntries.js.length > 0) {
             for (let i = 0; i < groupedEntries.js.length; i++) {
               const [file, chunk] = groupedEntries.js[i] as [string, OutputChunk]
               if (isInclude(file)) {
@@ -64,7 +64,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             }
           }
 
-          if (Array.isArray(groupedEntries.css) && groupedEntries.css.length) {
+          if (Array.isArray(groupedEntries.css) && groupedEntries.css.length > 0) {
             for (let i = 0; i < groupedEntries.css.length; i++) {
               const [file, css] = groupedEntries.css[i] as [string, OutputAsset]
               if (isInclude(file)) {
@@ -91,7 +91,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
         const abs = getAssetPath(outputPath, file)
         const rel = getAssetPath(outputPath, file, false)
         try {
-          fs.writeFileSync(abs, data, 'utf-8')
+          fs.writeFileSync(abs, data, 'utf8')
           console.log('[tailwindcss-mangle]: ' + rel + ' overwrited successfully')
         } catch (error) {
           console.log('[tailwindcss-mangle]: ' + rel + ' overwrited fail!')
@@ -144,20 +144,20 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
             // cache result
-            if (!runtimeSet.size) {
+            if (runtimeSet.size === 0) {
               const css = new Map()
               const html = new Map()
               const js = new Map()
-              groupedEntries.css.forEach(([file, source]) => {
+              for (const [file, source] of groupedEntries.css) {
                 css.set(file, source)
-              })
-              groupedEntries.html.forEach(([file, source]) => {
+              }
+              for (const [file, source] of groupedEntries.html) {
                 html.set(file, source)
-              })
-              groupedEntries.js.forEach(([file, source]) => {
+              }
+              for (const [file, source] of groupedEntries.js) {
                 js.set(file, source)
-              })
-              if (js.size || css.size || html.size) {
+              }
+              if (js.size > 0 || css.size > 0 || html.size > 0) {
                 outputCachedMap.set(compiler.outputPath, {
                   css,
                   html,
@@ -168,7 +168,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               return
             }
 
-            if (groupedEntries.html.length) {
+            if (groupedEntries.html.length > 0) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
                 if (isInclude(file)) {
@@ -183,7 +183,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               }
             }
 
-            if (groupedEntries.js.length) {
+            if (groupedEntries.js.length > 0) {
               for (let i = 0; i < groupedEntries.js.length; i++) {
                 const [file, chunk] = groupedEntries.js[i]
                 if (isInclude(file)) {
@@ -200,7 +200,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               }
             }
 
-            if (groupedEntries.css.length) {
+            if (groupedEntries.css.length > 0) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, css] = groupedEntries.css[i]
                 if (isInclude(file)) {
@@ -215,9 +215,9 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               }
             }
             // overwrite ssr server side chunk
-            outputCachedMap.forEach(({ js, html, css }, key) => {
-              if (html.size) {
-                html.forEach((asset, file) => {
+            for (const [key, { js, html, css }] of outputCachedMap.entries()) {
+              if (html.size > 0) {
+                for (const [file, asset] of html.entries()) {
                   if (isInclude(file)) {
                     const html = htmlHandler((asset as sources.Source).source().toString(), {
                       ...htmlHandlerOptions,
@@ -226,12 +226,12 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                     })
                     overwriteServerSideAsset(key, file, html)
                   }
-                })
+                }
                 html.clear()
               }
 
-              if (js.size) {
-                js.forEach((chunk, file) => {
+              if (js.size > 0) {
+                for (const [file, chunk] of js.entries()) {
                   if (isInclude(file)) {
                     const rawCode = (chunk as sources.Source).source().toString()
                     const code = jsHandler(rawCode, {
@@ -243,12 +243,12 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
                       overwriteServerSideAsset(key, file, code)
                     }
                   }
-                })
+                }
                 js.clear()
               }
 
-              if (css.size) {
-                css.forEach((style, file) => {
+              if (css.size > 0) {
+                for (const [file, style] of css.entries()) {
                   if (isInclude(file)) {
                     const newCss = cssHandler((style as sources.Source).source().toString(), {
                       ...cssHandlerOptions,
@@ -258,17 +258,17 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
 
                     overwriteServerSideAsset(key, file, newCss)
                   }
-                })
+                }
                 css.clear()
               }
-            })
+            }
           }
         )
       })
     },
     writeBundle() {
       const entries = Object.entries(classGenerator.newClassMap)
-      if (entries.length && classMapOutputOptions) {
+      if (entries.length > 0 && classMapOutputOptions) {
         cacheDump(
           classMapOutputOptions.filename,
           entries.map((x) => {

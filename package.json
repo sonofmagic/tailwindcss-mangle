@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-mangle",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -29,6 +29,7 @@
     "bumpp": "^9.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.42.0",
+    "eslint-plugin-unicorn": "^47.0.0",
     "jest": "^29.5.0",
     "only-allow": "^1.1.1",
     "prettier": "^2.8.8",
@@ -44,5 +45,8 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "pnpm@8.5.1"
+  "packageManager": "pnpm@8.5.1",
+  "dependencies": {
+    "vitest": "^0.32.0"
+  }
 }

@@ -3,17 +3,16 @@ import * as t from '@babel/types'
 import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
-import { isProd } from '../env'
+import { isProd as isProduction } from '../env'
 
-export function handleValue(str: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
+export function handleValue(string_: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
 
-  const arr = splitCode(str, {
+  const array = splitCode(string_, {
     splitQuote
   })
-  let rawStr = str
-  for (let i = 0; i < arr.length; i++) {
-    const v = arr[i]
+  let rawString = string_
+  for (const v of array) {
     if (set.has(v)) {
       let ignoreFlag = false
       if (Array.isArray(node.leadingComments)) {
@@ -21,11 +20,11 @@ export function handleValue(str: string, node: StringLiteral | TemplateElement, 
       }
 
       if (!ignoreFlag) {
-        rawStr = rawStr.replace(makeRegex(v), clsGen.generateClassName(v).name)
+        rawString = rawString.replace(makeRegex(v), clsGen.generateClassName(v).name)
       }
     }
   }
-  return rawStr
+  return rawString
 }
 
 export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
@@ -52,12 +51,10 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
               enter(p: NodePath<CallExpression>) {
                 const n = p.node
                 // eval()
-                if (t.isIdentifier(n.callee) && n.callee.name === 'eval') {
-                  if (t.isStringLiteral(n.arguments[0])) {
-                    const res = jsHandler(n.arguments[0].value, options)
-                    if (res.code) {
-                      n.arguments[0].value = res.code
-                    }
+                if (t.isIdentifier(n.callee) && n.callee.name === 'eval' && t.isStringLiteral(n.arguments[0])) {
+                  const res = jsHandler(n.arguments[0].value, options)
+                  if (res.code) {
+                    n.arguments[0].value = res.code
                   }
                 }
               }
@@ -67,7 +64,7 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
         }
       }
     ],
-    minified: options.minified ?? isProd(),
+    minified: options.minified ?? isProduction(),
     sourceMaps: false,
     configFile: false
   })
