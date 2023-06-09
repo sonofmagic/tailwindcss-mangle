@@ -32,8 +32,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@babel/core": "^7.22.1",
-    "@babel/types": "^7.22.4",
+    "@babel/core": "^7.22.5",
+    "@babel/types": "^7.22.5",
     "parse5": "^7.1.2",
     "postcss": "^8.4.24",
     "postcss-selector-parser": "^6.0.13",
