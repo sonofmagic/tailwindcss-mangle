@@ -52,6 +52,8 @@
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
     "_test": "jest",
+    "test": "vitest run",
+    "test:dev": "vitest",
     "_prepare": "tw-patch"
   },
   "files": [
