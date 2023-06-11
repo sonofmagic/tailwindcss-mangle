@@ -7,6 +7,7 @@ A util for mangle tailwindcss
   - [tailwindcss-mangle-core](#tailwindcss-mangle-core)
   - [tailwindcss-mangle-shared](#tailwindcss-mangle-shared)
   - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
+  - [How to use](#how-to-use)
 
 ## tailwindcss-patch
 
@@ -31,3 +32,7 @@ click [tailwindcss-mangle-shared](./packages/shared) for more details.
 `unplugin-tailwindcss-mangle` is a plugin for `webpack` and `vite` to **obfuscate** tailwindcss class.
 
 you can enter [unplugin-tailwindcss-mangle](./packages/unplugin-tailwindcss-mangle) for usage and more details.
+
+## How to use
+
+See [unplugin-tailwindcss-mangle](./packages/unplugin-tailwindcss-mangle)

@@ -84,16 +84,15 @@ import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
 const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
 // use this webpack plugin
 // for example next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  webpack: (config) => {
+const { defineConfig } = require('@vue/cli-service')
+// vue.config.js
+module.exports = defineConfig({
+  transpileDependencies: true,
+  configureWebpack: (config) => {
     config.plugins.push(utwm())
-    return config
   }
-}
+})
 
-module.exports = nextConfig
 ```
 
 ## Options
