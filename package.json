@@ -33,7 +33,7 @@
     "jest": "^29.5.0",
     "only-allow": "^1.1.1",
     "prettier": "^2.8.8",
-    "rollup": "^3.25.0",
+    "rollup": "^3.25.1",
     "tailwindcss-mangle-core": "workspace:*",
     "tailwindcss-mangle-shared": "workspace:*",
     "tailwindcss-patch": "workspace:*",
@@ -45,7 +45,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "pnpm@8.6.1",
+  "packageManager": "pnpm@8.6.2",
   "dependencies": {
     "vitest": "^0.32.0"
   }

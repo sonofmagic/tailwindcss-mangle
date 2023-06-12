@@ -10,7 +10,7 @@
     "prepare": "tw-patch"
   },
   "dependencies": {
-    "core-js": "^3.30.2",
+    "core-js": "^3.31.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"
   },
