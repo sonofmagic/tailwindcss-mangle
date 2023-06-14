@@ -1,4 +1,4 @@
-import 'index.css'
+import './index.css'
 
 document.querySelector('#app').innerHTML = `
 <main class="flex min-h-screen flex-col items-center justify-between p-24">
