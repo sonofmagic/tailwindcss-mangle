@@ -1,5 +1,11 @@
 # tailwindcss-mangle
 
+![star](https://badgen.net/github/stars/sonofmagic/tailwindcss-mangle)
+![dm0](https://badgen.net/npm/dm/tailwindcss-mangle-core)
+![dm1](https://badgen.net/npm/dm/tailwindcss-mangle-shared)
+![dm2](https://badgen.net/npm/dm/tailwindcss-patch)
+![dm3](https://badgen.net/npm/dm/unplugin-tailwindcss-mangle)
+[![test](https://github.com/sonofmagic/tailwindcss-mangle/actions/workflows/test.yml/badge.svg?branch=dev)](https://github.com/sonofmagic/tailwindcss-mangle/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/sonofmagic/tailwindcss-mangle/branch/main/graph/badge.svg?token=jPyNihT78U)](https://codecov.io/gh/sonofmagic/tailwindcss-mangle)
 
 A util for mangle tailwindcss
