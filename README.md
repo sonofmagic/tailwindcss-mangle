@@ -1,5 +1,7 @@
 # tailwindcss-mangle
 
+[![codecov](https://codecov.io/gh/sonofmagic/tailwindcss-mangle/branch/main/graph/badge.svg?token=jPyNihT78U)](https://codecov.io/gh/sonofmagic/tailwindcss-mangle)
+
 A util for mangle tailwindcss
 
 - [tailwindcss-mangle](#tailwindcss-mangle)
