@@ -1,10 +1,10 @@
 import postcss from 'postcss'
 import tailwindcss from 'tailwindcss'
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 export function getTestCase(caseName: string) {
-  return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf-8')
+  return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf8')
 }
 // @tailwind base;
 // @tailwind components;

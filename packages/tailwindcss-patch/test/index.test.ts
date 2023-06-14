@@ -1,12 +1,12 @@
 import { internalPatch } from '../src/patcher'
 
-import path from 'path'
+import path from 'node:path'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const versionsPkgDir = path.resolve(tailwindcssCasePath, 'versions/package.json')
 
 function getTailwindcssVersion(str: string) {
   // eslint-disable-next-line no-useless-escape
-  const match = /^tailwindcss([\d\.]*)$/.exec(str)
+  const match = /^tailwindcss([\d.]*)$/.exec(str)
   if (match === null) {
     // 不是 tailwindcss
     return false

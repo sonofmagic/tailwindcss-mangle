@@ -1,6 +1,25 @@
 import type { IClassGeneratorOptions, IClassGenerator } from './types'
 
+export const preserveClassNames = [
+  // https://tailwindcss.com/docs/transition-timing-function start
+  // https://github.com/sonofmagic/tailwindcss-mangle/issues/21
+  'ease-out',
+  'ease-linear',
+  'ease-in',
+  'ease-in-out'
+  // https://tailwindcss.com/docs/transition-timing-function end
+]
+
+// eslint-disable-next-line unicorn/no-array-reduce
+const preserveClassNamesMap = preserveClassNames.reduce<Record<(typeof preserveClassNames)[number], true>>((acc, cur) => {
+  acc[cur] = true
+  return acc
+}, {})
+
 export const defaultMangleClassFilter = (className: string) => {
+  if (preserveClassNamesMap[className]) {
+    return false
+  }
   // ignore className like 'filter','container'
   // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
   // bg-[#123456] w-1 etc...

@@ -1,0 +1,614 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`vite build > common build  1`] = `
+"(function () {
+  const t = document.createElement(\\"link\\").relList;
+  if (t && t.supports && t.supports(\\"modulepreload\\")) return;
+  for (const e of document.querySelectorAll('link[rel=\\"modulepreload\\"]')) n(e);
+  new MutationObserver(e => {
+    for (const r of e) if (r.type === \\"childList\\") for (const a of r.addedNodes) a.tagName === \\"LINK\\" && a.rel === \\"modulepreload\\" && n(a);
+  }).observe(document, {
+    childList: !0,
+    subtree: !0
+  });
+  function s(e) {
+    const r = {};
+    return e.integrity && (r.integrity = e.integrity), e.referrerPolicy && (r.referrerPolicy = e.referrerPolicy), e.crossOrigin === \\"use-credentials\\" ? r.credentials = \\"include\\" : e.crossOrigin === \\"anonymous\\" ? r.credentials = \\"omit\\" : r.credentials = \\"same-origin\\", r;
+  }
+  function n(e) {
+    if (e.ep) return;
+    e.ep = !0;
+    const r = s(e);
+    fetch(e.href, r);
+  }
+})();
+function l(o) {
+  o.animate({
+    clipPath: []
+  }, {
+    duration: 400,
+    easing: \\"ease-out\\"
+  });
+}
+document.querySelector(\\"#app\\").innerHTML = \`
+  <div>
+    <button id=\\"counter\\">counter</button>
+  </div>
+
+<main class=\\"flex tw-a tw-b tw-c tw-d tw-e\\">
+<div class=\\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\">
+  <p
+    class=\\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea\\">
+    Get started by editing&nbsp;
+    <code class=\\"tw-i tw-fa\\">pages/index.tsx</code>
+  </p>
+  <div
+    class=\\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\">
+    <a class=\\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\"
+      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+      By
+    </a>
+  </div>
+</div>
+
+<div
+  class=\\"relative flex tw-ra tw-wa tw-xa tw-ya tw-za tw-ab before:bg-gradient-radial tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb after:bg-gradient-conic tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb\\">
+  <img class=\\"relative tw-ub tw-vb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+    priority />
+</div>
+
+<div class=\\"tw-wb grid tw-xb tw-yb tw-zb tw-ac\\">
+  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+      Docs <span
+        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Find in-depth information about Next.js
+      features and API.</p>
+  </a>
+
+  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+      Learn <span
+        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Learn about Next.js in an interactive
+      course with&nbsp;quizzes!</p>
+  </a>
+
+  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+      Templates <span
+        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Discover and deploy boilerplate example
+      Next.js&nbsp;projects.</p>
+  </a>
+
+  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+      Deploy <span
+        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Instantly deploy your Next.js site to a
+      shareable URL with Vercel.</p>
+  </a>
+</div>
+</main>
+\`;
+l(document.querySelector(\\"#counter\\"));"
+`;
+
+exports[`vite build > common build  2`] = `
+"*, ::before, ::after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  
+}
+::backdrop {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  
+}
+.tw-qa {
+    pointer-events: none
+}
+.fixed {
+    position: fixed
+}
+.relative {
+    position: relative
+}
+.tw-ga {
+    bottom: 0px
+}
+.tw-l {
+    left: 0px
+}
+.tw-m {
+    top: 0px
+}
+.tw-f {
+    z-index: 10
+}
+.tw-rc {
+    margin: 0px
+}
+.tw-kc {
+    margin-bottom: 0.75rem
+}
+.tw-wb {
+    margin-bottom: 8rem
+}
+.tw-nc {
+    display: inline-block
+}
+.flex {
+    display: flex
+}
+.grid {
+    display: grid
+}
+.tw-ha {
+    height: 12rem
+}
+.tw-a {
+    min-height: 100vh
+}
+.tw-g {
+    width: 100%
+}
+.tw-h {
+    max-width: 64rem
+}
+.tw-sc {
+    max-width: 30ch
+}
+.tw-b {
+    flex-direction: column
+}
+.tw-ra {
+    place-items: center
+}
+.tw-ia {
+    align-items: flex-end
+}
+.tw-c {
+    align-items: center
+}
+.tw-n {
+    justify-content: center
+}
+.tw-d {
+    justify-content: space-between
+}
+.tw-sa {
+    gap: 0.5rem
+}
+.tw-bc {
+    border-radius: 0.5rem
+}
+.border {
+    border-width: 1px
+}
+.tw-o {
+    border-bottom-width: 1px
+}
+.tw-p {
+    --tw-border-opacity: 1;
+    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+}
+.tw-cc {
+    border-color: transparent
+}
+.tw-q {
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops))
+}
+.tw-ja {
+    background-image: linear-gradient(to top, var(--tw-gradient-stops))
+}
+.tw-ka {
+    --tw-gradient-from: #fff var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+}
+.tw-r {
+    --tw-gradient-from: #e4e4e7 var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(228 228 231 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+}
+.tw-la {
+    --tw-gradient-to: rgb(255 255 255 / 0)  var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), #fff var(--tw-gradient-via-position), var(--tw-gradient-to)
+}
+.tw-e {
+    padding: 6rem
+}
+.tw-ta {
+    padding: 2rem
+}
+.tw-dc {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem
+}
+.tw-ec {
+    padding-top: 1rem;
+    padding-bottom: 1rem
+}
+.tw-s {
+    padding-bottom: 1.5rem
+}
+.tw-t {
+    padding-top: 2rem
+}
+.tw-xb {
+    text-align: center
+}
+.tw-i {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
+}
+.tw-lc {
+    font-size: 1.5rem;
+    line-height: 2rem
+}
+.tw-j {
+    font-size: 0.875rem;
+    line-height: 1.25rem
+}
+.tw-fa {
+    font-weight: 700
+}
+.tw-mc {
+    font-weight: 600
+}
+.tw-tc {
+    opacity: 0.5
+}
+.tw-u {
+    --tw-backdrop-blur: blur(40px);
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
+}
+.tw-fc {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms
+}
+.tw-oc {
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms
+}
+.ease-out {
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1)
+}
+.tw-wa::before {
+    content: var(--tw-content);
+    position: absolute
+}
+.tw-xa::before {
+    content: var(--tw-content);
+    height: 300px
+}
+.tw-ya::before {
+    content: var(--tw-content);
+    width: 480px
+}
+.tw-za::before {
+    content: var(--tw-content);
+    --tw-translate-x: -50%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+.tw-ab::before {
+    content: var(--tw-content);
+    border-radius: 9999px
+}
+.tw-bb::before {
+    content: var(--tw-content);
+    --tw-gradient-from: #fff var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+}
+.tw-cb::before {
+    content: var(--tw-content);
+    --tw-gradient-to: transparent var(--tw-gradient-to-position)
+}
+.tw-db::before {
+    content: var(--tw-content);
+    --tw-blur: blur(40px);
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+.tw-eb::before {
+    --tw-content: '';
+    content: var(--tw-content)
+}
+.tw-fb::after {
+    content: var(--tw-content);
+    position: absolute
+}
+.tw-gb::after {
+    content: var(--tw-content);
+    z-index: -20
+}
+.tw-hb::after {
+    content: var(--tw-content);
+    height: 180px
+}
+.tw-ib::after {
+    content: var(--tw-content);
+    width: 240px
+}
+.tw-jb::after {
+    content: var(--tw-content);
+    --tw-translate-x: 33.333333%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+.tw-kb::after {
+    content: var(--tw-content);
+    --tw-gradient-from: #bae6fd var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(186 230 253 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+}
+.tw-lb::after {
+    content: var(--tw-content);
+    --tw-gradient-to: rgb(191 219 254 / 0)  var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), #bfdbfe var(--tw-gradient-via-position), var(--tw-gradient-to)
+}
+.tw-mb::after {
+    content: var(--tw-content);
+    --tw-blur: blur(40px);
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+.tw-nb::after {
+    --tw-content: '';
+    content: var(--tw-content)
+}
+.tw-gc:hover {
+    --tw-border-opacity: 1;
+    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+}
+.tw-hc:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+}
+.group:hover .tw-pc {
+    --tw-translate-x: 0.25rem;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+@media (prefers-reduced-motion: reduce) {
+    .tw-qc {
+        transform: none
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .tw-v {
+        --tw-border-opacity: 1;
+        border-color: rgb(38 38 38 / var(--tw-border-opacity))
+    }
+    .tw-w {
+        background-color: rgb(39 39 42 / 0.3)
+    }
+    .tw-ma {
+        --tw-gradient-from: #000 var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+    }
+    .tw-x {
+        --tw-gradient-from: inherit var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+    }
+    .tw-na {
+        --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), #000 var(--tw-gradient-via-position), var(--tw-gradient-to)
+    }
+    .tw-ub {
+        --tw-drop-shadow: drop-shadow(0 0 0.3rem #ffffff70);
+        filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+    }
+    .tw-vb {
+        --tw-invert: invert(100%);
+        filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+    }
+    .tw-ob::before {
+        content: var(--tw-content);
+        background-image: linear-gradient(to bottom right, var(--tw-gradient-stops))
+    }
+    .tw-pb::before {
+        content: var(--tw-content);
+        --tw-gradient-from: transparent var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+    }
+    .tw-qb::before {
+        content: var(--tw-content);
+        --tw-gradient-to: rgb(29 78 216 / 0.1) var(--tw-gradient-to-position)
+    }
+    .tw-rb::after {
+        content: var(--tw-content);
+        --tw-gradient-from: #0c4a6e var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(12 74 110 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+    }
+    .tw-sb::after {
+        content: var(--tw-content);
+        --tw-gradient-to: rgb(1 65 255 / 0)  var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), rgb(1 65 255 / 0.4) var(--tw-gradient-via-position), var(--tw-gradient-to)
+    }
+    .tw-ic:hover {
+        --tw-border-opacity: 1;
+        border-color: rgb(64 64 64 / var(--tw-border-opacity))
+    }
+    .tw-jc:hover {
+        background-color: rgb(38 38 38 / 0.3)
+    }
+}
+@media (min-width: 1024px) {
+    .tw-ua {
+        pointer-events: auto
+    }
+    .tw-y {
+        position: static
+    }
+    .tw-yb {
+        margin-bottom: 0px
+    }
+    .tw-k {
+        display: flex
+    }
+    .tw-oa {
+        height: auto
+    }
+    .tw-z {
+        width: auto
+    }
+    .tw-zb {
+        grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+    .tw-aa {
+        border-radius: 0.75rem
+    }
+    .tw-ba {
+        border-width: 1px
+    }
+    .tw-ca {
+        --tw-bg-opacity: 1;
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+    }
+    .tw-pa {
+        background-image: none
+    }
+    .tw-va {
+        padding: 0px
+    }
+    .tw-da {
+        padding: 1rem
+    }
+    .tw-ac {
+        text-align: left
+    }
+    .tw-tb::before {
+        content: var(--tw-content);
+        height: 360px
+    }
+    @media (prefers-color-scheme: dark) {
+        .tw-ea {
+            background-color: rgb(39 39 42 / 0.3)
+        }
+    }
+}
+"
+`;
+
+exports[`vite build > common build  3`] = `
+"<!DOCTYPE html><html lang=\\"en\\"><head>
+    <meta charset=\\"UTF-8\\">
+    <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\">
+    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+    <title>Vite + TS</title>
+    <script type=\\"module\\" crossorigin=\\"\\" src=\\"/index.js\\"></script>
+    <link rel=\\"stylesheet\\" href=\\"/index.css\\">
+  </head>
+  <body>
+    <div id=\\"app\\"></div>
+    
+  
+
+</body></html>"
+`;

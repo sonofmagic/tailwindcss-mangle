@@ -1,5 +1,5 @@
 import { TailwindcssPatcher } from '../src/class'
-import path from 'path'
+import path from 'node:path'
 import { getCss, getTestCase } from './utils'
 describe('class', () => {
   it('default', () => {
@@ -34,5 +34,26 @@ describe('class', () => {
     const set = twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(5)
+  })
+
+  it('multiple time process sources', () => {
+    const twPatcher = new TailwindcssPatcher()
+    getCss(['text-[100px]'])
+    let ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    let set = twPatcher.getClassSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(2)
+    expect(set.has('text-[100px]')).toBe(true)
+
+    // 2 times
+    // 不累加
+    getCss(['text-[99px]'])
+    ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    set = twPatcher.getClassSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(2)
+    expect(set.has('text-[99px]')).toBe(true)
   })
 })

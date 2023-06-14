@@ -1,12 +1,12 @@
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '../src/inspector'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const twltsLibPath = path.resolve(tailwindcssCasePath, 'versions/3.3.1/lib')
 
 describe('inspector', () => {
   it('inspectPostcssPlugin patch snap', () => {
-    const rawCode = fs.readFileSync(path.resolve(twltsLibPath, 'plugin.js'), 'utf-8')
+    const rawCode = fs.readFileSync(path.resolve(twltsLibPath, 'plugin.js'), 'utf8')
     const { code, hasPatched } = inspectPostcssPlugin(rawCode)
     expect(hasPatched).toBe(false)
     expect(code).toMatchSnapshot()
@@ -16,7 +16,7 @@ describe('inspector', () => {
   })
 
   it('inspectProcessTailwindFeaturesReturnContext patch snap', () => {
-    const rawCode = fs.readFileSync(path.resolve(twltsLibPath, 'processTailwindFeatures.js'), 'utf-8')
+    const rawCode = fs.readFileSync(path.resolve(twltsLibPath, 'processTailwindFeatures.js'), 'utf8')
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(rawCode)
     expect(hasPatched).toBe(false)
     expect(code).toMatchSnapshot()

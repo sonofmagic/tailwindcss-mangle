@@ -6,7 +6,11 @@ const config: Config = {
       ...baseConfig
       // transformIgnorePatterns: ['/node_modules/(?!(@parse5/)/tools)']
     }
-  ]
+  ],
+  collectCoverage: true,
+  coverageDirectory: '../../coverage/tailwindcss-mangle-shared',
+  coverageProvider: 'v8',
+  coveragePathIgnorePatterns: ['/node_modules/', '/test/']
 }
 
 export default config
