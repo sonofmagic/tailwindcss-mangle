@@ -15,7 +15,14 @@ describe('vite build', () => {
       root: path.resolve(__dirname, 'fixtures/vite-repo'),
       build: {
         write: false,
-        cssMinify: false
+        cssMinify: false,
+        rollupOptions: {
+          output: {
+            entryFileNames: `[name].js`,
+            chunkFileNames: `[name].js`,
+            assetFileNames: `[name].[ext]`
+          }
+        }
       },
       plugins: [utwm()]
     })) as RollupOutput

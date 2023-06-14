@@ -602,8 +602,8 @@ exports[`vite build > common build  3`] = `
     <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\">
     <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
     <title>Vite + TS</title>
-    <script type=\\"module\\" crossorigin=\\"\\" src=\\"/assets/index-0391d18b.js\\"></script>
-    <link rel=\\"stylesheet\\" href=\\"/assets/index-d80d7913.css\\">
+    <script type=\\"module\\" crossorigin=\\"\\" src=\\"/index.js\\"></script>
+    <link rel=\\"stylesheet\\" href=\\"/index.css\\">
   </head>
   <body>
     <div id=\\"app\\"></div>
