@@ -14,7 +14,8 @@ describe('vite build', () => {
     const res = (await build({
       root: path.resolve(__dirname, 'fixtures/vite-repo'),
       build: {
-        write: false
+        write: false,
+        cssMinify: false
       },
       plugins: [utwm()]
     })) as RollupOutput
