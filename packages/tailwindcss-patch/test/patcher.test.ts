@@ -1,11 +1,11 @@
 import { getInstalledPkgJsonPath } from '../src/patcher'
-import path from 'path'
+import path from 'node:path'
 
 describe('patcher', () => {
   it('getInstalledPkgJsonPath common options', () => {
     const pkgJsonPath = getInstalledPkgJsonPath()
     expect(pkgJsonPath).toBeTruthy()
-    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath).replace(/\\/g, '/')).toMatchSnapshot()
+    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath).replaceAll('\\', '/')).toMatchSnapshot()
   })
 
   it('getInstalledPkgJsonPath baseDir options', () => {

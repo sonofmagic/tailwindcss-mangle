@@ -29,7 +29,7 @@ describe('common usage', () => {
     const set = getClassCacheSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
-    expect(Array.from(set.values())[1]).toBe("bg-[url('https://xxx.webp')]")
+    expect([...set.values()][1]).toBe("bg-[url('https://xxx.webp')]")
     //
   })
 

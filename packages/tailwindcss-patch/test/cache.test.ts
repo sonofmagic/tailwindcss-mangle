@@ -1,7 +1,7 @@
 import { getCacheOptions, mkCacheDirectory, readCache, writeCache } from '../src/cache'
-import path from 'path'
+import path from 'node:path'
 import { pkgName } from '../src/constants'
-import fs from 'fs'
+import fs from 'node:fs'
 describe('cache', () => {
   it('getCacheOptions', () => {
     expect(getCacheOptions).toBeDefined()
@@ -45,7 +45,7 @@ describe('cache', () => {
       `{
       [ '2',"fuck you",{s:'12}
     }`,
-      'utf-8'
+      'utf8'
     )
     expect(fs.existsSync(filepath)).toBe(true)
     const cache = readCache({
