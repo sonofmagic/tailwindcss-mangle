@@ -5,6 +5,10 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   }
+  // collectCoverage: true,
+  // coverageDirectory: 'coverage',
+  // coverageProvider: 'v8',
+  // coveragePathIgnorePatterns: ['/node_modules/', '<rootDir>/apps/']
 }
 
 export default config

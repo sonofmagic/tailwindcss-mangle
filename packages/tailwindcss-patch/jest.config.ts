@@ -6,7 +6,11 @@ const config: Config = {
       ...baseConfig,
       modulePathIgnorePatterns: ['<rootDir>/test/fixtures']
     }
-  ]
+  ],
+  collectCoverage: true,
+  coverageDirectory: '../../coverage/tailwindcss-patch',
+  coverageProvider: 'v8',
+  coveragePathIgnorePatterns: ['/node_modules/', '/test/']
 }
 
 export default config
