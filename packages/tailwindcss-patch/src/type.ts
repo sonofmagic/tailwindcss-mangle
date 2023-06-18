@@ -1,8 +1,11 @@
+export type CacheStrategy = 'merge' | 'overwrite'
+
 export interface CacheOptions {
   // enable?: boolean
   dir?: string
   cwd?: string
   file?: string
+  strategy?: CacheStrategy
 }
 
 export type InternalCacheOptions = CacheOptions & { enable?: boolean }

@@ -31,7 +31,9 @@ describe('class', () => {
     getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = twPatcher.getClassSet()
+    const set = twPatcher.getClassSet({
+      cacheStrategy: 'overwrite'
+    })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(5)
   })
@@ -55,5 +57,7 @@ describe('class', () => {
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[99px]')).toBe(true)
+
+    twPatcher.setCache(new Set())
   })
 })

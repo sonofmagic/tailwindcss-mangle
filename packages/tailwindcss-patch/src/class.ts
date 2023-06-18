@@ -1,5 +1,5 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions } from './type'
+import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from './type'
 import { writeCache, readCache } from './cache'
 import { createPatch, getPatchOptions } from './patcher'
 
@@ -53,9 +53,34 @@ export class TailwindcssPatcher {
     // }
   }
 
-  getClassSet(basedir?: string) {
+  /**
+   * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
+   * 详见 taro weapp-tailwindcss 独立分包
+   * @param basedir
+   * @returns
+   */
+  getClassSet(
+    options: {
+      basedir?: string
+      cacheStrategy?: CacheStrategy
+    } = {
+      cacheStrategy: this.cacheOptions.strategy ?? 'merge'
+    }
+  ) {
+    const { basedir, cacheStrategy } = options
     const set = getClassCacheSet(basedir)
-    set.size > 0 && this.setCache(set)
+    if (cacheStrategy === 'overwrite') {
+      set.size > 0 && this.setCache(set)
+    } else if (cacheStrategy === 'merge') {
+      const cacheSet = this.getCache()
+      if (cacheSet) {
+        for (const x of cacheSet) {
+          set.add(x)
+        }
+      }
+      this.setCache(set)
+    }
+
     return set
   }
 

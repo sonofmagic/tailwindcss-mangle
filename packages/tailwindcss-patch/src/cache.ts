@@ -22,7 +22,8 @@ export function getCacheOptions(options: CacheOptions = {}): Required<CacheOptio
     cwd,
     dir,
     file,
-    filename
+    filename,
+    strategy: 'merge'
   }
 }
 

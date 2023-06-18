@@ -45,7 +45,7 @@ export function getClassCacheSet(basedir?: string): Set<string> {
   for (const classCacheMap of classCaches) {
     const keys = classCacheMap.keys()
     for (const key of keys) {
-      classSet.add(key)
+      classSet.add(key.toString())
     }
   }
   return classSet
