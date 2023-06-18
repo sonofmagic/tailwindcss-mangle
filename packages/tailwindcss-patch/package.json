@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "patch tailwindcss for exposing context",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
@@ -47,7 +47,7 @@
     "@babel/traverse": "^7.22.5",
     "@babel/types": "^7.22.5",
     "resolve": "^1.22.2",
-    "semver": "^7.5.1"
+    "semver": "^7.5.2"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

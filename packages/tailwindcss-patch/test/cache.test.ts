@@ -2,6 +2,9 @@ import { getCacheOptions, mkCacheDirectory, readCache, writeCache } from '../src
 import path from 'node:path'
 import { pkgName } from '../src/constants'
 import fs from 'node:fs'
+import { TailwindcssPatcher } from '../src/class'
+import { getCss } from './utils'
+
 describe('cache', () => {
   it('getCacheOptions', () => {
     expect(getCacheOptions).toBeDefined()
@@ -53,5 +56,34 @@ describe('cache', () => {
     })
     expect(cache).toBe(undefined)
     expect(fs.existsSync(filepath)).toBe(false)
+  })
+
+  it('multiple tw context merge cache', () => {
+    const dir = path.resolve(__dirname, './fixtures/cache')
+    const twPatcher = new TailwindcssPatcher({
+      cache: {
+        dir,
+        file: 'merge-multiple-context.json'
+      }
+    })
+    twPatcher.setCache(new Set())
+    getCss(['text-[100px]'])
+    let ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    let set = twPatcher.getClassSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(2)
+    expect(set.has('text-[100px]')).toBe(true)
+
+    // 2 times
+    // 不累加
+    getCss(['text-[99px]'])
+    ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    set = twPatcher.getClassSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(3)
+    expect(set.has('text-[99px]')).toBe(true)
+    expect(set.has('text-[100px]')).toBe(true)
   })
 })
