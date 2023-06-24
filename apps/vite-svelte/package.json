@@ -7,15 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "prepare": "tw-patch"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.1",
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "@tsconfig/svelte": "^4.0.1",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
-    "svelte": "^3.59.1",
-    "svelte-check": "^3.4.3",
+    "svelte": "^4.0.0",
+    "svelte-check": "^3.4.4",
     "tailwindcss": "^3.3.2",
     "tailwindcss-patch": "workspace:*",
     "tslib": "^2.5.3",
