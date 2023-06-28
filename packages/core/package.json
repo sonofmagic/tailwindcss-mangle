@@ -42,7 +42,7 @@
   "devDependencies": {
     "@parse5/tools": "^0.1.0",
     "@types/babel__core": "^7.20.1",
-    "tslib": "^2.5.3"
+    "tslib": "^2.6.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {
