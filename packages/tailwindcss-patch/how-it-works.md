@@ -70,7 +70,7 @@ After reading and studying the source code, I came up with a solution to expose 
 
 As we want to patch `tailwindcss`, we need to know where exactly `tailwindcss` is running in our local code.
 
-We install version `3.2.2` of `tailwindcss` (the latest version as of 20230630) and go to `node_modules/tailwindcss/package.json`
+We install version `3.3.2` of `tailwindcss` (the latest version as of 20230630) and go to `node_modules/tailwindcss/package.json`
 
 ```jsonc
 {
