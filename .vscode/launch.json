@@ -6,6 +6,13 @@
   "configurations": [
     {
       "command": "npm run build",
+      "name": "Debug nuxt-app",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/nuxt-app"
+    },
+    {
+      "command": "npm run build",
       "name": "Debug next-app",
       "request": "launch",
       "type": "node-terminal",
