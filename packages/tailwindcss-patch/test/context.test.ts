@@ -1,8 +1,8 @@
 import { getContexts, getClassCacheSet } from '../src'
 import { getCss, getTestCase } from './utils'
 describe('common usage', () => {
-  it('hello-world', () => {
-    const result = getCss(getTestCase('hello-world.html'))
+  it('hello-world', async () => {
+    const result = await getCss(getTestCase('hello-world.html'))
     const ctxs = getContexts()
     expect(ctxs.length).toBeTruthy()
     const set = getClassCacheSet()
@@ -11,8 +11,8 @@ describe('common usage', () => {
     expect(result).toMatchSnapshot()
   })
 
-  it('hello-world with js', () => {
-    const result = getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
+  it('hello-world with js', async () => {
+    const result = await getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
     const ctxs = getContexts()
     expect(ctxs.length).toBeTruthy()
     const set = getClassCacheSet()
@@ -22,8 +22,8 @@ describe('common usage', () => {
   })
 
   // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin/issues/158
-  it("bg-[url('img_src')] lose efficacy", () => {
-    getCss([getTestCase('img-url.jsx')])
+  it("bg-[url('img_src')] lose efficacy", async () => {
+    await getCss([getTestCase('img-url.jsx')])
     const ctxs = getContexts()
     expect(ctxs).toBeTruthy()
     const set = getClassCacheSet()
@@ -33,8 +33,8 @@ describe('common usage', () => {
     //
   })
 
-  it('trailing slash', () => {
-    getCss([getTestCase('trailing-slash.vue')])
+  it('trailing slash', async () => {
+    await getCss([getTestCase('trailing-slash.vue')])
     const ctxs = getContexts()
     expect(ctxs).toBeTruthy()
     const set = getClassCacheSet()

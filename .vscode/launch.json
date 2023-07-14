@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "yarn patch",
+      "name": "do tailwindcss-patch",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/packages/tailwindcss-patch"
+    },
+    {
       "command": "npm run build",
       "name": "Debug nuxt-app",
       "request": "launch",

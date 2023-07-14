@@ -22,6 +22,7 @@ export interface InternalPatchOptions {
   paths?: string[]
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
+  version?: string
 }
 
 export interface TailwindcssPatcherOptions {

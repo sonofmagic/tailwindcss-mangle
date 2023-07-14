@@ -80,11 +80,13 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
   return result
 }
 
+
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
     const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
     if (gte(pkgJson.version!, '3.0.0')) {
+      options.version = pkgJson.version
       const result = monkeyPatchForExposingContext(twDir, options)
       return result
     }
