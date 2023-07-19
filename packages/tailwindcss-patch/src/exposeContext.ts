@@ -1,13 +1,14 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import type { Rule } from 'postcss'
+import type { TailwindcssClassCache, TailwindcssRuntimeContext } from './type'
 import { requireResolve } from './utils'
+
 
 export function getTailwindcssEntry(basedir: string = process.cwd()) {
   return requireResolve('tailwindcss')
 }
 
-export function getContexts(basedir?: string) {
+export function getContexts(basedir?: string): TailwindcssRuntimeContext[] {
   const twPath = getTailwindcssEntry(basedir)
 
   const distPath = path.dirname(twPath)
@@ -19,25 +20,16 @@ export function getContexts(basedir?: string) {
 
   const mo = require(injectFilePath)
   if (mo.contextRef) {
-    return mo.contextRef.value as any[]
+    return mo.contextRef.value
   }
   return []
 }
 
-export function getClassCaches(basedir?: string): Map<
-  string,
-  (
-    | {
-        layer: string
-        options: Record<string, any>
-        sort: Record<string, any>
-      }
-    | Rule
-  )[]
->[] {
+export function getClassCaches(basedir?: string): TailwindcssClassCache[] {
   const contexts = getContexts(basedir)
-  return (contexts as any[]).map((x) => x.classCache)
+  return contexts.map((x) => x.classCache)
 }
+
 
 export function getClassCacheSet(basedir?: string): Set<string> {
   const classCaches = getClassCaches(basedir)

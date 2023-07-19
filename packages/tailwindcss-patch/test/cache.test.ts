@@ -58,7 +58,7 @@ describe('cache', () => {
     expect(fs.existsSync(filepath)).toBe(false)
   })
 
-  it('multiple tw context merge cache', () => {
+  it('multiple tw context merge cache', async () => {
     const dir = path.resolve(__dirname, './fixtures/cache')
     const twPatcher = new TailwindcssPatcher({
       cache: {
@@ -67,7 +67,7 @@ describe('cache', () => {
       }
     })
     twPatcher.setCache(new Set())
-    getCss(['text-[100px]'])
+    await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     let set = twPatcher.getClassSet()
@@ -77,7 +77,7 @@ describe('cache', () => {
 
     // 2 times
     // 不累加
-    getCss(['text-[99px]'])
+    await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     set = twPatcher.getClassSet()

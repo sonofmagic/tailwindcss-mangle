@@ -1,0 +1,29 @@
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "command": "yarn patch",
+      "name": "do tailwindcss-patch",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/packages/tailwindcss-patch"
+    },
+    {
+      "command": "npm run build",
+      "name": "Debug nuxt-app",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/nuxt-app"
+    },
+    {
+      "command": "npm run build",
+      "name": "Debug next-app",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/next-app"
+    }
+  ]
+}

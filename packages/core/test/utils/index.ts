@@ -8,11 +8,11 @@ export function getTestCase(caseName: string) {
 }
 // @tailwind base;
 // @tailwind components;
-export function getCss(raw: string | string[]) {
+export async function getCss(raw: string | string[]) {
   if (typeof raw === 'string') {
     raw = [raw]
   }
-  return postcss([
+  const res = await postcss([
     tailwindcss({
       content: raw.map((x) => {
         return {
@@ -20,5 +20,6 @@ export function getCss(raw: string | string[]) {
         }
       })
     })
-  ]).process('@tailwind utilities;').css
+  ]).process('@tailwind utilities;')
+  return res.css
 }

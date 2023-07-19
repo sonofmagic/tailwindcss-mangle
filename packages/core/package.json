@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-mangle-core",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "The core of tailwindcss-mangle",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
@@ -13,10 +13,9 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "_test": "yarn build && jest",
     "jest:u": "jest -u",
     "test:dev": "yarn build && vitest",
-    "test": "yarn build && jest && vitest run",
+    "test": "jest && vitest run",
     "coverage": "vitest run --coverage"
   },
   "keywords": [
@@ -32,17 +31,17 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@babel/core": "^7.22.5",
+    "@babel/core": "^7.22.9",
     "@babel/types": "^7.22.5",
     "parse5": "^7.1.2",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.26",
     "postcss-selector-parser": "^6.0.13",
     "tailwindcss-mangle-shared": "workspace:^"
   },
   "devDependencies": {
     "@parse5/tools": "^0.1.0",
     "@types/babel__core": "^7.20.1",
-    "tslib": "^2.5.3"
+    "tslib": "^2.6.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

@@ -2,12 +2,12 @@ import { TailwindcssPatcher } from '../src/class'
 import path from 'node:path'
 import { getCss, getTestCase } from './utils'
 describe('class', () => {
-  it('default', () => {
+  it('default', async () => {
     // const dir = path.resolve(__dirname, './fixtures/cache')
     const twPatcher = new TailwindcssPatcher()
     expect(twPatcher.cacheOptions.enable).toBe(false)
     twPatcher.patch()
-    getCss([getTestCase('hello-world.html')])
+    await getCss([getTestCase('hello-world.html')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     const set = twPatcher.getClassSet()
@@ -15,7 +15,7 @@ describe('class', () => {
     expect(set.size).toBe(4)
   })
 
-  it('cache option', () => {
+  it('cache option', async () => {
     const dir = path.resolve(__dirname, './fixtures/cache')
     const twPatcher = new TailwindcssPatcher({
       cache: {
@@ -28,7 +28,7 @@ describe('class', () => {
     const p = twPatcher.setCache(new Set(['*', 'bg-[#123456]', 'font-bold', 'text-3xl', 'underline']))
     expect(p).toBe(path.resolve(dir, 'index.json'))
     twPatcher.patch()
-    getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
+    await getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     const set = twPatcher.getClassSet({
@@ -38,9 +38,9 @@ describe('class', () => {
     expect(set.size).toBe(5)
   })
 
-  it('multiple time process sources', () => {
+  it('multiple time process sources', async () => {
     const twPatcher = new TailwindcssPatcher()
-    getCss(['text-[100px]'])
+    await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     let set = twPatcher.getClassSet()
@@ -50,7 +50,7 @@ describe('class', () => {
 
     // 2 times
     // 不累加
-    getCss(['text-[99px]'])
+    await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     set = twPatcher.getClassSet()
