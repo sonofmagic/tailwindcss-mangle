@@ -7,8 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "pnpm run -r build",
-    "build:pkg": "pnpm run -r --filter=./packages/* build",
+    "build": "pnpm run -r --filter=./packages/* build",
     "build:app": "pnpm run -r --filter=./apps/* build ",
     "dev": "pnpm -r --parallel run dev",
     "dev:pkg": "pnpm -r --filter=./packages/* --parallel run dev",
@@ -16,10 +15,12 @@
     "lint": "pnpm run -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
-    "release": "bumpp -r",
-    "sync": "cnpm sync tailwindcss-mangle-shared tailwindcss-patch unplugin-tailwindcss-mangle tailwindcss-mangle-core"
+    "sync": "cnpm sync tailwindcss-mangle-shared tailwindcss-patch unplugin-tailwindcss-mangle tailwindcss-mangle-core",
+    "publish-packages": "pnpm run build && pnpm run test && changeset version && changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
     "@icebreakers/eslint-config-ts": "^1.2.2",
     "@icebreakers/rollup": "^0.4.0",
     "@icebreakers/tsconfig": "^0.0.7",
@@ -27,7 +28,6 @@
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.8",
     "@vitest/coverage-v8": "^0.34.1",
-    "bumpp": "^9.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.46.0",
     "eslint-plugin-unicorn": "^48.0.1",
