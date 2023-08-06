@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '../src/core/inspector'
+import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '@/core'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const twltsLibPath = path.resolve(tailwindcssCasePath, 'versions/3.3.1/lib')
 

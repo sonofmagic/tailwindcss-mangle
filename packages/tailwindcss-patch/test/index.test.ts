@@ -1,4 +1,4 @@
-import { internalPatch } from '../src/core/patcher'
+import { internalPatch } from '@/core'
 
 import path from 'node:path'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')

@@ -1,40 +1,20 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '../types'
-import { writeCache, readCache } from './cache'
-import { createPatch, getPatchOptions } from './patcher'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '../types'
+import { CacheManager, getCacheOptions } from './cache'
+import { createPatch, getPatchOptions } from './runtime-patcher'
 
-export function getCacheOptions(options?: CacheOptions | boolean) {
-  let cache: InternalCacheOptions
-  switch (typeof options) {
-    case 'undefined': {
-      cache = {
-        enable: false
-      }
-      break
-    }
-    case 'boolean': {
-      cache = {
-        enable: options
-      }
-      break
-    }
-    case 'object': {
-      cache = { ...options, enable: true }
-      break
-    }
-  }
-  return cache
-}
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
   public patchOptions: InternalPatchOptions
   public patch: () => void
+  public cacheManager: CacheManager
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
     this.cacheOptions = getCacheOptions(options.cache)
     this.patchOptions = getPatchOptions(options.patch)
     this.patch = createPatch(this.patchOptions)
+    this.cacheManager = new CacheManager(this.cacheOptions)
   }
 
   getPkgEntry(basedir?: string) {
@@ -43,13 +23,13 @@ export class TailwindcssPatcher {
 
   setCache(set: Set<string>) {
     if (this.cacheOptions.enable) {
-      return writeCache(set, this.cacheOptions)
+      return this.cacheManager.write(set)
     }
   }
 
   getCache() {
     // if(this.cache.enable){
-    return readCache(this.cacheOptions)
+    return this.cacheManager.read()
     // }
   }
 

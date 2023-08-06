@@ -1,4 +1,5 @@
-export * from './class'
+export * from './tw-patcher'
 export * from './exposeContext'
 export * from './inspector'
-export * from './patcher'
+export * from './runtime-patcher'
+export * from './cache'
