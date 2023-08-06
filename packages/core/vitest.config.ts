@@ -1,12 +1,15 @@
-import { defineConfig } from 'vitest/config'
+import path from 'node:path'
+import { defineProject } from 'vitest/config'
 
-export default defineConfig({
+export default defineProject({
   test: {
-    include: ['test/html.test.ts'],
-    coverage: {
-      enabled: true,
-      reportsDirectory: '../../coverage/vitest/tailwindcss-mangle-core'
-    }
-    // ...
+    alias: [
+      {
+        find: '@',
+        replacement: path.resolve(__dirname, './src')
+      }
+    ],
+    globals: true,
+    testTimeout: 60_000
   }
 })

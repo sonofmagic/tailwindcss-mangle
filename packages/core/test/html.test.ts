@@ -1,5 +1,5 @@
 import { getTestCase } from './utils'
-import { htmlHandler } from '../src/html'
+import { htmlHandler } from '@/html'
 import { ClassGenerator, splitCode } from 'tailwindcss-mangle-shared'
 import { describe, it, beforeEach, expect } from 'vitest'
 describe('html handler', () => {

@@ -1,6 +1,6 @@
-import { jsHandler } from '../src/js'
+import { jsHandler } from '@/js'
 import { getCss, getTestCase } from './utils'
-import { ClassGenerator } from '../src/shared'
+import { ClassGenerator } from '@/shared'
 // import { getClassCacheSet } from 'tailwindcss-patch'
 
 describe('js handler', () => {

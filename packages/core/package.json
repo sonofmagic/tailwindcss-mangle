@@ -13,9 +13,8 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "jest:u": "jest -u",
-    "test:dev": "yarn build && vitest",
-    "test": "jest && vitest run",
+    "test": "vitest run",
+    "test:dev": "vitest",
     "coverage": "vitest run --coverage"
   },
   "keywords": [
