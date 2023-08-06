@@ -32,30 +32,37 @@ export interface TailwindcssPatcherOptions {
   patch?: PatchOptions
 }
 
-
 export type TailwindcssClassCache = Map<
   string,
   (
     | {
-      layer: string
-      options: Record<string, any>
-      sort: Record<string, any>
-    }
+        layer: string
+        options: Record<string, any>
+        sort: Record<string, any>
+      }
     | Rule
   )[]
 >
 
 export type TailwindcssRuntimeContext = {
   applyClassCache: Map<any, any>
-  candidateRuleCache: Map<string | String, Set<[{
-    arbitrary: any
-    index: any
-    layer: string
-    options: any[]
-    parallelIndex: any
-    parentLayer: string
-    variants: any
-  }, Node]>>
+  candidateRuleCache: Map<
+    string | String,
+    Set<
+      [
+        {
+          arbitrary: any
+          index: any
+          layer: string
+          options: any[]
+          parallelIndex: any
+          parentLayer: string
+          variants: any
+        },
+        Node
+      ]
+    >
+  >
   candidateRuleMap: Map<string | String, [object, Node][]>
   changedContent: any[]
   classCache: TailwindcssClassCache

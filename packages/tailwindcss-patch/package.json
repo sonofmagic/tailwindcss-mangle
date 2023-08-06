@@ -2,9 +2,24 @@
   "name": "tailwindcss-patch",
   "version": "1.2.7",
   "description": "patch tailwindcss for exposing context",
-  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "dist/types/index.d.ts",
+  "types": "./dist/index.d.ts",
   "bin": {
     "tw-patch": "bin/tw-patch.js",
     "tailwindcss-patch": "bin/tw-patch.js"
@@ -14,10 +29,7 @@
     "bin"
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development rollup -cw",
-    "build": "cross-env NODE_ENV=production rollup -c",
-    "dev:tsc": "tsc -p tsconfig.json --sourceMap",
-    "build:tsc": "tsc -p tsconfig.json",
+    "build": "unbuild",
     "test": "vitest run",
     "test:dev": "vitest"
   },
