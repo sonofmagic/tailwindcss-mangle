@@ -1,4 +1,4 @@
-import ClassGenerator from '../src/classGenerator'
+import ClassGenerator from '@/classGenerator'
 
 describe('classGenerator', () => {
   it('size 26*27+1', () => {

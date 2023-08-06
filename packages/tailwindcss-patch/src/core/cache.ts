@@ -1,8 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { pkgName } from './constants'
-import type { CacheOptions } from './type'
-import { log } from './logger'
+import { pkgName } from '../constants'
+import type { CacheOptions } from '../types'
+import { log } from '../logger'
+
 export function mkCacheDirectory(cacheDirectory: string) {
   const exists = fs.existsSync(cacheDirectory)
   if (!exists) {

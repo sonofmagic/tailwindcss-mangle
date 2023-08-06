@@ -1,9 +1,9 @@
-import { ClassGenerator, cssHandler, handleValue, htmlHandler, jsHandler } from '../'
+import { ClassGenerator, cssHandler, handleValue, htmlHandler, jsHandler } from '@/index'
 
 describe('exports', () => {
   it('exports should be defined', () => {
-    ;[ClassGenerator, cssHandler, handleValue, htmlHandler, jsHandler].forEach((x) => {
+    for (const x of [ClassGenerator, cssHandler, handleValue, htmlHandler, jsHandler]) {
       expect(x).toBeDefined()
-    })
+    }
   })
 })

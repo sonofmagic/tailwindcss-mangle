@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`classGenerator size 26*27+1 1`] = `
+exports[`classGenerator > size 26*27+1 1`] = `
 [
   "tw-a",
   "tw-b",

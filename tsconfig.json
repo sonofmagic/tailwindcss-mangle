@@ -1,10 +1,12 @@
 {
-  "extends": "@icebreakers/tsconfig/tsconfig.cjs.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "declarationDir": "types",
-    "lib": [
-      "ES2021"
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "types": [
+      "vitest/globals"
     ]
   }
 }

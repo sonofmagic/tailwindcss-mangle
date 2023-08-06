@@ -2,20 +2,31 @@
   "name": "tailwindcss-mangle-core",
   "version": "1.2.7",
   "description": "The core of tailwindcss-mangle",
-  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development rollup -cw",
-    "build": "cross-env NODE_ENV=production rollup -c",
-    "dev:tsc": "tsc -p tsconfig.json --sourceMap",
-    "build:tsc": "tsc -p tsconfig.json",
-    "jest:u": "jest -u",
-    "test:dev": "yarn build && vitest",
-    "test": "jest && vitest run",
+    "build": "unbuild",
+    "test": "vitest run",
+    "test:dev": "vitest",
     "coverage": "vitest run --coverage"
   },
   "keywords": [

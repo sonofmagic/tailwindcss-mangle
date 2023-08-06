@@ -1,4 +1,4 @@
-import type { PatchOptions } from './type'
+import type { PatchOptions } from './types'
 
 export const defaultOptions: PatchOptions = {
   overwrite: true

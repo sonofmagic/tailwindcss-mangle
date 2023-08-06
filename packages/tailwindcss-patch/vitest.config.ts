@@ -13,10 +13,4 @@ export default defineProject({
     testTimeout: 60_000,
     setupFiles: ['./vitest.setup.ts']
   }
-
-  // build: {
-  //   commonjsOptions: {
-  //     transformMixedEsModules: true
-  //   }
-  // }
 })
