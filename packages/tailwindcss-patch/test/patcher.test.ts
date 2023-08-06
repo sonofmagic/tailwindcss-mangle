@@ -5,7 +5,7 @@ describe('patcher', () => {
   it('getInstalledPkgJsonPath common options', () => {
     const pkgJsonPath = getInstalledPkgJsonPath()
     expect(pkgJsonPath).toBeTruthy()
-    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath).replaceAll('\\', '/')).toMatchSnapshot()
+    pkgJsonPath && expect(path.relative(process.cwd(), pkgJsonPath).replaceAll('\\', '/')).toContain('node_modules/tailwindcss/package.json')
   })
 
   it('getInstalledPkgJsonPath baseDir options', () => {

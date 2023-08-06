@@ -18,8 +18,8 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev:tsc": "tsc -p tsconfig.json --sourceMap",
     "build:tsc": "tsc -p tsconfig.json",
-    "test": "npm run patch && jest",
-    "patch": "ts-node src/cli.ts"
+    "test": "vitest run",
+    "test:dev": "vitest"
   },
   "keywords": [
     "tailwindcss",
@@ -46,6 +46,8 @@
     "@babel/parser": "^7.22.7",
     "@babel/traverse": "^7.22.8",
     "@babel/types": "^7.22.5",
+    "c12": "^1.4.2",
+    "cac": "^6.7.14",
     "resolve": "^1.22.4",
     "semver": "^7.5.4"
   },

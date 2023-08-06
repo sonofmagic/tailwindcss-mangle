@@ -1,4 +1,4 @@
-import { splitCode } from '../src/split'
+import { splitCode } from '@/split'
 
 describe('split code', () => {
   it('split vue static str', () => {

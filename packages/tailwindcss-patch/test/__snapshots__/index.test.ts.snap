@@ -1,16 +1,16 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`versions-patch patch tailwindcss 1`] = `
+exports[`versions-patch > patch tailwindcss 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -21,10 +21,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, async function (root, result) {
       contextRef.value.length = 0;
@@ -33,10 +33,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root of roots) {
-          if (root.type === "root") {
+          if (root.type === \\"root\\") {
             contextRef.value.push(await (0, _processTailwindFeatures.default)(context)(root, result));
           }
         }
@@ -44,9 +44,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push(await (0, _processTailwindFeatures.default)(context)(root, result));
     }, false && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -54,9 +54,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -71,11 +71,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -83,37 +83,37 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: function () {
     return processTailwindFeatures;
   }
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interop_require_default(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interop_require_default(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -134,7 +134,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -143,8 +143,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     await (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -163,14 +163,14 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.0.0 1`] = `
+exports[`versions-patch > patch tailwindcss3.0.0 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-var _setupTrackingContext = _interopRequireDefault(require("./lib/setupTrackingContext"));
-var _setupWatchingContext = _interopRequireDefault(require("./lib/setupWatchingContext"));
-var _processTailwindFeatures = _interopRequireDefault(require("./processTailwindFeatures"));
-var _sharedState = require("./lib/sharedState");
+var _setupTrackingContext = _interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+var _setupWatchingContext = _interopRequireDefault(require(\\"./lib/setupWatchingContext\\"));
+var _processTailwindFeatures = _interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+var _sharedState = require(\\"./lib/sharedState\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -183,7 +183,7 @@ module.exports = function tailwindcss(configOrPath) {
   return {
     postcssPlugin: 'tailwindcss',
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log('\\n');
+      console.log('\\\\n');
       console.time('JIT TOTAL');
       return root;
     }, function (root, result) {
@@ -192,30 +192,30 @@ module.exports = function tailwindcss(configOrPath) {
       contextRef.value.push((0, _processTailwindFeatures).default(setupContext)(root, result));
     }, _sharedState.env.DEBUG && function (root) {
       console.timeEnd('JIT TOTAL');
-      console.log('\\n');
+      console.log('\\\\n');
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
 exports.default = processTailwindFeatures;
-var _normalizeTailwindDirectives = _interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-var _expandTailwindAtRules = _interopRequireDefault(require("./lib/expandTailwindAtRules"));
-var _expandApplyAtRules = _interopRequireDefault(require("./lib/expandApplyAtRules"));
-var _evaluateTailwindFunctions = _interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-var _substituteScreenAtRules = _interopRequireDefault(require("./lib/substituteScreenAtRules"));
-var _resolveDefaultsAtRules = _interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-var _collapseAdjacentRules = _interopRequireDefault(require("./lib/collapseAdjacentRules"));
-var _collapseDuplicateDeclarations = _interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-var _detectNesting = _interopRequireDefault(require("./lib/detectNesting"));
-var _setupContextUtils = require("./lib/setupContextUtils");
-var _featureFlags = require("./featureFlags");
+var _normalizeTailwindDirectives = _interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+var _expandTailwindAtRules = _interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+var _expandApplyAtRules = _interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+var _evaluateTailwindFunctions = _interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+var _substituteScreenAtRules = _interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+var _resolveDefaultsAtRules = _interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+var _collapseAdjacentRules = _interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+var _collapseDuplicateDeclarations = _interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+var _detectNesting = _interopRequireDefault(require(\\"./lib/detectNesting\\"));
+var _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+var _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -238,7 +238,7 @@ function processTailwindFeatures(setupContext) {
       }
     })(root, result);
     if (context.tailwindConfig.separator === '-') {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags).issueFlagNotices(context.tailwindConfig);
     (0, _detectNesting).default(context)(root, result);
@@ -255,17 +255,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.1 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.1 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -276,10 +276,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -288,10 +288,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (ref = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && ref !== void 0 ? ref : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -299,35 +299,35 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -348,7 +348,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -357,8 +357,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -377,17 +377,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.2 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.2 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -398,10 +398,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -410,10 +410,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (ref = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && ref !== void 0 ? ref : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -421,35 +421,35 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -470,7 +470,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -479,8 +479,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -499,17 +499,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.3 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.3 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -520,10 +520,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -532,10 +532,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (ref = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && ref !== void 0 ? ref : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -543,35 +543,35 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -592,7 +592,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -601,8 +601,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -621,17 +621,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.4 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.4 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -642,10 +642,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -654,10 +654,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (ref = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && ref !== void 0 ? ref : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -665,35 +665,35 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -714,7 +714,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -723,8 +723,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -743,17 +743,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.6 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.6 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -764,10 +764,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -776,10 +776,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -787,9 +787,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.OXIDE && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -797,9 +797,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -814,11 +814,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -826,35 +826,35 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -875,7 +875,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -884,8 +884,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -904,17 +904,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.2.7 1`] = `
+exports[`versions-patch > patch tailwindcss3.2.7 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -925,10 +925,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -937,10 +937,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -948,9 +948,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.OXIDE && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -958,9 +958,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -975,11 +975,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -987,35 +987,35 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1036,7 +1036,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -1045,8 +1045,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -1065,17 +1065,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.3.0 1`] = `
+exports[`versions-patch > patch tailwindcss3.3.0 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1086,10 +1086,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -1098,10 +1098,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -1109,9 +1109,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.OXIDE && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -1119,9 +1119,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -1136,11 +1136,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -1148,35 +1148,35 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1197,7 +1197,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -1206,8 +1206,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -1226,17 +1226,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.3.1 1`] = `
+exports[`versions-patch > patch tailwindcss3.3.1 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interopRequireDefault(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1247,10 +1247,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -1259,10 +1259,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root1 of roots) {
-          if (root1.type === "root") {
+          if (root1.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
           }
         }
@@ -1270,9 +1270,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, _sharedState.env.OXIDE && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -1280,9 +1280,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -1297,11 +1297,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -1309,35 +1309,35 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: () => processTailwindFeatures
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interopRequireDefault(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interopRequireDefault(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1358,7 +1358,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -1367,8 +1367,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -1387,17 +1387,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.3.2 1`] = `
+exports[`versions-patch > patch tailwindcss3.3.2 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1408,10 +1408,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, function (root, result) {
       contextRef.value.length = 0;
@@ -1420,10 +1420,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root of roots) {
-          if (root.type === "root") {
+          if (root.type === \\"root\\") {
             contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
           }
         }
@@ -1431,9 +1431,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
     }, false && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -1441,9 +1441,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -1458,11 +1458,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -1470,37 +1470,37 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: function () {
     return processTailwindFeatures;
   }
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interop_require_default(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interop_require_default(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1521,7 +1521,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -1530,8 +1530,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     (0, _expandTailwindAtRules.default)(context)(root, result);
@@ -1550,17 +1550,17 @@ function processTailwindFeatures(setupContext) {
 }
 `;
 
-exports[`versions-patch patch tailwindcss3.3.3 1`] = `
+exports[`versions-patch > patch tailwindcss3.3.3 1`] = `
 {
-  "plugin": ""use strict";
+  "plugin": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require("./lib/setupTrackingContext"));
-const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require("./processTailwindFeatures"));
-const _sharedState = require("./lib/sharedState");
-const _findAtConfigPath = require("./lib/findAtConfigPath");
+const _setupTrackingContext = /*#__PURE__*/_interop_require_default(require(\\"./lib/setupTrackingContext\\"));
+const _processTailwindFeatures = /*#__PURE__*/_interop_require_default(require(\\"./processTailwindFeatures\\"));
+const _sharedState = require(\\"./lib/sharedState\\");
+const _findAtConfigPath = require(\\"./lib/findAtConfigPath\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1571,10 +1571,10 @@ const contextRef = {
 };
 module.exports = function tailwindcss(configOrPath) {
   return {
-    postcssPlugin: "tailwindcss",
+    postcssPlugin: \\"tailwindcss\\",
     plugins: [_sharedState.env.DEBUG && function (root) {
-      console.log("\\n");
-      console.time("JIT TOTAL");
+      console.log(\\"\\\\n\\");
+      console.time(\\"JIT TOTAL\\");
       return root;
     }, async function (root, result) {
       contextRef.value.length = 0;
@@ -1583,10 +1583,10 @@ module.exports = function tailwindcss(configOrPath) {
       // path for the file being processed
       configOrPath = (_findAtConfigPath1 = (0, _findAtConfigPath.findAtConfigPath)(root, result)) !== null && _findAtConfigPath1 !== void 0 ? _findAtConfigPath1 : configOrPath;
       let context = (0, _setupTrackingContext.default)(configOrPath);
-      if (root.type === "document") {
-        let roots = root.nodes.filter(node => node.type === "root");
+      if (root.type === \\"document\\") {
+        let roots = root.nodes.filter(node => node.type === \\"root\\");
         for (const root of roots) {
-          if (root.type === "root") {
+          if (root.type === \\"root\\") {
             contextRef.value.push(await (0, _processTailwindFeatures.default)(context)(root, result));
           }
         }
@@ -1594,9 +1594,9 @@ module.exports = function tailwindcss(configOrPath) {
       }
       contextRef.value.push(await (0, _processTailwindFeatures.default)(context)(root, result));
     }, false && function lightningCssPlugin(_root, result) {
-      let postcss = require("postcss");
-      let lightningcss = require("lightningcss");
-      let browserslist = require("browserslist");
+      let postcss = require(\\"postcss\\");
+      let lightningcss = require(\\"lightningcss\\");
+      let browserslist = require(\\"browserslist\\");
       try {
         let transformed = lightningcss.transform({
           filename: result.opts.from,
@@ -1604,9 +1604,9 @@ module.exports = function tailwindcss(configOrPath) {
           minify: false,
           sourceMap: !!result.map,
           inputSourceMap: result.map ? result.map.toString() : undefined,
-          targets: typeof process !== "undefined" && process.env.JEST_WORKER_ID ? {
+          targets: typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID ? {
             chrome: 106 << 16
-          } : lightningcss.browserslistToTargets(browserslist(require("../package.json").browserslist)),
+          } : lightningcss.browserslistToTargets(browserslist(require(\\"../package.json\\").browserslist)),
           drafts: {
             nesting: true,
             customMedia: true
@@ -1621,11 +1621,11 @@ module.exports = function tailwindcss(configOrPath) {
             return transformed.map.toString();
           }
         });
-        result.root = postcss.parse(transformed.code.toString("utf8"));
+        result.root = postcss.parse(transformed.code.toString(\\"utf8\\"));
       } catch (err) {
-        if (typeof process !== "undefined" && process.env.JEST_WORKER_ID) {
-          let lines = err.source.split("\\n");
-          err = new Error(["Error formatting using Lightning CSS:", "", ...["\`\`\`css", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), " ".repeat(err.loc.column - 1) + "^-- " + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), "\`\`\`"]].join("\\n"));
+        if (typeof process !== \\"undefined\\" && process.env.JEST_WORKER_ID) {
+          let lines = err.source.split(\\"\\\\n\\");
+          err = new Error([\\"Error formatting using Lightning CSS:\\", \\"\\", ...[\\"\`\`\`css\\", ...lines.slice(Math.max(err.loc.line - 3, 0), err.loc.line), \\" \\".repeat(err.loc.column - 1) + \\"^-- \\" + err.toString(), ...lines.slice(err.loc.line, err.loc.line + 2), \\"\`\`\`\\"]].join(\\"\\\\n\\"));
         }
         if (Error.captureStackTrace) {
           Error.captureStackTrace(err, lightningCssPlugin);
@@ -1633,37 +1633,37 @@ module.exports = function tailwindcss(configOrPath) {
         throw err;
       }
     }, _sharedState.env.DEBUG && function (root) {
-      console.timeEnd("JIT TOTAL");
-      console.log("\\n");
+      console.timeEnd(\\"JIT TOTAL\\");
+      console.log(\\"\\\\n\\");
       return root;
     }].filter(Boolean)
   };
 };
 module.exports.postcss = true;
 module.exports.contextRef = contextRef;",
-  "processTailwindFeatures": ""use strict";
+  "processTailwindFeatures": "\\"use strict\\";
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, \\"__esModule\\", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+Object.defineProperty(exports, \\"default\\", {
   enumerable: true,
   get: function () {
     return processTailwindFeatures;
   }
 });
-const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require("./lib/normalizeTailwindDirectives"));
-const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandTailwindAtRules"));
-const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/expandApplyAtRules"));
-const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require("./lib/evaluateTailwindFunctions"));
-const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require("./lib/substituteScreenAtRules"));
-const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require("./lib/resolveDefaultsAtRules"));
-const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require("./lib/collapseAdjacentRules"));
-const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require("./lib/collapseDuplicateDeclarations"));
-const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require("./lib/partitionApplyAtRules"));
-const _detectNesting = /*#__PURE__*/_interop_require_default(require("./lib/detectNesting"));
-const _setupContextUtils = require("./lib/setupContextUtils");
-const _featureFlags = require("./featureFlags");
+const _normalizeTailwindDirectives = /*#__PURE__*/_interop_require_default(require(\\"./lib/normalizeTailwindDirectives\\"));
+const _expandTailwindAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandTailwindAtRules\\"));
+const _expandApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/expandApplyAtRules\\"));
+const _evaluateTailwindFunctions = /*#__PURE__*/_interop_require_default(require(\\"./lib/evaluateTailwindFunctions\\"));
+const _substituteScreenAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/substituteScreenAtRules\\"));
+const _resolveDefaultsAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/resolveDefaultsAtRules\\"));
+const _collapseAdjacentRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseAdjacentRules\\"));
+const _collapseDuplicateDeclarations = /*#__PURE__*/_interop_require_default(require(\\"./lib/collapseDuplicateDeclarations\\"));
+const _partitionApplyAtRules = /*#__PURE__*/_interop_require_default(require(\\"./lib/partitionApplyAtRules\\"));
+const _detectNesting = /*#__PURE__*/_interop_require_default(require(\\"./lib/detectNesting\\"));
+const _setupContextUtils = require(\\"./lib/setupContextUtils\\");
+const _featureFlags = require(\\"./featureFlags\\");
 function _interop_require_default(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -1684,7 +1684,7 @@ function processTailwindFeatures(setupContext) {
       applyDirectives,
       registerDependency(dependency) {
         result.messages.push({
-          plugin: "tailwindcss",
+          plugin: \\"tailwindcss\\",
           parent: result.opts.from,
           ...dependency
         });
@@ -1693,8 +1693,8 @@ function processTailwindFeatures(setupContext) {
         return (0, _setupContextUtils.createContext)(tailwindConfig, changedContent, root);
       }
     })(root, result);
-    if (context.tailwindConfig.separator === "-") {
-      throw new Error("The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.");
+    if (context.tailwindConfig.separator === \\"-\\") {
+      throw new Error(\\"The '-' character cannot be used as a custom separator in JIT mode due to parsing ambiguity. Please use another character like '_' instead.\\");
     }
     (0, _featureFlags.issueFlagNotices)(context.tailwindConfig);
     await (0, _expandTailwindAtRules.default)(context)(root, result);

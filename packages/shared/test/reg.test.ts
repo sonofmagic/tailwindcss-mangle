@@ -1,4 +1,4 @@
-import { makeRegex } from '../src/regex'
+import { makeRegex } from '@/regex'
 
 describe('regex', () => {
   it('z-10 regex', () => {
