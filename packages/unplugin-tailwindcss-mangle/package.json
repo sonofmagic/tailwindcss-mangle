@@ -53,7 +53,7 @@
   },
   "scripts": {
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "tw-patch install && vitest run",
     "test:dev": "vitest",
     "_prepare": "tw-patch"
   },
