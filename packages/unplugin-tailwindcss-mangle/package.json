@@ -53,9 +53,9 @@
   },
   "scripts": {
     "build": "unbuild",
-    "test": "tw-patch install && vitest run",
+    "test": "vitest run",
     "test:dev": "vitest",
-    "_prepare": "tw-patch"
+    "patch": "tw-patch"
   },
   "files": [
     "dist"
