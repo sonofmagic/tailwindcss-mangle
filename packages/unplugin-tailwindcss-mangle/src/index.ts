@@ -99,8 +99,8 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
         }
       }
 
-      const twmCssloader = path.resolve(__dirname, 'twm-css.js')
-      // const twmJsloader = path.resolve(__dirname, 'twm-js.js')
+      const twmCssloader = path.resolve(__dirname, 'twm-css.cjs')
+
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
         NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (loaderContext, module) => {
           const idx = module.loaders.findIndex((x) => x.loader.includes('css-loader'))
@@ -117,20 +117,6 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
               type: null
             })
           }
-
-          // idx = module.loaders.findIndex((x) => x.loader.includes('babel-loader'))
-
-          // if (idx > -1) {
-          //   module.loaders.splice(idx + 1, 0, {
-          //     loader: twmJsloader,
-          //     options: {
-          //       classGenerator,
-          //       getCachedClassSet
-          //     },
-          //     ident: null,
-          //     type: null
-          //   })
-          // }
         })
         compilation.hooks.processAssets.tap(
           {

@@ -31,7 +31,8 @@
   "scripts": {
     "build": "unbuild",
     "test": "vitest run",
-    "test:dev": "vitest"
+    "test:dev": "vitest",
+    "cli": "node bin/tw-patch.js"
   },
   "keywords": [
     "tailwindcss",
