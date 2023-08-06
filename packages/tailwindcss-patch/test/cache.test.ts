@@ -1,8 +1,8 @@
-import { getCacheOptions, mkCacheDirectory, readCache, writeCache } from '../src/cache'
+import { getCacheOptions, mkCacheDirectory, readCache, writeCache } from '../src/core/cache'
 import path from 'node:path'
 import { pkgName } from '../src/constants'
 import fs from 'node:fs'
-import { TailwindcssPatcher } from '../src/class'
+import { TailwindcssPatcher } from '../src/core/class'
 import { getCss } from './utils'
 
 describe('cache', () => {

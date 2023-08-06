@@ -1,4 +1,4 @@
-import { TailwindcssPatcher } from '../src/class'
+import { TailwindcssPatcher } from '../src/core/class'
 import path from 'node:path'
 import { getCss, getTestCase } from './utils'
 describe('class', () => {

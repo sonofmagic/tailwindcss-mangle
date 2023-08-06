@@ -1,5 +1,5 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from './type'
+import type { CacheOptions, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '../types'
 import { writeCache, readCache } from './cache'
 import { createPatch, getPatchOptions } from './patcher'
 

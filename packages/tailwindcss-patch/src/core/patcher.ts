@@ -2,11 +2,11 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { gte } from 'semver'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
-import type { PatchOptions, InternalPatchOptions } from './type'
+import type { PatchOptions, InternalPatchOptions } from '../types'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
-import { defaultOptions } from './defaults'
-import { ensureFileContent, requireResolve } from './utils'
+import { defaultOptions } from '../defaults'
+import { ensureFileContent, requireResolve } from '../utils'
 
 export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
   try {
@@ -79,7 +79,6 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
   opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
   return result
 }
-
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {

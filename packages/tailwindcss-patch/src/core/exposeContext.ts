@@ -1,8 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import type { TailwindcssClassCache, TailwindcssRuntimeContext } from './type'
-import { requireResolve } from './utils'
-
+import type { TailwindcssClassCache, TailwindcssRuntimeContext } from '../types'
+import { requireResolve } from '../utils'
 
 export function getTailwindcssEntry(basedir: string = process.cwd()) {
   return requireResolve('tailwindcss')
@@ -29,7 +28,6 @@ export function getClassCaches(basedir?: string): TailwindcssClassCache[] {
   const contexts = getContexts(basedir)
   return contexts.map((x) => x.classCache)
 }
-
 
 export function getClassCacheSet(basedir?: string): Set<string> {
   const classCaches = getClassCaches(basedir)

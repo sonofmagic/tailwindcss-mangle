@@ -1,4 +1,4 @@
-import { getInstalledPkgJsonPath } from '../src/patcher'
+import { getInstalledPkgJsonPath } from '../src/core/patcher'
 import path from 'node:path'
 
 describe('patcher', () => {
