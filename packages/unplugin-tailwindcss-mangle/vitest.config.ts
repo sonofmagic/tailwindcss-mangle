@@ -12,4 +12,9 @@ export default defineProject({
     globals: true,
     testTimeout: 60_000
   }
+  // build: {
+  //   commonjsOptions: {
+  //     transformMixedEsModules: true
+  //   }
+  // }
 })

@@ -1,5 +1,7 @@
 import fs from 'node:fs'
-import { sync, type SyncOpts } from 'resolve'
+import type { SyncOpts } from 'resolve'
+import pkg from 'resolve'
+const { sync } = pkg
 
 export function ensureFileContent(filepaths: string | string[]) {
   if (typeof filepaths === 'string') {
