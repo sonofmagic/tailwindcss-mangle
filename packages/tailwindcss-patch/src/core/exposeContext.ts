@@ -35,10 +35,11 @@ export function getClassCacheSet(basedir?: string, options?: { removeUniversalSe
   for (const classCacheMap of classCaches) {
     const keys = classCacheMap.keys()
     for (const key of keys) {
-      if (options?.removeUniversalSelector && key.toString() === '*') {
+      const v = key.toString()
+      if (options?.removeUniversalSelector && v === '*') {
         continue
       }
-      classSet.add(key.toString())
+      classSet.add(v)
     }
   }
   return classSet

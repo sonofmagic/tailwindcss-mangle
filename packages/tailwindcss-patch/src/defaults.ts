@@ -1,7 +1,9 @@
 import type { PatchOptions, UserConfig, DeepRequired } from './types'
 
-export const defaultOptions: PatchOptions = {
-  overwrite: true
+export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
+  return {
+    overwrite: true
+  }
 }
 
 export function getDefaultUserConfig(): DeepRequired<UserConfig> {
