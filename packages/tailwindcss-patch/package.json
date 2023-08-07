@@ -61,6 +61,7 @@
     "@babel/types": "^7.22.5",
     "c12": "^1.4.2",
     "cac": "^6.7.14",
+    "postcss-load-config": "^4.0.1",
     "resolve": "^1.22.4",
     "semver": "^7.5.4"
   },

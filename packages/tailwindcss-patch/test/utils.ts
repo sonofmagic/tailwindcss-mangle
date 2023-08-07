@@ -20,6 +20,8 @@ export async function getCss(raw: string | string[]) {
         }
       })
     })
-  ]).process('@tailwind utilities;')
+  ]).process('@tailwind utilities;', {
+    from: undefined
+  })
   return res.css
 }
