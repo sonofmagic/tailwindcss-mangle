@@ -1,11 +1,11 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy, UserConfig, DeepRequired } from '@/types'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy, UserConfig } from '@/types'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
 import fs from 'node:fs/promises'
 import { ensureDir } from '@/utils'
 import { dirname } from 'node:path'
-import { getCss } from './postcss'
+import { processTailwindcss } from './postcss'
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
@@ -66,20 +66,22 @@ export class TailwindcssPatcher {
     return getContexts(basedir)
   }
 
-  async extract(options: DeepRequired<UserConfig>) {
-    const { output, postcss } = options
-    if (output && postcss) {
+  async extract(options: UserConfig) {
+    const { output, tailwindcss } = options
+    if (output && tailwindcss) {
       const { removeUniversalSelector, filename, loose } = output
-      const { configDir } = postcss
-      await getCss(configDir)
+
+      await processTailwindcss(tailwindcss)
 
       const set = this.getClassSet({
         removeUniversalSelector
       })
-      await ensureDir(dirname(filename))
-      const classList = [...set]
-      await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
-      return filename
+      if (filename) {
+        await ensureDir(dirname(filename))
+        const classList = [...set]
+        await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
+        return filename
+      }
     }
   }
 }

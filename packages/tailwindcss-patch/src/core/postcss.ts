@@ -1,13 +1,16 @@
 import postcss from 'postcss'
-import postcssrc from 'postcss-load-config'
+import path from 'node:path'
 
-export async function getCss(p?: string) {
-  // ctx?: postcssrc.ConfigContext,
-  //  opts?: Parameters<typeof postcssrc>[2]
-  const { options, plugins } = await postcssrc(undefined, p)
-  const res = await postcss(plugins).process('@tailwind base;@tailwind components;@tailwind utilities;', {
-    from: undefined,
-    ...options
+export async function processTailwindcss(options: { cwd?: string; config?: string }) {
+  options.cwd = options.cwd ?? process.cwd()
+  const config = options.config && path.isAbsolute(options.config) ? options.config : path.resolve(options.cwd, 'tailwind.config.js')
+
+  const res = await postcss([
+    require('tailwindcss')({
+      config
+    })
+  ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {
+    from: undefined
   })
   return res
 }

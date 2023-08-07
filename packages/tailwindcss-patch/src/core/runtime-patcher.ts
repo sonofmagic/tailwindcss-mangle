@@ -5,7 +5,7 @@ import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } fro
 import type { PatchOptions, InternalPatchOptions } from '@/types'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
-import { defaultOptions } from '@/defaults'
+import { getDefaultPatchOptions } from '@/defaults'
 import { ensureFileContent, requireResolve } from '@/utils'
 
 export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
@@ -31,7 +31,7 @@ export function getPatchOptions(options: PatchOptions = {}) {
     {
       basedir: process.cwd()
     },
-    defaultOptions
+    getDefaultPatchOptions()
   ) as InternalPatchOptions
 }
 

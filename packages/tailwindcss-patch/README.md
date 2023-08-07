@@ -1,6 +1,6 @@
 # tailwindcss-patch
 
-get tailwindcss context at runtime ! extract all class to json file!
+get tailwindcss context at runtime ! extract all classes into file!
 
 - [tailwindcss-patch](#tailwindcss-patch)
   - [Setup](#setup)
@@ -10,9 +10,10 @@ get tailwindcss context at runtime ! extract all class to json file!
     - [Extract all class into a json](#extract-all-class-into-a-json)
     - [Nodejs](#nodejs)
   - [Migration form v1 to v2](#migration-form-v1-to-v2)
-    - [2. cli command change](#2-cli-command-change)
+    - [0. cli command change](#0-cli-command-change)
     - [1. default remove `*` in json array result](#1-default-remove--in-json-array-result)
-  - [Notice](#notice)
+
+> Nodejs version should >= `16.6.0`
 
 ## Setup
 
@@ -77,7 +78,7 @@ twPatcher.getClassSet()
 
 ## Migration form v1 to v2
 
-### 2. cli command change
+### 0. cli command change
 
 ```diff
 {
@@ -95,11 +96,3 @@ twPatcher.getClassSet()
   "text-[100px]"
 ]
 ```
-
-## Notice
-
-`getContexts`,`getClassCacheSet` should be invoked after `postcss-loader`'s activation.
-
-which means you may not get tailwindcss contexts at build start time.
-
-you may call them at `generateBundle` lifetime hook in `vite/webpack plugin`.

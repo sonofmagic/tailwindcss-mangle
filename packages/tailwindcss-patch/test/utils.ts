@@ -3,6 +3,8 @@ import tailwindcss from 'tailwindcss'
 import fs from 'node:fs'
 import path from 'node:path'
 
+export const fixturesRoot = path.resolve(__dirname, './fixtures')
+
 export function getTestCase(caseName: string) {
   return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf8')
 }
