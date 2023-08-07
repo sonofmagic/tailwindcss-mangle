@@ -36,7 +36,9 @@
   },
   "keywords": [
     "tailwindcss",
-    "patch"
+    "patch",
+    "extract",
+    "class"
   ],
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
