@@ -1,4 +1,4 @@
-import { getContexts, getClassCacheSet } from '../src'
+import { getContexts, getClassCacheSet } from '@/core'
 import { getCss, getTestCase } from './utils'
 describe('common usage', () => {
   it('hello-world', async () => {

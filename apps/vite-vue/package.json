@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
   "dependencies": {
     "vue": "^3.3.4"

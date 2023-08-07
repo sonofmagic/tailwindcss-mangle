@@ -1,4 +1,4 @@
-import { TailwindcssPatcher } from '../src/core/class'
+import { TailwindcssPatcher } from '@/core'
 import path from 'node:path'
 import { getCss, getTestCase } from './utils'
 describe('class', () => {
@@ -10,7 +10,9 @@ describe('class', () => {
     await getCss([getTestCase('hello-world.html')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = twPatcher.getClassSet()
+    const set = twPatcher.getClassSet({
+      removeUniversalSelector: false
+    })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(4)
   })
@@ -32,7 +34,8 @@ describe('class', () => {
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     const set = twPatcher.getClassSet({
-      cacheStrategy: 'overwrite'
+      cacheStrategy: 'overwrite',
+      removeUniversalSelector: false
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(5)
@@ -43,7 +46,9 @@ describe('class', () => {
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = twPatcher.getClassSet()
+    let set = twPatcher.getClassSet({
+      removeUniversalSelector: false
+    })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[100px]')).toBe(true)
@@ -53,7 +58,9 @@ describe('class', () => {
     await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    set = twPatcher.getClassSet()
+    set = twPatcher.getClassSet({
+      removeUniversalSelector: false
+    })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[99px]')).toBe(true)

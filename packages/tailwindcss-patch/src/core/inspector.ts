@@ -1,5 +1,5 @@
 import * as t from '@babel/types'
-import { parse, traverse, generate } from '../babel'
+import { parse, traverse, generate } from '@/babel'
 // crash code
 
 export function inspectProcessTailwindFeaturesReturnContext(content: string) {
