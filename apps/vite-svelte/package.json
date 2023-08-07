@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.4",
@@ -22,6 +22,6 @@
     "tslib": "^2.6.1",
     "typescript": "^5.1.6",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^4.4.8"
+    "vite": "^4.4.9"
   }
 }

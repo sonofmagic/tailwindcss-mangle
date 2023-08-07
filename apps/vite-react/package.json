@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -23,6 +23,6 @@
     "tailwindcss-patch": "workspace:*",
     "typescript": "^5.1.6",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^4.4.8"
+    "vite": "^4.4.9"
   }
 }

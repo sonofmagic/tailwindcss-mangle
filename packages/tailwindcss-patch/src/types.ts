@@ -98,10 +98,10 @@ export interface UserConfig {
      */
     removeUniversalSelector?: boolean
   }
-  postcss?: {
-    configDir?: string
+  tailwindcss?: {
+    cwd?: string
+    config?: string
   }
-  tailwindcss?: {}
 }
 // Custom utility type:
 export type DeepRequired<T> = {

@@ -9,7 +9,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "preview": "vite preview",
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
   "license": "MIT",
   "devDependencies": {
@@ -19,7 +19,7 @@
     "tailwindcss-patch": "workspace:*",
     "typescript": "^5.1.6",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^4.4.8",
+    "vite": "^4.4.9",
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {

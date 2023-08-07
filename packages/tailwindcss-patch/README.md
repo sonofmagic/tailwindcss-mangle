@@ -14,6 +14,8 @@ get tailwindcss context at runtime ! extract all class to json file!
     - [1. default remove `*` in json array result](#1-default-remove--in-json-array-result)
   - [Notice](#notice)
 
+> Nodejs version should >= `16.6.0`
+
 ## Setup
 
 1. Install package

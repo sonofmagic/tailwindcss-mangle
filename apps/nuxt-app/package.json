@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "_postinstall": "nuxt prepare",
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",

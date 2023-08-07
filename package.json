@@ -40,10 +40,14 @@
     "typescript": "^5.1.6",
     "unbuild": "^1.2.1",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vitest": "^0.34.1"
+    "vitest": "^0.34.1",
+    "dedent": "^1.5.1",
+    "defu": "^6.1.2",
+    "del": "^7.0.0",
+    "tslib": "^2.6.1"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.6.0"
   },
   "packageManager": "pnpm@8.6.11"
 }

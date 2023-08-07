@@ -6,15 +6,15 @@ export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
   }
 }
 
-export function getDefaultUserConfig(): DeepRequired<UserConfig> {
+export function getDefaultUserConfig(): UserConfig {
   return {
     output: {
       filename: '.tw-patch/tw-class-list.json',
       removeUniversalSelector: true,
       loose: true
     },
-    postcss: {
-      configDir: process.cwd()
+    tailwindcss: {
+      cwd: process.cwd()
     }
   }
 }
