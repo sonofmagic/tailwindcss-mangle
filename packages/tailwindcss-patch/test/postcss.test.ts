@@ -6,7 +6,7 @@ describe('postcss', () => {
   it('getCss 0.common', async () => {
     const p = path.resolve(appRoot, '0.common')
     const twPatcher = new TailwindcssPatcher()
-    const res = await getCss(undefined, p)
+    const res = await getCss(p)
     expect(res.css).toMatchSnapshot()
     const res0 = twPatcher.getContexts()
     expect(res0.length).toBe(1)

@@ -78,6 +78,6 @@ export class TailwindcssPatcher {
     await ensureDir(dirname(filename))
     const classList = [...set]
     await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
-    return classList
+    return filename
   }
 }
