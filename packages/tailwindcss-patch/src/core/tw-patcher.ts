@@ -1,5 +1,5 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy, UserConfig, DeepRequired } from '@/types'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
 import fs from 'node:fs/promises'
@@ -42,16 +42,11 @@ export class TailwindcssPatcher {
    * @param basedir
    * @returns
    */
-  getClassSet(
-    options: {
-      basedir?: string
-      cacheStrategy?: CacheStrategy
-    } = {
-      cacheStrategy: this.cacheOptions.strategy ?? 'merge'
-    }
-  ) {
-    const { basedir, cacheStrategy } = options
-    const set = getClassCacheSet(basedir)
+  getClassSet(options?: { basedir?: string; cacheStrategy?: CacheStrategy; removeUniversalSelector?: boolean }) {
+    const { basedir, cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
+    const set = getClassCacheSet(basedir, {
+      removeUniversalSelector
+    })
     if (cacheStrategy === 'overwrite') {
       set.size > 0 && this.setCache(set)
     } else if (cacheStrategy === 'merge') {
@@ -71,13 +66,20 @@ export class TailwindcssPatcher {
     return getContexts(basedir)
   }
 
-  async extract(options: { configDir: string; filename: string; loose: boolean }) {
-    const { configDir, filename, loose } = options
-    await getCss(configDir)
-    const set = this.getClassSet()
-    await ensureDir(dirname(filename))
-    const classList = [...set]
-    await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
-    return filename
+  async extract(options: DeepRequired<UserConfig>) {
+    const { output, postcss } = options
+    if (output && postcss) {
+      const { removeUniversalSelector, filename, loose } = output
+      const { configDir } = postcss
+      await getCss(configDir)
+
+      const set = this.getClassSet({
+        removeUniversalSelector
+      })
+      await ensureDir(dirname(filename))
+      const classList = [...set]
+      await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
+      return filename
+    }
   }
 }

@@ -75,7 +75,9 @@ describe('cache', () => {
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = twPatcher.getClassSet()
+    let set = twPatcher.getClassSet({
+      removeUniversalSelector: false
+    })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[100px]')).toBe(true)

@@ -10,7 +10,9 @@ describe('postcss', () => {
     expect(res.css).toMatchSnapshot()
     const res0 = twPatcher.getContexts()
     expect(res0.length).toBe(1)
-    const set = twPatcher.getClassSet()
+    const set = twPatcher.getClassSet({
+      removeUniversalSelector: false
+    })
     expect(set.size).toBe(4)
   })
 })

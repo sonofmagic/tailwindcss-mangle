@@ -29,12 +29,15 @@ export function getClassCaches(basedir?: string): TailwindcssClassCache[] {
   return contexts.map((x) => x.classCache)
 }
 
-export function getClassCacheSet(basedir?: string): Set<string> {
+export function getClassCacheSet(basedir?: string, options?: { removeUniversalSelector?: boolean }): Set<string> {
   const classCaches = getClassCaches(basedir)
   const classSet = new Set<string>()
   for (const classCacheMap of classCaches) {
     const keys = classCacheMap.keys()
     for (const key of keys) {
+      if (options?.removeUniversalSelector && key.toString() === '*') {
+        continue
+      }
       classSet.add(key.toString())
     }
   }

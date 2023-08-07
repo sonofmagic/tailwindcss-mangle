@@ -32,15 +32,10 @@ cli.command('init').action(async () => {
 
 cli.command('extract').action(async () => {
   const { config } = await getConfig()
-  if (config?.output?.filename) {
+  if (config) {
     const twPatcher = new TailwindcssPatcher()
-    const p = await twPatcher.extract({
-      filename: config.output.filename,
-      configDir: config.postcss?.configDir!,
-      loose: config.postcss?.loose!
-    })
-    console.log('✨ tailwindcss-patch extract success! file path:')
-    console.log(p)
+    const p = await twPatcher.extract(config)
+    console.log('✨ tailwindcss-patch extract success! file path:\n' + p)
   }
 })
 

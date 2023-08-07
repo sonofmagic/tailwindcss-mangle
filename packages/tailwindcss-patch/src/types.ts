@@ -91,10 +91,19 @@ export type TailwindcssRuntimeContext = {
 export interface UserConfig {
   output?: {
     filename?: string
+
+    loose?: boolean
+    /**
+     * @description remove * in output json
+     */
+    removeUniversalSelector?: boolean
   }
   postcss?: {
     configDir?: string
-    loose?: boolean
   }
   tailwindcss?: {}
+}
+// Custom utility type:
+export type DeepRequired<T> = {
+  [K in keyof T]: Required<DeepRequired<T[K]>>
 }

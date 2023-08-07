@@ -1,17 +1,12 @@
 import { loadConfig, createDefineConfig } from 'c12'
-import { UserConfig } from '@/types'
+import { DeepRequired, UserConfig } from '@/types'
+import { getDefaultUserConfig } from '@/defaults'
 
 export function getConfig() {
-  return loadConfig<UserConfig>({
+  return loadConfig<DeepRequired<UserConfig>>({
     name: 'tailwindcss-patch',
     defaults: {
-      output: {
-        filename: '.tw-patch/tw-class-list.json'
-      },
-      postcss: {
-        configDir: process.cwd(),
-        loose: true
-      }
+      ...getDefaultUserConfig()
     }
   })
 }
