@@ -1,8 +1,11 @@
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '../types'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
-
+import fs from 'node:fs/promises'
+import { ensureDir } from '@/utils'
+import { dirname } from 'node:path'
+import { getCss } from './postcss'
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
@@ -66,5 +69,14 @@ export class TailwindcssPatcher {
 
   getContexts(basedir?: string) {
     return getContexts(basedir)
+  }
+
+  async extract(filename: string) {
+    await getCss()
+    const set = this.getClassSet()
+    await ensureDir(dirname(filename))
+    const classList = [...set]
+    await fs.writeFile(filename, JSON.stringify(classList), 'utf8')
+    return classList
   }
 }

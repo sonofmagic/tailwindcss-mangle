@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import type { TailwindcssClassCache, TailwindcssRuntimeContext } from '../types'
-import { requireResolve } from '../utils'
+import type { TailwindcssClassCache, TailwindcssRuntimeContext } from '@/types'
+import { requireResolve } from '@/utils'
 
 export function getTailwindcssEntry(basedir: string = process.cwd()) {
   return requireResolve('tailwindcss')

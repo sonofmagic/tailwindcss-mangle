@@ -87,3 +87,13 @@ export type TailwindcssRuntimeContext = {
   variantMap: Map<string, [[object, Function]]>
   variantOptions: Map<string, object>
 }
+
+export interface UserConfig {
+  output?: {
+    filename?: string
+  }
+  postcss?: {
+    configDir?: string
+  }
+  tailwindcss?: {}
+}

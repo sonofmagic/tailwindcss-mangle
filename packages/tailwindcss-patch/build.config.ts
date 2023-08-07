@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
@@ -10,6 +11,9 @@ export default defineBuildConfig({
       // https://github.com/unjs/unbuild/issues/135
       respectExternal: false
     }
+  },
+  alias: {
+    '@': path.resolve(__dirname, './src')
   },
   declaration: true
 })
