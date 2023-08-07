@@ -94,6 +94,7 @@ export interface UserConfig {
   }
   postcss?: {
     configDir?: string
+    loose?: boolean
   }
   tailwindcss?: {}
 }

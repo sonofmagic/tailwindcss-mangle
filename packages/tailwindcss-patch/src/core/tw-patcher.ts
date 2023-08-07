@@ -71,12 +71,13 @@ export class TailwindcssPatcher {
     return getContexts(basedir)
   }
 
-  async extract(filename: string) {
-    await getCss()
+  async extract(options: { configDir: string; filename: string; loose: boolean }) {
+    const { configDir, filename, loose } = options
+    await getCss(configDir)
     const set = this.getClassSet()
     await ensureDir(dirname(filename))
     const classList = [...set]
-    await fs.writeFile(filename, JSON.stringify(classList), 'utf8')
+    await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
     return classList
   }
 }

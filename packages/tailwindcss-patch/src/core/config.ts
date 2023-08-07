@@ -9,7 +9,8 @@ export function getConfig() {
         filename: '.tw-patch/tw-class-list.json'
       },
       postcss: {
-        configDir: process.cwd()
+        configDir: process.cwd(),
+        loose: true
       }
     }
   })
