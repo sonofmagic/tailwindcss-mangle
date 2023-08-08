@@ -100,7 +100,9 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: (config) => {
-    config.plugins.push(utwm())
+    if (process.env.NODE_ENV === 'production') {
+      config.plugins.push(utwm())
+    }
   }
 })
 

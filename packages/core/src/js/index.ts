@@ -54,6 +54,7 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
                   p.traverse({
                     StringLiteral: {
                       enter(s) {
+                        // ___CSS_LOADER_EXPORT___
                         const res = jsHandler(s.node.value, options)
                         if (res.code) {
                           s.node.value = res.code

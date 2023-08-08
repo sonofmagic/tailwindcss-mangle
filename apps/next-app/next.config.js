@@ -5,9 +5,12 @@ const utwm = require('unplugin-tailwindcss-mangle/webpack')
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
-    config.plugins.push(utwm({
-      classMapOutput: true
-    }))
+    // console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV === 'production') {
+      config.plugins.push(utwm({
+        classMapOutput: true
+      }))
+    }
     return config
   }
 }
