@@ -1,12 +1,12 @@
+import fs from 'node:fs/promises'
+import { dirname } from 'node:path'
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
-import fs from 'node:fs/promises'
-import { ensureDir } from '@/utils'
 import { UserConfig } from './config'
-import { dirname } from 'node:path'
 import { processTailwindcss } from './postcss'
+import { ensureDir } from '@/utils'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "extract": "npx tw-patch extract"
   },
   "devDependencies": {
     "typescript": "^5.0.2",

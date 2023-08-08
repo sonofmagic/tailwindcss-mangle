@@ -1,7 +1,7 @@
 import path from 'node:path'
+import { appRoot } from './utils'
 import { processTailwindcss } from '@/core/postcss'
 import { TailwindcssPatcher } from '@/core/tw-patcher'
-import { appRoot } from './utils'
 
 describe('postcss', () => {
   it('getCss 0.common', async () => {

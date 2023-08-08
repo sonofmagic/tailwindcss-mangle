@@ -7,9 +7,7 @@ export function getDefaultPatchConfig(): PatchUserConfig {
       removeUniversalSelector: true,
       loose: true
     },
-    tailwindcss: {
-      cwd: process.cwd()
-    }
+    tailwindcss: {}
   }
 }
 
