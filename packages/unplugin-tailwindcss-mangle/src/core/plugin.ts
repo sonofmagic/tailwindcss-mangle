@@ -9,11 +9,14 @@ import { getGroupedEntries, cacheDump } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, htmlHandlerOptions, jsHandlerOptions, cssHandlerOptions } = getOptions(options)
+  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, htmlHandlerOptions, jsHandlerOptions, cssHandlerOptions, initConfig } = getOptions(options)
 
   return {
     name: pluginName,
     enforce: 'post',
+    async buildStart() {
+      await initConfig()
+    },
     vite: {
       generateBundle: {
         handler(options, bundle) {

@@ -10,7 +10,8 @@ mangle tailwindcss utilities plugin
     - [1. Install Package](#1-install-package)
     - [2. Run patch script](#2-run-patch-script)
     - [3. add `prepare` script in your `package.json`](#3-add-prepare-script-in-your-packagejson)
-    - [4. register this plugin](#4-register-this-plugin)
+    - [4. run extract command](#4-run-extract-command)
+    - [5. register this plugin](#5-register-this-plugin)
       - [vite](#vite)
       - [webpack](#webpack)
   - [Options](#options)
@@ -38,18 +39,28 @@ mangle tailwindcss utilities plugin
 ### 2. Run patch script
 
 ```sh
-npx tw-patch
+npx tw-patch install
 ```
 
 ### 3. add `prepare` script in your `package.json`
 
 ```json
   "scripts": {
-    "prepare": "tw-patch"
+    "prepare": "tw-patch install"
   },
 ```
 
-### 4. register this plugin
+### 4. run extract command
+
+```sh
+npx tw-patch extract
+```
+
+> See more options in [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch)
+
+Then there will generate a json file:   `.tw-patch/tw-class-list.json`
+
+### 5. register this plugin
 
 #### vite
 

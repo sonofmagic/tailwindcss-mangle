@@ -1,5 +1,5 @@
 const { defineConfig } = require('@vue/cli-service')
-const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
+const utwm = require('unplugin-tailwindcss-mangle/webpack')
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: (config) => {

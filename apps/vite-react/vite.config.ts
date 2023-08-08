@@ -1,12 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { vitePlugin as utwm } from 'unplugin-tailwindcss-mangle'
+import utwm from 'unplugin-tailwindcss-mangle/vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     utwm({
-      classSetOutput: true,
       classMapOutput: true
     })
   ]
