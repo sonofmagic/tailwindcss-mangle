@@ -1,5 +1,5 @@
 import type { Options } from './types'
-import { unplugin } from '.'
+import { unplugin } from './core'
 
 export default function (options: Options = {}, nuxt: any) {
   // install webpack plugin

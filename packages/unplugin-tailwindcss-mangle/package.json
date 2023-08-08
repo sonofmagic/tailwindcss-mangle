@@ -36,11 +36,6 @@
       "require": "./dist/nuxt.cjs",
       "import": "./dist/nuxt.mjs"
     },
-    "./twm-css": {
-      "types": "./dist/twm-css.d.ts",
-      "require": "./dist/twm-css.cjs",
-      "import": "./dist/twm-css.mjs"
-    },
     "./*": "./*"
   },
   "typesVersions": {
@@ -74,7 +69,7 @@
     "micromatch": "^4.0.5",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "tailwindcss-patch": "workspace:^",
+    "@tailwindcss-mangle/config": "workspace:^",
     "unplugin": "^1.4.0"
   },
   "publishConfig": {

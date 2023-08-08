@@ -1,5 +1,4 @@
 // import 'tailwindcss-patch/cli'
-import { createPatch, getPatchOptions } from './dist'
-const opt = getPatchOptions()
-const patch = createPatch(opt)
-patch()
+import { TailwindcssPatcher } from './dist'
+const twPatcher = new TailwindcssPatcher()
+twPatcher.patch()

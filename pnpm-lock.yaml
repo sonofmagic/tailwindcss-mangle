@@ -577,6 +577,9 @@ importers:
 
   packages/unplugin-tailwindcss-mangle:
     dependencies:
+      '@tailwindcss-mangle/config':
+        specifier: workspace:^
+        version: link:../config
       '@tailwindcss-mangle/core':
         specifier: workspace:^
         version: link:../core
@@ -586,9 +589,6 @@ importers:
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
-      tailwindcss-patch:
-        specifier: workspace:^
-        version: link:../tailwindcss-patch
       unplugin:
         specifier: ^1.4.0
         version: 1.4.0

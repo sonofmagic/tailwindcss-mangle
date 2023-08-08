@@ -1,5 +1,4 @@
 import { build } from 'vite'
-import { describe, it, expect, beforeEach } from 'vitest'
 import path from 'node:path'
 import { RollupOutput } from 'rollup'
 import utwm from '../src/vite'

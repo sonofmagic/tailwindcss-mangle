@@ -1,5 +1,3 @@
-// import webpack from 'webpack'
-import { describe, it, expect } from 'vitest'
 import path from 'node:path'
 import { getMemfsCompiler5, compile, readAssets, getErrors, getWarnings } from 'webpack-build-utils'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
