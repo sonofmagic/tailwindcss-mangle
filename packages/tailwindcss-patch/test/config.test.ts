@@ -7,7 +7,7 @@ import { deleteAsync } from 'del'
 describe('config', () => {
   it('0.default', async () => {
     const cwd = resolve(fixturesRoot, './config/0.default')
-    const configPath = resolve(cwd, 'tailwindcss-patch.config.ts')
+    const configPath = resolve(cwd, 'tailwindcss-mangle.config.ts')
     if (existsSync(configPath)) {
       await deleteAsync(configPath)
     }
