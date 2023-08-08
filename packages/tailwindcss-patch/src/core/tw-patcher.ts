@@ -1,11 +1,12 @@
+import fs from 'node:fs/promises'
+import { dirname } from 'node:path'
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy, UserConfig } from '@/types'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
-import fs from 'node:fs/promises'
-import { ensureDir } from '@/utils'
-import { dirname } from 'node:path'
+import { UserConfig } from './config'
 import { processTailwindcss } from './postcss'
+import { ensureDir } from '@/utils'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
@@ -66,8 +67,8 @@ export class TailwindcssPatcher {
     return getContexts(basedir)
   }
 
-  async extract(options: UserConfig) {
-    const { output, tailwindcss } = options
+  async extract(options: UserConfig['patch']) {
+    const { output, tailwindcss } = options ?? {}
     if (output && tailwindcss) {
       const { removeUniversalSelector, filename, loose } = output
 

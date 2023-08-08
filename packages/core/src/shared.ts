@@ -1,1 +1,1 @@
-export * from 'tailwindcss-mangle-shared'
+export * from '@tailwindcss-mangle/shared'

@@ -1,9 +1,11 @@
-import postcss from 'postcss'
-import tailwindcss from 'tailwindcss'
 import fs from 'node:fs'
 import path from 'node:path'
+import postcss from 'postcss'
+import tailwindcss from 'tailwindcss'
 
 export const fixturesRoot = path.resolve(__dirname, './fixtures')
+
+export const appRoot = path.resolve(fixturesRoot, './apps')
 
 export function getTestCase(caseName: string) {
   return fs.readFileSync(path.resolve(__dirname, 'fixtures', caseName), 'utf8')

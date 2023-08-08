@@ -1,8 +1,8 @@
 # tailwindcss-mangle
 
 ![star](https://badgen.net/github/stars/sonofmagic/tailwindcss-mangle)
-![dm0](https://badgen.net/npm/dm/tailwindcss-mangle-core)
-![dm1](https://badgen.net/npm/dm/tailwindcss-mangle-shared)
+![dm0](https://badgen.net/npm/dm/@tailwindcss-mangle/core)
+![dm1](https://badgen.net/npm/dm/@tailwindcss-mangle/shared)
 ![dm2](https://badgen.net/npm/dm/tailwindcss-patch)
 ![dm3](https://badgen.net/npm/dm/unplugin-tailwindcss-mangle)
 [![test](https://github.com/sonofmagic/tailwindcss-mangle/actions/workflows/test.yml/badge.svg?branch=dev)](https://github.com/sonofmagic/tailwindcss-mangle/actions/workflows/test.yml)
@@ -12,8 +12,8 @@ A util for mangle tailwindcss
 
 - [tailwindcss-mangle](#tailwindcss-mangle)
   - [tailwindcss-patch](#tailwindcss-patch)
-  - [tailwindcss-mangle-core](#tailwindcss-mangle-core)
-  - [tailwindcss-mangle-shared](#tailwindcss-mangle-shared)
+  - [@tailwindcss-mangle/core](#@tailwindcss-mangle/core)
+  - [@tailwindcss-mangle/shared](#@tailwindcss-mangle/shared)
   - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
   - [How to use](#how-to-use)
 
@@ -23,17 +23,17 @@ A util for mangle tailwindcss
 
 click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
 
-## tailwindcss-mangle-core
+## @tailwindcss-mangle/core
 
 The core of tailwindcss-mangle
 
-click [tailwindcss-mangle-core](./packages/core) for more details.
+click [@tailwindcss-mangle/core](./packages/core) for more details.
 
-## tailwindcss-mangle-shared
+## @tailwindcss-mangle/shared
 
 The shared utils of tailwindcss-mangle
 
-click [tailwindcss-mangle-shared](./packages/shared) for more details.
+click [@tailwindcss-mangle/shared](./packages/shared) for more details.
 
 ## unplugin-tailwindcss-mangle
 

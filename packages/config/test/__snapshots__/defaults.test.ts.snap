@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`defaults > getDefaultPatchConfig 1`] = `
+{
+  "output": {
+    "filename": ".tw-patch/tw-class-list.json",
+    "loose": true,
+    "removeUniversalSelector": true,
+  },
+  "tailwindcss": {},
+}
+`;
+
+exports[`defaults > getDefaultUserConfig 1`] = `
+{
+  "patch": {
+    "output": {
+      "filename": ".tw-patch/tw-class-list.json",
+      "loose": true,
+      "removeUniversalSelector": true,
+    },
+    "tailwindcss": {},
+  },
+}
+`;

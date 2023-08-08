@@ -1,18 +1,13 @@
-import { build } from 'vite'
-import { describe, it, expect, beforeEach } from 'vitest'
 import path from 'node:path'
-import { RollupOutput } from 'rollup'
-import utwm from '../src/vite'
-import { TailwindcssPatcher } from 'tailwindcss-patch'
+import { build } from 'vite'
+import type { RollupOutput } from 'rollup'
+import utwm from '@/vite'
+
+const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
 describe('vite build', () => {
-  let twPatcher: TailwindcssPatcher
-  beforeEach(() => {
-    twPatcher = new TailwindcssPatcher()
-    twPatcher.patch()
-  })
   it('common build ', async () => {
     const res = (await build({
-      root: path.resolve(__dirname, 'fixtures/vite-repo'),
+      root: appRoot,
       build: {
         write: false,
         cssMinify: false,
@@ -24,7 +19,11 @@ describe('vite build', () => {
           }
         }
       },
-      plugins: [utwm()]
+      plugins: [
+        utwm({
+          classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json')
+        })
+      ]
     })) as RollupOutput
     const output = res.output
     expect(output.length).toBe(3)

@@ -5,11 +5,3 @@ exports[`defaults > getDefaultPatchOptions 1`] = `
   "overwrite": true,
 }
 `;
-
-exports[`defaults > getDefaultUserConfig 1`] = `
-{
-  "filename": ".tw-patch/tw-class-list.json",
-  "loose": true,
-  "removeUniversalSelector": true,
-}
-`;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import type { Rule, Node } from 'postcss'
 import type { Config } from 'tailwindcss'
 export type CacheStrategy = 'merge' | 'overwrite'
@@ -47,7 +48,7 @@ export type TailwindcssClassCache = Map<
 export type TailwindcssRuntimeContext = {
   applyClassCache: Map<any, any>
   candidateRuleCache: Map<
-    string | String,
+    string | string,
     Set<
       [
         {
@@ -63,7 +64,7 @@ export type TailwindcssRuntimeContext = {
       ]
     >
   >
-  candidateRuleMap: Map<string | String, [object, Node][]>
+  candidateRuleMap: Map<string | string, [object, Node][]>
   changedContent: any[]
   classCache: TailwindcssClassCache
   disposables: any[]
@@ -72,7 +73,7 @@ export type TailwindcssRuntimeContext = {
   getVariants: Function
   markInvalidUtilityCandidate: Function
   markInvalidUtilityNode: Function
-  notClassCache: Set<String>
+  notClassCache: Set<string>
   offsets: {
     layerPositions: object
     offsets: object
@@ -88,21 +89,6 @@ export type TailwindcssRuntimeContext = {
   variantOptions: Map<string, object>
 }
 
-export interface UserConfig {
-  output?: {
-    filename?: string
-
-    loose?: boolean
-    /**
-     * @description remove * in output json
-     */
-    removeUniversalSelector?: boolean
-  }
-  tailwindcss?: {
-    cwd?: string
-    config?: string
-  }
-}
 // Custom utility type:
 export type DeepRequired<T> = {
   [K in keyof T]: Required<DeepRequired<T[K]>>

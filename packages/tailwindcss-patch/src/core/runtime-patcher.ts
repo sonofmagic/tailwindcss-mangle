@@ -1,10 +1,10 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import { gte } from 'semver'
-import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
-import type { PatchOptions, InternalPatchOptions } from '@/types'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
+import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
+import type { PatchOptions, InternalPatchOptions } from '@/types'
 import { getDefaultPatchOptions } from '@/defaults'
 import { ensureFileContent, requireResolve } from '@/utils'
 

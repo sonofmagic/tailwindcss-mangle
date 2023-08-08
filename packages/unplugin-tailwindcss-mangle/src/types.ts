@@ -3,7 +3,7 @@ import type {
   IHtmlHandlerOptions, // as InternalHtmlHandlerOptions,
   IJsHandlerOptions, // as InternalJsHandlerOptions,
   ICssHandlerOptions // as InternalCssHandlerOptions
-} from 'tailwindcss-mangle-core'
+} from '@tailwindcss-mangle/core'
 
 export interface IClassGeneratorOptions {
   reserveClassName?: (string | RegExp)[]
@@ -13,12 +13,6 @@ export interface IClassGeneratorOptions {
   include?: (string | RegExp)[]
   ignoreClass?: (string | RegExp)[]
   classPrefix?: string
-}
-
-export interface ClassSetOutputOptions {
-  filename: string
-  dir?: string
-  type: 'all' | 'partial'
 }
 
 export interface ClassMapOutputOptions {
@@ -33,7 +27,7 @@ export interface Options {
   classGenerator?: IClassGeneratorOptions
   exclude?: string[]
   include?: string[]
-  classSetOutput?: boolean | ClassSetOutputOptions
+  classListPath?: string
   classMapOutput?: boolean | ClassMapOutputOptions
   htmlHandlerOptions?: PartialHandlerOptions<IHtmlHandlerOptions>
   jsHandlerOptions?: PartialHandlerOptions<IJsHandlerOptions>

@@ -1,11 +1,9 @@
-// import webpack from 'webpack'
-import { describe, it, expect } from 'vitest'
 import path from 'node:path'
 import { getMemfsCompiler5, compile, readAssets, getErrors, getWarnings } from 'webpack-build-utils'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import { webpackPlugin as utwm } from '../'
+import utwm from '@/webpack'
 const context = path.resolve(__dirname, 'fixtures/webpack-repo')
-describe('webpack build', async () => {
+describe('webpack build', () => {
   it('common', async () => {
     const compiler = getMemfsCompiler5({
       mode: 'production',
@@ -55,7 +53,9 @@ describe('webpack build', async () => {
       }
     })
 
-    utwm().apply(compiler)
+    utwm({
+      classListPath: path.resolve(context, '.tw-patch/tw-class-list.json')
+    }).apply(compiler)
     const stats = await compile(compiler)
 
     // get all Assets as Record<string,string>

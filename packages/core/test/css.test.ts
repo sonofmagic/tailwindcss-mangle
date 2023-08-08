@@ -1,6 +1,6 @@
+import { getTestCase } from './utils'
 import { cssHandler } from '@/css'
 import { ClassGenerator } from '@/shared'
-import { getTestCase } from './utils'
 describe('css', () => {
   let classGenerator: ClassGenerator
   beforeEach(() => {

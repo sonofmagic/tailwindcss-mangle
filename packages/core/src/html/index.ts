@@ -7,7 +7,7 @@ export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
   const { runtimeSet, classGenerator } = options
   const fragment = parse(rawSource)
   traverse(fragment, {
-    element(node, parent) {
+    element(node) {
       const attribute = node.attrs.find((x) => x.name === 'class')
       if (attribute) {
         const array = splitCode(attribute.value, {
