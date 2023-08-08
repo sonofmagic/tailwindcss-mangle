@@ -1,6 +1,6 @@
 import type { PatchUserConfig, UserConfig } from './types'
 
-export function getPatchConfig(): PatchUserConfig {
+export function getDefaultPatchConfig(): PatchUserConfig {
   return {
     output: {
       filename: '.tw-patch/tw-class-list.json',
@@ -13,8 +13,8 @@ export function getPatchConfig(): PatchUserConfig {
   }
 }
 
-export function getUserConfig(): UserConfig {
+export function getDefaultUserConfig(): UserConfig {
   return {
-    patch: getPatchConfig()
+    patch: getDefaultPatchConfig()
   }
 }

@@ -3,7 +3,7 @@ import { fixturesRoot } from './utils'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
-import { getUserConfig } from '@/defaults'
+import { getDefaultUserConfig } from '@/defaults'
 import { configName } from '@/constants'
 
 describe('config', () => {
@@ -18,7 +18,7 @@ describe('config', () => {
     expect(existsSync(configPath)).toBe(true)
 
     const { config } = await getConfig(cwd)
-    expect(config).toEqual(getUserConfig())
+    expect(config).toEqual(getDefaultUserConfig())
   })
 
   it('1.change-options', async () => {

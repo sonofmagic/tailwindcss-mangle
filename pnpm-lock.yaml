@@ -32,6 +32,9 @@ importers:
       '@tsconfig/recommended':
         specifier: ^1.0.2
         version: 1.0.2
+      '@types/lodash-es':
+        specifier: ^4.17.8
+        version: 4.17.8
       '@types/node':
         specifier: ^20.4.8
         version: 20.4.8
@@ -56,6 +59,9 @@ importers:
       eslint-plugin-unicorn:
         specifier: ^48.0.1
         version: 48.0.1(eslint@8.46.0)
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       only-allow:
         specifier: ^1.1.1
         version: 1.1.1
@@ -534,9 +540,9 @@ importers:
       '@babel/types':
         specifier: ^7.22.10
         version: 7.22.10
-      c12:
-        specifier: ^1.4.2
-        version: 1.4.2
+      '@tailwindcss-mangle/config':
+        specifier: workspace:^
+        version: link:../config
       cac:
         specifier: ^6.7.14
         version: 6.7.14
@@ -5795,6 +5801,16 @@ packages:
     dependencies:
       '@types/node': 20.4.5
       '@types/webpack': 4.41.33
+    dev: true
+
+  /@types/lodash-es@4.17.8:
+    resolution: {integrity: sha512-euY3XQcZmIzSy7YH5+Unb3b2X12Wtk54YWINBvvGQ5SmMvwb11JQskGsfkH/5HXK77Kr8GF0wkVDIxzAisWtog==}
+    dependencies:
+      '@types/lodash': 4.14.196
+    dev: true
+
+  /@types/lodash@4.14.196:
+    resolution: {integrity: sha512-22y3o88f4a94mKljsZcanlNWPzO0uBsBdzLAngf2tp533LzZcQzb6+eZPJ+vCTt+bqF2XnvT9gejTLsAcJAJyQ==}
     dev: true
 
   /@types/mdast@3.0.12:
@@ -13102,6 +13118,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: true
 
   /lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}

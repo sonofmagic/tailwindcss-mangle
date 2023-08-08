@@ -1,9 +1,8 @@
-import { initConfig, getConfig } from '@/core/config'
+import { initConfig, getConfig, getDefaultUserConfig } from '@/core/config'
 import { fixturesRoot } from './utils'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
-import { getDefaultUserConfig } from '@/defaults'
 
 describe('config', () => {
   it('0.default', async () => {
@@ -24,13 +23,15 @@ describe('config', () => {
     const cwd = resolve(fixturesRoot, './config/1.change-options')
     const { config } = await getConfig(cwd)
     expect(config).toEqual({
-      output: {
-        filename: 'xxx/yyy/zzz.json',
-        loose: false,
-        removeUniversalSelector: false
-      },
-      tailwindcss: {
-        cwd: 'aaa/bbb/cc'
+      patch: {
+        output: {
+          filename: 'xxx/yyy/zzz.json',
+          loose: false,
+          removeUniversalSelector: false
+        },
+        tailwindcss: {
+          cwd: 'aaa/bbb/cc'
+        }
       }
     })
   })

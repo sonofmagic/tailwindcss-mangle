@@ -88,21 +88,6 @@ export type TailwindcssRuntimeContext = {
   variantOptions: Map<string, object>
 }
 
-export interface UserConfig {
-  output?: {
-    filename?: string
-
-    loose?: boolean
-    /**
-     * @description remove * in output json
-     */
-    removeUniversalSelector?: boolean
-  }
-  tailwindcss?: {
-    cwd?: string
-    config?: string
-  }
-}
 // Custom utility type:
 export type DeepRequired<T> = {
   [K in keyof T]: Required<DeepRequired<T[K]>>
