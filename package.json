@@ -15,7 +15,7 @@
     "lint": "pnpm run -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
-    "sync": "cnpm sync @tailwindcss-mangle/shared tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
+    "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
     "publish-packages": "pnpm run build && pnpm run test && changeset version && changeset publish"
   },
   "devDependencies": {

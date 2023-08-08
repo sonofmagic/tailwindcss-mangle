@@ -5,13 +5,13 @@ import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
 
-export function handleValue(string_: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
+export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
 
-  const array = splitCode(string_, {
+  const array = splitCode(raw, {
     splitQuote
   })
-  let rawString = string_
+  let rawString = raw
   for (const v of array) {
     if (set.has(v)) {
       let ignoreFlag = false

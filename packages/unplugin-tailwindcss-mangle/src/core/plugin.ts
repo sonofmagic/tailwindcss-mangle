@@ -83,7 +83,9 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             const runtimeSet = getCachedClassSet()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
             // cache result
-
+            if (runtimeSet.size === 0) {
+              return
+            }
             if (groupedEntries.html.length > 0) {
               for (let i = 0; i < groupedEntries.html.length; i++) {
                 const [file, asset] = groupedEntries.html[i]
