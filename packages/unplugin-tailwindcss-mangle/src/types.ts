@@ -33,3 +33,8 @@ export interface Options {
   jsHandlerOptions?: PartialHandlerOptions<IJsHandlerOptions>
   cssHandlerOptions?: PartialHandlerOptions<ICssHandlerOptions>
 }
+
+export interface ReplaceEntity {
+  origin: string
+  replacement: string
+}

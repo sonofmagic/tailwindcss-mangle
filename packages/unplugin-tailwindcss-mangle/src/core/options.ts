@@ -10,11 +10,13 @@ export function getOptions(options: Options | undefined = {}) {
   const includeMatcher = createGlobMatcher(options.include, true)
   const excludeMatcher = createGlobMatcher(options.exclude, false)
   const currentMangleClassFilter = options.mangleClassFilter ?? defaultMangleClassFilter
+
   function isInclude(file: string) {
     return includeMatcher(file) && !excludeMatcher(file)
   }
 
   const classSet: Set<string> = new Set()
+  const replaceMap: Map<string, string> = new Map()
   let userConfig: UserConfig = getDefaultUserConfig()
 
   const classMapOutputOptions: ClassMapOutputOptions = {
@@ -27,8 +29,13 @@ export function getOptions(options: Options | undefined = {}) {
 
   // let cached: boolean
   const classGenerator = new ClassGenerator(options.classGenerator)
+
   function getCachedClassSet() {
     return classSet
+  }
+
+  function getReplaceMap() {
+    return replaceMap
   }
 
   async function initConfig() {
@@ -51,6 +58,13 @@ export function getOptions(options: Options | undefined = {}) {
         }
       }
     }
+    for (const cls of classSet) {
+      classGenerator.generateClassName(cls)
+    }
+
+    for (const x of Object.entries(classGenerator.newClassMap)) {
+      replaceMap.set(x[0], x[1].name)
+    }
     return config
   }
 
@@ -64,6 +78,7 @@ export function getOptions(options: Options | undefined = {}) {
     jsHandlerOptions: <IJsHandlerOptions>(options.jsHandlerOptions ?? {}),
     htmlHandlerOptions: <IHtmlHandlerOptions>(options.htmlHandlerOptions ?? {}),
     cssHandlerOptions: <ICssHandlerOptions>(options.cssHandlerOptions ?? {}),
-    initConfig
+    initConfig,
+    getReplaceMap
   }
 }

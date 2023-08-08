@@ -586,9 +586,18 @@ importers:
       '@tailwindcss-mangle/shared':
         specifier: workspace:^
         version: link:../shared
+      magic-string:
+        specifier: ^0.30.2
+        version: 0.30.2
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
+      postcss:
+        specifier: ^8.4.27
+        version: 8.4.27
+      postcss-selector-parser:
+        specifier: ^6.0.13
+        version: 6.0.13
       unplugin:
         specifier: ^1.4.0
         version: 1.4.0
@@ -605,9 +614,6 @@ importers:
       mini-css-extract-plugin:
         specifier: ^2.7.6
         version: 2.7.6(webpack@5.88.2)
-      postcss:
-        specifier: ^8.4.27
-        version: 8.4.27
       postcss-loader:
         specifier: ^7.3.3
         version: 7.3.3(postcss@8.4.27)(webpack@5.88.2)

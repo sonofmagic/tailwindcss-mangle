@@ -68,8 +68,11 @@
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
+    "magic-string": "^0.30.2",
     "micromatch": "^4.0.5",
-    "unplugin": "^1.4.0"
+    "unplugin": "^1.4.0",
+    "postcss": "^8.4.27",
+    "postcss-selector-parser": "^6.0.13"
   },
   "publishConfig": {
     "access": "public",
