@@ -12,6 +12,13 @@
       "cwd": "${workspaceFolder}/packages/tailwindcss-patch"
     },
     {
+      "command": "npm run dev",
+      "name": "[next-app] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/next-app"
+    },
+    {
       "command": "npm run test:dev",
       "name": "[tailwindcss-patch] test:dev",
       "request": "launch",

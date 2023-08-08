@@ -49,13 +49,18 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
             },
             CallExpression: {
               enter(p: NodePath<CallExpression>) {
-                const n = p.node
-                // eval()
-                if (t.isIdentifier(n.callee) && n.callee.name === 'eval' && t.isStringLiteral(n.arguments[0])) {
-                  const res = jsHandler(n.arguments[0].value, options)
-                  if (res.code) {
-                    n.arguments[0].value = res.code
-                  }
+                const calleePath = p.get('callee')
+                if (calleePath.isIdentifier() && calleePath.node.name === 'eval') {
+                  p.traverse({
+                    StringLiteral: {
+                      enter(s) {
+                        const res = jsHandler(s.node.value, options)
+                        if (res.code) {
+                          s.node.value = res.code
+                        }
+                      }
+                    }
+                  })
                 }
               }
             }
