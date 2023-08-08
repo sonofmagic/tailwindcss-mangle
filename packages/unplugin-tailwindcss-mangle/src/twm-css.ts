@@ -1,5 +1,5 @@
 import * as webpack from 'webpack'
-import { cssHandler, ClassGenerator } from 'tailwindcss-mangle-core'
+import { cssHandler, ClassGenerator } from '@tailwindcss-mangle/core'
 
 export default function cssloader(
   this: webpack.LoaderContext<{

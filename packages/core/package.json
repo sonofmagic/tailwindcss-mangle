@@ -1,5 +1,5 @@
 {
-  "name": "tailwindcss-mangle-core",
+  "name": "@tailwindcss-mangle/core",
   "version": "1.2.7",
   "description": "The core of tailwindcss-mangle",
   "exports": {
@@ -42,12 +42,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@babel/core": "^7.22.9",
-    "@babel/types": "^7.22.5",
+    "@babel/core": "^7.22.10",
+    "@babel/types": "^7.22.10",
     "parse5": "^7.1.2",
     "postcss": "^8.4.27",
     "postcss-selector-parser": "^6.0.13",
-    "tailwindcss-mangle-shared": "workspace:^"
+    "@tailwindcss-mangle/shared": "workspace:^"
   },
   "devDependencies": {
     "@parse5/tools": "^0.2.0",

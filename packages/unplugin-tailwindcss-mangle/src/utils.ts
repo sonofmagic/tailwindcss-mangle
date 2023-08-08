@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { pluginName } from './constants'
-import { groupBy } from 'tailwindcss-mangle-shared'
+import { groupBy } from '@tailwindcss-mangle/shared'
 const { isMatch } = micromatch
 
 export function getGroupedEntries<T>(
@@ -83,4 +83,4 @@ export function cacheDump(filename: string, data: any[] | Set<any>, basedir?: st
   }
 }
 
-export { defaultMangleClassFilter, isMap, isRegexp } from 'tailwindcss-mangle-shared'
+export { defaultMangleClassFilter, isMap, isRegexp } from '@tailwindcss-mangle/shared'

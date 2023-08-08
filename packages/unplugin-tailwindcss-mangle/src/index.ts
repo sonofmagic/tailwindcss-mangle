@@ -3,13 +3,13 @@ import type { Options } from './types'
 import { pluginName } from './constants'
 import { getGroupedEntries, cacheDump } from './utils'
 import type { OutputAsset, OutputChunk } from 'rollup'
-import { cssHandler, htmlHandler, jsHandler } from 'tailwindcss-mangle-core'
+import { cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import type { sources } from 'webpack'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getOptions } from './options'
 
-export { defaultMangleClassFilter } from 'tailwindcss-mangle-shared'
+export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 // cache map
 const outputCachedMap = new Map<

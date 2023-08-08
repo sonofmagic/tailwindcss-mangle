@@ -72,8 +72,8 @@
   "license": "MIT",
   "dependencies": {
     "micromatch": "^4.0.5",
-    "tailwindcss-mangle-core": "workspace:^",
-    "tailwindcss-mangle-shared": "workspace:^",
+    "@tailwindcss-mangle/core": "workspace:^",
+    "@tailwindcss-mangle/shared": "workspace:^",
     "tailwindcss-patch": "workspace:^",
     "unplugin": "^1.4.0"
   },

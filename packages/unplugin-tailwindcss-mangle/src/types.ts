@@ -3,7 +3,7 @@ import type {
   IHtmlHandlerOptions, // as InternalHtmlHandlerOptions,
   IJsHandlerOptions, // as InternalJsHandlerOptions,
   ICssHandlerOptions // as InternalCssHandlerOptions
-} from 'tailwindcss-mangle-core'
+} from '@tailwindcss-mangle/core'
 
 export interface IClassGeneratorOptions {
   reserveClassName?: (string | RegExp)[]
