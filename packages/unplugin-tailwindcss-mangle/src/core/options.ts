@@ -1,9 +1,8 @@
-import type { Options, ClassSetOutputOptions, ClassMapOutputOptions } from '@/types'
-import { TailwindcssPatcher } from 'tailwindcss-patch'
+import type { Options, ClassMapOutputOptions } from '@/types'
 import { ClassGenerator } from '@tailwindcss-mangle/core'
 import type { IHtmlHandlerOptions, IJsHandlerOptions, ICssHandlerOptions } from '@tailwindcss-mangle/core'
-import { createGlobMatcher, defaultMangleClassFilter, cacheDump } from '@/utils'
-
+import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
+import fs from 'node:fs'
 export function getOptions(options: Options | undefined = {}) {
   const includeMatcher = createGlobMatcher(options.include, true)
   const excludeMatcher = createGlobMatcher(options.exclude, false)
@@ -12,20 +11,21 @@ export function getOptions(options: Options | undefined = {}) {
     return includeMatcher(file) && !excludeMatcher(file)
   }
 
-  let classSet: Set<string>
-  const twPatcher = new TailwindcssPatcher()
-  const classSetOutputOptions: ClassSetOutputOptions = {
-    filename: 'classSet.json',
-    type: 'partial'
+  const classSet: Set<string> = new Set()
+  if (options.classListPath) {
+    const rawClassList = fs.readFileSync(options.classListPath, 'utf8')
+    const classList = JSON.parse(rawClassList) as string[]
+    for (const className of classList) {
+      if (currentMangleClassFilter(className)) {
+        classSet.add(className)
+      }
+    }
   }
 
   const classMapOutputOptions: ClassMapOutputOptions = {
     filename: 'classMap.json'
   }
 
-  if (typeof options.classSetOutput === 'object') {
-    Object.assign(classSetOutputOptions, options.classSetOutput)
-  }
   if (typeof options.classMapOutput === 'object') {
     Object.assign(classMapOutputOptions, options.classMapOutput)
   }
@@ -33,22 +33,6 @@ export function getOptions(options: Options | undefined = {}) {
   // let cached: boolean
   const classGenerator = new ClassGenerator(options.classGenerator)
   function getCachedClassSet() {
-    const set = twPatcher.getClassSet()
-    const isOutput = set.size > 0 && options.classSetOutput
-    if (isOutput && classSetOutputOptions.type === 'all') {
-      cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
-    }
-    for (const c of set) {
-      if (!currentMangleClassFilter(c)) {
-        set.delete(c)
-      }
-    }
-    if (isOutput && classSetOutputOptions.type === 'partial') {
-      cacheDump(classSetOutputOptions.filename, set, classSetOutputOptions.dir)
-    }
-
-    classSet = set
-
     return classSet
   }
 
@@ -58,9 +42,7 @@ export function getOptions(options: Options | undefined = {}) {
     includeMatcher,
     excludeMatcher,
     isInclude,
-    classSetOutputOptions,
     classMapOutputOptions,
-    twPatcher,
     jsHandlerOptions: <IJsHandlerOptions>(options.jsHandlerOptions ?? {}),
     htmlHandlerOptions: <IHtmlHandlerOptions>(options.htmlHandlerOptions ?? {}),
     cssHandlerOptions: <ICssHandlerOptions>(options.cssHandlerOptions ?? {})

@@ -1,9 +1,9 @@
-import { loadConfig, createDefineConfig } from 'c12'
-import type { UserConfig } from './types'
-import { getDefaultUserConfig } from './defaults'
-import dedent from 'dedent'
 import path from 'node:path'
 import fs from 'node:fs/promises'
+import { loadConfig, createDefineConfig } from 'c12'
+import dedent from 'dedent'
+import type { UserConfig } from './types'
+import { getDefaultUserConfig } from './defaults'
 import { configName } from './constants'
 
 export function getConfig(cwd?: string) {

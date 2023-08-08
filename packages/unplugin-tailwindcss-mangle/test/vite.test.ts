@@ -1,7 +1,7 @@
 import { build } from 'vite'
 import path from 'node:path'
 import { RollupOutput } from 'rollup'
-import utwm from '../src/vite'
+import utwm from '@/vite'
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 describe('vite build', () => {
   let twPatcher: TailwindcssPatcher
@@ -23,7 +23,7 @@ describe('vite build', () => {
           }
         }
       },
-      plugins: [utwm()]
+      plugins: [utwm({})]
     })) as RollupOutput
     const output = res.output
     expect(output.length).toBe(3)
