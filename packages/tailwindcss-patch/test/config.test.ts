@@ -1,8 +1,8 @@
-import { initConfig, getConfig, getDefaultUserConfig } from '@/core/config'
-import { fixturesRoot } from './utils'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
+import { fixturesRoot } from './utils'
+import { initConfig, getConfig, getDefaultUserConfig } from '@/core/config'
 
 describe('config', () => {
   it('0.default', async () => {

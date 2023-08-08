@@ -1,8 +1,8 @@
-import { ensureDir } from '@/utils'
 import { existsSync, statSync } from 'node:fs'
 import path from 'node:path'
-import { fixturesRoot } from './utils'
 import { deleteAsync } from 'del'
+import { fixturesRoot } from './utils'
+import { ensureDir } from '@/utils'
 
 describe('utils', () => {
   it('ensureDir', async () => {

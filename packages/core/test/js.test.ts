@@ -1,5 +1,5 @@
-import { jsHandler } from '@/js'
 import { getCss, getTestCase } from './utils'
+import { jsHandler } from '@/js'
 import { ClassGenerator } from '@/shared'
 
 describe('js handler', () => {

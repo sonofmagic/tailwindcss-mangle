@@ -1,8 +1,8 @@
-import { initConfig, getConfig } from '@/index'
-import { fixturesRoot } from './utils'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
+import { fixturesRoot } from './utils'
+import { initConfig, getConfig } from '@/index'
 import { getDefaultUserConfig } from '@/defaults'
 import { configName } from '@/constants'
 

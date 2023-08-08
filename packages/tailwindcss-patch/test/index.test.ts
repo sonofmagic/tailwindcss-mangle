@@ -1,6 +1,6 @@
+import path from 'node:path'
 import { internalPatch } from '@/core'
 
-import path from 'node:path'
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const versionsPkgDir = path.resolve(tailwindcssCasePath, 'versions/package.json')
 

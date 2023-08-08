@@ -1,14 +1,14 @@
 import { createUnplugin } from 'unplugin'
-import type { Options } from '@/types'
-import { pluginName } from '@/constants'
-import { getGroupedEntries, cacheDump } from '@/utils'
 import type { OutputAsset, OutputChunk } from 'rollup'
 import { cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import { getOptions } from './options'
+import type { Options } from '@/types'
+import { pluginName } from '@/constants'
+import { getGroupedEntries, cacheDump } from '@/utils'
 
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
-export const unplugin = createUnplugin((options: Options | undefined = {}, meta) => {
+export const unplugin = createUnplugin((options: Options | undefined = {}) => {
   const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, htmlHandlerOptions, jsHandlerOptions, cssHandlerOptions } = getOptions(options)
 
   return {
@@ -16,7 +16,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}, meta)
     enforce: 'post',
     vite: {
       generateBundle: {
-        handler(options, bundle, isWrite) {
+        handler(options, bundle) {
           const runtimeSet = getCachedClassSet()
           if (runtimeSet.size === 0) {
             return

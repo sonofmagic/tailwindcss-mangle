@@ -1,8 +1,8 @@
 import path from 'node:path'
-import { pkgName } from '../src/constants'
 import fs from 'node:fs'
-import { TailwindcssPatcher, CacheManager } from '@/core'
 import { getCss } from './utils'
+import { pkgName } from '@/constants'
+import { TailwindcssPatcher, CacheManager } from '@/core'
 
 describe('cache', () => {
   let cm: CacheManager

@@ -1,5 +1,5 @@
-import { getContexts, getClassCacheSet } from '@/core'
 import { getCss, getTestCase } from './utils'
+import { getContexts, getClassCacheSet } from '@/core'
 describe('common usage', () => {
   it('hello-world', async () => {
     const result = await getCss(getTestCase('hello-world.html'))

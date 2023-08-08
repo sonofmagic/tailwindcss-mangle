@@ -1,7 +1,7 @@
-import { IClassGeneratorContextItem, ICssHandlerOptions } from '@/types'
 import type { PluginCreator } from 'postcss'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
+import { IClassGeneratorContextItem, ICssHandlerOptions } from '@/types'
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
@@ -32,7 +32,7 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
     }
     return {
       postcssPlugin,
-      Rule(rule, helper) {
+      Rule(rule) {
         rule.selector = parser((selectors) => {
           selectors.walkClasses((s) => {
             if (s.value) {
@@ -58,7 +58,7 @@ const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options)
 
     return {
       postcssPlugin,
-      Rule(rule, helper) {
+      Rule(rule) {
         rule.selector = parser((selectors) => {
           selectors.walkClasses((s) => {
             if (s.value) {

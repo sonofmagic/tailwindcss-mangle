@@ -1,7 +1,7 @@
+import { ClassGenerator, splitCode } from '@tailwindcss-mangle/shared'
 import { getTestCase } from './utils'
 import { htmlHandler } from '@/html'
-import { ClassGenerator, splitCode } from '@tailwindcss-mangle/shared'
-import { describe, it, beforeEach, expect } from 'vitest'
+
 describe('html handler', () => {
   let classGenerator: ClassGenerator
   beforeEach(() => {

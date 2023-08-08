@@ -1,5 +1,5 @@
-import { getInstalledPkgJsonPath } from '@/core'
 import path from 'node:path'
+import { getInstalledPkgJsonPath } from '@/core'
 
 describe('patcher', () => {
   it('getInstalledPkgJsonPath common options', () => {

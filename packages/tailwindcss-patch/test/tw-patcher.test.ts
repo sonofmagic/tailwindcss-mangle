@@ -1,6 +1,6 @@
-import { TailwindcssPatcher } from '@/core'
 import path from 'node:path'
 import { getCss, getTestCase } from './utils'
+import { TailwindcssPatcher } from '@/core'
 describe('class', () => {
   it('default', async () => {
     // const dir = path.resolve(__dirname, './fixtures/cache')

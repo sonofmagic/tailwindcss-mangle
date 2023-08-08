@@ -1,7 +1,8 @@
-import { processTailwindcss } from '@/core/postcss'
 import path from 'node:path'
-import { TailwindcssPatcher } from '@/core'
-const appRoot = path.resolve(__dirname, './fixtures/apps')
+import { processTailwindcss } from '@/core/postcss'
+import { TailwindcssPatcher } from '@/core/tw-patcher'
+import { appRoot } from './utils'
+
 describe('postcss', () => {
   it('getCss 0.common', async () => {
     const p = path.resolve(appRoot, '0.common')
