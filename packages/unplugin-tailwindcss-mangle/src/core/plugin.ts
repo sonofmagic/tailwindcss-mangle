@@ -40,39 +40,22 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
 
   return {
     name: pluginName,
-    enforce: 'post',
+    enforce: 'pre',
     async buildStart() {
       await initConfig()
+    },
+    transformInclude(id) {
+      return isInclude(id)
     },
     transform(code, id) {
       const replaceMap = getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-      // if (id.endsWith('.css')) {
-      //   const { css, map } = await postcss([
-      //     transformSelectorPostcssPlugin({
-      //       replaceMap
-      //     })
-      //   ]).process(code, {
-      //     from: id,
-      //     to: id,
-      //     map: true
-      //   })
 
-      //   return {
-      //     code: css,
-      //     map
-      //   }
-      // } else {
       for (const [key, value] of replaceMap) {
         code = code.replaceAll(key, value)
       }
-      // const s = new MagicString(code)
+
       return code
-      //  {
-      //   code: s.toString(),
-      //   map: s.generateMap()
-      // }
-      // }
     },
     vite: {
       generateBundle: {

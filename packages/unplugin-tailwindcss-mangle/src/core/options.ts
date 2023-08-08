@@ -4,9 +4,14 @@ import { ClassGenerator } from '@tailwindcss-mangle/core'
 import type { IHtmlHandlerOptions, IJsHandlerOptions, ICssHandlerOptions } from '@tailwindcss-mangle/core'
 import { getConfig, getDefaultUserConfig } from '@tailwindcss-mangle/config'
 import type { UserConfig } from '@tailwindcss-mangle/config'
+import defu from 'defu'
 import type { Options, ClassMapOutputOptions } from '@/types'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
-export function getOptions(options: Options | undefined = {}) {
+export function getOptions(opts: Options | undefined = {}) {
+  const options = defu<Options, Options[]>(opts, {
+    include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte}'],
+    exclude: ['**/*.{css,scss,less,sass,postcss}']
+  })
   const includeMatcher = createGlobMatcher(options.include, true)
   const excludeMatcher = createGlobMatcher(options.exclude, false)
   const currentMangleClassFilter = options.mangleClassFilter ?? defaultMangleClassFilter
