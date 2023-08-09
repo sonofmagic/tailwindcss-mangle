@@ -32,7 +32,7 @@
     "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "cli": "node bin/tw-patch.js install"
+    "patch": "node bin/tw-patch.js install"
   },
   "keywords": [
     "tailwindcss",

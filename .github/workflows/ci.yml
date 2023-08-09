@@ -42,5 +42,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Patch
+        working-directory: packages/tailwindcss-patch
+        run: pnpm run patch
+
       - name: Test
         run: pnpm test
