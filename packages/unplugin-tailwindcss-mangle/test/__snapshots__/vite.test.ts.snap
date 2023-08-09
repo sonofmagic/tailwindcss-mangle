@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vite build > common build  1`] = `
-"(function(){const a=document.createElement(\\"link\\").relList;if(a&&a.supports&&a.supports(\\"modulepreload\\"))return;for(const t of document.querySelectorAll('link[rel=\\"modulepreload\\"]'))c(t);new MutationObserver(t=>{for(const e of t)if(e.type===\\"childList\\")for(const w of e.addedNodes)w.tagName===\\"LINK\\"&&w.rel===\\"modulepreload\\"&&c(w)}).observe(document,{childList:!0,subtree:!0});function s(t){const e={};return t.integrity&&(e.integrity=t.integrity),t.referrerPolicy&&(e.referrerPolicy=t.referrerPolicy),t.crossOrigin===\\"use-credentials\\"?e.credentials=\\"include\\":t.crossOrigin===\\"anonymous\\"?e.credentials=\\"omit\\":e.credentials=\\"same-origin\\",e}function c(t){if(t.ep)return;t.ep=!0;const e=s(t);fetch(t.href,e)}})();function o(r){r.animate({clipPath:[]},{duration:400,easing:\\"ease-out\\"})}document.querySelector(\\"#app\\").innerHTML=\`
+"(function(){const a=document.createElement(\\"link\\").relList;if(a&&a.supports&&a.supports(\\"modulepreload\\"))return;for(const t of document.querySelectorAll('link[rel=\\"modulepreload\\"]'))c(t);new MutationObserver(t=>{for(const e of t)if(e.type===\\"childList\\")for(const w of e.addedNodes)w.tagName===\\"LINK\\"&&w.rel===\\"modulepreload\\"&&c(w)}).observe(document,{childList:!0,subtree:!0});function s(t){const e={};return t.integrity&&(e.integrity=t.integrity),t.referrerPolicy&&(e.referrerPolicy=t.referrerPolicy),t.crossOrigin===\\"use-credentials\\"?e.credentials=\\"include\\":t.crossOrigin===\\"anonymous\\"?e.credentials=\\"omit\\":e.credentials=\\"same-origin\\",e}function c(t){if(t.ep)return;t.ep=!0;const e=s(t);fetch(t.href,e)}})();function n(r){r.animate({clipPath:[]},{duration:400,easing:\\"ease-out\\"})}document.querySelector(\\"#app\\").innerHTML=\`
   <div>
     <button id=\\"counter\\">counter</button>
   </div>
@@ -9,13 +9,13 @@ exports[`vite build > common build  1`] = `
 <main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
 <div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
   <p
-    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc lg:tw-v\\">
+    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m\\">
     Get started by editing&nbsp;
     <code class=\\"tw-ob tw-nb\\">pages/index.tsx</code>
   </p>
   <div
     class=\\"fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb\\">
-    <a class=\\"tw-w flex place-tw-cb tw-hc tw-tc tw-n tw-ec\\"
+    <a class=\\"tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec\\"
       href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
       target=\\"_blank\\" rel=\\"noopener noreferrer\\">
       By
@@ -24,14 +24,14 @@ exports[`vite build > common build  1`] = `
 </div>
 
 <div
-  class=\\"relative flex place-tw-cb tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial before:tw-jb tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x before:dark:tw-jar tw-d tw-h tw-j tw-g tw-t\\">
+  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
   <img class=\\"relative tw-a tw-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
     priority />
 </div>
 
 <div class=\\"tw-ic grid tw-ib tw-bc tw-xa tw-db\\">
   <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga hover:tw-pa tw-fa tw-c tw-e\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
     <h2 class=\\"tw-lc tw-zb tw-ya\\">
       Docs <span
@@ -42,7 +42,7 @@ exports[`vite build > common build  1`] = `
   </a>
 
   <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga hover:tw-pa tw-fa tw-c tw-e\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
     <h2 class=\\"tw-lc tw-zb tw-ya\\">
       Learn <span
@@ -53,7 +53,7 @@ exports[`vite build > common build  1`] = `
   </a>
 
   <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga hover:tw-pa tw-fa tw-c tw-e\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
     <h2 class=\\"tw-lc tw-zb tw-ya\\">
       Templates <span
@@ -64,7 +64,7 @@ exports[`vite build > common build  1`] = `
   </a>
 
   <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga hover:tw-pa tw-fa tw-c tw-e\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
     <h2 class=\\"tw-lc tw-zb tw-ya\\">
       Deploy <span
@@ -75,7 +75,7 @@ exports[`vite build > common build  1`] = `
   </a>
 </div>
 </main>
-\`;o(document.querySelector(\\"#counter\\"));
+\`;n(document.querySelector(\\"#counter\\"));
 "
 `;
 

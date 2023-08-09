@@ -2,6 +2,7 @@ import babel from '@babel/core'
 import { declare } from '@babel/helper-plugin-utils'
 import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
+import { sort } from 'fast-sort'
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
@@ -12,7 +13,7 @@ interface Options {
 export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number } & Options) {
   const { addToUsedBy, id, magicString, node, raw, replaceMap, offset = 0 } = options
   let value = raw
-  const arr = splitCode(value)
+  const arr = sort(splitCode(value)).desc((x) => x.length)
 
   for (const str of arr) {
     if (replaceMap.has(str)) {
