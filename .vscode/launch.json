@@ -5,11 +5,74 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "yarn dev",
+      "name": "[vite-vue] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vue"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-vue] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vue"
+    },
+    {
+      "command": "yarn dev",
+      "name": "[vite-react] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-react"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-react] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-react"
+    },
+    {
+      "command": "yarn dev",
+      "name": "[vite-vanilla] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vanilla"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-vanilla] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vanilla"
+    },
+    {
+      "command": "yarn dev",
+      "name": "[webpack5-vue3] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/webpack5-vue3"
+    },
+    {
+      "command": "yarn build",
+      "name": "[webpack5-vue3] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/webpack5-vue3"
+    },
+    {
       "command": "yarn patch",
       "name": "do tailwindcss-patch",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/packages/tailwindcss-patch"
+    },
+    {
+      "command": "npm run dev",
+      "name": "[next-app] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/next-app"
     },
     {
       "command": "npm run test:dev",
@@ -38,6 +101,13 @@
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/next-app"
+    },
+    {
+      "command": "npm run test:dev",
+      "name": "[core] test:dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/packages/core"
     }
   ]
 }

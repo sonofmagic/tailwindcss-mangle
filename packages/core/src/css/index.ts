@@ -1,8 +1,12 @@
 import postcss from 'postcss'
 import { ICssHandlerOptions } from '../types'
-import { postcssMangleTailwindcssPlugin } from './plugins'
+import { transformSelectorPostcssPlugin } from './plugins'
 
 export function cssHandler(rawSource: string, options: ICssHandlerOptions) {
-  const acceptedPlugins = [postcssMangleTailwindcssPlugin(options)]
-  return postcss(acceptedPlugins).process(rawSource).css
+  const acceptedPlugins = [transformSelectorPostcssPlugin(options)]
+  const { file } = options
+  return postcss(acceptedPlugins).process(rawSource, {
+    from: file,
+    to: file
+  })
 }

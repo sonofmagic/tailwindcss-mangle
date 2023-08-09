@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { vitePlugin as utwm } from 'unplugin-tailwindcss-mangle'
+import utwm from 'unplugin-tailwindcss-mangle/vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {

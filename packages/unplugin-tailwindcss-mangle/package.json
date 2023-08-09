@@ -1,6 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
-  "version": "1.2.7",
+  "version": "2.0.0",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -65,9 +65,11 @@
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "micromatch": "^4.0.5",
+    "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
+    "fast-sort": "^3.4.0",
+    "micromatch": "^4.0.5",
     "unplugin": "^1.4.0"
   },
   "publishConfig": {
@@ -75,6 +77,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@types/babel__helper-plugin-utils": "^7.10.0",
     "@types/micromatch": "^4.0.2",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
@@ -82,10 +85,10 @@
     "postcss": "^8.4.27",
     "postcss-loader": "^7.3.3",
     "tailwindcss": "^3.3.3",
+    "tailwindcss-patch": "workspace:^",
     "vite": "^4.4.9",
     "webpack": "^5.88.2",
-    "webpack-build-utils": "^0.0.4",
-    "tailwindcss-patch": "workspace:^"
+    "webpack-build-utils": "^0.0.4"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

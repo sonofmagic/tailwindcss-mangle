@@ -1,5 +1,3 @@
-import type { IClassGeneratorOptions, IClassGenerator } from './types'
-
 export const preserveClassNames = [
   // https://tailwindcss.com/docs/transition-timing-function start
   // https://github.com/sonofmagic/tailwindcss-mangle/issues/21
@@ -54,21 +52,6 @@ export const acceptChars = [...'abcdefghijklmnopqrstuvwxyz']
 
 export function stripEscapeSequence(words: string) {
   return words.replaceAll('\\', '')
-}
-
-export const validate = (opts: IClassGeneratorOptions, classGenerator: IClassGenerator) => {
-  if (!opts.log) return
-  for (const className in classGenerator.newClassMap) {
-    const c = classGenerator.newClassMap[className]
-    if (c.usedBy.length > 0) {
-      continue
-    }
-    if (/.+\.css:*$/.test(c.usedBy[0])) {
-      console.log(`The class name '${className}' is not used: defined at ${c.usedBy[0]}.`)
-    } else {
-      console.log(`The class name '${className}' is not defined: used at ${c.usedBy[0]}.`)
-    }
-  }
 }
 
 export function isRegexp(value: unknown) {

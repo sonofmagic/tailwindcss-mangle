@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
-import { vitePlugin as utwm } from 'unplugin-tailwindcss-mangle'
+import utwm from 'unplugin-tailwindcss-mangle/vite'
 export default defineConfig({
   plugins: [
     solidPlugin(),
     utwm({
-      classSetOutput: true,
       classMapOutput: true
     })
   ],

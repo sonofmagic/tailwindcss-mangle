@@ -2,7 +2,7 @@ import { ClassGenerator } from './shared'
 
 export interface IClassGeneratorContextItem {
   name: string
-  usedBy: any[]
+  usedBy: string[]
 }
 
 export interface IClassGeneratorOptions {
@@ -16,8 +16,8 @@ export interface IClassGeneratorOptions {
 }
 
 export interface IHandlerOptions {
-  runtimeSet: Set<string>
   classGenerator: ClassGenerator
+  replaceMap: Map<string, string>
 }
 
 export interface IHtmlHandlerOptions extends IHandlerOptions {}
@@ -28,8 +28,9 @@ export interface IJsHandlerOptions extends IHandlerOptions {
 }
 
 export interface ICssHandlerOptions extends IHandlerOptions {
-  scene?: 'loader' | 'process'
+  // scene?: 'loader' | 'process'
   ignoreVueScoped?: boolean
+  file?: string
 }
 
 export interface ClassSetOutputOptions {

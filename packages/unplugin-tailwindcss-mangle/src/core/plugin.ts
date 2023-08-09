@@ -1,66 +1,63 @@
 import { createUnplugin } from 'unplugin'
-import type { OutputAsset, OutputChunk } from 'rollup'
-import { cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
+import type { OutputAsset } from 'rollup'
 import { getOptions } from './options'
 import type { Options } from '@/types'
 import { pluginName } from '@/constants'
-import { getGroupedEntries, cacheDump } from '@/utils'
-
+import { cacheDump, getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { classGenerator, getCachedClassSet, isInclude, classMapOutputOptions, htmlHandlerOptions, jsHandlerOptions, cssHandlerOptions } = getOptions(options)
-
+  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions, disabled, htmlHandler, cssHandler, jsHandler, preProcessJs } =
+    getOptions(options)
+  if (disabled) {
+    return {
+      name: pluginName
+    }
+  }
   return {
     name: pluginName,
-    enforce: 'post',
+    enforce: 'pre',
+    async buildStart() {
+      await initConfig()
+    },
+    transformInclude(id) {
+      return isInclude(id)
+    },
+    transform(code, id) {
+      const replaceMap = getReplaceMap()
+      // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
+      if (id.endsWith('.js') || id.endsWith('.ts') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
+        const str = preProcessJs({
+          code,
+          replaceMap,
+          addToUsedBy,
+          id
+        })
+        return str
+      } else {
+        for (const [key, value] of replaceMap) {
+          code = code.replaceAll(key, value)
+        }
+      }
+
+      return code
+    },
     vite: {
       generateBundle: {
-        handler(options, bundle) {
-          const runtimeSet = getCachedClassSet()
-          if (runtimeSet.size === 0) {
-            return
-          }
+        async handler(options, bundle) {
+          const replaceMap = getReplaceMap()
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
-
-          if (Array.isArray(groupedEntries.html) && groupedEntries.html.length > 0) {
-            for (let i = 0; i < groupedEntries.html.length; i++) {
-              const [file, asset] = groupedEntries.html[i] as [string, OutputAsset]
-              if (isInclude(file)) {
-                asset.source = htmlHandler(asset.source.toString(), {
-                  ...htmlHandlerOptions,
-                  classGenerator,
-                  runtimeSet
-                })
-              }
-            }
-          }
-          if (Array.isArray(groupedEntries.js) && groupedEntries.js.length > 0) {
-            for (let i = 0; i < groupedEntries.js.length; i++) {
-              const [file, chunk] = groupedEntries.js[i] as [string, OutputChunk]
-              if (isInclude(file)) {
-                const code = jsHandler(chunk.code, {
-                  ...jsHandlerOptions,
-                  runtimeSet,
-                  classGenerator
-                }).code
-                if (code) {
-                  chunk.code = code
-                }
-              }
-            }
-          }
 
           if (Array.isArray(groupedEntries.css) && groupedEntries.css.length > 0) {
             for (let i = 0; i < groupedEntries.css.length; i++) {
-              const [file, css] = groupedEntries.css[i] as [string, OutputAsset]
-              if (isInclude(file)) {
-                css.source = cssHandler(css.source.toString(), {
-                  ...cssHandlerOptions,
-                  classGenerator,
-                  runtimeSet
-                })
-              }
+              const [file, cssSource] = groupedEntries.css[i] as [string, OutputAsset]
+
+              const { css } = await cssHandler(cssSource.source.toString(), {
+                file,
+                replaceMap,
+                classGenerator
+              })
+              cssSource.source = css
             }
           }
         }
@@ -71,63 +68,56 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
       const { ConcatSource } = sources
 
       compiler.hooks.compilation.tap(pluginName, (compilation) => {
-        compilation.hooks.processAssets.tap(
+        compilation.hooks.processAssets.tapPromise(
           {
             name: pluginName,
             stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
           },
-          (assets) => {
-            // nextjs webpack build multiple times
-            // server -> manifest -> client
-
-            const runtimeSet = getCachedClassSet()
+          async (assets) => {
+            const replaceMap = getReplaceMap()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
-            // cache result
-
-            if (groupedEntries.html.length > 0) {
-              for (let i = 0; i < groupedEntries.html.length; i++) {
-                const [file, asset] = groupedEntries.html[i]
-                if (isInclude(file)) {
-                  const html = htmlHandler(asset.source().toString(), {
-                    ...htmlHandlerOptions,
-                    classGenerator,
-                    runtimeSet
-                  })
-                  const source = new ConcatSource(html)
-                  compilation.updateAsset(file, source)
-                }
-              }
-            }
 
             if (groupedEntries.js.length > 0) {
               for (let i = 0; i < groupedEntries.js.length; i++) {
                 const [file, chunk] = groupedEntries.js[i]
-                if (isInclude(file)) {
-                  const code = jsHandler(chunk.source().toString(), {
-                    ...jsHandlerOptions,
-                    runtimeSet,
-                    classGenerator
-                  }).code
-                  if (code) {
-                    const source = new ConcatSource(code)
-                    compilation.updateAsset(file, source)
-                  }
+
+                const code = jsHandler(chunk.source().toString(), {
+                  replaceMap,
+                  classGenerator
+                }).code
+                if (code) {
+                  const source = new ConcatSource(code)
+                  compilation.updateAsset(file, source)
                 }
               }
             }
 
             if (groupedEntries.css.length > 0) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
-                const [file, css] = groupedEntries.css[i]
-                if (isInclude(file)) {
-                  const newCss = cssHandler(css.source().toString(), {
-                    ...cssHandlerOptions,
-                    classGenerator,
-                    runtimeSet
-                  })
-                  const source = new ConcatSource(newCss)
-                  compilation.updateAsset(file, source)
-                }
+                const [file, cssSource] = groupedEntries.css[i]
+
+                const { css } = await cssHandler(cssSource.source().toString(), {
+                  replaceMap,
+                  file,
+                  classGenerator
+                })
+
+                const source = new ConcatSource(css)
+
+                compilation.updateAsset(file, source)
+              }
+            }
+
+            if (groupedEntries.html.length > 0) {
+              for (let i = 0; i < groupedEntries.html.length; i++) {
+                const [file, asset] = groupedEntries.html[i]
+
+                const html = htmlHandler(asset.source().toString(), {
+                  classGenerator,
+                  replaceMap
+                })
+                const source = new ConcatSource(html)
+                compilation.updateAsset(file, source)
               }
             }
           }
@@ -140,7 +130,11 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
         cacheDump(
           classMapOutputOptions.filename,
           entries.map((x) => {
-            return [x[0], x[1].name]
+            return {
+              origin: x[0],
+              replacement: x[1].name,
+              usedBy: [...x[1].usedBy]
+            }
           }),
           classMapOutputOptions.dir
         )

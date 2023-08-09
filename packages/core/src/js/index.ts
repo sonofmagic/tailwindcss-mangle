@@ -4,16 +4,16 @@ import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
+export { preProcessJs } from './pre'
+export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
+  const { replaceMap, classGenerator: clsGen, splitQuote = true } = options
 
-export function handleValue(string_: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
-  const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
-
-  const array = splitCode(string_, {
+  const array = splitCode(raw, {
     splitQuote
   })
-  let rawString = string_
+  let rawString = raw
   for (const v of array) {
-    if (set.has(v)) {
+    if (replaceMap.has(v)) {
       let ignoreFlag = false
       if (Array.isArray(node.leadingComments)) {
         ignoreFlag = node.leadingComments.findIndex((x) => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
@@ -49,13 +49,19 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
             },
             CallExpression: {
               enter(p: NodePath<CallExpression>) {
-                const n = p.node
-                // eval()
-                if (t.isIdentifier(n.callee) && n.callee.name === 'eval' && t.isStringLiteral(n.arguments[0])) {
-                  const res = jsHandler(n.arguments[0].value, options)
-                  if (res.code) {
-                    n.arguments[0].value = res.code
-                  }
+                const calleePath = p.get('callee')
+                if (calleePath.isIdentifier() && calleePath.node.name === 'eval') {
+                  p.traverse({
+                    StringLiteral: {
+                      enter(s) {
+                        // ___CSS_LOADER_EXPORT___
+                        const res = jsHandler(s.node.value, options)
+                        if (res.code) {
+                          s.node.value = res.code
+                        }
+                      }
+                    }
+                  })
                 }
               }
             }
