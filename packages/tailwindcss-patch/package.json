@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "patch tailwindcss for exposing context and extract classes",
   "exports": {
     ".": {
@@ -32,7 +32,7 @@
     "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "cli": "node bin/tw-patch.js install"
+    "patch": "node bin/tw-patch.js install"
   },
   "keywords": [
     "tailwindcss",
@@ -51,7 +51,7 @@
   },
   "peerDependenciesMeta": {
     "tailwindcss": {
-      "optional": false
+      "optional": true
     }
   },
   "devDependencies": {

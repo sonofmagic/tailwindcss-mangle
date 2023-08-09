@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
 import { fixturesRoot } from './utils'
 import { initConfig, getConfig } from '@/index'
-import { getDefaultUserConfig } from '@/defaults'
+import { getDefaultUserConfig, getDefaultMangleUserConfig } from '@/defaults'
 import { configName } from '@/constants'
 
 describe('config', () => {
@@ -34,7 +34,8 @@ describe('config', () => {
         tailwindcss: {
           cwd: 'aaa/bbb/cc'
         }
-      }
+      },
+      mangle: getDefaultMangleUserConfig()
     })
   })
 })

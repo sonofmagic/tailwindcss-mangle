@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import micromatch from 'micromatch'
 
@@ -62,24 +62,13 @@ export function getCacheDir(basedir = process.cwd()) {
   return path.resolve(basedir, 'node_modules/.cache', pluginName)
 }
 
-export function mkCacheDirectory(cwd = process.cwd()) {
-  const cacheDirectory = getCacheDir(cwd)
-
-  const exists = fs.existsSync(cacheDirectory)
-  if (!exists) {
-    fs.mkdirSync(cacheDirectory, {
+export async function ensureDir(p: string) {
+  try {
+    await fs.access(p)
+  } catch {
+    await fs.mkdir(p, {
       recursive: true
     })
-  }
-  return cacheDirectory
-}
-
-export function cacheDump(filename: string, data: any[] | Set<any>, basedir?: string) {
-  try {
-    const dir = mkCacheDirectory(basedir)
-    fs.writeFileSync(path.resolve(dir, filename), JSON.stringify([...data], undefined, 2), 'utf8')
-  } catch (error) {
-    console.log(error)
   }
 }
 

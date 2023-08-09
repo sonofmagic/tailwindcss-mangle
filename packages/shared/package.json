@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/shared",
-  "version": "2.0.0",
+  "version": "2.0.4",
   "description": "The shared utils of tailwindcss-mangle",
   "exports": {
     ".": {
@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },
   "keywords": [

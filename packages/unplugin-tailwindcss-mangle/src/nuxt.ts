@@ -1,15 +1,15 @@
-import type { Options } from './types'
+import type { MangleUserConfig } from './types'
 import { unplugin } from './core'
 
-export default function (options: Options = {}, nuxt: any) {
+export default function (options: MangleUserConfig = {}, nuxt: any) {
   // install webpack plugin
-  nuxt.hook('webpack:config', async (config: any) => {
+  nuxt.hook('webpack:config', (config: any) => {
     config.plugins = config.plugins || []
     config.plugins.unshift(unplugin.webpack(options))
   })
 
   // install vite plugin
-  nuxt.hook('vite:extendConfig', async (config: any) => {
+  nuxt.hook('vite:extendConfig', (config: any) => {
     config.plugins = config.plugins || []
     config.plugins.push(unplugin.vite(options))
   })

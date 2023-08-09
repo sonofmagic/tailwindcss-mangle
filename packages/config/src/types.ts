@@ -1,3 +1,21 @@
+import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
+
+export interface ClassMapOutputOptions {
+  enable?: boolean
+  filename?: string
+  loose?: boolean
+}
+
+export interface MangleUserConfig {
+  mangleClassFilter?: (className: string) => boolean
+  classGenerator?: IClassGeneratorOptions
+  exclude?: string[]
+  include?: string[]
+  classListPath?: string
+  classMapOutput?: ClassMapOutputOptions
+  disabled?: boolean
+}
+
 export interface PatchUserConfig {
   output?: {
     filename?: string
@@ -16,4 +34,5 @@ export interface PatchUserConfig {
 
 export interface UserConfig {
   patch?: PatchUserConfig
+  mangle?: MangleUserConfig
 }

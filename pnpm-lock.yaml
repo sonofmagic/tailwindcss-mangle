@@ -486,6 +486,9 @@ importers:
 
   packages/config:
     dependencies:
+      '@tailwindcss-mangle/shared':
+        specifier: workspace:^
+        version: link:../shared
       c12:
         specifier: ^1.4.2
         version: 1.4.2

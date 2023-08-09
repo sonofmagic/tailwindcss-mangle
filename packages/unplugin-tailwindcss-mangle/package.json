@@ -1,6 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -36,6 +36,11 @@
       "require": "./dist/nuxt.cjs",
       "import": "./dist/nuxt.mjs"
     },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "require": "./dist/utils.cjs",
+      "import": "./dist/utils.mjs"
+    },
     "./*": "./*"
   },
   "typesVersions": {
@@ -48,7 +53,7 @@
   },
   "scripts": {
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },
   "files": [

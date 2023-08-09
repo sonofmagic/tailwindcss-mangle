@@ -13,6 +13,23 @@ exports[`defaults > getDefaultPatchConfig 1`] = `
 
 exports[`defaults > getDefaultUserConfig 1`] = `
 {
+  "mangle": {
+    "classListPath": ".tw-patch/tw-class-list.json",
+    "classMapOutput": {
+      "enable": false,
+      "filename": ".tw-patch/tw-map-list.json",
+      "loose": true,
+    },
+    "disabled": false,
+    "exclude": [
+      "node_modules/**/*",
+      "**/*.{css,scss,less,sass,postcss,html,htm}",
+    ],
+    "include": [
+      "**/*.{js,jsx,ts,tsx,svelte,vue}",
+    ],
+    "mangleClassFilter": [Function],
+  },
   "patch": {
     "output": {
       "filename": ".tw-patch/tw-class-list.json",
