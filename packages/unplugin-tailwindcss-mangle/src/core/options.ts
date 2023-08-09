@@ -9,13 +9,22 @@ import type { Options, ClassMapOutputOptions } from '@/types'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
 
 export function getOptions(opts: Options | undefined = {}) {
-  const options = defu<Options, Options[]>(opts, {
+  const {
+    include,
+    exclude,
+    disabled,
+    mangleClassFilter,
+    classMapOutput,
+    classGenerator: classGeneratorOptions,
+    classListPath: _classListPath
+  } = defu<Options, Options[]>(opts, {
     include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte,vue}'],
-    exclude: ['**/*.{css,scss,less,sass,postcss}']
+    exclude: ['**/*.{css,scss,less,sass,postcss}'],
+    disabled: process.env.NODE_ENV === 'development'
   })
-  const includeMatcher = createGlobMatcher(options.include, true)
-  const excludeMatcher = createGlobMatcher(options.exclude, false)
-  const currentMangleClassFilter = options.mangleClassFilter ?? defaultMangleClassFilter
+  const includeMatcher = createGlobMatcher(include, true)
+  const excludeMatcher = createGlobMatcher(exclude, false)
+  const currentMangleClassFilter = mangleClassFilter ?? defaultMangleClassFilter
 
   function isInclude(file: string) {
     return includeMatcher(file) && !excludeMatcher(file)
@@ -29,12 +38,12 @@ export function getOptions(opts: Options | undefined = {}) {
     filename: 'classMap.json'
   }
 
-  if (typeof options.classMapOutput === 'object') {
-    Object.assign(classMapOutputOptions, options.classMapOutput)
+  if (typeof classMapOutput === 'object') {
+    Object.assign(classMapOutputOptions, classMapOutput)
   }
 
   // let cached: boolean
-  const classGenerator = new ClassGenerator(options.classGenerator)
+  const classGenerator = new ClassGenerator(classGeneratorOptions)
 
   function getCachedClassSet() {
     return classSet
@@ -51,11 +60,11 @@ export function getOptions(opts: Options | undefined = {}) {
     if (userConfig) {
       classListPath = resolve(process.cwd(), userConfig.patch?.output?.filename as string)
     }
-    if (options.classListPath) {
-      classListPath = options.classListPath
+    if (_classListPath) {
+      classListPath = _classListPath
     }
 
-    if (classListPath) {
+    if (classListPath && fs.existsSync(classListPath)) {
       const rawClassList = fs.readFileSync(classListPath, 'utf8')
       const list = JSON.parse(rawClassList) as string[]
       // why?
@@ -94,6 +103,7 @@ export function getOptions(opts: Options | undefined = {}) {
     classMapOutputOptions,
     initConfig,
     getReplaceMap,
-    addToUsedBy
+    addToUsedBy,
+    disabled
   }
 }

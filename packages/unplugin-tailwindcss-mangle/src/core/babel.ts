@@ -9,6 +9,25 @@ interface Options {
   addToUsedBy: (key: string, file: string) => void
 }
 
+export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement } & Options) {
+  const { addToUsedBy, id, magicString, node, raw, replaceMap } = options
+  let value = raw
+  const arr = splitCode(value)
+
+  for (const str of arr) {
+    if (replaceMap.has(str)) {
+      addToUsedBy(str, id)
+      const v = replaceMap.get(str)
+      if (v) {
+        value = value.replaceAll(str, v)
+      }
+    }
+  }
+  if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
+    magicString.update(node.start + 1, node.end - 1, value)
+  }
+}
+
 export const plugin = declare((api, options: Options) => {
   api.assertVersion(7)
   const { magicString, replaceMap, id, addToUsedBy } = options
@@ -17,21 +36,27 @@ export const plugin = declare((api, options: Options) => {
       StringLiteral: {
         enter(p) {
           const node = p.node
-          let value = node.value
-          const arr = splitCode(value)
-
-          for (const str of arr) {
-            if (replaceMap.has(str)) {
-              addToUsedBy(str, id)
-              const v = replaceMap.get(str)
-              if (v) {
-                value = value.replaceAll(str, v)
-              }
-            }
-          }
-          if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
-            magicString.update(node.start + 1, node.end - 1, value)
-          }
+          handleValue({
+            addToUsedBy,
+            id,
+            magicString,
+            node,
+            raw: node.value,
+            replaceMap
+          })
+        }
+      },
+      TemplateElement: {
+        enter(p) {
+          const node = p.node
+          handleValue({
+            addToUsedBy,
+            id,
+            magicString,
+            node,
+            raw: node.value.raw,
+            replaceMap
+          })
         }
       }
     }

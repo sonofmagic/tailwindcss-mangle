@@ -12,4 +12,5 @@ export interface Options {
   include?: string[]
   classListPath?: string
   classMapOutput?: boolean | ClassMapOutputOptions
+  disabled?: boolean
 }

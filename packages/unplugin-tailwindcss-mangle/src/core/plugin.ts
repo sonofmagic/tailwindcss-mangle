@@ -11,8 +11,12 @@ import { cacheDump, getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions } = getOptions(options)
-
+  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions, disabled } = getOptions(options)
+  if (disabled) {
+    return {
+      name: pluginName
+    }
+  }
   return {
     name: pluginName,
     enforce: 'pre',

@@ -6,10 +6,7 @@ export default defineConfig({
   plugins: [
     vue(),
     utwm({
-      classMapOutput: true,
-      jsHandlerOptions: {
-        minified: true
-      }
+      classMapOutput: true
     })
   ]
 })

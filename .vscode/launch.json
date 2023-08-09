@@ -33,6 +33,20 @@
       "cwd": "${workspaceFolder}/apps/vite-react"
     },
     {
+      "command": "yarn dev",
+      "name": "[vite-vanilla] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vanilla"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-vanilla] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vanilla"
+    },
+    {
       "command": "yarn patch",
       "name": "do tailwindcss-patch",
       "request": "launch",
