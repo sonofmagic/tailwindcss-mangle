@@ -90,7 +90,8 @@ export function preProcessJs(options: { code: string; replaceMap: Map<string, st
           addToUsedBy
         }
       ]
-    ]
+    ],
+    filename: id
   })
   return magicString.toString()
 }
