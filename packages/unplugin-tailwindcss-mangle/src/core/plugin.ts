@@ -2,16 +2,15 @@ import { dirname } from 'node:path'
 import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
-import { getOptions } from './options'
-import type { Options } from '@/types'
+import { htmlHandler, cssHandler, jsHandler, preProcessJs } from '@tailwindcss-mangle/core'
+import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
+import { Context } from './context'
 import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
-export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
-export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions, disabled, htmlHandler, cssHandler, jsHandler, preProcessJs } =
-    getOptions(options)
-  if (disabled) {
+export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
+  const ctx = new Context(options)
+  if (ctx.options.disabled) {
     return {
       name: pluginName
     }
@@ -20,19 +19,19 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
     name: pluginName,
     enforce: 'pre',
     async buildStart() {
-      await initConfig()
+      await ctx.initConfig()
     },
     transformInclude(id) {
-      return isInclude(id)
+      return ctx.isInclude(id)
     },
     transform(code, id) {
-      const replaceMap = getReplaceMap()
+      const replaceMap = ctx.getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-      if (id.endsWith('.js') || id.endsWith('.ts') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
+      if (/\.[jt]sx?$/.test(id)) {
         const str = preProcessJs({
           code,
           replaceMap,
-          addToUsedBy,
+          addToUsedBy: ctx.addToUsedBy.bind(ctx),
           id
         })
         return str
@@ -47,7 +46,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
     vite: {
       generateBundle: {
         async handler(options, bundle) {
-          const replaceMap = getReplaceMap()
+          const replaceMap = ctx.getReplaceMap()
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
 
           if (Array.isArray(groupedEntries.css) && groupedEntries.css.length > 0) {
@@ -57,7 +56,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
               const { css } = await cssHandler(cssSource.source.toString(), {
                 file,
                 replaceMap,
-                classGenerator
+                classGenerator: ctx.classGenerator
               })
               cssSource.source = css
             }
@@ -76,7 +75,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
           },
           async (assets) => {
-            const replaceMap = getReplaceMap()
+            const replaceMap = ctx.getReplaceMap()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
 
             if (groupedEntries.js.length > 0) {
@@ -85,7 +84,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
 
                 const code = jsHandler(chunk.source().toString(), {
                   replaceMap,
-                  classGenerator
+                  classGenerator: ctx.classGenerator
                 }).code
                 if (code) {
                   const source = new ConcatSource(code)
@@ -101,7 +100,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
                 const { css } = await cssHandler(cssSource.source().toString(), {
                   replaceMap,
                   file,
-                  classGenerator
+                  classGenerator: ctx.classGenerator
                 })
 
                 const source = new ConcatSource(css)
@@ -115,7 +114,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
                 const [file, asset] = groupedEntries.html[i]
 
                 const html = htmlHandler(asset.source().toString(), {
-                  classGenerator,
+                  classGenerator: ctx.classGenerator,
                   replaceMap
                 })
                 const source = new ConcatSource(html)
@@ -127,25 +126,28 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
       })
     },
     async writeBundle() {
-      const entries = Object.entries(classGenerator.newClassMap)
-      if (entries.length > 0 && classMapOutputOptions) {
-        await ensureDir(dirname(classMapOutputOptions.filename))
-        await fs.writeFile(
-          classMapOutputOptions.filename,
-          JSON.stringify(
-            entries.map((x) => {
-              return {
-                origin: x[0],
-                replacement: x[1].name,
-                usedBy: [...x[1].usedBy]
-              }
-            }),
-            null,
-            2
-          ),
-          'utf8'
-        )
-        console.log(`✨ ${classMapOutputOptions.filename} generated!`)
+      if (ctx.options.classMapOutput?.enable) {
+        const opts = ctx.options.classMapOutput as Required<ClassMapOutputOptions>
+        const entries = Object.entries(ctx.classGenerator.newClassMap)
+        if (entries.length > 0 && opts) {
+          await ensureDir(dirname(opts.filename))
+          await fs.writeFile(
+            opts.filename,
+            JSON.stringify(
+              entries.map((x) => {
+                return {
+                  origin: x[0],
+                  replacement: x[1].name,
+                  usedBy: [...x[1].usedBy]
+                }
+              }),
+              null,
+              2
+            ),
+            'utf8'
+          )
+          console.log(`✨ ${opts.filename} generated!`)
+        }
       }
     }
   }

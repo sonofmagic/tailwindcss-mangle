@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "patch tailwindcss for exposing context and extract classes",
   "exports": {
     ".": {
@@ -51,7 +51,7 @@
   },
   "peerDependenciesMeta": {
     "tailwindcss": {
-      "optional": false
+      "optional": true
     }
   },
   "devDependencies": {
