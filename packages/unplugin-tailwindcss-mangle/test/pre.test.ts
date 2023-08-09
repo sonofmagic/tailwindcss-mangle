@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { processJs } from '@/core/babel'
+import { preProcessJs } from '@tailwindcss-mangle/core'
 import { getOptions } from '@/core/options'
 const fixturesRoot = path.resolve(__dirname, './fixtures')
 const tsxRoot = path.resolve(fixturesRoot, './tsx')
@@ -15,7 +15,7 @@ describe('babel plugin', () => {
     const replaceMap = getReplaceMap()
     const file = path.resolve(tsxRoot, 'app0.tsx')
     const code = await fs.readFile(file, 'utf8')
-    const res = processJs({
+    const res = preProcessJs({
       code,
       replaceMap,
       addToUsedBy,
@@ -32,7 +32,7 @@ describe('babel plugin', () => {
     const replaceMap = getReplaceMap()
     const file = path.resolve(tsRoot, 'vanilla-0.ts')
     const code = await fs.readFile(file, 'utf8')
-    const res = processJs({
+    const res = preProcessJs({
       code,
       replaceMap,
       addToUsedBy,
