@@ -8,6 +8,10 @@ export default defineNuxtConfig({
       autoprefixer: {}
     }
   },
+  // https://github.com/nuxt/nuxt/issues/20428
+  experimental: {
+    inlineSSRStyles: false
+  },
   modules: [
     [
       nuxtPlugin,

@@ -16,6 +16,7 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
     - [5. Register this plugin](#5-register-this-plugin)
       - [vite](#vite)
       - [webpack](#webpack)
+      - [Nuxt 3](#nuxt-3)
   - [Options](#options)
   - [Notice](#notice)
   - [Migration form v1 to v2](#migration-form-v1-to-v2)
@@ -107,6 +108,29 @@ module.exports = defineConfig({
       config.plugins.push(utwm())
     }
   }
+})
+
+```
+
+#### Nuxt 3
+
+```ts
+import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
+export default defineNuxtConfig({
+  //...
+  // https://github.com/nuxt/nuxt/issues/20428
+  // you must set this option to false to enable vite extract css
+  experimental: {
+    inlineSSRStyles: false
+  },
+  modules: [
+    [
+      nuxtPlugin,
+      {
+        // options
+      }
+    ]
+  ]
 })
 
 ```
