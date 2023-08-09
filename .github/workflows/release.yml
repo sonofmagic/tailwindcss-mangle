@@ -27,6 +27,13 @@ jobs:
       - name: Install Dependencies
         run: pnpm i
 
+      - name: Build
+        run: pnpm build
+        
+      - name: Patch
+        working-directory: packages/tailwindcss-patch
+        run: pnpm run patch
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
