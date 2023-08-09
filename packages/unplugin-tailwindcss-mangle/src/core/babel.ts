@@ -5,11 +5,13 @@ import { splitCode } from '@tailwindcss-mangle/shared'
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
+  id: string
+  addToUsedBy: (key: string, file: string) => void
 }
 
 export const plugin = declare((api, options: Options) => {
   api.assertVersion(7)
-  const { magicString, replaceMap } = options
+  const { magicString, replaceMap, id, addToUsedBy } = options
   return {
     visitor: {
       StringLiteral: {
@@ -20,6 +22,7 @@ export const plugin = declare((api, options: Options) => {
 
           for (const str of arr) {
             if (replaceMap.has(str)) {
+              addToUsedBy(str, id)
               const v = replaceMap.get(str)
               if (v) {
                 value = value.replaceAll(str, v)
@@ -35,8 +38,8 @@ export const plugin = declare((api, options: Options) => {
   }
 })
 
-export function processJs(options: { code: string; replaceMap: Map<string, string> }) {
-  const { code, replaceMap } = options
+export function processJs(options: { code: string; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
+  const { code, replaceMap, id, addToUsedBy } = options
   const magicString = new MagicString(code)
   babel.transformSync(code, {
     presets: [
@@ -54,7 +57,9 @@ export function processJs(options: { code: string; replaceMap: Map<string, strin
         plugin,
         {
           magicString,
-          replaceMap
+          replaceMap,
+          id,
+          addToUsedBy
         }
       ]
     ]

@@ -1,6 +1,6 @@
 export interface IClassGeneratorContextItem {
   name: string
-  usedBy: any[]
+  usedBy: Set<string>
 }
 
 export interface IClassGeneratorOptions {

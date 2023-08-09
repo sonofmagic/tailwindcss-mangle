@@ -71,7 +71,6 @@
     "@babel/preset-typescript": "^7.22.5",
     "@babel/types": "^7.22.10",
     "@tailwindcss-mangle/config": "workspace:^",
-    "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "@vue/compiler-core": "^3.3.4",
     "@vue/compiler-sfc": "^3.3.4",

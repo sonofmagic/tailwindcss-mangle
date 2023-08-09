@@ -1,13 +1,13 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
-import { ClassGenerator } from '@tailwindcss-mangle/core'
-import type { IHtmlHandlerOptions, IJsHandlerOptions, ICssHandlerOptions } from '@tailwindcss-mangle/core'
+import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { getConfig, getDefaultUserConfig } from '@tailwindcss-mangle/config'
 import type { UserConfig } from '@tailwindcss-mangle/config'
 import defu from 'defu'
 import { sort } from 'fast-sort'
 import type { Options, ClassMapOutputOptions } from '@/types'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
+
 export function getOptions(opts: Options | undefined = {}) {
   const options = defu<Options, Options[]>(opts, {
     include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte,vue}'],
@@ -78,6 +78,13 @@ export function getOptions(opts: Options | undefined = {}) {
     return config
   }
 
+  function addToUsedBy(key: string, file: string) {
+    const hit = classGenerator.newClassMap[key]
+    if (hit) {
+      hit.usedBy.add(file)
+    }
+  }
+
   return {
     getCachedClassSet,
     classGenerator,
@@ -85,10 +92,8 @@ export function getOptions(opts: Options | undefined = {}) {
     excludeMatcher,
     isInclude,
     classMapOutputOptions,
-    jsHandlerOptions: <IJsHandlerOptions>(options.jsHandlerOptions ?? {}),
-    htmlHandlerOptions: <IHtmlHandlerOptions>(options.htmlHandlerOptions ?? {}),
-    cssHandlerOptions: <ICssHandlerOptions>(options.cssHandlerOptions ?? {}),
     initConfig,
-    getReplaceMap
+    getReplaceMap,
+    addToUsedBy
   }
 }

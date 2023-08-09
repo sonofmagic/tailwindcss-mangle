@@ -2,7 +2,7 @@ import { ClassGenerator } from './shared'
 
 export interface IClassGeneratorContextItem {
   name: string
-  usedBy: any[]
+  usedBy: string[]
 }
 
 export interface IClassGeneratorOptions {

@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/shared",
-  "version": "1.2.7",
+  "version": "2.0.0",
   "description": "The shared utils of tailwindcss-mangle",
   "exports": {
     ".": {

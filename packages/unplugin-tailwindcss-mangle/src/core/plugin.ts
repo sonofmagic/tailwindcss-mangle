@@ -7,11 +7,11 @@ import { processJs } from './babel'
 import { processCss } from './postcss'
 import type { Options } from '@/types'
 import { pluginName } from '@/constants'
-import { getGroupedEntries } from '@/utils'
+import { cacheDump, getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { isInclude, initConfig, getReplaceMap } = getOptions(options)
+  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions } = getOptions(options)
 
   return {
     name: pluginName,
@@ -28,7 +28,9 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
       if (id.endsWith('.js') || id.endsWith('.ts') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
         const str = processJs({
           code,
-          replaceMap
+          replaceMap,
+          addToUsedBy,
+          id
         })
         return str
       } else {
@@ -91,6 +93,22 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
           }
         )
       })
+    },
+    writeBundle() {
+      const entries = Object.entries(classGenerator.newClassMap)
+      if (entries.length > 0 && classMapOutputOptions) {
+        cacheDump(
+          classMapOutputOptions.filename,
+          entries.map((x) => {
+            return {
+              origin: x[0],
+              replacement: x[1].name,
+              usedBy: [...x[1].usedBy]
+            }
+          }),
+          classMapOutputOptions.dir
+        )
+      }
     }
   }
 })

@@ -90,7 +90,7 @@ class ClassGenerator implements IClassGenerator {
     }
     const newClass: IClassGeneratorContextItem = {
       name: newClassName,
-      usedBy: []
+      usedBy: new Set<string>()
     }
     this.newClassMap[original] = newClass
     this.newClassSize++
