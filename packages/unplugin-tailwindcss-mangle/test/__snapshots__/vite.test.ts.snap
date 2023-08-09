@@ -1,50 +1,21 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vite build > common build  1`] = `
-"(function () {
-  const t = document.createElement(\\"link\\").relList;
-  if (t && t.supports && t.supports(\\"modulepreload\\")) return;
-  for (const e of document.querySelectorAll('link[rel=\\"modulepreload\\"]')) n(e);
-  new MutationObserver(e => {
-    for (const r of e) if (r.type === \\"childList\\") for (const a of r.addedNodes) a.tagName === \\"LINK\\" && a.rel === \\"modulepreload\\" && n(a);
-  }).observe(document, {
-    childList: !0,
-    subtree: !0
-  });
-  function s(e) {
-    const r = {};
-    return e.integrity && (r.integrity = e.integrity), e.referrerPolicy && (r.referrerPolicy = e.referrerPolicy), e.crossOrigin === \\"use-credentials\\" ? r.credentials = \\"include\\" : e.crossOrigin === \\"anonymous\\" ? r.credentials = \\"omit\\" : r.credentials = \\"same-origin\\", r;
-  }
-  function n(e) {
-    if (e.ep) return;
-    e.ep = !0;
-    const r = s(e);
-    fetch(e.href, r);
-  }
-})();
-function l(o) {
-  o.animate({
-    clipPath: []
-  }, {
-    duration: 400,
-    easing: \\"ease-out\\"
-  });
-}
-document.querySelector(\\"#app\\").innerHTML = \`
+"(function(){const t=document.createElement(\\"link\\").relList;if(t&&t.supports&&t.supports(\\"modulepreload\\"))return;for(const e of document.querySelectorAll('link[rel=\\"modulepreload\\"]'))n(e);new MutationObserver(e=>{for(const r of e)if(r.type===\\"childList\\")for(const a of r.addedNodes)a.tagName===\\"LINK\\"&&a.rel===\\"modulepreload\\"&&n(a)}).observe(document,{childList:!0,subtree:!0});function s(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),e.crossOrigin===\\"use-credentials\\"?r.credentials=\\"include\\":e.crossOrigin===\\"anonymous\\"?r.credentials=\\"omit\\":r.credentials=\\"same-origin\\",r}function n(e){if(e.ep)return;e.ep=!0;const r=s(e);fetch(e.href,r)}})();function l(o){o.animate({clipPath:[]},{duration:400,easing:\\"ease-out\\"})}document.querySelector(\\"#app\\").innerHTML=\`
   <div>
     <button id=\\"counter\\">counter</button>
   </div>
 
-<main class=\\"flex tw-a tw-b tw-c tw-d tw-e\\">
-<div class=\\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\">
+<main class=\\"flex min-h-screen flex-col items-center justify-between p-24\\">
+<div class=\\"z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex\\">
   <p
-    class=\\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea\\">
+    class=\\"fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30\\">
     Get started by editing&nbsp;
-    <code class=\\"tw-i tw-fa\\">pages/index.tsx</code>
+    <code class=\\"font-mono font-bold\\">pages/index.tsx</code>
   </p>
   <div
-    class=\\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\">
-    <a class=\\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\"
+    class=\\"fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none\\">
+    <a class=\\"pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0\\"
       href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
       target=\\"_blank\\" rel=\\"noopener noreferrer\\">
       By
@@ -53,63 +24,63 @@ document.querySelector(\\"#app\\").innerHTML = \`
 </div>
 
 <div
-  class=\\"relative flex tw-ra tw-wa tw-xa tw-ya tw-za tw-ab before:bg-gradient-radial tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb after:bg-gradient-conic tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb\\">
-  <img class=\\"relative tw-ub tw-vb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+  class=\\"relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]\\">
+  <img class=\\"relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
     priority />
 </div>
 
-<div class=\\"tw-wb grid tw-xb tw-yb tw-zb tw-ac\\">
+<div class=\\"mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left\\">
   <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+    <h2 class=\\"mb-3 text-2xl font-semibold\\">
       Docs <span
-        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>
     </h2>
-    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Find in-depth information about Next.js
+    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Find in-depth information about Next.js
       features and API.</p>
   </a>
 
   <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+    <h2 class=\\"mb-3 text-2xl font-semibold\\">
       Learn <span
-        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>
     </h2>
-    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Learn about Next.js in an interactive
+    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Learn about Next.js in an interactive
       course with&nbsp;quizzes!</p>
   </a>
 
   <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+    <h2 class=\\"mb-3 text-2xl font-semibold\\">
       Templates <span
-        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>
     </h2>
-    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Discover and deploy boilerplate example
+    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Discover and deploy boilerplate example
       Next.js&nbsp;projects.</p>
   </a>
 
   <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-bc border tw-cc tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc\\"
+    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"
     target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-kc tw-lc tw-mc\\">
+    <h2 class=\\"mb-3 text-2xl font-semibold\\">
       Deploy <span
-        class=\\"tw-nc tw-oc tw-pc tw-qc\\">-&gt;</span>
+        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>
     </h2>
-    <p class=\\"tw-rc tw-sc tw-j tw-tc\\">Instantly deploy your Next.js site to a
+    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Instantly deploy your Next.js site to a
       shareable URL with Vercel.</p>
   </a>
 </div>
 </main>
-\`;
-l(document.querySelector(\\"#counter\\"));"
+\`;l(document.querySelector(\\"#counter\\"));
+"
 `;
 
 exports[`vite build > common build  2`] = `
-"*, ::before, ::after {
+"*,::before,::after {
     --tw-border-spacing-x: 0;
     --tw-border-spacing-y: 0;
     --tw-translate-x: 0;
@@ -207,7 +178,7 @@ exports[`vite build > common build  2`] = `
     --tw-backdrop-saturate:  ;
     --tw-backdrop-sepia:  
 }
-.tw-qa {
+.tw-w {
     pointer-events: none
 }
 .fixed {
@@ -216,28 +187,28 @@ exports[`vite build > common build  2`] = `
 .relative {
     position: relative
 }
-.tw-ga {
+.tw-xb {
     bottom: 0px
 }
-.tw-l {
+.tw-dc {
     left: 0px
 }
-.tw-m {
+.tw-jc {
     top: 0px
 }
-.tw-f {
+.tw-rc {
     z-index: 10
 }
-.tw-rc {
+.tw-sc {
     margin: 0px
 }
-.tw-kc {
+.tw-lc {
     margin-bottom: 0.75rem
 }
-.tw-wb {
+.tw-ic {
     margin-bottom: 8rem
 }
-.tw-nc {
+.tw-bb {
     display: inline-block
 }
 .flex {
@@ -246,131 +217,131 @@ exports[`vite build > common build  2`] = `
 .grid {
     display: grid
 }
-.tw-ha {
+.tw-kc {
     height: 12rem
 }
-.tw-a {
+.tw-fb {
     min-height: 100vh
 }
-.tw-g {
+.tw-gc {
     width: 100%
 }
-.tw-h {
+.tw-ub {
     max-width: 64rem
 }
-.tw-sc {
+.tw-eb {
     max-width: 30ch
 }
-.tw-b {
+.tw-yb {
     flex-direction: column
 }
-.tw-ra {
+.tw-ba {
     place-items: center
 }
-.tw-ia {
+.tw-pb {
     align-items: flex-end
 }
-.tw-c {
+.tw-cb {
     align-items: center
 }
-.tw-n {
+.tw-va {
     justify-content: center
 }
-.tw-d {
+.tw-ra {
     justify-content: space-between
 }
-.tw-sa {
+.tw-hc {
     gap: 0.5rem
 }
-.tw-bc {
+.tw-mb {
     border-radius: 0.5rem
 }
 .border {
     border-width: 1px
 }
-.tw-o {
+.tw-wb {
     border-bottom-width: 1px
 }
-.tw-p {
+.tw-pa {
     --tw-border-opacity: 1;
     border-color: rgb(209 213 219 / var(--tw-border-opacity))
 }
-.tw-cc {
+.tw-aa {
     border-color: transparent
 }
-.tw-q {
+.tw-ja {
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops))
 }
-.tw-ja {
+.tw-ka {
     background-image: linear-gradient(to top, var(--tw-gradient-stops))
 }
-.tw-ka {
+.tw-jb {
     --tw-gradient-from: #fff var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.tw-r {
+.tw-za {
     --tw-gradient-from: #e4e4e7 var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(228 228 231 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.tw-la {
+.tw-vb {
     --tw-gradient-to: rgb(255 255 255 / 0)  var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), #fff var(--tw-gradient-via-position), var(--tw-gradient-to)
 }
-.tw-e {
+.tw-mc {
     padding: 6rem
 }
-.tw-ta {
+.tw-tc {
     padding: 2rem
 }
-.tw-dc {
+.tw-pc {
     padding-left: 1.25rem;
     padding-right: 1.25rem
 }
-.tw-ec {
+.tw-qc {
     padding-top: 1rem;
     padding-bottom: 1rem
 }
-.tw-s {
+.tw-nc {
     padding-bottom: 1.5rem
 }
-.tw-t {
+.tw-oc {
     padding-top: 2rem
 }
-.tw-xb {
+.tw-ib {
     text-align: center
 }
-.tw-i {
+.tw-ob {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
 }
-.tw-lc {
+.tw-zb {
     font-size: 1.5rem;
     line-height: 2rem
 }
-.tw-j {
+.tw-cc {
     font-size: 0.875rem;
     line-height: 1.25rem
 }
-.tw-fa {
+.tw-nb {
     font-weight: 700
 }
-.tw-mc {
+.tw-ya {
     font-weight: 600
 }
-.tw-tc {
+.tw-lb {
     opacity: 0.5
 }
-.tw-u {
+.tw-ca {
     --tw-backdrop-blur: blur(40px);
     backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
 }
-.tw-fc {
+.tw-ga {
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms
 }
-.tw-oc {
+.tw-r {
     transition-property: transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms
@@ -378,47 +349,47 @@ exports[`vite build > common build  2`] = `
 .ease-out {
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1)
 }
-.tw-wa::before {
+.tw-na::before {
     content: var(--tw-content);
     position: absolute
 }
-.tw-xa::before {
+.tw-ha::before {
     content: var(--tw-content);
     height: 300px
 }
-.tw-ya::before {
+.tw-ia::before {
     content: var(--tw-content);
     width: 480px
 }
-.tw-za::before {
+.tw-k::before {
     content: var(--tw-content);
     --tw-translate-x: -50%;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
-.tw-ab::before {
+.tw-u::before {
     content: var(--tw-content);
     border-radius: 9999px
 }
-.tw-bb::before {
+.tw-da::before {
     content: var(--tw-content);
     --tw-gradient-from: #fff var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.tw-cb::before {
+.tw-p::before {
     content: var(--tw-content);
     --tw-gradient-to: transparent var(--tw-gradient-to-position)
 }
-.tw-db::before {
+.tw-oa::before {
     content: var(--tw-content);
     --tw-blur: blur(40px);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
-.tw-eb::before {
+.tw-s::before {
     --tw-content: '';
     content: var(--tw-content)
 }
-.tw-fb::after {
+.tw-sa::after {
     content: var(--tw-content);
     position: absolute
 }
@@ -426,169 +397,169 @@ exports[`vite build > common build  2`] = `
     content: var(--tw-content);
     z-index: -20
 }
-.tw-hb::after {
+.tw-la::after {
     content: var(--tw-content);
     height: 180px
 }
-.tw-ib::after {
+.tw-ma::after {
     content: var(--tw-content);
     width: 240px
 }
-.tw-jb::after {
+.tw-o::after {
     content: var(--tw-content);
     --tw-translate-x: 33.333333%;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
-.tw-kb::after {
+.tw-y::after {
     content: var(--tw-content);
     --tw-gradient-from: #bae6fd var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(186 230 253 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.tw-lb::after {
+.tw-z::after {
     content: var(--tw-content);
     --tw-gradient-to: rgb(191 219 254 / 0)  var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), #bfdbfe var(--tw-gradient-via-position), var(--tw-gradient-to)
 }
-.tw-mb::after {
+.tw-ta::after {
     content: var(--tw-content);
     --tw-blur: blur(40px);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
-.tw-nb::after {
+.tw-x::after {
     --tw-content: '';
     content: var(--tw-content)
 }
-.tw-gc:hover {
+.tw-q:hover {
     --tw-border-opacity: 1;
     border-color: rgb(209 213 219 / var(--tw-border-opacity))
 }
-.tw-hc:hover {
+.tw-fa:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(243 244 246 / var(--tw-bg-opacity))
 }
-.group:hover .tw-pc {
+.group:hover .tw-i {
     --tw-translate-x: 0.25rem;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
 @media (prefers-reduced-motion: reduce) {
-    .tw-qc {
+    .tw-f {
         transform: none
     }
 }
 @media (prefers-color-scheme: dark) {
-    .tw-v {
+    .tw-l {
         --tw-border-opacity: 1;
         border-color: rgb(38 38 38 / var(--tw-border-opacity))
     }
-    .tw-w {
+    .tw-v {
         background-color: rgb(39 39 42 / 0.3)
     }
-    .tw-ma {
+    .tw-qa {
         --tw-gradient-from: #000 var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .tw-x {
+    .tw-ea {
         --tw-gradient-from: inherit var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .tw-na {
+    .tw-ua {
         --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), #000 var(--tw-gradient-via-position), var(--tw-gradient-to)
     }
-    .tw-ub {
+    .tw-a {
         --tw-drop-shadow: drop-shadow(0 0 0.3rem #ffffff70);
         filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
     }
-    .tw-vb {
+    .tw-hb {
         --tw-invert: invert(100%);
         filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
     }
-    .tw-ob::before {
+    .tw-b::before {
         content: var(--tw-content);
         background-image: linear-gradient(to bottom right, var(--tw-gradient-stops))
     }
-    .tw-pb::before {
+    .tw-d::before {
         content: var(--tw-content);
         --tw-gradient-from: transparent var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .tw-qb::before {
+    .tw-h::before {
         content: var(--tw-content);
         --tw-gradient-to: rgb(29 78 216 / 0.1) var(--tw-gradient-to-position)
     }
-    .tw-rb::after {
+    .tw-j::after {
         content: var(--tw-content);
         --tw-gradient-from: #0c4a6e var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(12 74 110 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .tw-sb::after {
+    .tw-g::after {
         content: var(--tw-content);
         --tw-gradient-to: rgb(1 65 255 / 0)  var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), rgb(1 65 255 / 0.4) var(--tw-gradient-via-position), var(--tw-gradient-to)
     }
-    .tw-ic:hover {
+    .tw-c:hover {
         --tw-border-opacity: 1;
         border-color: rgb(64 64 64 / var(--tw-border-opacity))
     }
-    .tw-jc:hover {
+    .tw-e:hover {
         background-color: rgb(38 38 38 / 0.3)
     }
 }
 @media (min-width: 1024px) {
-    .tw-ua {
+    .tw-n {
         pointer-events: auto
     }
-    .tw-y {
+    .tw-sb {
         position: static
     }
-    .tw-yb {
+    .tw-bc {
         margin-bottom: 0px
     }
-    .tw-k {
+    .tw-ac {
         display: flex
     }
-    .tw-oa {
+    .tw-rb {
         height: auto
     }
-    .tw-z {
+    .tw-tb {
         width: auto
     }
-    .tw-zb {
+    .tw-xa {
         grid-template-columns: repeat(4, minmax(0, 1fr))
     }
-    .tw-aa {
+    .tw-ab {
         border-radius: 0.75rem
     }
-    .tw-ba {
+    .tw-qb {
         border-width: 1px
     }
-    .tw-ca {
+    .tw-wa {
         --tw-bg-opacity: 1;
         background-color: rgb(229 231 235 / var(--tw-bg-opacity))
     }
-    .tw-pa {
+    .tw-kb {
         background-image: none
     }
-    .tw-va {
+    .tw-ec {
         padding: 0px
     }
-    .tw-da {
+    .tw-fc {
         padding: 1rem
     }
-    .tw-ac {
+    .tw-db {
         text-align: left
     }
-    .tw-tb::before {
+    .tw-t::before {
         content: var(--tw-content);
         height: 360px
     }
     @media (prefers-color-scheme: dark) {
-        .tw-ea {
+        .tw-m {
             background-color: rgb(39 39 42 / 0.3)
         }
     }
@@ -597,18 +568,20 @@ exports[`vite build > common build  2`] = `
 `;
 
 exports[`vite build > common build  3`] = `
-"<!DOCTYPE html><html lang=\\"en\\"><head>
-    <meta charset=\\"UTF-8\\">
-    <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\">
-    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+  <head>
+    <meta charset=\\"UTF-8\\" />
+    <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\" />
+    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\" />
     <title>Vite + TS</title>
-    <script type=\\"module\\" crossorigin=\\"\\" src=\\"/index.js\\"></script>
+    <script type=\\"module\\" crossorigin src=\\"/index.js\\"></script>
     <link rel=\\"stylesheet\\" href=\\"/index.css\\">
   </head>
   <body>
     <div id=\\"app\\"></div>
     
-  
-
-</body></html>"
+  </body>
+</html>
+"
 `;

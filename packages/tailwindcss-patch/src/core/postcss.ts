@@ -1,11 +1,14 @@
 import path from 'node:path'
+import url from 'node:url'
 import postcss from 'postcss'
 import { lilconfig } from 'lilconfig'
-
+import createJiti from 'jiti'
+// const jiti = require('jiti')(__filename)
 // const importDefault = async (filepath: string) => {
 //   const module = await import(url.pathToFileURL(filepath).href)
 //   return module.default
 // }
+const jiti = createJiti(__filename)
 
 export async function processTailwindcss(options: { cwd?: string; config?: string }) {
   options.cwd = options.cwd ?? process.cwd()
@@ -17,8 +20,8 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
       searchPlaces: [`${moduleName}.config.js`, `${moduleName}.config.cjs`],
       loaders: {
         // 默认支持 js 和 cjs 2种格式
-        '.js': require,
-        '.cjs': require
+        '.js': jiti,
+        '.cjs': jiti
       }
     }).search(options.cwd)
     if (!result) {

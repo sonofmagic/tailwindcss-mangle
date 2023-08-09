@@ -5,6 +5,34 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "yarn dev",
+      "name": "[vite-vue] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vue"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-vue] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-vue"
+    },
+    {
+      "command": "yarn dev",
+      "name": "[vite-react] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-react"
+    },
+    {
+      "command": "yarn build",
+      "name": "[vite-react] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-react"
+    },
+    {
       "command": "yarn patch",
       "name": "do tailwindcss-patch",
       "request": "launch",

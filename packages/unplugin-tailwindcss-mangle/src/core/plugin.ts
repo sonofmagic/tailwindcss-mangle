@@ -1,39 +1,14 @@
-import { SourceMapCompact, createUnplugin } from 'unplugin'
-import type { OutputAsset, OutputChunk, SourceMapInput } from 'rollup'
-import { cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
-import parser from 'postcss-selector-parser'
-import postcss, { type PluginCreator } from 'postcss'
-// import MagicString from 'magic-string'
+import { createUnplugin } from 'unplugin'
+import type { OutputAsset } from 'rollup'
 import { getOptions } from './options'
-import type { Options, ReplaceEntity } from '@/types'
+// import { svelteToTsx } from './svelte-to-tsx'
+// import { vueToTsx } from './vue-to-tsx'
+import { processJs } from './babel'
+import { processCss } from './postcss'
+import type { Options } from '@/types'
 import { pluginName } from '@/constants'
-import { getGroupedEntries, cacheDump } from '@/utils'
+import { getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
-
-const transformSelectorPostcssPlugin: PluginCreator<{
-  replaceMap: Map<string, string>
-}> = function (options) {
-  const { replaceMap } = options ?? {}
-  return {
-    postcssPlugin: 'transformSelectorPostcssPlugin',
-    async Rule(rule) {
-      await parser((selectors) => {
-        selectors.walkClasses((s) => {
-          if (s.value && replaceMap && replaceMap.has(s.value)) {
-            const v = replaceMap.get(s.value)
-            if (v) {
-              s.value = v
-            }
-          }
-        })
-      }).transform(rule, {
-        lossless: false,
-        updateSelector: true
-      })
-    }
-  }
-}
-transformSelectorPostcssPlugin.postcss = true
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
   const { isInclude, initConfig, getReplaceMap } = getOptions(options)
@@ -50,9 +25,16 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
     transform(code, id) {
       const replaceMap = getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-
-      for (const [key, value] of replaceMap) {
-        code = code.replaceAll(key, value)
+      if (id.endsWith('.js') || id.endsWith('.ts') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
+        const str = processJs({
+          code,
+          replaceMap
+        })
+        return str
+      } else {
+        for (const [key, value] of replaceMap) {
+          code = code.replaceAll(key, value)
+        }
       }
 
       return code
@@ -67,13 +49,10 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             for (let i = 0; i < groupedEntries.css.length; i++) {
               const [file, cssSource] = groupedEntries.css[i] as [string, OutputAsset]
 
-              const { css } = await postcss([
-                transformSelectorPostcssPlugin({
-                  replaceMap
-                })
-              ]).process(cssSource.source.toString(), {
-                from: file,
-                to: file
+              const { css } = await processCss({
+                css: cssSource.source.toString(),
+                file,
+                replaceMap
               })
               cssSource.source = css
             }
@@ -98,14 +77,11 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             if (groupedEntries.css.length > 0) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, cssSource] = groupedEntries.css[i]
-                // CachedSource，如何获取内容
-                const { css } = await postcss([
-                  transformSelectorPostcssPlugin({
-                    replaceMap
-                  })
-                ]).process(cssSource.source().toString(), {
-                  from: file,
-                  to: file
+
+                const { css } = await processCss({
+                  css: cssSource.source().toString(),
+                  replaceMap,
+                  file
                 })
 
                 const source = new ConcatSource(css)

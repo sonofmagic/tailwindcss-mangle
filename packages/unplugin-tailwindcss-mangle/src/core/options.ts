@@ -5,11 +5,12 @@ import type { IHtmlHandlerOptions, IJsHandlerOptions, ICssHandlerOptions } from 
 import { getConfig, getDefaultUserConfig } from '@tailwindcss-mangle/config'
 import type { UserConfig } from '@tailwindcss-mangle/config'
 import defu from 'defu'
+import { sort } from 'fast-sort'
 import type { Options, ClassMapOutputOptions } from '@/types'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
 export function getOptions(opts: Options | undefined = {}) {
   const options = defu<Options, Options[]>(opts, {
-    include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte}'],
+    include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte,vue}'],
     exclude: ['**/*.{css,scss,less,sass,postcss}']
   })
   const includeMatcher = createGlobMatcher(options.include, true)
@@ -56,7 +57,11 @@ export function getOptions(opts: Options | undefined = {}) {
 
     if (classListPath) {
       const rawClassList = fs.readFileSync(classListPath, 'utf8')
-      const classList = JSON.parse(rawClassList) as string[]
+      const list = JSON.parse(rawClassList) as string[]
+      // why?
+      // case bg-red-500 and bg-red-500/50
+      // transform bg-red-500/50 first
+      const classList = sort(list).desc((c) => c.length)
       for (const className of classList) {
         if (currentMangleClassFilter(className)) {
           classSet.add(className)
