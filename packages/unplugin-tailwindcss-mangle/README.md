@@ -2,6 +2,8 @@
 
 mangle tailwindcss utilities plugin
 
+It is recommended to read the documentation of [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch) first, `unplugin-tailwindcss-mangle` depends on this tool.
+
 > Now Support `vite` and `webpack`
 
 - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
@@ -16,6 +18,7 @@ mangle tailwindcss utilities plugin
       - [webpack](#webpack)
   - [Options](#options)
   - [Notice](#notice)
+  - [Migration form v1 to v2](#migration-form-v1-to-v2)
 
 ## Features
 
@@ -128,3 +131,15 @@ document.body.innerHTML = innerHTML
 ```
 
 so only strings with `-` or `:` will be transformed.
+
+## Migration form v1 to v2
+
+```diff
+// vite
+- import { vitePlugin } from 'unplugin-tailwindcss-mangle'
++ import utwm from 'unplugin-tailwindcss-mangle/vite'
+
+// webpack
+- import { webpackPlugin } from 'unplugin-tailwindcss-mangle'
++ import utwm from 'unplugin-tailwindcss-mangle/webpack'
+```
