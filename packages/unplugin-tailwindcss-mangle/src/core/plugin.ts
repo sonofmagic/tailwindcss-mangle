@@ -1,9 +1,11 @@
+import { dirname } from 'node:path'
+import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
 import { getOptions } from './options'
 import type { Options } from '@/types'
 import { pluginName } from '@/constants'
-import { cacheDump, getGroupedEntries } from '@/utils'
+import { ensureDir, getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
@@ -124,20 +126,26 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
         )
       })
     },
-    writeBundle() {
+    async writeBundle() {
       const entries = Object.entries(classGenerator.newClassMap)
       if (entries.length > 0 && classMapOutputOptions) {
-        cacheDump(
+        await ensureDir(dirname(classMapOutputOptions.filename))
+        await fs.writeFile(
           classMapOutputOptions.filename,
-          entries.map((x) => {
-            return {
-              origin: x[0],
-              replacement: x[1].name,
-              usedBy: [...x[1].usedBy]
-            }
-          }),
-          classMapOutputOptions.dir
+          JSON.stringify(
+            entries.map((x) => {
+              return {
+                origin: x[0],
+                replacement: x[1].name,
+                usedBy: [...x[1].usedBy]
+              }
+            }),
+            null,
+            2
+          ),
+          'utf8'
         )
+        console.log(`✨ ${classMapOutputOptions.filename} generated!`)
       }
     }
   }

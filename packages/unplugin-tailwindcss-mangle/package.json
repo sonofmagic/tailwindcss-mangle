@@ -48,7 +48,7 @@
   },
   "scripts": {
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },
   "files": [

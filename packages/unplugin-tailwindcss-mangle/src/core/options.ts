@@ -17,10 +17,10 @@ export function getOptions(opts: Options | undefined = {}) {
     mangleClassFilter,
     classMapOutput,
     classGenerator: classGeneratorOptions,
-    classListPath: _classListPath
+    classListPath
   } = defu<Options, Options[]>(opts, {
     include: ['**/*.{js,jsx,ts,tsx,svelte,vue}'],
-    exclude: ['**/*.{css,scss,less,sass,postcss,html,htm}'],
+    exclude: ['node_modules/**/*', '**/*.{css,scss,less,sass,postcss,html,htm}'],
     disabled: process.env.NODE_ENV === 'development'
   })
   const includeMatcher = createGlobMatcher(include, true)
@@ -57,16 +57,16 @@ export function getOptions(opts: Options | undefined = {}) {
   async function initConfig() {
     const { config } = await getConfig()
     userConfig = config as UserConfig
-    let classListPath: string = ''
+    let jsonPath: string = ''
     if (userConfig) {
-      classListPath = resolve(process.cwd(), userConfig.patch?.output?.filename as string)
+      jsonPath = resolve(process.cwd(), userConfig.patch?.output?.filename as string)
     }
-    if (_classListPath) {
-      classListPath = _classListPath
+    if (classListPath) {
+      jsonPath = classListPath
     }
 
-    if (classListPath && fs.existsSync(classListPath)) {
-      const rawClassList = fs.readFileSync(classListPath, 'utf8')
+    if (jsonPath && fs.existsSync(jsonPath)) {
+      const rawClassList = fs.readFileSync(jsonPath, 'utf8')
       const list = JSON.parse(rawClassList) as string[]
       // why?
       // case bg-red-500 and bg-red-500/50

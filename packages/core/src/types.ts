@@ -1,4 +1,4 @@
-import { ClassGenerator } from './shared'
+import type { ClassGenerator } from './shared'
 
 export interface IClassGeneratorContextItem {
   name: string
@@ -33,20 +33,17 @@ export interface ICssHandlerOptions extends IHandlerOptions {
   file?: string
 }
 
-export interface ClassSetOutputOptions {
-  filename: string
-  dir?: string
-  type: 'all' | 'partial'
-}
-
 export interface ClassMapOutputOptions {
   filename: string
-  dir?: string
+  loose: boolean
 }
-export interface Options {
+
+export interface ManglePluginOptions {
+  mangleClassFilter?: (className: string) => boolean
   classGenerator?: IClassGeneratorOptions
   exclude?: string[]
   include?: string[]
-  classSetOutput?: boolean | ClassSetOutputOptions
+  classListPath?: string
   classMapOutput?: boolean | ClassMapOutputOptions
+  disabled?: boolean
 }
