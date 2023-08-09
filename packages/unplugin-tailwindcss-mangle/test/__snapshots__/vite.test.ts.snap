@@ -6,7 +6,6 @@ exports[`vite build > common build  1`] = `
     <button id=\\"counter\\">counter</button>
   </div>
 
-
 <main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
 <div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
   <p
@@ -76,7 +75,6 @@ exports[`vite build > common build  1`] = `
   </a>
 </div>
 </main>
-
 \`;o(document.querySelector(\\"#counter\\"));
 "
 `;

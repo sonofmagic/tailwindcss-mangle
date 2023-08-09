@@ -9,8 +9,8 @@ interface Options {
   addToUsedBy: (key: string, file: string) => void
 }
 
-export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement } & Options) {
-  const { addToUsedBy, id, magicString, node, raw, replaceMap } = options
+export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number } & Options) {
+  const { addToUsedBy, id, magicString, node, raw, replaceMap, offset = 0 } = options
   let value = raw
   const arr = splitCode(value)
 
@@ -24,7 +24,7 @@ export function handleValue(options: { raw: string; node: babel.types.StringLite
     }
   }
   if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
-    magicString.update(node.start + 1, node.end - 1, value)
+    magicString.update(node.start + offset, node.end - offset, value)
   }
 }
 
@@ -42,7 +42,8 @@ export const plugin = declare((api, options: Options) => {
             magicString,
             node,
             raw: node.value,
-            replaceMap
+            replaceMap,
+            offset: 1
           })
         }
       },
@@ -55,7 +56,8 @@ export const plugin = declare((api, options: Options) => {
             magicString,
             node,
             raw: node.value.raw,
-            replaceMap
+            replaceMap,
+            offset: 0
           })
         }
       }

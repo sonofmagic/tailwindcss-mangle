@@ -1,5 +1,88 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`babel plugin > ts vanilla-0 1`] = `
+"import './style.css'
+import typescriptLogo from './typescript.svg'
+
+import { setupCounter } from './counter'
+
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = \`
+<main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
+<div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
+  <p
+    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc lg:tw-v\\">
+    Get started by editing&nbsp;
+    <code class=\\"tw-ob tw-nb\\">pages/index.tsx</code>
+  </p>
+  <div
+    class=\\"fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb\\">
+    <a class=\\"tw-w flex place-tw-cb tw-hc tw-tc tw-n tw-ec\\"
+      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+      By
+      <img src=\\"\${typescriptLogo}\\" alt=\\"Vercel Logo\\" class=\\"tw-hb\\" priority />
+    </a>
+  </div>
+</div>
+
+<div
+  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
+  <img class=\\"relative tw-a tw-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+    priority />
+</div>
+
+<div class=\\"tw-ic grid tw-ib tw-bc tw-xa tw-db\\">
+  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Docs <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Find in-depth information about Next.js
+      features and API.</p>
+  </a>
+
+  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Learn <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Learn about Next.js in an interactive
+      course with&nbsp;quizzes!</p>
+  </a>
+
+  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Templates <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Discover and deploy boilerplate example
+      Next.js&nbsp;projects.</p>
+  </a>
+
+  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Deploy <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Instantly deploy your Next.js site to a
+      shareable URL with Vercel.</p>
+  </a>
+</div>
+</main>
+\`
+
+setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+"
+`;
+
 exports[`babel plugin > tsx app0 1`] = `
 "import { useState } from 'react'
 import reactLogo from './assets/react.svg'
@@ -39,10 +122,10 @@ function App() {
           target=\\"_blank\\"
           rel=\\"noopener noreferrer\\"
         >
-          <h2 className={\`  tw-mc tw-ac tw-yad\`}>
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
             Docs <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
           </h2>
-          <p className={\`  tw-tc tw-eb tw-dc tw-lb0\`}>Find in-depth information about Next.js features and API.</p>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Find in-depth information about Next.js features and API.</p>
         </a>
 
         <a
@@ -51,10 +134,10 @@ function App() {
           target=\\"_blank\\"
           rel=\\"noopener noreferrer\\"
         >
-          <h2 className={\`  tw-mc tw-ac tw-yad\`}>
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
             Learn <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
           </h2>
-          <p className={\`  tw-tc tw-eb tw-dc tw-lb0\`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
         </a>
 
         <a
@@ -63,10 +146,10 @@ function App() {
           target=\\"_blank\\"
           rel=\\"noopener noreferrer\\"
         >
-          <h2 className={\`  tw-mc tw-ac tw-yad\`}>
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
             Templates <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
           </h2>
-          <p className={\`  tw-tc tw-eb tw-dc tw-lb0\`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
         </a>
 
         <a
@@ -75,10 +158,10 @@ function App() {
           target=\\"_blank\\"
           rel=\\"noopener noreferrer\\"
         >
-          <h2 className={\`  tw-mc tw-ac tw-yad\`}>
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
             Deploy <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
           </h2>
-          <p className={\`  tw-tc tw-eb tw-dc tw-lb0\`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
         </a>
       </div>
     </main>
