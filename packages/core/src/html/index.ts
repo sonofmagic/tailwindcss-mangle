@@ -4,7 +4,7 @@ import { IHtmlHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 // const { traverse } = await import('@parse5/tools')
 export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
-  const { runtimeSet, classGenerator } = options
+  const { replaceMap, classGenerator } = options
   const fragment = parse(rawSource)
   traverse(fragment, {
     element(node) {
@@ -14,7 +14,7 @@ export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
           splitQuote: false
         })
         for (const v of array) {
-          if (runtimeSet.has(v)) {
+          if (replaceMap.has(v)) {
             attribute.value = attribute.value.replace(makeRegex(v), classGenerator.generateClassName(v).name)
           }
         }

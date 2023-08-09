@@ -1,17 +1,14 @@
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
 import { getOptions } from './options'
-// import { svelteToTsx } from './svelte-to-tsx'
-// import { vueToTsx } from './vue-to-tsx'
-import { processJs } from './babel'
-import { processCss } from './postcss'
 import type { Options } from '@/types'
 import { pluginName } from '@/constants'
 import { cacheDump, getGroupedEntries } from '@/utils'
 export { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 
 export const unplugin = createUnplugin((options: Options | undefined = {}) => {
-  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions, disabled } = getOptions(options)
+  const { isInclude, initConfig, getReplaceMap, classGenerator, addToUsedBy, classMapOutputOptions, disabled, htmlHandler, cssHandler, jsHandler, preProcessJs } =
+    getOptions(options)
   if (disabled) {
     return {
       name: pluginName
@@ -30,7 +27,7 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
       const replaceMap = getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
       if (id.endsWith('.js') || id.endsWith('.ts') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
-        const str = processJs({
+        const str = preProcessJs({
           code,
           replaceMap,
           addToUsedBy,
@@ -55,10 +52,10 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             for (let i = 0; i < groupedEntries.css.length; i++) {
               const [file, cssSource] = groupedEntries.css[i] as [string, OutputAsset]
 
-              const { css } = await processCss({
-                css: cssSource.source.toString(),
+              const { css } = await cssHandler(cssSource.source.toString(), {
                 file,
-                replaceMap
+                replaceMap,
+                classGenerator
               })
               cssSource.source = css
             }
@@ -80,17 +77,46 @@ export const unplugin = createUnplugin((options: Options | undefined = {}) => {
             const replaceMap = getReplaceMap()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
 
+            if (groupedEntries.js.length > 0) {
+              for (let i = 0; i < groupedEntries.js.length; i++) {
+                const [file, chunk] = groupedEntries.js[i]
+
+                const code = jsHandler(chunk.source().toString(), {
+                  replaceMap,
+                  classGenerator
+                }).code
+                if (code) {
+                  const source = new ConcatSource(code)
+                  compilation.updateAsset(file, source)
+                }
+              }
+            }
+
             if (groupedEntries.css.length > 0) {
               for (let i = 0; i < groupedEntries.css.length; i++) {
                 const [file, cssSource] = groupedEntries.css[i]
 
-                const { css } = await processCss({
-                  css: cssSource.source().toString(),
+                const { css } = await cssHandler(cssSource.source().toString(), {
                   replaceMap,
-                  file
+                  file,
+                  classGenerator
                 })
 
                 const source = new ConcatSource(css)
+
+                compilation.updateAsset(file, source)
+              }
+            }
+
+            if (groupedEntries.html.length > 0) {
+              for (let i = 0; i < groupedEntries.html.length; i++) {
+                const [file, asset] = groupedEntries.html[i]
+
+                const html = htmlHandler(asset.source().toString(), {
+                  classGenerator,
+                  replaceMap
+                })
+                const source = new ConcatSource(html)
                 compilation.updateAsset(file, source)
               }
             }

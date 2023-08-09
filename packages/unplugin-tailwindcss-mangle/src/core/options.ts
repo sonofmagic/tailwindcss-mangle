@@ -5,6 +5,7 @@ import { getConfig, getDefaultUserConfig } from '@tailwindcss-mangle/config'
 import type { UserConfig } from '@tailwindcss-mangle/config'
 import defu from 'defu'
 import { sort } from 'fast-sort'
+import { htmlHandler, cssHandler, jsHandler, preProcessJs } from '@tailwindcss-mangle/core'
 import type { Options, ClassMapOutputOptions } from '@/types'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
 
@@ -18,8 +19,8 @@ export function getOptions(opts: Options | undefined = {}) {
     classGenerator: classGeneratorOptions,
     classListPath: _classListPath
   } = defu<Options, Options[]>(opts, {
-    include: ['**/*.{js,jsx,ts,tsx,html,htm,svelte,vue}'],
-    exclude: ['**/*.{css,scss,less,sass,postcss}'],
+    include: ['**/*.{js,jsx,ts,tsx,svelte,vue}'],
+    exclude: ['**/*.{css,scss,less,sass,postcss,html,htm}'],
     disabled: process.env.NODE_ENV === 'development'
   })
   const includeMatcher = createGlobMatcher(include, true)
@@ -104,6 +105,10 @@ export function getOptions(opts: Options | undefined = {}) {
     initConfig,
     getReplaceMap,
     addToUsedBy,
-    disabled
+    disabled,
+    htmlHandler,
+    cssHandler,
+    jsHandler,
+    preProcessJs
   }
 }

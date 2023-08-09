@@ -47,6 +47,20 @@
       "cwd": "${workspaceFolder}/apps/vite-vanilla"
     },
     {
+      "command": "yarn dev",
+      "name": "[webpack5-vue3] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/webpack5-vue3"
+    },
+    {
+      "command": "yarn build",
+      "name": "[webpack5-vue3] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/webpack5-vue3"
+    },
+    {
       "command": "yarn patch",
       "name": "do tailwindcss-patch",
       "request": "launch",
@@ -87,6 +101,13 @@
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/next-app"
+    },
+    {
+      "command": "npm run test:dev",
+      "name": "[core] test:dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/packages/core"
     }
   ]
 }

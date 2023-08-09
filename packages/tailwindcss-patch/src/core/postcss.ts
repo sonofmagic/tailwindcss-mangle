@@ -21,7 +21,9 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
       loaders: {
         // 默认支持 js 和 cjs 2种格式
         '.js': jiti,
-        '.cjs': jiti
+        '.cjs': jiti,
+        '.ts': jiti,
+        '.mjs': jiti
       }
     }).search(options.cwd)
     if (!result) {

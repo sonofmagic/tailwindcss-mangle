@@ -8,40 +8,40 @@ describe('html handler', () => {
     classGenerator = new ClassGenerator()
   })
   it('common usage', () => {
-    const runtimeSet = new Set<string>()
+    const replaceMap = new Map()
 
     for (const x of splitCode('text-3xl font-bold underline')) {
-      runtimeSet.add(x)
+      replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('hello-world.html'), {
       classGenerator,
-      runtimeSet
+      replaceMap
     })
     expect(res).toMatchSnapshot()
   })
 
   it('trailing slash case', () => {
-    const runtimeSet = new Set<string>()
+    const replaceMap = new Map()
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
-      runtimeSet.add(x)
+      replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('trailing-slash.html'), {
       classGenerator,
-      runtimeSet
+      replaceMap
     })
     expect(res).toMatchSnapshot()
   })
 
   it('trailing slash case 0', () => {
-    const runtimeSet = new Set<string>()
+    const replaceMap = new Map()
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
-      runtimeSet.add(x)
+      replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('trailing-slash-0.html'), {
       classGenerator,
-      runtimeSet
+      replaceMap
     })
     expect(res).toMatchSnapshot()
   })

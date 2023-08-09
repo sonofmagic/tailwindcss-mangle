@@ -19,66 +19,33 @@ export function isVueScoped(s: parser.ClassName): boolean {
   return false
 }
 
-const postcssMangleTailwindcssPlugin: PostcssMangleTailwindcssPlugin = (options) => {
-  const { ignoreVueScoped } = defu(options, {
+export const transformSelectorPostcssPlugin: PluginCreator<{
+  replaceMap: Map<string, string>
+}> = function (options) {
+  const { ignoreVueScoped, replaceMap } = defu(options, {
     ignoreVueScoped: true
   })
-  if (options?.scene === 'loader') {
-    // must set newClassMap options
-    let set: Set<string> = new Set()
 
-    if (options && options.runtimeSet) {
-      set = options.runtimeSet
-    }
-    return {
-      postcssPlugin,
-      Rule(rule) {
-        rule.selector = parser((selectors) => {
-          selectors.walkClasses((s) => {
-            if (s.value) {
-              const existed = set.has(s.value)
-
-              if (existed) {
-                if (ignoreVueScoped && isVueScoped(s)) {
-                  return
-                }
-                s.value = options.classGenerator.generateClassName(s.value).name
-              }
+  return {
+    postcssPlugin,
+    async Rule(rule) {
+      await parser((selectors) => {
+        selectors.walkClasses((s) => {
+          if (s.value && replaceMap && replaceMap.has(s.value)) {
+            if (ignoreVueScoped && isVueScoped(s)) {
+              return
             }
-          })
-        }).processSync(rule.selector)
-      }
-    }
-  } else {
-    let newClassMap: Record<string, IClassGeneratorContextItem> = {}
-
-    if (options && options.classGenerator) {
-      newClassMap = options.classGenerator.newClassMap
-    }
-
-    return {
-      postcssPlugin,
-      Rule(rule) {
-        rule.selector = parser((selectors) => {
-          selectors.walkClasses((s) => {
-            if (s.value) {
-              const hit = newClassMap[s.value]
-              const existed = Boolean(hit)
-
-              if (existed) {
-                if (ignoreVueScoped && isVueScoped(s)) {
-                  return
-                }
-                s.value = hit.name
-              }
+            const v = replaceMap.get(s.value)
+            if (v) {
+              s.value = v
             }
-          })
-        }).processSync(rule.selector)
-      }
+          }
+        })
+      }).transform(rule, {
+        lossless: false,
+        updateSelector: true
+      })
     }
   }
 }
-
-postcssMangleTailwindcssPlugin.postcss = true
-
-export { postcssMangleTailwindcssPlugin }
+transformSelectorPostcssPlugin.postcss = true

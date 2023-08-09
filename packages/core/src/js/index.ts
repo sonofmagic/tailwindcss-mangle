@@ -4,16 +4,16 @@ import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
-
+export { preProcessJs } from './pre'
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
-  const { runtimeSet: set, classGenerator: clsGen, splitQuote = true } = options
+  const { replaceMap, classGenerator: clsGen, splitQuote = true } = options
 
   const array = splitCode(raw, {
     splitQuote
   })
   let rawString = raw
   for (const v of array) {
-    if (set.has(v)) {
+    if (replaceMap.has(v)) {
       let ignoreFlag = false
       if (Array.isArray(node.leadingComments)) {
         ignoreFlag = node.leadingComments.findIndex((x) => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1

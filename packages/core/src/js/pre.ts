@@ -66,7 +66,7 @@ export const plugin = declare((api, options: Options) => {
   }
 })
 
-export function processJs(options: { code: string; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
+export function preProcessJs(options: { code: string; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
   const { code, replaceMap, id, addToUsedBy } = options
   const magicString = new MagicString(code)
   babel.transformSync(code, {
