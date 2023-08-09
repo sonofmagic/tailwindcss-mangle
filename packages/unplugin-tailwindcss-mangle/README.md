@@ -8,15 +8,13 @@ mangle tailwindcss utilities plugin
   - [Features](#features)
   - [Usage](#usage)
     - [1. Install Package](#1-install-package)
-    - [2. Run patch script](#2-run-patch-script)
+    - [2. Run install script](#2-run-install-script)
     - [3. add `prepare` script in your `package.json`](#3-add-prepare-script-in-your-packagejson)
-    - [4. run extract command](#4-run-extract-command)
-    - [5. register this plugin](#5-register-this-plugin)
+    - [4. Run extract command](#4-run-extract-command)
+    - [5. Register this plugin](#5-register-this-plugin)
       - [vite](#vite)
       - [webpack](#webpack)
   - [Options](#options)
-    - [classGenerator](#classgenerator)
-    - [include / exclude](#include--exclude)
   - [Notice](#notice)
 
 ## Features
@@ -36,7 +34,7 @@ mangle tailwindcss utilities plugin
 <npm|yarn|pnpm> i -D unplugin-tailwindcss-mangle tailwindcss-patch
 ```
 
-### 2. Run patch script
+### 2. Run install script
 
 ```sh
 npx tw-patch install
@@ -50,7 +48,9 @@ npx tw-patch install
   },
 ```
 
-### 4. run extract command
+### 4. Run extract command
+
+cd to the same directory as `package.son` and `tailwind.config.js`, then run:
 
 ```sh
 npx tw-patch extract
@@ -58,9 +58,9 @@ npx tw-patch extract
 
 > See more options in [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch)
 
-Then there will generate a json file:   `.tw-patch/tw-class-list.json`
+Then there will generate a json file:  `.tw-patch/tw-class-list.json`
 
-### 5. register this plugin
+### 5. Register this plugin
 
 #### vite
 
@@ -68,7 +68,7 @@ Then there will generate a json file:   `.tw-patch/tw-class-list.json`
 // for example: vue vite project
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { vitePlugin as utwm } from 'unplugin-tailwindcss-mangle'
+import utwm from 'unplugin-tailwindcss-mangle/vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), utwm()]
@@ -92,7 +92,7 @@ You will see all class was renamed to `tw-*`
 // esm
 import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
 // or cjs
-const { webpackPlugin: utwm } = require('unplugin-tailwindcss-mangle')
+const utwm = require('unplugin-tailwindcss-mangle/webpack')
 // use this webpack plugin
 // for example next.config.js
 const { defineConfig } = require('@vue/cli-service')
@@ -110,33 +110,11 @@ module.exports = defineConfig({
 
 ## Options
 
-### classGenerator
-
-custom class generator, if you want to custom class name (default 'tw-*'), use this options
-
-```js
-export interface IClassGeneratorOptions {
-  reserveClassName?: (string | RegExp)[]
-  // custom generate class name
-  customGenerate?: (original: string, opts: IClassGeneratorOptions, context: Record<string, any>) => string | undefined
-  log?: boolean
-  exclude?: (string | RegExp)[]
-  include?: (string | RegExp)[]
-  ignoreClass?: (string | RegExp)[]
-  // default 'tw-',for example: tw-a,tw-b, you can set any you want, like '','ice-'
-  classPrefix?: string
-}
-```
-
-### include / exclude
-
-Type: `string | string[]`  
-
-Default: `undefined`
-
-`glob string` allow you to control the mangle range of bundles.
+[types.ts]('./src/types.ts')
 
 ## Notice
+
+By default, only the build will take effect. Due to some restrictions, it cannot take effect in the development mode.
 
 This plugin only transform those classes which name contain `-` or `:`, like `w-32`, `before:h-[300px]`,`after:dark:via-[#0141ff]/40`. some classes like `flex`,`relative` will not be mangled.
 

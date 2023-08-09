@@ -73,7 +73,7 @@ export function preProcessJs(options: { code: string; replaceMap: Map<string, st
     presets: [
       // ['@babel/preset-react', {}],
       [
-        '@babel/preset-typescript',
+        require('@babel/preset-typescript'),
         {
           allExtensions: true,
           isTSX: true
