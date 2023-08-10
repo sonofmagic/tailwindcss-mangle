@@ -1,5 +1,5 @@
 import { getCss, getTestCase } from './utils'
-import { jsHandler } from '@/js'
+import { jsHandler, preProcessJs } from '@/js'
 import { ClassGenerator } from '@/shared'
 
 describe('js handler', () => {
@@ -193,5 +193,31 @@ describe('js handler', () => {
       replaceMap
     }).code
     expect(code).toMatchSnapshot()
+  })
+
+  it('LINEFEED case', () => {
+    const testCase = 'const LINEFEED = "\\n";'
+    const replaceMap = new Map()
+    // replaceMap.set('bg-red-500/50', true)
+    // replaceMap.set('bg-red-500', true)
+    const code = jsHandler(testCase, {
+      classGenerator,
+      replaceMap
+    }).code
+    expect(code).toBe('const LINEFEED="\\n";')
+  })
+
+  it('preProcessJs case', () => {
+    const testCase = 'const LINEFEED = "\\n";'
+    const replaceMap = new Map()
+    // replaceMap.set('bg-red-500/50', true)
+    // replaceMap.set('bg-red-500', true)
+    const code = preProcessJs({
+      code: testCase,
+      addToUsedBy: () => {},
+      id: 'xxx',
+      replaceMap
+    })
+    expect(code).toBe(testCase)
   })
 })

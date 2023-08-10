@@ -10,8 +10,36 @@ interface Options {
   addToUsedBy: (key: string, file: string) => void
 }
 
-export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number } & Options) {
-  const { addToUsedBy, id, magicString, node, raw, replaceMap, offset = 0 } = options
+export function jsStringEscape(str: unknown) {
+  return ('' + str).replaceAll(/[\n\r"'\\\u2028\u2029]/g, (character) => {
+    switch (character) {
+      case '"':
+      case "'":
+      case '\\': {
+        return '\\' + character
+      }
+
+      case '\n': {
+        return '\\n'
+      }
+      case '\r': {
+        return '\\r'
+      }
+      case '\u2028': {
+        return '\\u2028'
+      }
+      case '\u2029': {
+        return '\\u2029'
+      }
+      default: {
+        return character
+      }
+    }
+  })
+}
+
+export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number; escape: boolean } & Options) {
+  const { addToUsedBy, id, magicString, node, raw, replaceMap, offset = 0, escape = false } = options
   let value = raw
   const arr = sort(splitCode(value)).desc((x) => x.length)
 
@@ -25,7 +53,7 @@ export function handleValue(options: { raw: string; node: babel.types.StringLite
     }
   }
   if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
-    magicString.update(node.start + offset, node.end - offset, value)
+    magicString.update(node.start + offset, node.end - offset, escape ? jsStringEscape(value) : value)
   }
 }
 
@@ -44,7 +72,8 @@ export const plugin = declare((api, options: Options) => {
             node,
             raw: node.value,
             replaceMap,
-            offset: 1
+            offset: 1,
+            escape: true
           })
         }
       },
@@ -58,7 +87,8 @@ export const plugin = declare((api, options: Options) => {
             node,
             raw: node.value.raw,
             replaceMap,
-            offset: 0
+            offset: 0,
+            escape: false
           })
         }
       }
