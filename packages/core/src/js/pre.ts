@@ -3,39 +3,12 @@ import { declare } from '@babel/helper-plugin-utils'
 import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
+import { jsStringEscape } from '@ast-core/escape'
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
   id: string
   addToUsedBy: (key: string, file: string) => void
-}
-
-export function jsStringEscape(str: unknown) {
-  return ('' + str).replaceAll(/[\n\r"'\\\u2028\u2029]/g, (character) => {
-    switch (character) {
-      case '"':
-      case "'":
-      case '\\': {
-        return '\\' + character
-      }
-
-      case '\n': {
-        return '\\n'
-      }
-      case '\r': {
-        return '\\r'
-      }
-      case '\u2028': {
-        return '\\u2028'
-      }
-      case '\u2029': {
-        return '\\u2029'
-      }
-      default: {
-        return character
-      }
-    }
-  })
 }
 
 export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number; escape: boolean } & Options) {
