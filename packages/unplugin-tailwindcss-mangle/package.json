@@ -74,7 +74,9 @@
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.0",
+    "magic-string": "^0.30.2",
     "micromatch": "^4.0.5",
+    "modern-ahocorasick": "^1.0.0",
     "unplugin": "^1.4.0"
   },
   "publishConfig": {

@@ -1,3 +1,5 @@
+/* eslint-disable no-template-curly-in-string */
+import MagicString from 'magic-string'
 import { getCss, getTestCase } from './utils'
 import { jsHandler, preProcessJs } from '@/js'
 import { ClassGenerator } from '@/shared'
@@ -219,5 +221,33 @@ describe('js handler', () => {
       replaceMap
     })
     expect(code).toBe(testCase)
+  })
+
+  it('preProcessJs TemplateElement case', () => {
+    const testCase = 'const LINEFEED = `bg-red-500/50${n}bg-red-500/50`;'
+    const replaceMap = new Map()
+    replaceMap.set('bg-red-500/50', 'a')
+    replaceMap.set('bg-red-500', 'b')
+    const code = preProcessJs({
+      code: testCase,
+      addToUsedBy: () => {},
+      id: 'xxx',
+      replaceMap
+    })
+    expect(code).toBe('const LINEFEED = `a${n}a`;')
+  })
+
+  it('preProcessJs MagicString TemplateElement case', () => {
+    const testCase = new MagicString('const LINEFEED = `bg-red-500/50${n}bg-red-500/50`;')
+    const replaceMap = new Map()
+    replaceMap.set('bg-red-500/50', 'a')
+    replaceMap.set('bg-red-500', 'b')
+    const code = preProcessJs({
+      code: testCase,
+      addToUsedBy: () => {},
+      id: 'xxx',
+      replaceMap
+    })
+    expect(code).toBe('const LINEFEED = `a${n}a`;')
   })
 })
