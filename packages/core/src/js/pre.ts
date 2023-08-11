@@ -26,7 +26,11 @@ export function handleValue(options: { raw: string; node: babel.types.StringLite
     }
   }
   if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
-    magicString.update(node.start + offset, node.end - offset, escape ? jsStringEscape(value) : value)
+    const start = node.start + offset
+    const end = node.end - offset
+    if (start < end) {
+      magicString.update(start, end, escape ? jsStringEscape(value) : value)
+    }
   }
 }
 
