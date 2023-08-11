@@ -4,6 +4,7 @@ import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
 import { htmlHandler, cssHandler, jsHandler, preProcessJs } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
+import MagicString from 'magic-string'
 import { Context } from './context'
 import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
@@ -25,23 +26,33 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
       return ctx.isInclude(id)
     },
     transform(code, id) {
+      const s = new MagicString(code)
       const replaceMap = ctx.getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
       if (/\.[jt]sx?$/.test(id)) {
-        const str = preProcessJs({
-          code,
+        return preProcessJs({
+          code: s,
           replaceMap,
           addToUsedBy: ctx.addToUsedBy.bind(ctx),
           id
         })
-        return str
       } else {
-        for (const [key, value] of replaceMap) {
-          code = code.replaceAll(key, value)
+        const arr = ctx.search(code)
+        for (const [start, strs] of arr) {
+          for (const str of strs) {
+            const value = replaceMap.get(str)
+            if (value) {
+              s.update(start, start + str.length, value)
+            }
+          }
         }
+        // raw replace usage
+        // for (const [key, value] of replaceMap) {
+        //   code = code.replaceAll(key, value)
+        // }
       }
 
-      return code
+      return s.toString()
     },
     vite: {
       generateBundle: {

@@ -5,8 +5,8 @@ import { getConfig, getDefaultMangleUserConfig } from '@tailwindcss-mangle/confi
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import { sort } from 'fast-sort'
 import defu from 'defu'
+import AhoCorasick from 'modern-ahocorasick'
 import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
-
 export class Context {
   options: MangleUserConfig
   includeMatcher: (file: string) => boolean
@@ -14,6 +14,7 @@ export class Context {
   classSet: Set<string>
   replaceMap: Map<string, string>
   classGenerator: ClassGenerator
+  ahoCorasick: AhoCorasick
   constructor(opts: MangleUserConfig) {
     this.options = defu(opts, getDefaultMangleUserConfig())
     this.classSet = new Set()
@@ -21,6 +22,7 @@ export class Context {
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
+    this.ahoCorasick = new AhoCorasick([])
   }
 
   mergeOptions(opts?: MangleUserConfig) {
@@ -54,6 +56,10 @@ export class Context {
     }
   }
 
+  search(str: string) {
+    return this.ahoCorasick.search(str)
+  }
+
   async initConfig() {
     const { config } = await getConfig()
     const mangleConfig = config?.mangle
@@ -73,9 +79,12 @@ export class Context {
         }
       }
     }
+    const keywords: string[] = []
     for (const cls of this.classSet) {
       this.classGenerator.generateClassName(cls)
+      keywords.push(cls)
     }
+    this.ahoCorasick = new AhoCorasick(keywords)
 
     for (const x of Object.entries(this.classGenerator.newClassMap)) {
       this.replaceMap.set(x[0], x[1].name)
