@@ -6,7 +6,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "_postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare",
     "prepare": "tw-patch install"
   },
   "devDependencies": {

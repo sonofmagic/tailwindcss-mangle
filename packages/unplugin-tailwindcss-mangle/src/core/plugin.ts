@@ -37,19 +37,20 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
           id
         })
       } else {
-        const arr = ctx.search(code)
-        for (const [start, strs] of arr) {
-          for (const str of strs) {
-            const value = replaceMap.get(str)
-            if (value) {
-              s.update(start, start + str.length, value)
-            }
-          }
-        }
-        // raw replace usage
-        // for (const [key, value] of replaceMap) {
-        //   code = code.replaceAll(key, value)
+        // Cannot split a chunk that has already been edited (1:40 – "n flex-col i")
+        // const arr = ctx.search(code)
+        // for (const [start, strs] of arr) {
+        //   for (const str of strs) {
+        //     const value = replaceMap.get(str)
+        //     if (value) {
+        //       s.update(start, start + str.length, value)
+        //     }
+        //   }
         // }
+        // raw replace usage
+        for (const [key, value] of replaceMap) {
+          code = code.replaceAll(key, value)
+        }
       }
 
       return s.toString()
