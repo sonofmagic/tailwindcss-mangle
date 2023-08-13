@@ -244,6 +244,9 @@ importers:
       mini-css-extract-plugin:
         specifier: ^2.7.6
         version: 2.7.6(webpack@5.88.2)
+      normalize-newline:
+        specifier: ^4.1.0
+        version: 4.1.0
       postcss:
         specifier: ^8.4.27
         version: 8.4.27
@@ -4863,6 +4866,13 @@ packages:
   /node-releases@2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
 
+  /normalize-newline@4.1.0:
+    resolution: {integrity: sha512-ff4jKqMI8Xl50/4Mms/9jPobzAV/UK+kXG2XJ/7AqOmxIx8mqfqTIHYxuAnEgJ2AQeBbLnlbmZ5+38Y9A0w/YA==}
+    engines: {node: '>=12'}
+    dependencies:
+      replace-buffer: 1.2.1
+    dev: true
+
   /normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
@@ -5504,6 +5514,11 @@ packages:
       htmlparser2: 6.1.0
       lodash: 4.17.21
       strip-ansi: 6.0.1
+    dev: true
+
+  /replace-buffer@1.2.1:
+    resolution: {integrity: sha512-ly3OKwKu+3T55DjP5PjIMzxgz9lFx6dQnBmAIxryZyRKl8f22juy12ShOyuq8WrQE5UlFOseZgQZDua0iF9DHw==}
+    engines: {node: '>=4'}
     dev: true
 
   /require-directory@2.1.1:
