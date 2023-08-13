@@ -1,0 +1,19 @@
+{
+  "name": "apps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss-mangle/config": "link:../packages/config",
+    "@tailwindcss-mangle/core": "link:../packages/core",
+    "@tailwindcss-mangle/shared": "link:../packages/shared",
+    "tailwindcss-patch": "link:../packages/tailwindcss-patch",
+    "unplugin-tailwindcss-mangle": "link:../packages/unplugin-tailwindcss-mangle"
+  }
+}
