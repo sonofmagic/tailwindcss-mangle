@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.5",

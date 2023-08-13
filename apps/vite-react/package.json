@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
     "react": "^18.2.0",

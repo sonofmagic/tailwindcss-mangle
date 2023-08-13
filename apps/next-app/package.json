@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
     "@types/node": "20.4.10",

@@ -52,7 +52,7 @@ npx tw-patch install
 tw-patch init
 ```
 
-Then there will be a ts file called `tailwindcss-patch.config.ts` exist in your `cwd`.
+Then there will be a ts file called `tailwindcss-mangle.config.ts` exist in your `cwd`.
 
 ### Extract all class into a json
 
@@ -62,7 +62,7 @@ tw-patch extract
 
 default there will be a json in `.tw-patch/tw-class-list.json` in your project.
 
-you can custom this behavior by config `tailwindcss-patch.config.ts`
+you can custom this behavior by config `tailwindcss-mangle.config.ts`
 
 ### Nodejs
 

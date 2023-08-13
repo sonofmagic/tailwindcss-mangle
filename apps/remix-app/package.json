@@ -7,7 +7,8 @@
     "dev": "remix dev",
     "start": "remix-serve build",
     "typecheck": "tsc",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
     "@remix-run/node": "^1.19.3",

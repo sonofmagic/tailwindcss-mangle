@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "vite",
     "_build": "tsc && vite build",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
     "lit": "^2.8.0"

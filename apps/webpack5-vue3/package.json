@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "preview": "vite preview",
     "lint": "vue-cli-service lint",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
     "core-js": "^3.32.0",
