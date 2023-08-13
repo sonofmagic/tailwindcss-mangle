@@ -58,14 +58,14 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
             }
           }
         }
+        return s.toString()
       } else {
         // raw replace usage
         for (const [key, value] of replaceMap) {
           code = code.replaceAll(key, value)
         }
+        return code
       }
-
-      return s.toString()
     },
     vite: {
       generateBundle: {
