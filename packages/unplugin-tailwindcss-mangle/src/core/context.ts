@@ -1,7 +1,7 @@
 import fs from 'node:fs'
-import { resolve } from 'node:path'
+import { resolve, isAbsolute } from 'node:path'
 import { ClassGenerator } from '@tailwindcss-mangle/shared'
-import { getConfig, getDefaultMangleUserConfig } from '@tailwindcss-mangle/config'
+import { getConfig } from '@tailwindcss-mangle/config'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import { sort } from 'fast-sort'
 import defu from 'defu'
@@ -14,19 +14,18 @@ export class Context {
   classSet: Set<string>
   replaceMap: Map<string, string>
   classGenerator: ClassGenerator
-  ahoCorasick: AhoCorasick
-  constructor(opts: MangleUserConfig) {
-    this.options = defu(opts, getDefaultMangleUserConfig())
+  ahoCorasick?: AhoCorasick
+  constructor(opts: MangleUserConfig = {}) {
+    this.options = opts //  defu(opts, getDefaultMangleUserConfig())
     this.classSet = new Set()
     this.replaceMap = new Map()
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
-    this.ahoCorasick = new AhoCorasick([])
   }
 
   mergeOptions(opts?: MangleUserConfig) {
-    // 插件选项优先
+    // 配置选项优先
     this.options = defu(this.options, opts)
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
@@ -57,14 +56,20 @@ export class Context {
   }
 
   search(str: string) {
-    return this.ahoCorasick.search(str)
+    return this.ahoCorasick?.search(str) ?? []
   }
 
-  async initConfig() {
-    const { config } = await getConfig()
+  async initConfig(cwd?: string) {
+    const { config, cwd: configCwd } = await getConfig(cwd)
     const mangleConfig = config?.mangle
     this.mergeOptions(mangleConfig)
-    const jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
+    // const jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
+    let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
+    if (!isAbsolute(jsonPath)) {
+      jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)
+      // console.log(configFile, configCwd)
+      //  resolve(configCwd ?? process.cwd(), config?.patch?.output?.filename as string)
+    }
 
     if (jsonPath && fs.existsSync(jsonPath)) {
       const rawClassList = fs.readFileSync(jsonPath, 'utf8')

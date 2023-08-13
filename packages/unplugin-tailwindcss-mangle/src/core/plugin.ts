@@ -9,7 +9,7 @@ import { Context } from './context'
 import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
 
-export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
+export const unplugin = createUnplugin((options?: MangleUserConfig) => {
   const ctx = new Context(options)
   if (ctx.options.disabled) {
     return {
@@ -43,7 +43,8 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
         //   for (const str of strs) {
         //     const value = replaceMap.get(str)
         //     if (value) {
-        //       s.update(start, start + str.length, value)
+        //       console.log(start, start + str.length, value)
+        //       // s.update(start, start + str.length, value)
         //     }
         //   }
         // }
@@ -143,21 +144,18 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
         const entries = Object.entries(ctx.classGenerator.newClassMap)
         if (entries.length > 0 && opts) {
           await ensureDir(dirname(opts.filename))
-          await fs.writeFile(
-            opts.filename,
-            JSON.stringify(
-              entries.map((x) => {
-                return {
-                  origin: x[0],
-                  replacement: x[1].name,
-                  usedBy: [...x[1].usedBy]
-                }
-              }),
-              null,
-              2
-            ),
-            'utf8'
+          const output = JSON.stringify(
+            entries.map((x) => {
+              return {
+                origin: x[0],
+                replacement: x[1].name,
+                usedBy: [...x[1].usedBy]
+              }
+            }),
+            null,
+            opts.loose ? 2 : 0
           )
+          await fs.writeFile(opts.filename, output, 'utf8')
           console.log(`✨ ${opts.filename} generated!`)
         }
       }
