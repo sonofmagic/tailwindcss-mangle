@@ -37,19 +37,20 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
           id
         })
       } else {
-        const arr = ctx.search(code)
-        for (const [end, strs] of arr) {
-          for (const str of strs) {
-            const value = replaceMap.get(str)
-            if (value) {
-              s.update(end - str.length + 1, end + 1, value)
-            }
-          }
-        }
-        // raw replace usage
-        // for (const [key, value] of replaceMap) {
-        //   code = code.replaceAll(key, value)
+        // should be sort first
+        // const { arr } = ctx.search(code)
+        // for (const [cls, ends] of arr) {
+        //   for (const end of ends) {
+        //     const value = replaceMap.get(cls)
+        //     if (value) {
+        //       s.update(end - cls.length + 1, end + 1, value)
+        //     }
+        //   }
         // }
+        // raw replace usage
+        for (const [key, value] of replaceMap) {
+          code = code.replaceAll(key, value)
+        }
       }
 
       return s.toString()

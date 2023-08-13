@@ -56,7 +56,25 @@ export class Context {
   }
 
   search(str: string) {
-    return this.ahoCorasick?.search(str) ?? []
+    const arr = this.ahoCorasick?.search(str) ?? []
+    const map = new Map<string, [number, number][]>()
+    for (const [end, classNames] of arr) {
+      for (const className of classNames) {
+        if (map.has(className)) {
+          const v = map.get(className)
+          if (v) {
+            v.push([end - className.length + 1, end + 1])
+          }
+        } else {
+          map.set(className, [[end - className.length + 1, end + 1]])
+        }
+      }
+    }
+    // end - str.length + 1, end + 1, value
+    return {
+      map,
+      arr: sort([...map.entries()]).desc((x) => x[0].length)
+    }
   }
 
   async initConfig(cwd?: string) {
