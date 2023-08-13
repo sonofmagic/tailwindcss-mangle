@@ -1,5 +1,4 @@
 import type { StringLiteral, TemplateElement, CallExpression } from '@babel/types'
-import * as t from '@babel/types'
 import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'

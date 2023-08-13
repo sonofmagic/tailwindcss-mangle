@@ -4,6 +4,7 @@ import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
+
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
@@ -73,10 +74,11 @@ export const plugin = declare((api, options: Options) => {
   }
 })
 
-export function preProcessJs(options: { code: string; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
+export function preProcessJs(options: { code: string | MagicString; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
   const { code, replaceMap, id, addToUsedBy } = options
-  const magicString = new MagicString(code)
-  babel.transformSync(code, {
+  const magicString = typeof code === 'string' ? new MagicString(code) : code
+
+  babel.transformSync(magicString.original, {
     presets: [
       // ['@babel/preset-react', {}],
       [

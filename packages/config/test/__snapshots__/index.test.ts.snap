@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`config > 2.mangle-options 1`] = `
+{
+  "mangle": {
+    "classGenerator": {
+      "log": true,
+    },
+    "classListPath": "zzzzz.json",
+    "classMapOutput": {
+      "enable": true,
+      "filename": "ffff.json",
+      "loose": false,
+    },
+    "disabled": false,
+    "exclude": [
+      "node_modules/**/*",
+      "**/*.{css,scss,less,sass,postcss,html,htm}",
+    ],
+    "include": [
+      "**/*.{js,jsx,ts,tsx,svelte,vue}",
+    ],
+    "mangleClassFilter": [Function],
+  },
+  "patch": {
+    "output": {
+      "filename": "xxx/yyy/zzz.json",
+      "loose": false,
+      "removeUniversalSelector": false,
+    },
+    "tailwindcss": {
+      "cwd": "aaa/bbb/cc",
+    },
+  },
+}
+`;

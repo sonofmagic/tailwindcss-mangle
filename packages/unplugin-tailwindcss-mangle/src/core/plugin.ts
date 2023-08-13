@@ -4,11 +4,12 @@ import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
 import { htmlHandler, cssHandler, jsHandler, preProcessJs } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
+import MagicString from 'magic-string'
 import { Context } from './context'
 import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
 
-export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
+export const unplugin = createUnplugin((options?: MangleUserConfig) => {
   const ctx = new Context(options)
   if (ctx.options.disabled) {
     return {
@@ -25,23 +26,46 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
       return ctx.isInclude(id)
     },
     transform(code, id) {
+      const s = new MagicString(code)
       const replaceMap = ctx.getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
       if (/\.[jt]sx?$/.test(id)) {
-        const str = preProcessJs({
-          code,
+        return preProcessJs({
+          code: s,
           replaceMap,
           addToUsedBy: ctx.addToUsedBy.bind(ctx),
           id
         })
-        return str
+      } else if (ctx.useAC) {
+        // should be sort first
+        const { arr } = ctx.search(code)
+        const markArr: [number, number][] = []
+        for (const [cls, ranges] of arr) {
+          for (const [start, end] of ranges) {
+            const value = replaceMap.get(cls)
+            if (value) {
+              let flag = true
+              for (const [ps, pe] of markArr) {
+                if ((start > ps && start < pe) || (end < pe && end > start)) {
+                  flag = false
+                  break
+                }
+              }
+              if (flag) {
+                markArr.push([start, end])
+                s.update(start, end, value)
+              }
+            }
+          }
+        }
+        return s.toString()
       } else {
+        // raw replace usage
         for (const [key, value] of replaceMap) {
           code = code.replaceAll(key, value)
         }
+        return code
       }
-
-      return code
     },
     vite: {
       generateBundle: {
@@ -131,21 +155,18 @@ export const unplugin = createUnplugin((options: MangleUserConfig = {}) => {
         const entries = Object.entries(ctx.classGenerator.newClassMap)
         if (entries.length > 0 && opts) {
           await ensureDir(dirname(opts.filename))
-          await fs.writeFile(
-            opts.filename,
-            JSON.stringify(
-              entries.map((x) => {
-                return {
-                  origin: x[0],
-                  replacement: x[1].name,
-                  usedBy: [...x[1].usedBy]
-                }
-              }),
-              null,
-              2
-            ),
-            'utf8'
+          const output = JSON.stringify(
+            entries.map((x) => {
+              return {
+                origin: x[0],
+                replacement: x[1].name,
+                usedBy: [...x[1].usedBy]
+              }
+            }),
+            null,
+            opts.loose ? 2 : 0
           )
+          await fs.writeFile(opts.filename, output, 'utf8')
           console.log(`✨ ${opts.filename} generated!`)
         }
       }

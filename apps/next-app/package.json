@@ -7,14 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "tw-patch install"
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "@types/node": "20.4.9",
+    "@types/node": "20.4.10",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
-    "eslint": "8.46.0",
+    "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
     "next": "13.4.13",
     "postcss": "8.4.27",
@@ -23,8 +24,5 @@
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6"
   },
-  "devDependencies": {
-    "tailwindcss-patch": "workspace:*",
-    "unplugin-tailwindcss-mangle": "workspace:*"
-  }
+  "devDependencies": {}
 }

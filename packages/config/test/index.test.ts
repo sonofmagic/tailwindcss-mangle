@@ -38,4 +38,10 @@ describe('config', () => {
       mangle: getDefaultMangleUserConfig()
     })
   })
+
+  it('2.mangle-options', async () => {
+    const cwd = resolve(fixturesRoot, './config/2.mangle-options')
+    const { config } = await getConfig(cwd)
+    expect(config).toMatchSnapshot()
+  })
 })

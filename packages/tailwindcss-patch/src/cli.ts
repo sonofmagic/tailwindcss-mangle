@@ -24,7 +24,7 @@ cli.command('extract').action(async () => {
   if (config) {
     const twPatcher = new TailwindcssPatcher()
     const p = await twPatcher.extract(config.patch)
-    console.log('✨ tailwindcss-patch extract success! file path:\n' + p)
+    console.log('✨ tailwindcss-patch extract success! file path: ' + p)
   }
 })
 

@@ -90,14 +90,14 @@
     },
     {
       "command": "npm run build",
-      "name": "Debug nuxt-app",
+      "name": "[nuxt-app] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/nuxt-app"
     },
     {
       "command": "npm run build",
-      "name": "Debug next-app",
+      "name": "[next-app] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/next-app"

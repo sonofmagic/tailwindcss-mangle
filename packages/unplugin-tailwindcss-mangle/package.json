@@ -1,6 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -74,7 +74,9 @@
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.0",
+    "magic-string": "^0.30.2",
     "micromatch": "^4.0.5",
+    "modern-ahocorasick": "^1.0.0",
     "unplugin": "^1.4.0"
   },
   "publishConfig": {
@@ -87,6 +89,7 @@
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
+    "normalize-newline": "^4.1.0",
     "postcss": "^8.4.27",
     "postcss-loader": "^7.3.3",
     "tailwindcss": "^3.3.3",

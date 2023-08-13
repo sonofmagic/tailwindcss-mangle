@@ -1,24 +1,8 @@
 {
   "name": "tailwindcss-patch",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "patch tailwindcss for exposing context and extract classes",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
     "tw-patch": "bin/tw-patch.js",
