@@ -6,7 +6,7 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     }
   },
   "typesVersions": {
@@ -17,7 +17,7 @@
       ]
     }
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
@@ -29,7 +29,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "tsup",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
     "patch": "node bin/tw-patch.js install"

@@ -83,12 +83,10 @@ export class Context {
     const { config, cwd: configCwd } = await getConfig(cwd)
     const mangleConfig = config?.mangle
     this.mergeOptions(mangleConfig)
-    // const jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
+
     let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
     if (!isAbsolute(jsonPath)) {
       jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)
-      // console.log(configFile, configCwd)
-      //  resolve(configCwd ?? process.cwd(), config?.patch?.output?.filename as string)
     }
 
     if (jsonPath && fs.existsSync(jsonPath)) {
