@@ -17,8 +17,10 @@ describe('fallback', () => {
       for (const str of strs) {
         const value = replaceMap.get(str)
         if (value) {
-          console.log(start, start + str.length, value)
-          console.log(s.slice(start, start + str.length))
+          const res = s.slice(start - str.length + 1, start + 1)
+          expect(res).toBe(str)
+          console.log(str, value)
+
           // s.update(start, start + str.length, value)
         }
       }
