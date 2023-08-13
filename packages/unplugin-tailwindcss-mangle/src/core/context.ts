@@ -15,6 +15,7 @@ export class Context {
   replaceMap: Map<string, string>
   classGenerator: ClassGenerator
   ahoCorasick?: AhoCorasick
+  useAC: boolean
   constructor(opts: MangleUserConfig = {}) {
     this.options = opts //  defu(opts, getDefaultMangleUserConfig())
     this.classSet = new Set()
@@ -22,6 +23,7 @@ export class Context {
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
+    this.useAC = false
   }
 
   mergeOptions(opts?: MangleUserConfig) {

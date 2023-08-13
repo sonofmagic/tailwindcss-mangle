@@ -36,17 +36,29 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
           addToUsedBy: ctx.addToUsedBy.bind(ctx),
           id
         })
-      } else {
+      } else if (ctx.useAC) {
         // should be sort first
-        // const { arr } = ctx.search(code)
-        // for (const [cls, ends] of arr) {
-        //   for (const end of ends) {
-        //     const value = replaceMap.get(cls)
-        //     if (value) {
-        //       s.update(end - cls.length + 1, end + 1, value)
-        //     }
-        //   }
-        // }
+        const { arr } = ctx.search(code)
+        const markArr: [number, number][] = []
+        for (const [cls, ranges] of arr) {
+          for (const [start, end] of ranges) {
+            const value = replaceMap.get(cls)
+            if (value) {
+              let flag = true
+              for (const [ps, pe] of markArr) {
+                if ((start > ps && start < pe) || (end < pe && end > start)) {
+                  flag = false
+                  break
+                }
+              }
+              if (flag) {
+                markArr.push([start, end])
+                s.update(start, end, value)
+              }
+            }
+          }
+        }
+      } else {
         // raw replace usage
         for (const [key, value] of replaceMap) {
           code = code.replaceAll(key, value)
