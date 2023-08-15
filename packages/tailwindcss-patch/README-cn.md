@@ -1,8 +1,18 @@
 # 使用 `tailwindcss-patch@2` 来提取你的类名吧
 
+- [使用 `tailwindcss-patch@2` 来提取你的类名吧](#使用-tailwindcss-patch2-来提取你的类名吧)
+  - [安装](#安装)
+  - [使用方式](#使用方式)
+    - [命令行 Cli](#命令行-cli)
+      - [开始提取吧](#开始提取吧)
+    - [Nodejs API 的方式来使用](#nodejs-api-的方式来使用)
+  - [配置](#配置)
+    - [初始化](#初始化)
+  - [What's next?](#whats-next)
+
 `tailwindcss-patch` 是一个 `tailwindcss` 生态的扩展项目。也是 [`tailwindcss-mangle`](https://github.com/sonofmagic/tailwindcss-mangle) 项目重要的组成部分。
 
-最近我发布了 `tailwindcss-patch` 的 `2.x` 版本，相比 `1.x` 版本，主要添加了一个配置文件读取和工具类名提取额功能。
+最近我发布了 `tailwindcss-patch` 的 `2.x` 版本，主要添加了一个配置文件读取和工具类名提取额功能。
 
 让我们来看看怎么使用它吧。
 
@@ -35,9 +45,9 @@ npx tw-patch install
 
 ## 使用方式
 
-## 命令行 Cli
+### 命令行 Cli
 
-### 开始提取吧
+#### 开始提取吧
 
 ```sh
 npx tw-patch extract
@@ -47,7 +57,7 @@ npx tw-patch extract
 
 当然，你可以通过配置文件 `tailwindcss-mangle.config.ts` 来自定义这个行为。
 
-## Nodejs API 的方式来使用
+### Nodejs API 的方式来使用
 
 ```js
 import { TailwindcssPatcher } from 'tailwindcss-patch'
@@ -96,3 +106,11 @@ export default defineConfig({
   }
 })
 ```
+
+## What's next?
+
+目前我只是提取了所有的工具类，实际上可以获取 `tailwindcss` 的上下文进行分析。你可以给我提 `issue` 或者 `pr` 的方式，来为这个项目添加更多的功能，
+
+当然，提取之后这个 `json` 当然也不是只是给你看看的。你可以对它进行一些分析，而我是把它作为我 `tailwindcss-mangle` 的数据文件来使用的。
+
+`tailwindcss-mangle` 本身是一个混淆工具，用来混淆 `tailwindcss` 生成的工具类，具体的使用方式就看下篇文章吧。
