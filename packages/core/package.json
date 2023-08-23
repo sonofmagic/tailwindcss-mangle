@@ -48,9 +48,9 @@
     "@babel/preset-typescript": "^7.22.5",
     "@babel/types": "^7.22.10",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "magic-string": "^0.30.2",
+    "magic-string": "^0.30.3",
     "parse5": "^7.1.2",
-    "postcss": "^8.4.27",
+    "postcss": "^8.4.28",
     "postcss-selector-parser": "^6.0.13"
   },
   "devDependencies": {
