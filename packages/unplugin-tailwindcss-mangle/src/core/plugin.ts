@@ -18,6 +18,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
   return {
     name: pluginName,
     enforce: 'pre',
+
     async buildStart() {
       await ctx.initConfig()
     },
@@ -107,7 +108,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
                 const code = jsHandler(chunk.source().toString(), {
                   replaceMap,
-                  classGenerator: ctx.classGenerator
+                  ctx
                 }).code
                 if (code) {
                   const source = new ConcatSource(code)
@@ -123,7 +124,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
                 const { css } = await cssHandler(cssSource.source().toString(), {
                   replaceMap,
                   file,
-                  classGenerator: ctx.classGenerator
+                  ctx
                 })
 
                 const source = new ConcatSource(css)
@@ -137,7 +138,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
                 const [file, asset] = groupedEntries.html[i]
 
                 const html = htmlHandler(asset.source().toString(), {
-                  classGenerator: ctx.classGenerator,
+                  ctx,
                   replaceMap
                 })
                 const source = new ConcatSource(html)

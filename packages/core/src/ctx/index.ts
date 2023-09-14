@@ -38,6 +38,13 @@ export class Context {
     return this.preserveClassNamesSet.add(className)
   }
 
+  isPreserveFunction(calleeName: string) {
+    // if (callee === undefined) {
+    //   return false
+    // }
+    return this.preserveFunctionSet.has(calleeName)
+  }
+
   mergeOptions(opts?: MangleUserConfig) {
     // 配置选项优先
     this.options = defu(this.options, opts)

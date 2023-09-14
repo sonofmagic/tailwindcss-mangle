@@ -4,6 +4,7 @@ import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
+import { getStringLiteralCalleeName, getTemplateElementCalleeName } from './utils'
 import type { Context } from '@/ctx'
 
 interface Options {
@@ -13,19 +14,35 @@ interface Options {
   ctx: Context
 }
 
-export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number; escape: boolean } & Options) {
-  const { ctx, id, magicString, node, raw, replaceMap, offset = 0, escape = false } = options
+type HandleValueOptions = {
+  raw: string
+  path: babel.NodePath<babel.types.StringLiteral | babel.types.TemplateElement>
+  offset: number
+  escape: boolean
+  preserve: boolean
+} & Options
+
+export function handleValue(options: HandleValueOptions) {
+  const { ctx, id, path, magicString, raw, replaceMap, offset = 0, escape = false, preserve = false } = options
+  const node = path.node
   let value = raw
   const arr = sort(splitCode(value)).desc((x) => x.length)
 
   for (const str of arr) {
     if (replaceMap.has(str)) {
       ctx.addToUsedBy(str, id)
+      if (preserve) {
+        ctx.addPreserveClass(str)
+      }
+      // replace
       const v = replaceMap.get(str)
       if (v) {
         value = value.replaceAll(str, v)
       }
     }
+  }
+  if (preserve) {
+    return
   }
   if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
     const start = node.start + offset
@@ -43,32 +60,42 @@ export const plugin = declare((api, options: Options) => {
     visitor: {
       StringLiteral: {
         enter(p) {
-          const node = p.node
-          handleValue({
+          const opts: HandleValueOptions = {
             ctx,
             id,
             magicString,
-            node,
-            raw: node.value,
+            path: p,
+            raw: p.node.value,
             replaceMap,
             offset: 1,
-            escape: true
-          })
+            escape: true,
+            preserve: false
+          }
+          const calleeName = getStringLiteralCalleeName(p)
+          if (calleeName && ctx.isPreserveFunction(calleeName)) {
+            opts.preserve = true
+          }
+          handleValue(opts)
         }
       },
       TemplateElement: {
         enter(p) {
-          const node = p.node
-          handleValue({
+          const opts: HandleValueOptions = {
             ctx,
             id,
             magicString,
-            node,
-            raw: node.value.raw,
+            path: p,
+            raw: p.node.value.raw,
             replaceMap,
             offset: 0,
-            escape: false
-          })
+            escape: false,
+            preserve: false
+          }
+          const calleeName = getTemplateElementCalleeName(p)
+          if (calleeName && ctx.isPreserveFunction(calleeName)) {
+            opts.preserve = true
+          }
+          handleValue(opts)
         }
       }
     }

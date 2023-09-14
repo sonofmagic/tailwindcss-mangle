@@ -252,6 +252,86 @@ exports[`js handler > nextjs server side mangle 1`] = `
 })();"
 `;
 
+exports[`js handler > preserve-fn-case0.js case 0 1`] = `
+"import { clsx } from \\"clsx\\";
+import { twMerge } from \\"tailwind-merge\\";
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+cn('w-10 h-10 b and a')
+
+cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
+
+twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
+`;
+
+exports[`js handler > preserve-fn-case0.js case 1 1`] = `
+"import { clsx } from \\"clsx\\";
+import { twMerge } from \\"tailwind-merge\\";
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+
+cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
+
+twMerge('e f g and h')"
+`;
+
+exports[`js handler > preserve-fn-case0.js case 1 2`] = `
+{
+  "bg-red-400": "g",
+  "bg-red-400/50": "h",
+  "h-1": "f",
+  "w-1": "e",
+}
+`;
+
+exports[`js handler > preserve-fn-case0.js case 2 1`] = `
+"import { clsx } from \\"clsx\\";
+import { twMerge } from \\"tailwind-merge\\";
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+cn('w-10 h-10 b and a')
+
+cn(\`c d bg-red-600 and bg-red-600/50\`)
+
+twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
+`;
+
+exports[`js handler > preserve-fn-case0.js case 2 2`] = `
+Map {
+  "bg-red-500/50" => "a",
+  "bg-red-500" => "b",
+  "w-2" => "c",
+  "h-2" => "d",
+}
+`;
+
+exports[`js handler > preserve-fn-case0.js case 3 1`] = `
+"import { clsx } from \\"clsx\\";
+import { twMerge } from \\"tailwind-merge\\";
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+
+cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
+
+twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
+`;
+
+exports[`js handler > preserve-fn-case0.js case 3 2`] = `Map {}`;
+
 exports[`js handler > trailing slash case 0 1`] = `"document.getElementById(\\"#app\\").classList.add(\\"tw-a tw-b\\");"`;
 
 exports[`js handler > trailing slash case 1 1`] = `"document.querySelector(\\"#app\\").classList.add(\\"tw-a tw-b\\");"`;

@@ -1,11 +1,14 @@
-import { ClassGenerator, splitCode } from '@tailwindcss-mangle/shared'
+import { splitCode } from '@tailwindcss-mangle/shared'
 import { getTestCase } from './utils'
 import { htmlHandler } from '@/html'
+import { Context } from '@/ctx'
 
 describe('html handler', () => {
-  let classGenerator: ClassGenerator
+  // let classGenerator: ClassGenerator
+  let ctx: Context
   beforeEach(() => {
-    classGenerator = new ClassGenerator()
+    // classGenerator = new ClassGenerator()
+    ctx = new Context()
   })
   it('common usage', () => {
     const replaceMap = new Map()
@@ -14,7 +17,7 @@ describe('html handler', () => {
       replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('hello-world.html'), {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(res).toMatchSnapshot()
@@ -27,7 +30,7 @@ describe('html handler', () => {
       replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('trailing-slash.html'), {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(res).toMatchSnapshot()
@@ -40,7 +43,7 @@ describe('html handler', () => {
       replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('trailing-slash-0.html'), {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(res).toMatchSnapshot()

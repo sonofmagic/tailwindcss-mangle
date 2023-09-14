@@ -1,7 +1,7 @@
 import type { PluginCreator } from 'postcss'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
-import { IClassGeneratorContextItem, ICssHandlerOptions } from '@/types'
+import { ICssHandlerOptions } from '@/types'
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'

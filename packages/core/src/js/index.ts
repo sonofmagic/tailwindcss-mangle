@@ -5,8 +5,8 @@ import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
 export { preProcessJs } from './pre'
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
-  const { replaceMap, classGenerator: clsGen, splitQuote = true } = options
-
+  const { replaceMap, ctx, splitQuote = true } = options
+  const clsGen = ctx.classGenerator
   const array = splitCode(raw, {
     splitQuote
   })
