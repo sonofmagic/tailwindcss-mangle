@@ -216,7 +216,10 @@ describe('js handler', () => {
     // replaceMap.set('bg-red-500', true)
     const code = preProcessJs({
       code: testCase,
-      addToUsedBy: () => {},
+      // @ts-ignore
+      ctx: {
+        addToUsedBy: () => {}
+      },
       id: 'xxx',
       replaceMap
     })
@@ -230,7 +233,10 @@ describe('js handler', () => {
     replaceMap.set('bg-red-500', 'b')
     const code = preProcessJs({
       code: testCase,
-      addToUsedBy: () => {},
+      // @ts-ignore
+      ctx: {
+        addToUsedBy: () => {}
+      },
       id: 'xxx',
       replaceMap
     })
@@ -244,7 +250,10 @@ describe('js handler', () => {
     replaceMap.set('bg-red-500', 'b')
     const code = preProcessJs({
       code: testCase,
-      addToUsedBy: () => {},
+      // @ts-ignore
+      ctx: {
+        addToUsedBy: () => {}
+      },
       id: 'xxx',
       replaceMap
     })

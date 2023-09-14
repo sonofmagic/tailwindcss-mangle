@@ -16,6 +16,8 @@ export class Context {
   classGenerator: ClassGenerator
   ahoCorasick?: AhoCorasick
   useAC: boolean
+  preserveFunctionSet: Set<string>
+  preserveClassNamesSet: Set<string>
   constructor(opts: MangleUserConfig = {}) {
     this.options = opts //  defu(opts, getDefaultMangleUserConfig())
     this.classSet = new Set()
@@ -24,6 +26,16 @@ export class Context {
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
     this.useAC = false
+    this.preserveFunctionSet = new Set(opts.preserveFunction)
+    this.preserveClassNamesSet = new Set()
+  }
+
+  isPreserveClass(className: string) {
+    return this.preserveClassNamesSet.has(className)
+  }
+
+  addPreserveClass(className: string) {
+    return this.preserveClassNamesSet.add(className)
   }
 
   mergeOptions(opts?: MangleUserConfig) {
@@ -47,7 +59,13 @@ export class Context {
   }
 
   getReplaceMap() {
-    return this.replaceMap
+    const map = new Map<string, string>()
+    for (const [key, value] of this.replaceMap) {
+      if (!this.isPreserveClass(key)) {
+        map.set(key, value)
+      }
+    }
+    return map
   }
 
   addToUsedBy(key: string, file: string) {
@@ -93,7 +111,7 @@ export class Context {
       const rawClassList = fs.readFileSync(jsonPath, 'utf8')
       const list = JSON.parse(rawClassList) as string[]
       // why?
-      // case bg-red-500 and bg-red-500/50
+      // cause bg-red-500 and bg-red-500/50 same time
       // transform bg-red-500/50 first
       const classList = sort(list).desc((c) => c.length)
       for (const className of classList) {

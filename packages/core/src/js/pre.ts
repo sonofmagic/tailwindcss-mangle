@@ -4,22 +4,23 @@ import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
+import type { Context } from '@/ctx'
 
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
   id: string
-  addToUsedBy: (key: string, file: string) => void
+  ctx: Context
 }
 
 export function handleValue(options: { raw: string; node: babel.types.StringLiteral | babel.types.TemplateElement; offset: number; escape: boolean } & Options) {
-  const { addToUsedBy, id, magicString, node, raw, replaceMap, offset = 0, escape = false } = options
+  const { ctx, id, magicString, node, raw, replaceMap, offset = 0, escape = false } = options
   let value = raw
   const arr = sort(splitCode(value)).desc((x) => x.length)
 
   for (const str of arr) {
     if (replaceMap.has(str)) {
-      addToUsedBy(str, id)
+      ctx.addToUsedBy(str, id)
       const v = replaceMap.get(str)
       if (v) {
         value = value.replaceAll(str, v)
@@ -37,14 +38,14 @@ export function handleValue(options: { raw: string; node: babel.types.StringLite
 
 export const plugin = declare((api, options: Options) => {
   api.assertVersion(7)
-  const { magicString, replaceMap, id, addToUsedBy } = options
+  const { magicString, replaceMap, id, ctx } = options
   return {
     visitor: {
       StringLiteral: {
         enter(p) {
           const node = p.node
           handleValue({
-            addToUsedBy,
+            ctx,
             id,
             magicString,
             node,
@@ -59,7 +60,7 @@ export const plugin = declare((api, options: Options) => {
         enter(p) {
           const node = p.node
           handleValue({
-            addToUsedBy,
+            ctx,
             id,
             magicString,
             node,
@@ -74,8 +75,8 @@ export const plugin = declare((api, options: Options) => {
   }
 })
 
-export function preProcessJs(options: { code: string | MagicString; replaceMap: Map<string, string>; id: string; addToUsedBy: (key: string, file: string) => void }) {
-  const { code, replaceMap, id, addToUsedBy } = options
+export function preProcessJs(options: { code: string | MagicString; replaceMap: Map<string, string>; id: string; ctx: Context }) {
+  const { code, replaceMap, id, ctx } = options
   const magicString = typeof code === 'string' ? new MagicString(code) : code
 
   babel.transformSync(magicString.original, {
@@ -96,7 +97,7 @@ export function preProcessJs(options: { code: string | MagicString; replaceMap: 
           magicString,
           replaceMap,
           id,
-          addToUsedBy
+          ctx
         }
       ]
     ],

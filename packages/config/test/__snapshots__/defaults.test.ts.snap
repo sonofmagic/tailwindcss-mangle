@@ -29,6 +29,7 @@ exports[`defaults > getDefaultUserConfig 1`] = `
       "**/*.{js,jsx,ts,tsx,svelte,vue}",
     ],
     "mangleClassFilter": [Function],
+    "preserveFunction": [],
   },
   "patch": {
     "output": {

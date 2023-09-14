@@ -23,7 +23,8 @@ export function getDefaultMangleUserConfig(): MangleUserConfig {
       enable: false,
       filename: '.tw-patch/tw-map-list.json',
       loose: true
-    }
+    },
+    preserveFunction: []
   }
 }
 

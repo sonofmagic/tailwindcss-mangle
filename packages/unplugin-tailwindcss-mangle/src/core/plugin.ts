@@ -2,10 +2,9 @@ import { dirname } from 'node:path'
 import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
-import { htmlHandler, cssHandler, jsHandler, preProcessJs } from '@tailwindcss-mangle/core'
+import { htmlHandler, cssHandler, jsHandler, preProcessJs, Context } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
-import { Context } from './context'
 import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
 
@@ -33,7 +32,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
         return preProcessJs({
           code: s,
           replaceMap,
-          addToUsedBy: ctx.addToUsedBy.bind(ctx),
+          ctx,
           id
         })
       } else if (ctx.useAC) {

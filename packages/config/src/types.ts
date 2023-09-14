@@ -14,6 +14,7 @@ export interface MangleUserConfig {
   classListPath?: string
   classMapOutput?: ClassMapOutputOptions
   disabled?: boolean
+  preserveFunction?: string[]
 }
 
 export interface PatchUserConfig {

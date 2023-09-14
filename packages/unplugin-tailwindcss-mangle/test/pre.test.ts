@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { preProcessJs } from '@tailwindcss-mangle/core'
-import { Context } from '@/core/context'
+import { preProcessJs, Context } from '@tailwindcss-mangle/core'
+
 const fixturesRoot = path.resolve(__dirname, './fixtures')
 const tsxRoot = path.resolve(fixturesRoot, './tsx')
 const tsRoot = path.resolve(fixturesRoot, './ts')
@@ -18,7 +18,7 @@ describe('babel plugin', () => {
     const res = preProcessJs({
       code,
       replaceMap,
-      addToUsedBy: ctx.addToUsedBy.bind(ctx),
+      ctx,
       id: file
     })
     expect(res).toMatchSnapshot()
@@ -35,7 +35,7 @@ describe('babel plugin', () => {
     const res = preProcessJs({
       code,
       replaceMap,
-      addToUsedBy: ctx.addToUsedBy.bind(ctx),
+      ctx,
       id: file
     })
     expect(res).toMatchSnapshot()

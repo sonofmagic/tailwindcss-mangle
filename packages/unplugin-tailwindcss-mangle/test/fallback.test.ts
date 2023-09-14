@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 // import MagicString from 'magic-string'
 import normalizeNewline from 'normalize-newline'
-import { Context } from '@/core/context'
+import { Context } from '@tailwindcss-mangle/core'
 const fallbackDir = path.resolve(__dirname, 'fixtures/fallback')
 describe('fallback', () => {
   it('ac', async () => {
