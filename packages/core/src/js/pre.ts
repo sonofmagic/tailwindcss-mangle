@@ -7,6 +7,7 @@ import { jsStringEscape } from '@ast-core/escape'
 import { parse, ParseResult } from '@babel/parser'
 import traverse from '@babel/traverse'
 import { getStringLiteralCalleeName, getTemplateElementCalleeName } from './utils'
+import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 
 interface Options {
@@ -160,8 +161,16 @@ interface IPreProcessRawCodeOptions {
 export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
   const { code, replaceMap, ctx } = options
   const magicString = typeof code === 'string' ? new MagicString(code) : code
+  const markArr: [number, number][] = []
   for (const regex of ctx.preserveFunctionRegexs) {
-    for (const regExpMatch of magicString.original.matchAll(regex)) {
+    const allArr: RegExpExecArray[] = []
+    let arr: RegExpExecArray | null = null
+    while ((arr = regex.exec(magicString.original)) !== null) {
+      allArr.push(arr)
+      markArr.push([arr.index, arr.index + arr[0].length])
+    }
+    //  magicString.original.matchAll(regex)
+    for (const regExpMatch of allArr) {
       let ast: ParseResult<babel.types.File>
       try {
         ast = parse(regExpMatch[0], {
@@ -170,8 +179,9 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
         traverse(ast, {
           StringLiteral: {
             enter(p) {
-              const array = splitCode(p.node.value)
-              for (const v of array) {
+              const arr = sort(splitCode(p.node.value)).desc((x) => x.length)
+
+              for (const v of arr) {
                 if (replaceMap.has(v)) {
                   ctx.addPreserveClass(v)
                 }
@@ -180,8 +190,8 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
           },
           TemplateElement: {
             enter(p) {
-              const array = splitCode(p.node.value.raw)
-              for (const v of array) {
+              const arr = sort(splitCode(p.node.value.raw)).desc((x) => x.length)
+              for (const v of arr) {
                 if (replaceMap.has(v)) {
                   ctx.addPreserveClass(v)
                 }
@@ -196,10 +206,27 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
     // console.log(arr, regex.lastIndex)
   }
   for (const [key, value] of replaceMap) {
-    if (!ctx.isPreserveClass(key)) {
-      magicString.replaceAll(key, value)
+    // if (!ctx.isPreserveClass(key)) {
+    // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+    const regex = new RegExp(escapeStringRegexp(key), 'g')
+    let arr: RegExpExecArray | null = null
+    while ((arr = regex.exec(magicString.original)) !== null) {
+      const start = arr.index
+      const end = arr.index + arr[0].length
+      let shouldUpdate = true
+      for (const [ps, pe] of markArr) {
+        if ((start > ps && start < pe) || (end < pe && end > ps)) {
+          shouldUpdate = false
+          break
+        }
+      }
+      if (shouldUpdate) {
+        magicString.update(start, end, value)
+        markArr.push([start, end])
+      }
     }
   }
+
   return magicString.toString()
   // for (const [key, value] of replaceMap) {
   //   code = code.replaceAll(key, value)

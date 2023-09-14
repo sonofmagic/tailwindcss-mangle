@@ -419,4 +419,34 @@ describe('js handler', () => {
     expect(ctx.preserveClassNamesSet.size).toBe(6)
     expect(ctx.getReplaceMap()).toMatchSnapshot()
   })
+
+  it('preProcessRawCode case 1', async () => {
+    const testCase = getTestCase('preserve-fn-case1.vue')
+    const ctx = new Context({
+      preserveFunction: ['twMerge']
+    })
+
+    const list = require('./fixtures/preserve-fn-case1.json') as string[]
+    const replaceMap = new Map()
+    for (const cls of list) {
+      replaceMap.set(cls, 'i')
+    }
+
+    await ctx.initConfig()
+    ctx.replaceMap = replaceMap
+    //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+
+    // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
+
+    // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
+    const code = preProcessRawCode({
+      code: testCase,
+      ctx,
+      replaceMap: ctx.getReplaceMap(),
+      id: 'xxx'
+    })
+    expect(code).toMatchSnapshot()
+    expect(ctx.preserveClassNamesSet.size).toBe(6)
+    expect(ctx.getReplaceMap()).toMatchSnapshot()
+  })
 })

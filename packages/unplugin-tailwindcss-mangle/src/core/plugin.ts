@@ -46,7 +46,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
             if (value) {
               let flag = true
               for (const [ps, pe] of markArr) {
-                if ((start > ps && start < pe) || (end < pe && end > start)) {
+                if ((start > ps && start < pe) || (end < pe && end > ps)) {
                   flag = false
                   break
                 }

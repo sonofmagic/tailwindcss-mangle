@@ -320,12 +320,263 @@ export default defineComponent({
 
 exports[`js handler > preProcessRawCode case 0 2`] = `
 Map {
-  "flex" => "u",
-  "min-h-screen" => "i",
-  "flex-col" => "o",
-  "items-center" => "p",
   "justify-between" => "a",
+  "min-h-screen" => "i",
+  "items-center" => "p",
+  "flex-col" => "o",
+  "flex" => "u",
   "p-24" => "s",
+}
+`;
+
+exports[`js handler > preProcessRawCode case 1 1`] = `
+"<script setup lang=\\"ts\\">
+import { twMerge } from 'tailwind-merge'
+// 'hover:bg-dark-red i i'
+const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
+
+</script>
+
+<template>
+  <main class=\\"i i i i i i \\">
+    <nav :class=\\"aaa\\">{{ aaa }}</nav>
+    <div class=\\"i i i i i i i i\\">
+      <p
+        class=\\"i i i i i i i i i i i i i i i i i i  i i i i i\\">
+        Get started by editing&nbsp;
+        <code class=\\"i i\\">pages/index.tsx</code>
+      </p>
+      <div
+        class=\\"i i i i i i i i i i i i i i i i i\\">
+        <a class=\\"i i i i i i i\\"
+          href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+          target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+          By
+          <img src=\\"/vite.svg\\" alt=\\"Vercel Logo\\" class=\\"i\\" priority />
+        </a>
+      </div>
+    </div>
+
+    <div
+      class=\\"i i i i i i i i before:bg-gradient-radial i i i i i i i i i after:bg-gradient-conic i i i i i i i i i i\\">
+      <img class=\\"i i i\\" src=\\"./assets/vue.svg\\" alt=\\"Next.js Logo\\"
+        priority />
+    </div>
+
+    <div class=\\"i i i i i i \\">
+      <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+        class=\\"group i i i i i i i i i i\\"
+        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+        <h2 class=\\"i i i i\\">
+          Docs <span
+            class=\\"i i i i\\">-&gt;</span>
+        </h2>
+        <p class=\\"i i i i\\">Find in-depth information about Next.js
+          features and API.</p>
+      </a>
+
+      <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+        class=\\"group i i i i i i i i i i\\"
+        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+        <h2 class=\\"i i i i\\">
+          Learn <span
+            class=\\"i i i i\\">-&gt;</span>
+        </h2>
+        <p class=\\"i i i i\\">Learn about Next.js in an interactive
+          course with&nbsp;quizzes!</p>
+      </a>
+
+      <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+        class=\\"group i i i i i i i i i i\\"
+        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+        <h2 class=\\"i i i i\\">
+          Templates <span
+            class=\\"i i i i\\">-&gt;</span>
+        </h2>
+        <p class=\\"i i i i\\">Discover and deploy boilerplate example
+          Next.js&nbsp;projects.</p>
+      </a>
+
+      <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+        class=\\"group i i i i i i i i i i\\"
+        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+        <h2 class=\\"i i i i\\">
+          Deploy <span
+            class=\\"i i i i\\">-&gt;</span>
+        </h2>
+        <p class=\\"i i i i\\">Instantly deploy your Next.js site to a
+          shareable URL with Vercel.</p>
+      </a>
+    </div>
+  </main>
+</template>
+
+<script lang=\\"ts\\">
+import { onMounted, defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {
+    onMounted(() => {
+      const clipPath = '';
+      document.documentElement.animate(
+        {
+          clipPath
+        },
+        {
+          duration: 500,
+          easing: /* tw-mangle ignore */ 'i',
+          pseudoElement: '::view-i-new(root)'
+        })
+      document.documentElement.animate(
+        {
+          clipPath
+        },
+        {
+          duration: 500,
+          easing: 'i',
+          pseudoElement: '::view-i-new(root)'
+        }
+      )
+    })
+    return {}
+  }
+})
+
+</script>
+
+<style scoped>
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: i;
+  i: i 300ms;
+}
+
+.logo:hover {
+  i: i(0 0 2em #646cffaa);
+}
+
+.logo.vue:hover {
+  i: i(0 0 2em #42b883aa);
+}
+</style>
+"
+`;
+
+exports[`js handler > preProcessRawCode case 1 2`] = `
+Map {
+  "dark:drop-shadow-[0_0_0.3rem_#ffffff70]" => "i",
+  "before:dark:bg-gradient-to-br" => "i",
+  "hover:dark:border-neutral-700" => "i",
+  "before:dark:from-transparent" => "i",
+  "hover:dark:bg-neutral-800/30" => "i",
+  "motion-reduce:transform-none" => "i",
+  "after:dark:via-[#0141ff]/40" => "i",
+  "before:dark:to-blue-700/10" => "i",
+  "group-hover:translate-x-1" => "i",
+  "after:dark:from-sky-900" => "i",
+  "before:-translate-x-1/2" => "i",
+  "dark:border-neutral-800" => "i",
+  "lg:dark:bg-zinc-800/30" => "i",
+  "lg:pointer-events-auto" => "i",
+  "after:translate-x-1/3" => "i",
+  "before:to-transparent" => "i",
+  "hover:border-gray-300" => "i",
+  "transition-transform" => "i",
+  "before:content-['']" => "i",
+  "before:lg:h-[360px]" => "i",
+  "before:rounded-full" => "i",
+  "dark:bg-zinc-800/30" => "i",
+  "pointer-events-none" => "i",
+  "after:content-['']" => "i",
+  "after:from-sky-200" => "i",
+  "after:via-blue-200" => "i",
+  "border-transparent" => "i",
+  "place-items-center" => "i",
+  "backdrop-blur-2xl" => "i",
+  "before:from-white" => "i",
+  "dark:from-inherit" => "i",
+  "hover:bg-gray-100" => "i",
+  "transition-colors" => "i",
+  "before:h-[300px]" => "i",
+  "before:w-[480px]" => "i",
+  "bg-gradient-to-b" => "i",
+  "bg-gradient-to-t" => "i",
+  "after:h-[180px]" => "i",
+  "after:w-[240px]" => "i",
+  "before:absolute" => "i",
+  "before:blur-2xl" => "i",
+  "border-gray-300" => "i",
+  "dark:from-black" => "i",
+  "justify-between" => "i",
+  "after:absolute" => "i",
+  "after:blur-2xl" => "i",
+  "dark:via-black" => "i",
+  "justify-center" => "i",
+  "lg:bg-gray-200" => "i",
+  "lg:grid-cols-4" => "i",
+  "bg-red-200/40" => "i",
+  "bg-red-200/70" => "i",
+  "bg-red-200/90" => "i",
+  "font-semibold" => "i",
+  "from-zinc-200" => "i",
+  "lg:rounded-xl" => "i",
+  "inline-block" => "i",
+  "items-center" => "i",
+  "lg:text-left" => "i",
+  "max-w-[30ch]" => "i",
+  "min-h-screen" => "i",
+  "after:-z-20" => "i",
+  "dark:invert" => "i",
+  "drop-shadow" => "i",
+  "text-[16px]" => "i",
+  "text-center" => "i",
+  "bg-red-200" => "i",
+  "from-white" => "i",
+  "lg:bg-none" => "i",
+  "opacity-50" => "i",
+  "rounded-lg" => "i",
+  "transition" => "i",
+  "font-bold" => "i",
+  "font-mono" => "i",
+  "items-end" => "i",
+  "lg:border" => "i",
+  "lg:h-auto" => "i",
+  "lg:static" => "i",
+  "lg:w-auto" => "i",
+  "max-w-5xl" => "i",
+  "via-white" => "i",
+  "border-b" => "i",
+  "bottom-0" => "i",
+  "ease-out" => "i",
+  "flex-col" => "i",
+  "relative" => "i",
+  "text-2xl" => "i",
+  "lg:flex" => "i",
+  "lg:mb-0" => "i",
+  "text-sm" => "i",
+  "border" => "i",
+  "filter" => "i",
+  "left-0" => "i",
+  "lg:p-0" => "i",
+  "lg:p-4" => "i",
+  "w-full" => "i",
+  "fixed" => "i",
+  "gap-2" => "i",
+  "mb-32" => "i",
+  "top-0" => "i",
+  "flex" => "i",
+  "grid" => "i",
+  "h-48" => "i",
+  "mb-3" => "i",
+  "p-24" => "i",
+  "pb-6" => "i",
+  "pt-8" => "i",
+  "px-5" => "i",
+  "py-4" => "i",
+  "z-10" => "i",
+  "m-0" => "i",
+  "p-8" => "i",
 }
 `;
 
