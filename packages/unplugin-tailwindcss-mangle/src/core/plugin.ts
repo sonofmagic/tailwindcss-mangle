@@ -2,7 +2,7 @@ import { dirname } from 'node:path'
 import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
-import { htmlHandler, cssHandler, jsHandler, preProcessJs, Context } from '@tailwindcss-mangle/core'
+import { htmlHandler, cssHandler, jsHandler, preProcessJs, Context, preProcessRawCode } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
 import { pluginName } from '@/constants'
@@ -60,11 +60,12 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
         }
         return s.toString()
       } else {
-        // raw replace usage
-        for (const [key, value] of replaceMap) {
-          code = code.replaceAll(key, value)
-        }
-        return code
+        return preProcessRawCode({
+          code,
+          ctx,
+          replaceMap,
+          id
+        })
       }
     },
     vite: {
@@ -80,7 +81,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
               const { css } = await cssHandler(cssSource.source.toString(), {
                 file,
                 replaceMap,
-                classGenerator: ctx.classGenerator
+                ctx
               })
               cssSource.source = css
             }

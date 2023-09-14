@@ -1,23 +1,37 @@
 import { getTestCase } from './utils'
 import { cssHandler } from '@/css'
-import { ClassGenerator } from '@/shared'
+import { Context } from '@/ctx'
 describe('css', () => {
-  let classGenerator: ClassGenerator
+  let ctx: Context
   beforeEach(() => {
-    classGenerator = new ClassGenerator()
+    // classGenerator = new ClassGenerator()
+    ctx = new Context()
+  })
+
+  it('preserveClassNamesSet case 0', async () => {
+    const replaceMap = new Map()
+    replaceMap.set('gap-y-4', 'tw-a')
+    ctx.classGenerator.generateClassName('gap-y-4')
+    const testCase = `.gap-y-4 {color:red;}`
+    ctx.addPreserveClass('gap-y-4')
+    const { css } = await cssHandler(testCase, {
+      ctx,
+      replaceMap
+    })
+    expect(css).toMatchSnapshot()
   })
 
   it('vue scoped .gap-y-4', async () => {
     const replaceMap = new Map()
     replaceMap.set('gap-y-4', 'tw-a')
-    classGenerator.generateClassName('gap-y-4')
+    ctx.classGenerator.generateClassName('gap-y-4')
     const testCase = `@media (min-width: 768px) {
       .gap-y-4 {
       }
     }`
 
     const { css } = await cssHandler(testCase, {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(css).toMatchSnapshot()
@@ -26,14 +40,14 @@ describe('css', () => {
   it('vue scoped .gap-y-4[data-v-0f84999b]', async () => {
     const replaceMap = new Map()
     replaceMap.set('gap-y-4', 'tw-a')
-    classGenerator.generateClassName('gap-y-4')
+    ctx.classGenerator.generateClassName('gap-y-4')
     const testCase = `@media (min-width: 768px) {
       .gap-y-4[data-v-0f84999b] {
       }
     }`
 
     const { css } = await cssHandler(testCase, {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(css).toMatchSnapshot()
@@ -42,14 +56,14 @@ describe('css', () => {
   it('vue scoped no ignore .gap-y-4[data-v-0f84999b]', async () => {
     const replaceMap = new Map()
     replaceMap.set('gap-y-4', 'tw-a')
-    classGenerator.generateClassName('gap-y-4')
+    ctx.classGenerator.generateClassName('gap-y-4')
     const testCase = `@media (min-width: 768px) {
       .gap-y-4[data-v-0f84999b] {
       }
     }`
 
     const { css } = await cssHandler(testCase, {
-      classGenerator,
+      ctx,
       replaceMap,
       ignoreVueScoped: false
     })
@@ -59,7 +73,7 @@ describe('css', () => {
   it('common with scoped', async () => {
     const replaceMap = new Map()
     replaceMap.set('bg-white', 'tw-a')
-    classGenerator.generateClassName('bg-white')
+    ctx.classGenerator.generateClassName('bg-white')
     const testCase = `
     .bg-white[data-v-0f84999b] {
       --tw-bg-opacity: 1;
@@ -67,7 +81,7 @@ describe('css', () => {
     }`
 
     const { css } = await cssHandler(testCase, {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(css).toMatchSnapshot()
@@ -77,11 +91,11 @@ describe('css', () => {
     const list = JSON.parse(getTestCase('nuxt-app-partial-class-set.json'))
     const replaceMap: Map<string, any> = new Map()
     for (const cls of list) {
-      replaceMap.set(cls, classGenerator.generateClassName(cls).name)
+      replaceMap.set(cls, ctx.classGenerator.generateClassName(cls).name)
     }
     const testCase = getTestCase('vue.scoped.css')
     const { css } = await cssHandler(testCase, {
-      classGenerator,
+      ctx,
       replaceMap
     })
     expect(css).toMatchSnapshot()

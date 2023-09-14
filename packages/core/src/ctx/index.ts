@@ -6,7 +6,8 @@ import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import { sort } from 'fast-sort'
 import defu from 'defu'
 import AhoCorasick from 'modern-ahocorasick'
-import { createGlobMatcher, defaultMangleClassFilter } from '@/utils'
+import { createGlobMatcher, defaultMangleClassFilter, escapeStringRegexp } from '@/utils'
+
 export class Context {
   options: MangleUserConfig
   includeMatcher: (file: string) => boolean
@@ -18,6 +19,7 @@ export class Context {
   useAC: boolean
   preserveFunctionSet: Set<string>
   preserveClassNamesSet: Set<string>
+  preserveFunctionRegexs: RegExp[]
   constructor(opts: MangleUserConfig = {}) {
     this.options = opts //  defu(opts, getDefaultMangleUserConfig())
     this.classSet = new Set()
@@ -28,6 +30,9 @@ export class Context {
     this.useAC = false
     this.preserveFunctionSet = new Set(opts.preserveFunction)
     this.preserveClassNamesSet = new Set()
+    this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
+      return new RegExp(escapeStringRegexp(x) + '\\(([^)]*)\\)', 'g')
+    })
   }
 
   isPreserveClass(className: string) {
@@ -139,4 +144,6 @@ export class Context {
     }
     return config
   }
+
+  // ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
 }

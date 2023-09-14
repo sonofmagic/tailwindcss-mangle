@@ -4,6 +4,8 @@ import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
+import { parse, ParseResult } from '@babel/parser'
+import traverse from '@babel/traverse'
 import { getStringLiteralCalleeName, getTemplateElementCalleeName } from './utils'
 import type { Context } from '@/ctx'
 
@@ -53,7 +55,7 @@ export function handleValue(options: HandleValueOptions) {
   }
 }
 
-export const plugin = declare((api, options: Options) => {
+export const JsPlugin = declare((api, options: Options) => {
   api.assertVersion(7)
   const { magicString, replaceMap, id, ctx } = options
   return {
@@ -102,11 +104,15 @@ export const plugin = declare((api, options: Options) => {
   }
 })
 
-export function preProcessJs(options: { code: string | MagicString; replaceMap: Map<string, string>; id: string; ctx: Context }) {
-  const { code, replaceMap, id, ctx } = options
-  const magicString = typeof code === 'string' ? new MagicString(code) : code
+interface IPreProcessJsOptions {
+  code: string | MagicString
+  replaceMap: Map<string, string>
+  id: string
+  ctx: Context
+}
 
-  babel.transformSync(magicString.original, {
+function transformSync(code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
+  babel.transformSync(code, {
     presets: [
       // ['@babel/preset-react', {}],
       [
@@ -117,9 +123,19 @@ export function preProcessJs(options: { code: string | MagicString; replaceMap: 
         }
       ]
     ],
-    plugins: [
+    plugins,
+    filename
+  })
+}
+
+export function preProcessJs(options: IPreProcessJsOptions) {
+  const { code, replaceMap, id, ctx } = options
+  const magicString = typeof code === 'string' ? new MagicString(code) : code
+  transformSync(
+    magicString.original,
+    [
       [
-        plugin,
+        JsPlugin,
         {
           magicString,
           replaceMap,
@@ -128,7 +144,65 @@ export function preProcessJs(options: { code: string | MagicString; replaceMap: 
         }
       ]
     ],
-    filename: id
-  })
+    id
+  )
+
   return magicString.toString()
+}
+
+interface IPreProcessRawCodeOptions {
+  code: string | MagicString
+  replaceMap: Map<string, string>
+  id: string
+  ctx: Context
+}
+
+export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
+  const { code, replaceMap, ctx } = options
+  const magicString = typeof code === 'string' ? new MagicString(code) : code
+  for (const regex of ctx.preserveFunctionRegexs) {
+    for (const regExpMatch of magicString.original.matchAll(regex)) {
+      let ast: ParseResult<babel.types.File>
+      try {
+        ast = parse(regExpMatch[0], {
+          sourceType: 'unambiguous'
+        })
+        traverse(ast, {
+          StringLiteral: {
+            enter(p) {
+              const array = splitCode(p.node.value)
+              for (const v of array) {
+                if (replaceMap.has(v)) {
+                  ctx.addPreserveClass(v)
+                }
+              }
+            }
+          },
+          TemplateElement: {
+            enter(p) {
+              const array = splitCode(p.node.value.raw)
+              for (const v of array) {
+                if (replaceMap.has(v)) {
+                  ctx.addPreserveClass(v)
+                }
+              }
+            }
+          }
+        })
+      } catch {
+        continue
+      }
+    }
+    // console.log(arr, regex.lastIndex)
+  }
+  for (const [key, value] of replaceMap) {
+    if (!ctx.isPreserveClass(key)) {
+      magicString.replaceAll(key, value)
+    }
+  }
+  return magicString.toString()
+  // for (const [key, value] of replaceMap) {
+  //   code = code.replaceAll(key, value)
+  // }
+  // return code
 }

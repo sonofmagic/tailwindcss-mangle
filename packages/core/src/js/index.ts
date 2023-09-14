@@ -3,7 +3,8 @@ import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
-export { preProcessJs } from './pre'
+export { preProcessJs, preProcessRawCode } from './pre'
+
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { replaceMap, ctx, splitQuote = true } = options
   const clsGen = ctx.classGenerator

@@ -4,6 +4,13 @@ import path from 'node:path'
 import { groupBy } from '@tailwindcss-mangle/shared'
 import { pluginName } from './constants'
 
+export function escapeStringRegexp(str: string) {
+  if (typeof str !== 'string') {
+    throw new TypeError('Expected a string')
+  }
+  return str.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&').replaceAll('-', '\\x2d')
+}
+
 export function getGroupedEntries<T>(
   entries: [string, T][],
   options = {

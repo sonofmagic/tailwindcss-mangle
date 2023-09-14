@@ -1,7 +1,7 @@
 /* eslint-disable no-template-curly-in-string */
 import MagicString from 'magic-string'
 import { getCss, getTestCase } from './utils'
-import { jsHandler, preProcessJs } from '@/js'
+import { jsHandler, preProcessJs, preProcessRawCode } from '@/js'
 // import { getStringLiteralCalleeName, getTemplateElementCalleeName } from '@/js/utils'
 // import { ClassGenerator } from '@/shared'
 import { Context } from '@/index'
@@ -388,6 +388,35 @@ describe('js handler', () => {
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(8)
+    expect(ctx.getReplaceMap()).toMatchSnapshot()
+  })
+
+  it('preProcessRawCode case 0', async () => {
+    const testCase = getTestCase('preserve-fn-case0.vue')
+    const ctx = new Context({
+      preserveFunction: ['twMerge']
+    })
+    const str = 'qwertyuiopasdfghjklzxcvbnm'
+    const replaceMap = new Map()
+    for (const [i, c] of 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' ').entries()) {
+      replaceMap.set(c, str[i])
+    }
+
+    await ctx.initConfig()
+    ctx.replaceMap = replaceMap
+    //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+
+    // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
+
+    // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
+    const code = preProcessRawCode({
+      code: testCase,
+      ctx,
+      replaceMap,
+      id: 'xxx'
+    })
+    expect(code).toMatchSnapshot()
+    expect(ctx.preserveClassNamesSet.size).toBe(6)
     expect(ctx.getReplaceMap()).toMatchSnapshot()
   })
 })
