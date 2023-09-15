@@ -23,7 +23,7 @@
     "@tailwindcss-mangle/shared": "workspace:*",
     "@tsconfig/recommended": "^1.0.2",
     "@types/lodash-es": "^4.17.9",
-    "@types/node": "^20.6.0",
+    "@types/node": "^20.6.1",
     "@vitest/coverage-v8": "^0.34.4",
     "cross-env": "^7.0.3",
     "dedent": "^1.5.1",

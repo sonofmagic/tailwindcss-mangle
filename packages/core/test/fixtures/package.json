@@ -1,0 +1,16 @@
+{
+  "name": "fixtures",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "tw-patch install",
+    "tw-extract": "tw-patch extract"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss-patch": "workspace:^"
+  }
+}

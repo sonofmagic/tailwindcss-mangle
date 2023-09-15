@@ -1,10 +1,15 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import micromatch from 'micromatch'
 
 import { groupBy } from '@tailwindcss-mangle/shared'
 import { pluginName } from './constants'
-const { isMatch } = micromatch
+
+export function escapeStringRegexp(str: string) {
+  if (typeof str !== 'string') {
+    throw new TypeError('Expected a string')
+  }
+  return str.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&').replaceAll('-', '\\x2d')
+}
 
 export function getGroupedEntries<T>(
   entries: [string, T][],
@@ -45,17 +50,6 @@ export function getGroupedEntries<T>(
     groupedEntries.other = []
   }
   return groupedEntries as Record<'css' | 'html' | 'js' | 'other', [string, T][]>
-}
-
-export function createGlobMatcher(pattern: string | string[] | undefined, fallbackValue: boolean = false) {
-  if (pattern === undefined) {
-    return function () {
-      return fallbackValue
-    }
-  }
-  return function (file: string) {
-    return isMatch(file, pattern)
-  }
 }
 
 export function getCacheDir(basedir = process.cwd()) {

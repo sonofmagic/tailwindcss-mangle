@@ -1,5 +1,4 @@
-import type { ClassGenerator } from './shared'
-
+import type { Context } from './ctx'
 export interface IClassGeneratorContextItem {
   name: string
   usedBy: string[]
@@ -16,8 +15,8 @@ export interface IClassGeneratorOptions {
 }
 
 export interface IHandlerOptions {
-  classGenerator: ClassGenerator
   replaceMap: Map<string, string>
+  ctx: Context
 }
 
 export interface IHtmlHandlerOptions extends IHandlerOptions {}

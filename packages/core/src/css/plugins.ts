@@ -1,10 +1,12 @@
 import type { PluginCreator } from 'postcss'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
-import { IClassGeneratorContextItem, ICssHandlerOptions } from '@/types'
+import { ICssHandlerOptions } from '@/types'
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
+
+const clonedKey = '__tw_mangle_cloned__'
 
 export function isVueScoped(s: parser.ClassName): boolean {
   if (s.parent) {
@@ -19,16 +21,18 @@ export function isVueScoped(s: parser.ClassName): boolean {
   return false
 }
 
-export const transformSelectorPostcssPlugin: PluginCreator<{
-  replaceMap: Map<string, string>
-}> = function (options) {
-  const { ignoreVueScoped, replaceMap } = defu(options, {
+export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> = function (options) {
+  const { ignoreVueScoped, replaceMap, ctx } = defu(options, {
     ignoreVueScoped: true
   })
 
   return {
     postcssPlugin,
     async Rule(rule) {
+      // @ts-ignore
+      if (rule[clonedKey]) {
+        return
+      }
       await parser((selectors) => {
         selectors.walkClasses((s) => {
           if (s.value && replaceMap && replaceMap.has(s.value)) {
@@ -37,6 +41,11 @@ export const transformSelectorPostcssPlugin: PluginCreator<{
             }
             const v = replaceMap.get(s.value)
             if (v) {
+              if (ctx.isPreserveClass(s.value)) {
+                const r = rule.cloneBefore()
+                // @ts-ignore
+                r[clonedKey] = true
+              }
               s.value = v
             }
           }
