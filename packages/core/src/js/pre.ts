@@ -128,7 +128,7 @@ export function loadPresets() {
   ]
 }
 
-export function preProcessJs(options: IPreProcessJsOptions) {
+export function preProcessJs(options: IPreProcessJsOptions): string {
   const { code, replaceMap, id, ctx } = options
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   let ast: ParseResult<babel.types.File>
@@ -140,10 +140,10 @@ export function preProcessJs(options: IPreProcessJsOptions) {
     if (file) {
       ast = file
     } else {
-      return code
+      return code.toString()
     }
   } catch {
-    return code
+    return code.toString()
   }
   const markedArray: [number, number][] = []
   babel.traverse(ast, {
@@ -216,7 +216,7 @@ interface IPreProcessRawCodeOptions {
   ctx: Context
 }
 
-export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
+export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
   const { code, replaceMap, ctx } = options
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   const markArr: [number, number][] = []
