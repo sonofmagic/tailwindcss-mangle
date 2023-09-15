@@ -270,7 +270,7 @@ describe('js handler', () => {
 
   it('preserve-fn-case0.js case 0', async () => {
     const testCase = getTestCase('preserve-fn-case0.js')
-    const ctx = new Context()
+
     await ctx.initConfig()
     const replaceMap = new Map()
     replaceMap.set('bg-red-500/50', 'a')
@@ -286,27 +286,20 @@ describe('js handler', () => {
 
   it('preserve-fn-case0.js case 1', async () => {
     const testCase = getTestCase('preserve-fn-case0.js')
-    const ctx = new Context({
-      preserveFunction: ['cn']
+
+    await ctx.initConfig({
+      classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
+      mangleOptions: {
+        preserveFunction: ['cn']
+      }
     })
 
-    const replaceMap = new Map()
-    replaceMap.set('bg-red-500/50', 'a')
-    replaceMap.set('bg-red-500', 'b')
-    replaceMap.set('w-2', 'c')
-    replaceMap.set('h-2', 'd')
-    replaceMap.set('w-1', 'e')
-    replaceMap.set('h-1', 'f')
-    replaceMap.set('bg-red-400', 'g')
-    replaceMap.set('bg-red-400/50', 'h')
-
-    await ctx.initConfig()
-    ctx.replaceMap = replaceMap
     //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
 
     // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
 
     // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
+    const replaceMap = ctx.getReplaceMap()
     const code = preProcessJs({
       code: testCase,
       ctx,
@@ -315,37 +308,27 @@ describe('js handler', () => {
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
-    expect(
-      [...ctx.getReplaceMap().entries()].reduce<Record<string, string>>((acc, cur) => {
-        acc[cur[0]] = cur[1]
-        return acc
-      }, {})
-    ).toMatchSnapshot()
+    expect(replaceMap).toMatchSnapshot()
+    // expect(
+    //   [...ctx.getReplaceMap().entries()].reduce<Record<string, string>>((acc, cur) => {
+    //     acc[cur[0]] = cur[1]
+    //     return acc
+    //   }, {})
+    // ).toMatchSnapshot()
   })
 
   it('preserve-fn-case0.js case 2', async () => {
     const testCase = getTestCase('preserve-fn-case0.js')
-    const ctx = new Context({
-      preserveFunction: ['twMerge']
+
+    await ctx.initConfig({
+      classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
+      mangleOptions: {
+        preserveFunction: ['twMerge']
+      }
     })
 
-    const replaceMap = new Map()
-    replaceMap.set('bg-red-500/50', 'a')
-    replaceMap.set('bg-red-500', 'b')
-    replaceMap.set('w-2', 'c')
-    replaceMap.set('h-2', 'd')
-    replaceMap.set('w-1', 'e')
-    replaceMap.set('h-1', 'f')
-    replaceMap.set('bg-red-400', 'g')
-    replaceMap.set('bg-red-400/50', 'h')
+    const replaceMap = ctx.getReplaceMap()
 
-    await ctx.initConfig()
-    ctx.replaceMap = replaceMap
-    //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
-
-    // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
-
-    // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
     const code = preProcessJs({
       code: testCase,
       ctx,
@@ -354,27 +337,21 @@ describe('js handler', () => {
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
-    expect(ctx.getReplaceMap()).toMatchSnapshot()
+    expect(replaceMap).toMatchSnapshot()
   })
 
   it('preserve-fn-case0.js case 3', async () => {
     const testCase = getTestCase('preserve-fn-case0.js')
-    const ctx = new Context({
-      preserveFunction: ['twMerge', 'cn']
+
+    await ctx.initConfig({
+      classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
+      mangleOptions: {
+        preserveFunction: ['twMerge', 'cn']
+      }
     })
 
-    const replaceMap = new Map()
-    replaceMap.set('bg-red-500/50', 'a')
-    replaceMap.set('bg-red-500', 'b')
-    replaceMap.set('w-2', 'c')
-    replaceMap.set('h-2', 'd')
-    replaceMap.set('w-1', 'e')
-    replaceMap.set('h-1', 'f')
-    replaceMap.set('bg-red-400', 'g')
-    replaceMap.set('bg-red-400/50', 'h')
+    const replaceMap = ctx.getReplaceMap()
 
-    await ctx.initConfig()
-    ctx.replaceMap = replaceMap
     //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
 
     // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
@@ -393,22 +370,15 @@ describe('js handler', () => {
 
   it('preProcessRawCode case 0', async () => {
     const testCase = getTestCase('preserve-fn-case0.vue')
-    const ctx = new Context({
-      preserveFunction: ['twMerge']
+    await ctx.initConfig({
+      classList: 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' '),
+      mangleOptions: {
+        preserveFunction: ['twMerge']
+      }
     })
-    const str = 'qwertyuiopasdfghjklzxcvbnm'
-    const replaceMap = new Map()
-    for (const [i, c] of 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' ').entries()) {
-      replaceMap.set(c, str[i])
-    }
 
-    await ctx.initConfig()
-    ctx.replaceMap = replaceMap
-    //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+    const replaceMap = ctx.getReplaceMap()
 
-    // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
-
-    // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
     const code = preProcessRawCode({
       code: testCase,
       ctx,
@@ -417,36 +387,49 @@ describe('js handler', () => {
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(6)
-    expect(ctx.getReplaceMap()).toMatchSnapshot()
+    expect(replaceMap).toMatchSnapshot()
   })
 
   it('preProcessRawCode case 1', async () => {
     const testCase = getTestCase('preserve-fn-case1.vue')
-    const ctx = new Context({
-      preserveFunction: ['twMerge']
+
+    await ctx.initConfig({
+      classList: require('./fixtures/preserve-fn-case1.json') as string[],
+      mangleOptions: {
+        preserveFunction: ['twMerge']
+      }
     })
-
-    const list = require('./fixtures/preserve-fn-case1.json') as string[]
-    const replaceMap = new Map()
-    for (const cls of list) {
-      replaceMap.set(cls, 'i')
-    }
-
-    await ctx.initConfig()
-    ctx.replaceMap = replaceMap
-    //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
-
-    // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
-
-    // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
+    const replaceMap = ctx.getReplaceMap()
     const code = preProcessRawCode({
       code: testCase,
       ctx,
-      replaceMap: ctx.getReplaceMap(),
+      replaceMap,
       id: 'xxx'
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(6)
-    expect(ctx.getReplaceMap()).toMatchSnapshot()
+    expect(replaceMap).toMatchSnapshot()
+  })
+
+  it('preProcessRawCode case 2', async () => {
+    const testCase = getTestCase('preserve-fn-case2.vue')
+
+    await ctx.initConfig({
+      classList: require('./fixtures/preserve-fn-case2.json') as string[],
+      mangleOptions: {
+        preserveFunction: ['twMerge']
+      }
+    })
+    const replaceMap = ctx.getReplaceMap()
+
+    const code = preProcessRawCode({
+      code: testCase,
+      ctx,
+      replaceMap,
+      id: 'xxx'
+    })
+    expect(code).toMatchSnapshot()
+    expect(ctx.preserveClassNamesSet.size).toBe(8)
+    expect(replaceMap).toMatchSnapshot()
   })
 })

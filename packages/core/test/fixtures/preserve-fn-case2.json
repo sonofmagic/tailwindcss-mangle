@@ -1,0 +1,19 @@
+[
+  "bg-[#B91C1C]",
+  "bg-red-100",
+  "drop-shadow",
+  "filter",
+  "flex",
+  "flex-col",
+  "hover:bg-red-100",
+  "hover:bg-red-800",
+  "items-center",
+  "justify-between",
+  "lg:dark:bg-red-100",
+  "min-h-screen",
+  "p-24",
+  "p-3",
+  "px-2",
+  "py-1",
+  "transition"
+]

@@ -52,6 +52,7 @@
     }
   },
   "scripts": {
+    "dev": "unbuild --sourcemap",
     "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"

@@ -24,6 +24,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "unbuild --sourcemap",
     "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
@@ -51,11 +52,9 @@
     "@babel/types": "^7.22.17",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "@vue/compiler-sfc": "^3.3.4",
     "fast-sort": "^3.4.0",
     "magic-string": "^0.30.3",
     "micromatch": "^4.0.5",
-    "modern-ahocorasick": "^1.0.0",
     "parse5": "^7.1.2",
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13"
@@ -65,11 +64,18 @@
     "@types/babel__core": "^7.20.1",
     "@types/babel__traverse": "^7.20.1",
     "@types/micromatch": "^4.0.2",
-    "@vue/compiler-core": "^3.3.4"
+    "@vue/compiler-core": "^3.3.4",
+    "@vue/compiler-sfc": "^3.3.4"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
+  },
+  "directories": {
+    "test": "test"
   }
 }

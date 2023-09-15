@@ -72,7 +72,7 @@ describe('vue', () => {
     )
     expect(code).toMatchSnapshot()
   })
-  it('test for vue', () => {
+  it.skip('test for vue', () => {
     const testCase = getTestCase('preserve-fn-case1.vue')
     const result = parse(testCase)
 

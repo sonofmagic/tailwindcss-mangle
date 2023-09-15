@@ -5,34 +5,36 @@ import { getConfig } from '@tailwindcss-mangle/config'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import { sort } from 'fast-sort'
 import defu from 'defu'
-import AhoCorasick from 'modern-ahocorasick'
 import { createGlobMatcher, defaultMangleClassFilter, escapeStringRegexp } from '@/utils'
+
+interface InitConfigOptions {
+  cwd?: string
+  classList?: string[]
+  mangleOptions?: MangleUserConfig
+}
 
 export class Context {
   options: MangleUserConfig
-  includeMatcher: (file: string) => boolean
-  excludeMatcher: (file: string) => boolean
+  private includeMatcher: (file: string) => boolean
+  private excludeMatcher: (file: string) => boolean
+  private replaceMap: Map<string, string>
   classSet: Set<string>
-  replaceMap: Map<string, string>
+
   classGenerator: ClassGenerator
-  ahoCorasick?: AhoCorasick
-  useAC: boolean
+
   preserveFunctionSet: Set<string>
   preserveClassNamesSet: Set<string>
   preserveFunctionRegexs: RegExp[]
-  constructor(opts: MangleUserConfig = {}) {
-    this.options = opts //  defu(opts, getDefaultMangleUserConfig())
+  constructor() {
+    this.options = {}
     this.classSet = new Set()
     this.replaceMap = new Map()
-    this.includeMatcher = createGlobMatcher(this.options.include, true)
-    this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
-    this.classGenerator = new ClassGenerator(this.options.classGenerator)
-    this.useAC = false
-    this.preserveFunctionSet = new Set(opts.preserveFunction)
+    this.includeMatcher = () => true
+    this.excludeMatcher = () => false
+    this.classGenerator = new ClassGenerator()
+    this.preserveFunctionSet = new Set()
     this.preserveClassNamesSet = new Set()
-    this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
-      return new RegExp(escapeStringRegexp(x) + '\\(([^)]*)\\)', 'g')
-    })
+    this.preserveFunctionRegexs = []
   }
 
   isPreserveClass(className: string) {
@@ -50,12 +52,16 @@ export class Context {
     return this.preserveFunctionSet.has(calleeName)
   }
 
-  mergeOptions(opts?: MangleUserConfig) {
+  private mergeOptions(opts?: MangleUserConfig) {
     // 配置选项优先
     this.options = defu(this.options, opts)
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
+    this.preserveFunctionSet = new Set(opts?.preserveFunction ?? [])
+    this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
+      return new RegExp(escapeStringRegexp(x) + '\\(([^)]*)\\)', 'g')
+    })
   }
 
   isInclude(file: string) {
@@ -87,57 +93,42 @@ export class Context {
     }
   }
 
-  search(str: string) {
-    const arr = this.ahoCorasick?.search(str) ?? []
-    const map = new Map<string, [number, number][]>()
-    for (const [end, classNames] of arr) {
-      for (const className of classNames) {
-        if (map.has(className)) {
-          const v = map.get(className)
-          if (v) {
-            v.push([end - className.length + 1, end + 1])
-          }
-        } else {
-          map.set(className, [[end - className.length + 1, end + 1]])
-        }
-      }
-    }
-    // end - str.length + 1, end + 1, value
-    return {
-      map,
-      arr: sort([...map.entries()]).desc((x) => x[0].length)
-    }
-  }
-
-  async initConfig(cwd?: string) {
+  async initConfig(opts: InitConfigOptions = {}) {
+    const { cwd, classList: _classList, mangleOptions } = opts
     const { config, cwd: configCwd } = await getConfig(cwd)
-    const mangleConfig = config?.mangle
+    const mangleConfig = mangleOptions ?? config?.mangle
     this.mergeOptions(mangleConfig)
-
-    let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
-    if (!isAbsolute(jsonPath)) {
-      jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)
-    }
-
-    if (jsonPath && fs.existsSync(jsonPath)) {
-      const rawClassList = fs.readFileSync(jsonPath, 'utf8')
-      const list = JSON.parse(rawClassList) as string[]
-      // why?
-      // cause bg-red-500 and bg-red-500/50 same time
-      // transform bg-red-500/50 first
-      const classList = sort(list).desc((c) => c.length)
+    if (_classList) {
+      const classList = sort(_classList).desc((c) => c.length)
       for (const className of classList) {
         if (this.currentMangleClassFilter(className)) {
           this.classSet.add(className)
         }
       }
+    } else {
+      let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
+      if (!isAbsolute(jsonPath)) {
+        jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)
+      }
+
+      if (jsonPath && fs.existsSync(jsonPath)) {
+        const rawClassList = fs.readFileSync(jsonPath, 'utf8')
+        const list = JSON.parse(rawClassList) as string[]
+        // why?
+        // cause bg-red-500 and bg-red-500/50 same time
+        // transform bg-red-500/50 first
+        const classList = sort(list).desc((c) => c.length)
+        for (const className of classList) {
+          if (this.currentMangleClassFilter(className)) {
+            this.classSet.add(className)
+          }
+        }
+      }
     }
-    const keywords: string[] = []
+
     for (const cls of this.classSet) {
       this.classGenerator.generateClassName(cls)
-      keywords.push(cls)
     }
-    this.ahoCorasick = new AhoCorasick(keywords)
 
     for (const x of Object.entries(this.classGenerator.newClassMap)) {
       this.replaceMap.set(x[0], x[1].name)
