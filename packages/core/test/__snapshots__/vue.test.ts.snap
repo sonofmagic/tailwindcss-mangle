@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`vue > module mode preamble 1`] = `
+"import { createVNode as _createVNode, resolveDirective as _resolveDirective } from \\"vue\\"
+
+export function render(_ctx, _cache) {
+  return null
+}"
+`;
