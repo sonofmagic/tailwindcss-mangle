@@ -432,4 +432,36 @@ describe('js handler', () => {
     expect(ctx.preserveClassNamesSet.size).toBe(8)
     expect(replaceMap).toMatchSnapshot()
   })
+
+  it('tsx app0', async () => {
+    await ctx.initConfig({
+      classList: require('./fixtures/app0.json') as string[]
+    })
+    const replaceMap = ctx.getReplaceMap()
+    const code = getTestCase('app0.tsx')
+
+    const res = preProcessJs({
+      code,
+      replaceMap,
+      ctx,
+      id: 'xxx'
+    })
+    expect(res).toMatchSnapshot()
+  })
+
+  it('ts vanilla-0', async () => {
+    await ctx.initConfig({
+      classList: require('./fixtures/vanilla-0.json') as string[]
+    })
+    const replaceMap = ctx.getReplaceMap()
+    const code = getTestCase('vanilla-0.ts')
+
+    const res = preProcessJs({
+      code,
+      replaceMap,
+      ctx,
+      id: 'xxx'
+    })
+    expect(res).toMatchSnapshot()
+  })
 })

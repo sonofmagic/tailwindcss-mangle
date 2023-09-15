@@ -9,18 +9,16 @@ import { pluginName } from '@/constants'
 import { ensureDir, getGroupedEntries } from '@/utils'
 
 export const unplugin = createUnplugin((options?: MangleUserConfig) => {
-  const ctx = new Context(options)
-  if (ctx.options.disabled) {
-    return {
-      name: pluginName
-    }
-  }
+  const ctx = new Context()
+
   return {
     name: pluginName,
     enforce: 'pre',
 
     async buildStart() {
-      await ctx.initConfig()
+      await ctx.initConfig({
+        mangleOptions: options
+      })
     },
     transformInclude(id) {
       return ctx.isInclude(id)
@@ -29,44 +27,19 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
       const s = new MagicString(code)
       const replaceMap = ctx.getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-      if (/\.[jt]sx?$/.test(id)) {
-        return preProcessJs({
-          code: s,
-          replaceMap,
-          ctx,
-          id
-        })
-      } else if (ctx.useAC) {
-        // should be sort first
-        const { arr } = ctx.search(code)
-        const markArr: [number, number][] = []
-        for (const [cls, ranges] of arr) {
-          for (const [start, end] of ranges) {
-            const value = replaceMap.get(cls)
-            if (value) {
-              let flag = true
-              for (const [ps, pe] of markArr) {
-                if ((start > ps && start < pe) || (end < pe && end > ps)) {
-                  flag = false
-                  break
-                }
-              }
-              if (flag) {
-                markArr.push([start, end])
-                s.update(start, end, value)
-              }
-            }
-          }
-        }
-        return s.toString()
-      } else {
-        return preProcessRawCode({
-          code,
-          ctx,
-          replaceMap,
-          id
-        })
-      }
+      return /\.[jt]sx?$/.test(id)
+        ? preProcessJs({
+            code: s,
+            replaceMap,
+            ctx,
+            id
+          })
+        : preProcessRawCode({
+            code,
+            ctx,
+            replaceMap,
+            id
+          })
     },
     vite: {
       generateBundle: {

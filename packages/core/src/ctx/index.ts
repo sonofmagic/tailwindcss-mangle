@@ -52,13 +52,13 @@ export class Context {
     return this.preserveFunctionSet.has(calleeName)
   }
 
-  private mergeOptions(opts?: MangleUserConfig) {
+  private mergeOptions(...opts: (MangleUserConfig | undefined)[]) {
     // 配置选项优先
-    this.options = defu(this.options, opts)
+    this.options = defu(this.options, ...opts)
     this.includeMatcher = createGlobMatcher(this.options.include, true)
     this.excludeMatcher = createGlobMatcher(this.options.exclude, false)
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
-    this.preserveFunctionSet = new Set(opts?.preserveFunction ?? [])
+    this.preserveFunctionSet = new Set(this.options?.preserveFunction ?? [])
     this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
       return new RegExp(escapeStringRegexp(x) + '\\(([^)]*)\\)', 'g')
     })
@@ -96,8 +96,8 @@ export class Context {
   async initConfig(opts: InitConfigOptions = {}) {
     const { cwd, classList: _classList, mangleOptions } = opts
     const { config, cwd: configCwd } = await getConfig(cwd)
-    const mangleConfig = mangleOptions ?? config?.mangle
-    this.mergeOptions(mangleConfig)
+
+    this.mergeOptions(mangleOptions, config?.mangle)
     if (_classList) {
       const classList = sort(_classList).desc((c) => c.length)
       for (const className of classList) {

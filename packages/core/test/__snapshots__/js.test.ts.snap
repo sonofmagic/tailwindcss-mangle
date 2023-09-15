@@ -744,6 +744,177 @@ exports[`js handler > trailing slash case 1 1`] = `"document.querySelector(\\"#a
 
 exports[`js handler > trailing slash case 2 1`] = `"document.querySelector(\\"#app\\").classList.add(\\"tw-a tw-b tw-a s tw-a\\");"`;
 
+exports[`js handler > ts vanilla-0 1`] = `
+"import './style.css'
+import typescriptLogo from './typescript.svg'
+
+import { setupCounter } from './counter'
+
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = \`
+<main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
+<div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
+  <p
+    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m\\">
+    Get started by editing&nbsp;
+    <code class=\\"tw-ob tw-nb\\">pages/index.tsx</code>
+  </p>
+  <div
+    class=\\"fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb\\">
+    <a class=\\"tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec\\"
+      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+      By
+      <img src=\\"\${typescriptLogo}\\" alt=\\"Vercel Logo\\" class=\\"tw-hb\\" priority />
+    </a>
+  </div>
+</div>
+
+<div
+  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
+  <img class=\\"relative tw-a tw-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+    priority />
+</div>
+
+<div class=\\"tw-ic grid tw-ib tw-bc tw-xa tw-db\\">
+  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Docs <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Find in-depth information about Next.js
+      features and API.</p>
+  </a>
+
+  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Learn <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Learn about Next.js in an interactive
+      course with&nbsp;quizzes!</p>
+  </a>
+
+  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Templates <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Discover and deploy boilerplate example
+      Next.js&nbsp;projects.</p>
+  </a>
+
+  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
+    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+      Deploy <span
+        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+    </h2>
+    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Instantly deploy your Next.js site to a
+      shareable URL with Vercel.</p>
+  </a>
+</div>
+</main>
+\`
+
+setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+"
+`;
+
+exports[`js handler > tsx app0 1`] = `
+"import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+
+import './App.css'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <main className=\\"flex tw-fb tw-zb tw-cb tw-ra tw-nc\\">
+      <div className=\\"tw-sc tw-hc tw-vb tw-cb tw-ra tw-pb tw-dc tw-bc\\">
+        <p className=\\"fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m\\">
+          Get started by editing&nbsp;
+          <code className=\\"tw-pb tw-ob\\">pages/index.tsx</code>
+        </p>
+        <div className=\\"fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-jb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-kb\\">
+          <a
+            className=\\"tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc\\"
+            href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+            target=\\"_blank\\"
+            rel=\\"noopener noreferrer\\"
+          >
+            By <img src=\\"/vite.svg\\" alt=\\"Vercel Logo\\" className=\\"tw-hb\\" width={100} height={24} />
+          </a>
+        </div>
+      </div>
+
+      <div className=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
+        <img className=\\"relative tw-a tw-hb\\" src={reactLogo} alt=\\"Next.js Logo\\" width={180} height={37} />
+      </div>
+
+      <div className=\\"tw-jc grid tw-ib tw-cc tw-xa tw-db\\">
+        <a
+          href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
+          target=\\"_blank\\"
+          rel=\\"noopener noreferrer\\"
+        >
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
+            Docs <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+          </h2>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Find in-depth information about Next.js features and API.</p>
+        </a>
+
+        <a
+          href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
+          target=\\"_blank\\"
+          rel=\\"noopener noreferrer\\"
+        >
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
+            Learn <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+          </h2>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
+        </a>
+
+        <a
+          href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
+          target=\\"_blank\\"
+          rel=\\"noopener noreferrer\\"
+        >
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
+            Templates <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+          </h2>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
+        </a>
+
+        <a
+          href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
+          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
+          target=\\"_blank\\"
+          rel=\\"noopener noreferrer\\"
+        >
+          <h2 className={\` tw-mc tw-ac tw-ya\`}>
+            Deploy <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+          </h2>
+          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
+        </a>
+      </div>
+    </main>
+  )
+}
+
+export default App"
+`;
+
 exports[`js handler > z-10 not transform 1`] = `
 "{
   className: \\"tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h\\";
