@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "patch tailwindcss for exposing context and extract classes",
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
