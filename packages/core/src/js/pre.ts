@@ -4,8 +4,7 @@ import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
-import { parse, ParseResult } from '@babel/parser'
-import traverse from '@babel/traverse'
+import type { ParseResult } from '@babel/parser'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
@@ -147,7 +146,7 @@ export function preProcessJs(options: IPreProcessJsOptions) {
     return code
   }
   const markedArray: [number, number][] = []
-  traverse(ast, {
+  babel.traverse(ast, {
     CallExpression: {
       enter(p) {
         const callee = p.get('callee')
@@ -230,34 +229,36 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
     }
     //  magicString.original.matchAll(regex)
     for (const regExpMatch of allArr) {
-      let ast: ParseResult<babel.types.File>
+      let ast: ParseResult<babel.types.File> | null
       try {
-        ast = parse(regExpMatch[0], {
+        ast = babel.parseSync(regExpMatch[0], {
           sourceType: 'unambiguous'
         })
-        traverse(ast, {
-          StringLiteral: {
-            enter(p) {
-              const arr = sort(splitCode(p.node.value)).desc((x) => x.length)
 
-              for (const v of arr) {
-                if (replaceMap.has(v)) {
-                  ctx.addPreserveClass(v)
+        ast &&
+          babel.traverse(ast, {
+            StringLiteral: {
+              enter(p) {
+                const arr = sort(splitCode(p.node.value)).desc((x) => x.length)
+
+                for (const v of arr) {
+                  if (replaceMap.has(v)) {
+                    ctx.addPreserveClass(v)
+                  }
+                }
+              }
+            },
+            TemplateElement: {
+              enter(p) {
+                const arr = sort(splitCode(p.node.value.raw)).desc((x) => x.length)
+                for (const v of arr) {
+                  if (replaceMap.has(v)) {
+                    ctx.addPreserveClass(v)
+                  }
                 }
               }
             }
-          },
-          TemplateElement: {
-            enter(p) {
-              const arr = sort(splitCode(p.node.value.raw)).desc((x) => x.length)
-              for (const v of arr) {
-                if (replaceMap.has(v)) {
-                  ctx.addPreserveClass(v)
-                }
-              }
-            }
-          }
-        })
+          })
       } catch {
         continue
       }
