@@ -10,7 +10,7 @@ import { Context } from '@/index'
 //   return _jsHandler(str, options)
 // }
 
-describe('js handler', () => {
+describe('js handler', async () => {
   // let classGenerator: ClassGenerator
   let ctx: Context
   beforeEach(() => {
@@ -456,6 +456,30 @@ describe('js handler', () => {
     const replaceMap = ctx.getReplaceMap()
     const code = getTestCase('vanilla-0.ts')
 
+    const res = preProcessJs({
+      code,
+      replaceMap,
+      ctx,
+      id: 'xxx'
+    })
+    expect(res).toMatchSnapshot()
+  })
+
+  it('cn', async () => {
+    const code = `const bbb = cn(
+      {
+        'p-3': true
+      },
+      'p-1',
+      ['p-2', true && 'p-4']
+    )`
+    await ctx.initConfig({
+      classList: 'p-1 p-2 p-3 p-4'.split(' '),
+      mangleOptions: {
+        preserveFunction: ['cn']
+      }
+    })
+    const replaceMap = ctx.getReplaceMap()
     const res = preProcessJs({
       code,
       replaceMap,

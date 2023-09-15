@@ -2,15 +2,24 @@ import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import { cn } from './utils'
 // 'hover:bg-dark-red p-3 bg-[#B91C1C]'
 const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
-
+const bbb = cn(
+  {
+    'p-3': true
+  },
+  'p-1',
+  ['p-2', true && 'p-4']
+)
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <main className="px-2 py-1 bg-red-100 hover:bg-red-800 flex min-h-screen flex-col items-center justify-between p-24">
       <nav className={aaa}>{aaa}</nav>
+      <nav className={bbb}>{bbb}</nav>
+      <nav className="p-3">ccc</nav>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;

@@ -6,15 +6,16 @@ import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
 import { parse, ParseResult } from '@babel/parser'
 import traverse from '@babel/traverse'
-import { getStringLiteralCalleeName, getTemplateElementCalleeName } from './utils'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
+import { between } from '@/math'
 
 interface Options {
   replaceMap: Map<string, string>
   magicString: MagicString
   id: string
   ctx: Context
+  markedArray: [number, number][]
 }
 
 type HandleValueOptions = {
@@ -22,21 +23,25 @@ type HandleValueOptions = {
   path: babel.NodePath<babel.types.StringLiteral | babel.types.TemplateElement>
   offset: number
   escape: boolean
-  preserve: boolean
 } & Options
 
 export function handleValue(options: HandleValueOptions) {
-  const { ctx, id, path, magicString, raw, replaceMap, offset = 0, escape = false, preserve = false } = options
+  const { ctx, id, path, magicString, raw, replaceMap, offset = 0, escape = false, markedArray } = options
   const node = path.node
   let value = raw
+  // why 字符串字面量只要开始和结束 在 方法节点内就保留, 另外不可能出现 字符串字面量 开始和结束的下标整个包括 方法体，这是不可能出现的事情
+  for (const [s, e] of markedArray) {
+    if (between(node.start, s, e) || between(node.end, s, e)) {
+      return
+    }
+  }
+
   const arr = sort(splitCode(value)).desc((x) => x.length)
 
   for (const str of arr) {
     if (replaceMap.has(str)) {
       ctx.addToUsedBy(str, id)
-      if (preserve) {
-        ctx.addPreserveClass(str)
-      }
+
       // replace
       const v = replaceMap.get(str)
       if (v) {
@@ -44,9 +49,7 @@ export function handleValue(options: HandleValueOptions) {
       }
     }
   }
-  if (preserve) {
-    return
-  }
+
   if (typeof node.start === 'number' && typeof node.end === 'number' && value) {
     const start = node.start + offset
     const end = node.end - offset
@@ -58,11 +61,11 @@ export function handleValue(options: HandleValueOptions) {
 
 export const JsPlugin = declare((api, options: Options) => {
   api.assertVersion(7)
-  const { magicString, replaceMap, id, ctx } = options
+  const { magicString, replaceMap, id, ctx, markedArray } = options
   return {
     visitor: {
       StringLiteral: {
-        enter(p) {
+        exit(p) {
           const opts: HandleValueOptions = {
             ctx,
             id,
@@ -72,17 +75,14 @@ export const JsPlugin = declare((api, options: Options) => {
             replaceMap,
             offset: 1,
             escape: true,
-            preserve: false
+            markedArray
           }
-          const calleeName = getStringLiteralCalleeName(p)
-          if (calleeName && ctx.isPreserveFunction(calleeName)) {
-            opts.preserve = true
-          }
+
           handleValue(opts)
         }
       },
       TemplateElement: {
-        enter(p) {
+        exit(p) {
           const opts: HandleValueOptions = {
             ctx,
             id,
@@ -92,12 +92,9 @@ export const JsPlugin = declare((api, options: Options) => {
             replaceMap,
             offset: 0,
             escape: false,
-            preserve: false
+            markedArray
           }
-          const calleeName = getTemplateElementCalleeName(p)
-          if (calleeName && ctx.isPreserveFunction(calleeName)) {
-            opts.preserve = true
-          }
+
           handleValue(opts)
         }
       }
@@ -112,27 +109,88 @@ interface IPreProcessJsOptions {
   ctx: Context
 }
 
-function transformSync(code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
-  babel.transformSync(code, {
-    presets: [
-      // ['@babel/preset-react', {}],
-      [
-        require('@babel/preset-typescript'),
-        {
-          allExtensions: true,
-          isTSX: true
-        }
-      ]
-    ],
+function transformSync(ast: babel.types.Node, code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
+  babel.transformFromAstSync(ast, code, {
+    presets: loadPresets(),
     plugins,
     filename
   })
 }
 
+export function loadPresets() {
+  return [
+    [
+      require('@babel/preset-typescript'),
+      {
+        allExtensions: true,
+        isTSX: true
+      }
+    ]
+  ]
+}
+
 export function preProcessJs(options: IPreProcessJsOptions) {
   const { code, replaceMap, id, ctx } = options
   const magicString = typeof code === 'string' ? new MagicString(code) : code
+  let ast: ParseResult<babel.types.File>
+  try {
+    const file = babel.parseSync(magicString.original, {
+      sourceType: 'unambiguous',
+      presets: loadPresets()
+    })
+    if (file) {
+      ast = file
+    } else {
+      return code
+    }
+  } catch {
+    return code
+  }
+  const markedArray: [number, number][] = []
+  traverse(ast, {
+    CallExpression: {
+      enter(p) {
+        const callee = p.get('callee')
+        if (callee.isIdentifier() && ctx.isPreserveFunction(callee.node.name)) {
+          if (p.node.start && p.node.end) {
+            markedArray.push([p.node.start, p.node.end])
+          }
+
+          p.traverse({
+            StringLiteral: {
+              enter(path) {
+                const node = path.node
+                const value = node.value
+                const arr = sort(splitCode(value)).desc((x) => x.length)
+
+                for (const str of arr) {
+                  if (replaceMap.has(str)) {
+                    ctx.addPreserveClass(str)
+                  }
+                }
+              }
+            },
+            TemplateElement: {
+              enter(path) {
+                const node = path.node
+                const value = node.value.raw
+                const arr = sort(splitCode(value)).desc((x) => x.length)
+
+                for (const str of arr) {
+                  if (replaceMap.has(str)) {
+                    ctx.addPreserveClass(str)
+                  }
+                }
+              }
+            }
+          })
+        }
+      }
+    }
+  })
+
   transformSync(
+    ast,
     magicString.original,
     [
       [
@@ -141,7 +199,8 @@ export function preProcessJs(options: IPreProcessJsOptions) {
           magicString,
           replaceMap,
           id,
-          ctx
+          ctx,
+          markedArray
         }
       ]
     ],
@@ -203,10 +262,8 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
         continue
       }
     }
-    // console.log(arr, regex.lastIndex)
   }
   for (const [key, value] of replaceMap) {
-    // if (!ctx.isPreserveClass(key)) {
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
     const regex = new RegExp(escapeStringRegexp(key), 'g')
     let arr: RegExpExecArray | null = null
@@ -215,7 +272,7 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
       const end = arr.index + arr[0].length
       let shouldUpdate = true
       for (const [ps, pe] of markArr) {
-        if ((start > ps && start < pe) || (end < pe && end > ps)) {
+        if (between(start, ps, pe) || between(end, ps, pe)) {
           shouldUpdate = false
           break
         }
@@ -228,8 +285,4 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions) {
   }
 
   return magicString.toString()
-  // for (const [key, value] of replaceMap) {
-  //   code = code.replaceAll(key, value)
-  // }
-  // return code
 }

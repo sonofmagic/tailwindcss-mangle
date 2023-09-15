@@ -1,5 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`js handler > cn 1`] = `
+"const bbb = cn(
+      {
+        'p-3': true
+      },
+      'p-1',
+      ['p-2', true && 'p-4']
+    )"
+`;
+
 exports[`js handler > comment-ignore case 1`] = `
 "const clipPath = [\`circle()\`];
 document.documentElement.animate({
