@@ -13,6 +13,11 @@ exports[`css > preserveClassNamesSet case 0 1`] = `
 .tw-a {color:red;}"
 `;
 
+exports[`css > preserveClassNamesSet case 1 1`] = `
+".gap-y-4 {color:red;}
+.tw-a {color:red;}"
+`;
+
 exports[`css > vue scoped .gap-y-4 1`] = `
 "@media (min-width: 768px) {
       .tw-a {

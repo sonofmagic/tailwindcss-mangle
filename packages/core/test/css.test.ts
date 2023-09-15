@@ -21,6 +21,19 @@ describe('css', () => {
     expect(css).toMatchSnapshot()
   })
 
+  it('preserveClassNamesSet case 1', async () => {
+    await ctx.initConfig({
+      classList: ['gap-y-4']
+    })
+    const testCase = `.gap-y-4 {color:red;}`
+    ctx.addPreserveClass('gap-y-4')
+    const { css } = await cssHandler(testCase, {
+      ctx,
+      replaceMap: ctx.getReplaceMap()
+    })
+    expect(css).toMatchSnapshot()
+  })
+
   it('vue scoped .gap-y-4', async () => {
     const replaceMap = new Map()
     replaceMap.set('gap-y-4', 'tw-a')

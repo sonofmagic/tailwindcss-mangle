@@ -26,8 +26,6 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
     ignoreVueScoped: true
   })
 
-  const utilitiesSet = new Set<string>()
-
   return {
     postcssPlugin,
     async Rule(rule) {
@@ -36,18 +34,6 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
         return
       }
       await parser((selectors) => {
-        let flag = false
-        selectors.walkClasses((s) => {
-          if (ctx.isPreserveClass(s.value) && !utilitiesSet.has(rule.selector)) {
-            flag = true
-          }
-        })
-        if (flag) {
-          const r = rule.cloneBefore()
-          // @ts-ignore
-          r[clonedKey] = true
-        }
-
         selectors.walkClasses((s) => {
           if (s.value && replaceMap && replaceMap.has(s.value)) {
             if (ignoreVueScoped && isVueScoped(s)) {
@@ -55,6 +41,11 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
             }
             const v = replaceMap.get(s.value)
             if (v) {
+              if (ctx.isPreserveClass(s.value)) {
+                const r = rule.cloneBefore()
+                // @ts-ignore
+                r[clonedKey] = true
+              }
               s.value = v
             }
           }

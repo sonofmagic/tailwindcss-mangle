@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/core",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "The core of tailwindcss-mangle",
   "exports": {
     ".": {
@@ -44,12 +44,12 @@
   },
   "dependencies": {
     "@ast-core/escape": "^1.0.1",
-    "@babel/core": "^7.22.17",
+    "@babel/core": "^7.22.19",
     "@babel/helper-plugin-utils": "^7.22.5",
     "@babel/parser": "^7.22.16",
     "@babel/preset-typescript": "^7.22.15",
-    "@babel/traverse": "^7.22.17",
-    "@babel/types": "^7.22.17",
+    "@babel/traverse": "^7.22.19",
+    "@babel/types": "^7.22.19",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.0",

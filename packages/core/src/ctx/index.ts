@@ -77,13 +77,13 @@ export class Context {
   }
 
   getReplaceMap() {
-    const map = new Map<string, string>()
-    for (const [key, value] of sort([...this.replaceMap.entries()]).desc((x) => x[0].length)) {
-      if (!this.isPreserveClass(key)) {
-        map.set(key, value)
-      }
-    }
-    return map
+    // const map = new Map<string, string>()
+    // for (const [key, value] of sort([...this.replaceMap.entries()]).desc((x) => x[0].length)) {
+    //   if (!this.isPreserveClass(key)) {
+    //     map.set(key, value)
+    //   }
+    // }
+    return this.replaceMap // map
   }
 
   addToUsedBy(key: string, file: string) {
@@ -93,18 +93,22 @@ export class Context {
     }
   }
 
+  loadClassSet(classList: string[]) {
+    const list = sort(classList).desc((c) => c.length)
+    for (const className of list) {
+      if (this.currentMangleClassFilter(className)) {
+        this.classSet.add(className)
+      }
+    }
+  }
+
   async initConfig(opts: InitConfigOptions = {}) {
     const { cwd, classList: _classList, mangleOptions } = opts
     const { config, cwd: configCwd } = await getConfig(cwd)
 
     this.mergeOptions(mangleOptions, config?.mangle)
     if (_classList) {
-      const classList = sort(_classList).desc((c) => c.length)
-      for (const className of classList) {
-        if (this.currentMangleClassFilter(className)) {
-          this.classSet.add(className)
-        }
-      }
+      this.loadClassSet(_classList)
     } else {
       let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
       if (!isAbsolute(jsonPath)) {
@@ -117,12 +121,7 @@ export class Context {
         // why?
         // cause bg-red-500 and bg-red-500/50 same time
         // transform bg-red-500/50 first
-        const classList = sort(list).desc((c) => c.length)
-        for (const className of classList) {
-          if (this.currentMangleClassFilter(className)) {
-            this.classSet.add(className)
-          }
-        }
+        this.loadClassSet(list)
       }
     }
 
