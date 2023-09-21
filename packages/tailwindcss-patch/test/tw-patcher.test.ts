@@ -67,4 +67,10 @@ describe('class', () => {
 
     twPatcher.setCache(new Set())
   })
+
+  it('extract', async () => {
+    const twPatcher = new TailwindcssPatcher()
+    const filename = await twPatcher.extract()
+    console.log(filename)
+  })
 })

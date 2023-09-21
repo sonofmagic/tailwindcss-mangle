@@ -3,8 +3,8 @@ import { dirname } from 'node:path'
 import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
-import { UserConfig } from './config'
 import { processTailwindcss } from './postcss'
+import { UserConfig } from '@/config'
 import { ensureDir } from '@/utils'
 import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
 export class TailwindcssPatcher {
@@ -67,7 +67,7 @@ export class TailwindcssPatcher {
     return getContexts(basedir)
   }
 
-  async extract(options: UserConfig['patch']) {
+  async extract(options?: UserConfig['patch']) {
     const { output, tailwindcss } = options ?? {}
     if (output && tailwindcss) {
       const { removeUniversalSelector, filename, loose } = output

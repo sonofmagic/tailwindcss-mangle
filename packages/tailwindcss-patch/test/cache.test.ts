@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import { getCss } from './utils'
 import { pkgName } from '@/constants'
 import { TailwindcssPatcher, CacheManager } from '@/core'
+import { getCacheOptions } from '@/core/cache'
 
 describe('cache', () => {
   let cm: CacheManager
@@ -12,6 +13,12 @@ describe('cache', () => {
   it('getCacheOptions', () => {
     expect(cm.getOptions).toBeDefined()
     expect(cm.getOptions().dir).toBe(path.resolve(process.cwd(), './node_modules/.cache', pkgName))
+    expect(getCacheOptions(false)).toEqual({
+      enable: false
+    })
+    expect(getCacheOptions(true)).toEqual({
+      enable: true
+    })
   })
 
   it('mkCacheDirectory', () => {

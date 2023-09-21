@@ -3,8 +3,10 @@ import fs from 'node:fs'
 import type { TailwindcssClassCache, TailwindcssRuntimeContext } from '@/types'
 import { requireResolve } from '@/utils'
 
-export function getTailwindcssEntry(basedir: string = process.cwd()) {
-  return requireResolve('tailwindcss')
+export function getTailwindcssEntry(basedir?: string) {
+  return requireResolve('tailwindcss', {
+    basedir
+  })
 }
 
 export function getContexts(basedir?: string): TailwindcssRuntimeContext[] {

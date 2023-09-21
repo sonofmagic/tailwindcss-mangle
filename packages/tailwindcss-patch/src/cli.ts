@@ -1,5 +1,6 @@
 import cac from 'cac'
-import { createPatch, getPatchOptions, TailwindcssPatcher, getConfig, initConfig, configName } from './core'
+import { getConfig, initConfig, configName } from './config'
+import { createPatch, getPatchOptions, TailwindcssPatcher } from './core'
 
 function init() {
   const cwd = process.cwd()
