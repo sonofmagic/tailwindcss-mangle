@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/config",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "The config and load function of tailwindcss-mangle",
   "exports": {
     ".": {
