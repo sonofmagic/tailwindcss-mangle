@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@tailwindcss-mangle/shared": "workspace:^",
-    "c12": "^1.4.2",
+    "c12": "^1.5.1",
     "dedent": "^1.5.1"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
