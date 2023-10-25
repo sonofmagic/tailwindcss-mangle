@@ -11,21 +11,21 @@
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "@remix-run/node": "^1.19.3",
-    "@remix-run/react": "^1.19.3",
-    "@remix-run/serve": "^1.19.3",
-    "isbot": "^3.6.13",
+    "@remix-run/node": "^2.1.0",
+    "@remix-run/react": "^2.1.0",
+    "@remix-run/serve": "^2.1.0",
+    "isbot": "^3.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.19.3",
-    "@remix-run/eslint-config": "^1.19.3",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "eslint": "^8.47.0",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.1.6"
+    "@remix-run/dev": "^2.1.0",
+    "@remix-run/eslint-config": "^2.1.0",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "eslint": "^8.52.0",
+    "tailwindcss": "^3.3.4",
+    "typescript": "^5.2.2"
   },
   "engines": {
     "node": ">=14"

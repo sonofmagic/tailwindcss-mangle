@@ -90,7 +90,7 @@
     "normalize-newline": "^4.1.0",
     "postcss": "^8.4.31",
     "postcss-loader": "^7.3.3",
-    "tailwindcss": "^3.3.3",
+    "tailwindcss": "^3.3.4",
     "tailwindcss-patch": "workspace:^",
     "vite": "^4.5.0",
     "webpack": "^5.89.0",

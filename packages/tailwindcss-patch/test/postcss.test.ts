@@ -34,7 +34,7 @@ describe('postcss', () => {
         'min-h-[12rpx]',
         'max-h-[12rpx]',
         'basis-[32rpx]',
-        'text-[32rpx]'
+        'text-[length:32rpx]'
       ].map((x) => {
         return {
           raw: x

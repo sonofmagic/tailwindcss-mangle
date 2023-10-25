@@ -2,7 +2,7 @@
 
 exports[`postcss > getCss 0.common 1`] = `
 "/*
-! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.3.4 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -503,6 +503,6 @@ exports[`postcss > rpx case 0 1`] = `
 }.basis-\\\\[32rpx\\\\] {flex-basis: 32rpx
 }.space-y-\\\\[12\\\\.0rpx\\\\] > :not([hidden]) ~ :not([hidden]) {--tw-space-y-reverse: 0;margin-top: calc(12.0rpx * calc(1 - var(--tw-space-y-reverse)));margin-bottom: calc(12.0rpx * var(--tw-space-y-reverse))
 }.p-\\\\[0\\\\.32rpx\\\\] {padding: 0.32rpx
-}.text-\\\\[32rpx\\\\] {font-size: 32rpx
+}.text-\\\\[length\\\\:32rpx\\\\] {font-size: 32rpx
 }"
 `;

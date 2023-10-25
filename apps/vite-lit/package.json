@@ -19,13 +19,13 @@
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "lit": "^2.8.0"
+    "lit": "^3.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.15",
-    "postcss": "^8.4.28",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.9"
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.4",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0"
   }
 }
