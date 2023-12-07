@@ -2,7 +2,7 @@
 
 exports[`webpack build > common > assets 1`] = `
 {
-  "index.js": "(()=>{\\"use strict\\";document.querySelector(\\"#app\\").innerHTML='\\\\n<main class=\\"flex min-h-screen flex-col items-center justify-between p-24\\">\\\\n<div class=\\"z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex\\">\\\\n  <p\\\\n    class=\\"fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30\\">\\\\n    Get started by editing&nbsp;\\\\n    <code class=\\"font-mono font-bold\\">pages/index.tsx</code>\\\\n  </p>\\\\n  <div\\\\n    class=\\"fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none\\">\\\\n    <a class=\\"pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0\\"\\\\n      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n      target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n      By\\\\n    </a>\\\\n  </div>\\\\n</div>\\\\n\\\\n<div\\\\n  class=\\"relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[\\\\'\\\\'] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[\\\\'\\\\'] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]\\">\\\\n  <img class=\\"relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"\\\\n    priority />\\\\n</div>\\\\n\\\\n<div class=\\"mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left\\">\\\\n  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"mb-3 text-2xl font-semibold\\">\\\\n      Docs <span\\\\n        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Find in-depth information about Next.js\\\\n      features and API.</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"mb-3 text-2xl font-semibold\\">\\\\n      Learn <span\\\\n        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Learn about Next.js in an interactive\\\\n      course with&nbsp;quizzes!</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"mb-3 text-2xl font-semibold\\">\\\\n      Templates <span\\\\n        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Discover and deploy boilerplate example\\\\n      Next.js&nbsp;projects.</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"mb-3 text-2xl font-semibold\\">\\\\n      Deploy <span\\\\n        class=\\"inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"m-0 max-w-[30ch] text-sm opacity-50\\">Instantly deploy your Next.js site to a\\\\n      shareable URL with Vercel.</p>\\\\n  </a>\\\\n</div>\\\\n</main>\\\\n'})();",
+  "index.js": "(()=>{"use strict";document.querySelector("#app").innerHTML='\\n<main class="flex min-h-screen flex-col items-center justify-between p-24">\\n<div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">\\n  <p\\n    class="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">\\n    Get started by editing&nbsp;\\n    <code class="font-mono font-bold">pages/index.tsx</code>\\n  </p>\\n  <div\\n    class="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">\\n    <a class="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"\\n      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n      target="_blank" rel="noopener noreferrer">\\n      By\\n    </a>\\n  </div>\\n</div>\\n\\n<div\\n  class="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[\\'\\'] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[\\'\\'] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">\\n  <img class="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert" src="/vite.svg" alt="Next.js Logo"\\n    priority />\\n</div>\\n\\n<div class="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">\\n  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="mb-3 text-2xl font-semibold">\\n      Docs <span\\n        class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>\\n    </h2>\\n    <p class="m-0 max-w-[30ch] text-sm opacity-50">Find in-depth information about Next.js\\n      features and API.</p>\\n  </a>\\n\\n  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="mb-3 text-2xl font-semibold">\\n      Learn <span\\n        class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>\\n    </h2>\\n    <p class="m-0 max-w-[30ch] text-sm opacity-50">Learn about Next.js in an interactive\\n      course with&nbsp;quizzes!</p>\\n  </a>\\n\\n  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="mb-3 text-2xl font-semibold">\\n      Templates <span\\n        class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>\\n    </h2>\\n    <p class="m-0 max-w-[30ch] text-sm opacity-50">Discover and deploy boilerplate example\\n      Next.js&nbsp;projects.</p>\\n  </a>\\n\\n  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="mb-3 text-2xl font-semibold">\\n      Deploy <span\\n        class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>\\n    </h2>\\n    <p class="m-0 max-w-[30ch] text-sm opacity-50">Instantly deploy your Next.js site to a\\n      shareable URL with Vercel.</p>\\n  </a>\\n</div>\\n</main>\\n'})();",
   "main.css": "*, ::before, ::after {
     --tw-border-spacing-x: 0;
     --tw-border-spacing-y: 0;
@@ -152,7 +152,7 @@ exports[`webpack build > common > assets 1`] = `
 .max-w-5xl {
     max-width: 64rem
 }
-.max-w-\\\\[30ch\\\\] {
+.max-w-\\[30ch\\] {
     max-width: 30ch
 }
 .flex-col {
@@ -192,7 +192,7 @@ exports[`webpack build > common > assets 1`] = `
 .border-transparent {
     border-color: transparent
 }
-.bg-\\\\[\\\\#123456\\\\] {
+.bg-\\[\\#123456\\] {
     --tw-bg-opacity: 1;
     background-color: rgb(18 52 86 / var(--tw-bg-opacity))
 }
@@ -240,7 +240,7 @@ exports[`webpack build > common > assets 1`] = `
     text-align: center
 }
 .font-mono {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 .text-2xl {
     font-size: 1.5rem;
@@ -273,217 +273,217 @@ exports[`webpack build > common > assets 1`] = `
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms
 }
-.before\\\\:absolute::before {
+.before\\:absolute::before {
     content: var(--tw-content);
     position: absolute
 }
-.before\\\\:h-\\\\[300px\\\\]::before {
+.before\\:h-\\[300px\\]::before {
     content: var(--tw-content);
     height: 300px
 }
-.before\\\\:w-\\\\[480px\\\\]::before {
+.before\\:w-\\[480px\\]::before {
     content: var(--tw-content);
     width: 480px
 }
-.before\\\\:-translate-x-1\\\\/2::before {
+.before\\:-translate-x-1\\/2::before {
     content: var(--tw-content);
     --tw-translate-x: -50%;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
-.before\\\\:rounded-full::before {
+.before\\:rounded-full::before {
     content: var(--tw-content);
     border-radius: 9999px
 }
-.before\\\\:from-white::before {
+.before\\:from-white::before {
     content: var(--tw-content);
     --tw-gradient-from: #fff var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.before\\\\:to-transparent::before {
+.before\\:to-transparent::before {
     content: var(--tw-content);
     --tw-gradient-to: transparent var(--tw-gradient-to-position)
 }
-.before\\\\:blur-2xl::before {
+.before\\:blur-2xl::before {
     content: var(--tw-content);
     --tw-blur: blur(40px);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
-.before\\\\:content-\\\\[\\\\'\\\\'\\\\]::before {
+.before\\:content-\\[\\'\\'\\]::before {
     --tw-content: '';
     content: var(--tw-content)
 }
-.after\\\\:absolute::after {
+.after\\:absolute::after {
     content: var(--tw-content);
     position: absolute
 }
-.after\\\\:-z-20::after {
+.after\\:-z-20::after {
     content: var(--tw-content);
     z-index: -20
 }
-.after\\\\:h-\\\\[180px\\\\]::after {
+.after\\:h-\\[180px\\]::after {
     content: var(--tw-content);
     height: 180px
 }
-.after\\\\:w-\\\\[240px\\\\]::after {
+.after\\:w-\\[240px\\]::after {
     content: var(--tw-content);
     width: 240px
 }
-.after\\\\:translate-x-1\\\\/3::after {
+.after\\:translate-x-1\\/3::after {
     content: var(--tw-content);
     --tw-translate-x: 33.333333%;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
-.after\\\\:from-sky-200::after {
+.after\\:from-sky-200::after {
     content: var(--tw-content);
     --tw-gradient-from: #bae6fd var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(186 230 253 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
 }
-.after\\\\:via-blue-200::after {
+.after\\:via-blue-200::after {
     content: var(--tw-content);
     --tw-gradient-to: rgb(191 219 254 / 0)  var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), #bfdbfe var(--tw-gradient-via-position), var(--tw-gradient-to)
 }
-.after\\\\:blur-2xl::after {
+.after\\:blur-2xl::after {
     content: var(--tw-content);
     --tw-blur: blur(40px);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
-.after\\\\:content-\\\\[\\\\'\\\\'\\\\]::after {
+.after\\:content-\\[\\'\\'\\]::after {
     --tw-content: '';
     content: var(--tw-content)
 }
-.hover\\\\:border-gray-300:hover {
+.hover\\:border-gray-300:hover {
     --tw-border-opacity: 1;
     border-color: rgb(209 213 219 / var(--tw-border-opacity))
 }
-.hover\\\\:bg-gray-100:hover {
+.hover\\:bg-gray-100:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(243 244 246 / var(--tw-bg-opacity))
 }
-.group:hover .group-hover\\\\:translate-x-1 {
+.group:hover .group-hover\\:translate-x-1 {
     --tw-translate-x: 0.25rem;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
 @media (prefers-reduced-motion: reduce) {
-    .motion-reduce\\\\:transform-none {
+    .motion-reduce\\:transform-none {
         transform: none
     }
 }
 @media (prefers-color-scheme: dark) {
-    .dark\\\\:border-neutral-800 {
+    .dark\\:border-neutral-800 {
         --tw-border-opacity: 1;
         border-color: rgb(38 38 38 / var(--tw-border-opacity))
     }
-    .dark\\\\:bg-zinc-800\\\\/30 {
+    .dark\\:bg-zinc-800\\/30 {
         background-color: rgb(39 39 42 / 0.3)
     }
-    .dark\\\\:from-black {
+    .dark\\:from-black {
         --tw-gradient-from: #000 var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .dark\\\\:from-inherit {
+    .dark\\:from-inherit {
         --tw-gradient-from: inherit var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .dark\\\\:via-black {
+    .dark\\:via-black {
         --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), #000 var(--tw-gradient-via-position), var(--tw-gradient-to)
     }
-    .dark\\\\:drop-shadow-\\\\[0_0_0\\\\.3rem_\\\\#ffffff70\\\\] {
+    .dark\\:drop-shadow-\\[0_0_0\\.3rem_\\#ffffff70\\] {
         --tw-drop-shadow: drop-shadow(0 0 0.3rem #ffffff70);
         filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
     }
-    .dark\\\\:invert {
+    .dark\\:invert {
         --tw-invert: invert(100%);
         filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
     }
-    .before\\\\:dark\\\\:bg-gradient-to-br::before {
+    .before\\:dark\\:bg-gradient-to-br::before {
         content: var(--tw-content);
         background-image: linear-gradient(to bottom right, var(--tw-gradient-stops))
     }
-    .before\\\\:dark\\\\:from-transparent::before {
+    .before\\:dark\\:from-transparent::before {
         content: var(--tw-content);
         --tw-gradient-from: transparent var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .before\\\\:dark\\\\:to-blue-700\\\\/10::before {
+    .before\\:dark\\:to-blue-700\\/10::before {
         content: var(--tw-content);
         --tw-gradient-to: rgb(29 78 216 / 0.1) var(--tw-gradient-to-position)
     }
-    .after\\\\:dark\\\\:from-sky-900::after {
+    .after\\:dark\\:from-sky-900::after {
         content: var(--tw-content);
         --tw-gradient-from: #0c4a6e var(--tw-gradient-from-position);
         --tw-gradient-to: rgb(12 74 110 / 0) var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
     }
-    .after\\\\:dark\\\\:via-\\\\[\\\\#0141ff\\\\]\\\\/40::after {
+    .after\\:dark\\:via-\\[\\#0141ff\\]\\/40::after {
         content: var(--tw-content);
         --tw-gradient-to: rgb(1 65 255 / 0)  var(--tw-gradient-to-position);
         --tw-gradient-stops: var(--tw-gradient-from), rgb(1 65 255 / 0.4) var(--tw-gradient-via-position), var(--tw-gradient-to)
     }
-    .hover\\\\:dark\\\\:border-neutral-700:hover {
+    .hover\\:dark\\:border-neutral-700:hover {
         --tw-border-opacity: 1;
         border-color: rgb(64 64 64 / var(--tw-border-opacity))
     }
-    .hover\\\\:dark\\\\:bg-neutral-800\\\\/30:hover {
+    .hover\\:dark\\:bg-neutral-800\\/30:hover {
         background-color: rgb(38 38 38 / 0.3)
     }
 }
 @media (min-width: 1024px) {
-    .lg\\\\:pointer-events-auto {
+    .lg\\:pointer-events-auto {
         pointer-events: auto
     }
-    .lg\\\\:static {
+    .lg\\:static {
         position: static
     }
-    .lg\\\\:mb-0 {
+    .lg\\:mb-0 {
         margin-bottom: 0px
     }
-    .lg\\\\:flex {
+    .lg\\:flex {
         display: flex
     }
-    .lg\\\\:h-auto {
+    .lg\\:h-auto {
         height: auto
     }
-    .lg\\\\:w-auto {
+    .lg\\:w-auto {
         width: auto
     }
-    .lg\\\\:grid-cols-4 {
+    .lg\\:grid-cols-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr))
     }
-    .lg\\\\:rounded-xl {
+    .lg\\:rounded-xl {
         border-radius: 0.75rem
     }
-    .lg\\\\:border {
+    .lg\\:border {
         border-width: 1px
     }
-    .lg\\\\:bg-gray-200 {
+    .lg\\:bg-gray-200 {
         --tw-bg-opacity: 1;
         background-color: rgb(229 231 235 / var(--tw-bg-opacity))
     }
-    .lg\\\\:bg-none {
+    .lg\\:bg-none {
         background-image: none
     }
-    .lg\\\\:p-0 {
+    .lg\\:p-0 {
         padding: 0px
     }
-    .lg\\\\:p-4 {
+    .lg\\:p-4 {
         padding: 1rem
     }
-    .lg\\\\:text-left {
+    .lg\\:text-left {
         text-align: left
     }
-    .before\\\\:lg\\\\:h-\\\\[360px\\\\]::before {
+    .before\\:lg\\:h-\\[360px\\]::before {
         content: var(--tw-content);
         height: 360px
     }
     @media (prefers-color-scheme: dark) {
-        .lg\\\\:dark\\\\:bg-zinc-800\\\\/30 {
+        .lg\\:dark\\:bg-zinc-800\\/30 {
             background-color: rgb(39 39 42 / 0.3)
         }
     }
@@ -500,9 +500,9 @@ exports[`webpack build > common > warnings 1`] = `[]`;
 exports[`webpack build > with plugin > assets 1`] = `
 {
   "index.js": "(() => {
-  \\"use strict\\";
+  "use strict";
 
-  document.querySelector(\\"#app\\").innerHTML = '\\\\n<main class=\\"flex tw-gb tw-zb tw-db tw-ra tw-nc\\">\\\\n<div class=\\"tw-sc tw-hc tw-vb tw-db tw-ra tw-pb tw-dc tw-bc\\">\\\\n  <p\\\\n    class=\\"fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m\\">\\\\n    Get started by editing&nbsp;\\\\n    <code class=\\"tw-pb tw-ob\\">pages/index.tsx</code>\\\\n  </p>\\\\n  <div\\\\n    class=\\"fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-kb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-lb\\">\\\\n    <a class=\\"tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc\\"\\\\n      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n      target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n      By\\\\n    </a>\\\\n  </div>\\\\n</div>\\\\n\\\\n<div\\\\n  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-hb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">\\\\n  <img class=\\"relative tw-a tw-ib\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"\\\\n    priority />\\\\n</div>\\\\n\\\\n<div class=\\"tw-jc grid tw-jb tw-cc tw-xa tw-eb\\">\\\\n  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"tw-mc tw-ac tw-ya\\">\\\\n      Docs <span\\\\n        class=\\"tw-cb tw-r tw-i tw-f\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"tw-tc tw-fb tw-dc tw-mb\\">Find in-depth information about Next.js\\\\n      features and API.</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"tw-mc tw-ac tw-ya\\">\\\\n      Learn <span\\\\n        class=\\"tw-cb tw-r tw-i tw-f\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"tw-tc tw-fb tw-dc tw-mb\\">Learn about Next.js in an interactive\\\\n      course with&nbsp;quizzes!</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"tw-mc tw-ac tw-ya\\">\\\\n      Templates <span\\\\n        class=\\"tw-cb tw-r tw-i tw-f\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"tw-tc tw-fb tw-dc tw-mb\\">Discover and deploy boilerplate example\\\\n      Next.js&nbsp;projects.</p>\\\\n  </a>\\\\n\\\\n  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"\\\\n    class=\\"group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"\\\\n    target=\\"_blank\\" rel=\\"noopener noreferrer\\">\\\\n    <h2 class=\\"tw-mc tw-ac tw-ya\\">\\\\n      Deploy <span\\\\n        class=\\"tw-cb tw-r tw-i tw-f\\">-&gt;</span>\\\\n    </h2>\\\\n    <p class=\\"tw-tc tw-fb tw-dc tw-mb\\">Instantly deploy your Next.js site to a\\\\n      shareable URL with Vercel.</p>\\\\n  </a>\\\\n</div>\\\\n</main>\\\\n';
+  document.querySelector("#app").innerHTML = '\\n<main class="flex tw-gb tw-zb tw-db tw-ra tw-nc">\\n<div class="tw-sc tw-hc tw-vb tw-db tw-ra tw-pb tw-dc tw-bc">\\n  <p\\n    class="fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m">\\n    Get started by editing&nbsp;\\n    <code class="tw-pb tw-ob">pages/index.tsx</code>\\n  </p>\\n  <div\\n    class="fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-kb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-lb">\\n    <a class="tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc"\\n      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n      target="_blank" rel="noopener noreferrer">\\n      By\\n    </a>\\n  </div>\\n</div>\\n\\n<div\\n  class="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-hb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">\\n  <img class="relative tw-a tw-ib" src="/vite.svg" alt="Next.js Logo"\\n    priority />\\n</div>\\n\\n<div class="tw-jc grid tw-jb tw-cc tw-xa tw-eb">\\n  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="tw-mc tw-ac tw-ya">\\n      Docs <span\\n        class="tw-cb tw-r tw-i tw-f">-&gt;</span>\\n    </h2>\\n    <p class="tw-tc tw-fb tw-dc tw-mb">Find in-depth information about Next.js\\n      features and API.</p>\\n  </a>\\n\\n  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="tw-mc tw-ac tw-ya">\\n      Learn <span\\n        class="tw-cb tw-r tw-i tw-f">-&gt;</span>\\n    </h2>\\n    <p class="tw-tc tw-fb tw-dc tw-mb">Learn about Next.js in an interactive\\n      course with&nbsp;quizzes!</p>\\n  </a>\\n\\n  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="tw-mc tw-ac tw-ya">\\n      Templates <span\\n        class="tw-cb tw-r tw-i tw-f">-&gt;</span>\\n    </h2>\\n    <p class="tw-tc tw-fb tw-dc tw-mb">Discover and deploy boilerplate example\\n      Next.js&nbsp;projects.</p>\\n  </a>\\n\\n  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"\\n    class="group tw-nb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"\\n    target="_blank" rel="noopener noreferrer">\\n    <h2 class="tw-mc tw-ac tw-ya">\\n      Deploy <span\\n        class="tw-cb tw-r tw-i tw-f">-&gt;</span>\\n    </h2>\\n    <p class="tw-tc tw-fb tw-dc tw-mb">Instantly deploy your Next.js site to a\\n      shareable URL with Vercel.</p>\\n  </a>\\n</div>\\n</main>\\n';
 })();",
   "main.css": "*,::before,::after {
     --tw-border-spacing-x: 0;
@@ -741,7 +741,7 @@ exports[`webpack build > with plugin > assets 1`] = `
     text-align: center
 }
 .tw-pb {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 .tw-ac {
     font-size: 1.5rem;

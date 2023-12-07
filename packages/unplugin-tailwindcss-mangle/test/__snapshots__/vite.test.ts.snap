@@ -1,81 +1,81 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vite build > common build  1`] = `
-"(function(){const a=document.createElement(\\"link\\").relList;if(a&&a.supports&&a.supports(\\"modulepreload\\"))return;for(const t of document.querySelectorAll('link[rel=\\"modulepreload\\"]'))c(t);new MutationObserver(t=>{for(const e of t)if(e.type===\\"childList\\")for(const w of e.addedNodes)w.tagName===\\"LINK\\"&&w.rel===\\"modulepreload\\"&&c(w)}).observe(document,{childList:!0,subtree:!0});function s(t){const e={};return t.integrity&&(e.integrity=t.integrity),t.referrerPolicy&&(e.referrerPolicy=t.referrerPolicy),t.crossOrigin===\\"use-credentials\\"?e.credentials=\\"include\\":t.crossOrigin===\\"anonymous\\"?e.credentials=\\"omit\\":e.credentials=\\"same-origin\\",e}function c(t){if(t.ep)return;t.ep=!0;const e=s(t);fetch(t.href,e)}})();function n(r){r.animate({clipPath:[]},{duration:400,easing:\\"ease-out\\"})}document.querySelector(\\"#app\\").innerHTML=\`
+"(function(){const a=document.createElement("link").relList;if(a&&a.supports&&a.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))c(t);new MutationObserver(t=>{for(const e of t)if(e.type==="childList")for(const w of e.addedNodes)w.tagName==="LINK"&&w.rel==="modulepreload"&&c(w)}).observe(document,{childList:!0,subtree:!0});function s(t){const e={};return t.integrity&&(e.integrity=t.integrity),t.referrerPolicy&&(e.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?e.credentials="include":t.crossOrigin==="anonymous"?e.credentials="omit":e.credentials="same-origin",e}function c(t){if(t.ep)return;t.ep=!0;const e=s(t);fetch(t.href,e)}})();function n(r){r.animate({clipPath:[]},{duration:400,easing:"ease-out"})}document.querySelector("#app").innerHTML=\`
   <div>
-    <button id=\\"counter\\">counter</button>
+    <button id="counter">counter</button>
   </div>
 
-<main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
-<div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
+<main class="flex tw-fb tw-yb tw-cb tw-ra tw-mc">
+<div class="tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac">
   <p
-    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m\\">
+    class="fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m">
     Get started by editing&nbsp;
-    <code class=\\"tw-ob tw-nb\\">pages/index.tsx</code>
+    <code class="tw-ob tw-nb">pages/index.tsx</code>
   </p>
   <div
-    class=\\"fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb\\">
-    <a class=\\"tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec\\"
-      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    class="fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb">
+    <a class="tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec"
+      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+      target="_blank" rel="noopener noreferrer">
       By
     </a>
   </div>
 </div>
 
 <div
-  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
-  <img class=\\"relative tw-a tw-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+  class="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
+  <img class="relative tw-a tw-hb" src="/vite.svg" alt="Next.js Logo"
     priority />
 </div>
 
-<div class=\\"tw-ic grid tw-ib tw-bc tw-xa tw-db\\">
-  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+<div class="tw-ic grid tw-ib tw-bc tw-xa tw-db">
+  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Docs <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Find in-depth information about Next.js
+    <p class="tw-sc tw-eb tw-cc tw-lb">Find in-depth information about Next.js
       features and API.</p>
   </a>
 
-  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Learn <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Learn about Next.js in an interactive
+    <p class="tw-sc tw-eb tw-cc tw-lb">Learn about Next.js in an interactive
       course with&nbsp;quizzes!</p>
   </a>
 
-  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Templates <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Discover and deploy boilerplate example
+    <p class="tw-sc tw-eb tw-cc tw-lb">Discover and deploy boilerplate example
       Next.js&nbsp;projects.</p>
   </a>
 
-  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Deploy <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Instantly deploy your Next.js site to a
+    <p class="tw-sc tw-eb tw-cc tw-lb">Instantly deploy your Next.js site to a
       shareable URL with Vercel.</p>
   </a>
 </div>
 </main>
-\`;n(document.querySelector(\\"#counter\\"));
+\`;n(document.querySelector("#counter"));
 "
 `;
 
@@ -313,7 +313,7 @@ exports[`vite build > common build  2`] = `
     text-align: center
 }
 .tw-ob {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 .tw-zb {
     font-size: 1.5rem;
@@ -569,99 +569,98 @@ exports[`vite build > common build  2`] = `
 
 exports[`vite build > common build  3`] = `
 "<!DOCTYPE html>
-<html lang=\\"en\\">
+<html lang="en">
   <head>
-    <meta charset=\\"UTF-8\\" />
-    <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\" />
-    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\" />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
-    <script type=\\"module\\" crossorigin src=\\"/index.js\\"></script>
-    <link rel=\\"stylesheet\\" href=\\"/index.css\\">
+    <script type="module" crossorigin src="/index.js"></script>
+    <link rel="stylesheet" crossorigin href="/index.css">
   </head>
   <body>
-    <div id=\\"app\\"></div>
-    
+    <div id="app"></div>
   </body>
 </html>
 "
 `;
 
 exports[`vite build > common build change class prefix 1`] = `
-"(function(){const i=document.createElement(\\"link\\").relList;if(i&&i.supports&&i.supports(\\"modulepreload\\"))return;for(const e of document.querySelectorAll('link[rel=\\"modulepreload\\"]'))r(e);new MutationObserver(e=>{for(const c of e)if(c.type===\\"childList\\")for(const t of c.addedNodes)t.tagName===\\"LINK\\"&&t.rel===\\"modulepreload\\"&&r(t)}).observe(document,{childList:!0,subtree:!0});function s(e){const c={};return e.integrity&&(c.integrity=e.integrity),e.referrerPolicy&&(c.referrerPolicy=e.referrerPolicy),e.crossOrigin===\\"use-credentials\\"?c.credentials=\\"include\\":e.crossOrigin===\\"anonymous\\"?c.credentials=\\"omit\\":c.credentials=\\"same-origin\\",c}function r(e){if(e.ep)return;e.ep=!0;const c=s(e);fetch(e.href,c)}})();function n(a){a.animate({clipPath:[]},{duration:400,easing:\\"ease-out\\"})}document.querySelector(\\"#app\\").innerHTML=\`
+"(function(){const i=document.createElement("link").relList;if(i&&i.supports&&i.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))r(e);new MutationObserver(e=>{for(const c of e)if(c.type==="childList")for(const a of c.addedNodes)a.tagName==="LINK"&&a.rel==="modulepreload"&&r(a)}).observe(document,{childList:!0,subtree:!0});function s(e){const c={};return e.integrity&&(c.integrity=e.integrity),e.referrerPolicy&&(c.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?c.credentials="include":e.crossOrigin==="anonymous"?c.credentials="omit":c.credentials="same-origin",c}function r(e){if(e.ep)return;e.ep=!0;const c=s(e);fetch(e.href,c)}})();function n(t){t.animate({clipPath:[]},{duration:400,easing:"ease-out"})}document.querySelector("#app").innerHTML=\`
   <div>
-    <button id=\\"counter\\">counter</button>
+    <button id="counter">counter</button>
   </div>
 
-<main class=\\"flex ice-fb ice-yb ice-cb ice-ra ice-mc\\">
-<div class=\\"ice-rc ice-gc ice-ub ice-cb ice-ra ice-ob ice-cc ice-ac\\">
+<main class="flex ice-fb ice-yb ice-cb ice-ra ice-mc">
+<div class="ice-rc ice-gc ice-ub ice-cb ice-ra ice-ob ice-cc ice-ac">
   <p
-    class=\\"fixed ice-dc ice-jc flex ice-gc ice-va ice-wb ice-pa ice-ja ice-za ice-nc ice-oc ice-ca ice-l ice-v ice-ea ice-sb ice-tb  ice-ab ice-qb ice-wa ice-fc ice-m\\">
+    class="fixed ice-dc ice-jc flex ice-gc ice-va ice-wb ice-pa ice-ja ice-za ice-nc ice-oc ice-ca ice-l ice-v ice-ea ice-sb ice-tb  ice-ab ice-qb ice-wa ice-fc ice-m">
     Get started by editing&nbsp;
-    <code class=\\"ice-ob ice-nb\\">pages/index.tsx</code>
+    <code class="ice-ob ice-nb">pages/index.tsx</code>
   </p>
   <div
-    class=\\"fixed ice-xb ice-dc flex ice-kc ice-gc ice-pb ice-va ice-ka ice-jb ice-vb ice-qa ice-ua ice-sb ice-rb ice-tb ice-kb\\">
-    <a class=\\"ice-w flex ice-ba ice-hc ice-tc ice-n ice-ec\\"
-      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    class="fixed ice-xb ice-dc flex ice-kc ice-gc ice-pb ice-va ice-ka ice-jb ice-vb ice-qa ice-ua ice-sb ice-rb ice-tb ice-kb">
+    <a class="ice-w flex ice-ba ice-hc ice-tc ice-n ice-ec"
+      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+      target="_blank" rel="noopener noreferrer">
       By
     </a>
   </div>
 </div>
 
 <div
-  class=\\"relative flex ice-ba ice-na ice-ha ice-ia ice-k ice-u before:bg-gradient-radial ice-da ice-p ice-oa ice-s ice-sa ice-gb ice-la ice-ma ice-o after:bg-gradient-conic ice-y ice-z ice-ta ice-x ice-b ice-d ice-h ice-j ice-g ice-t\\">
-  <img class=\\"relative ice-a ice-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+  class="relative flex ice-ba ice-na ice-ha ice-ia ice-k ice-u before:bg-gradient-radial ice-da ice-p ice-oa ice-s ice-sa ice-gb ice-la ice-ma ice-o after:bg-gradient-conic ice-y ice-z ice-ta ice-x ice-b ice-d ice-h ice-j ice-g ice-t">
+  <img class="relative ice-a ice-hb" src="/vite.svg" alt="Next.js Logo"
     priority />
 </div>
 
-<div class=\\"ice-ic grid ice-ib ice-bc ice-xa ice-db\\">
-  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"ice-lc ice-zb ice-ya\\">
+<div class="ice-ic grid ice-ib ice-bc ice-xa ice-db">
+  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="ice-lc ice-zb ice-ya">
       Docs <span
-        class=\\"ice-bb ice-r ice-i ice-f\\">-&gt;</span>
+        class="ice-bb ice-r ice-i ice-f">-&gt;</span>
     </h2>
-    <p class=\\"ice-sc ice-eb ice-cc ice-lb\\">Find in-depth information about Next.js
+    <p class="ice-sc ice-eb ice-cc ice-lb">Find in-depth information about Next.js
       features and API.</p>
   </a>
 
-  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"ice-lc ice-zb ice-ya\\">
+  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="ice-lc ice-zb ice-ya">
       Learn <span
-        class=\\"ice-bb ice-r ice-i ice-f\\">-&gt;</span>
+        class="ice-bb ice-r ice-i ice-f">-&gt;</span>
     </h2>
-    <p class=\\"ice-sc ice-eb ice-cc ice-lb\\">Learn about Next.js in an interactive
+    <p class="ice-sc ice-eb ice-cc ice-lb">Learn about Next.js in an interactive
       course with&nbsp;quizzes!</p>
   </a>
 
-  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"ice-lc ice-zb ice-ya\\">
+  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="ice-lc ice-zb ice-ya">
       Templates <span
-        class=\\"ice-bb ice-r ice-i ice-f\\">-&gt;</span>
+        class="ice-bb ice-r ice-i ice-f">-&gt;</span>
     </h2>
-    <p class=\\"ice-sc ice-eb ice-cc ice-lb\\">Discover and deploy boilerplate example
+    <p class="ice-sc ice-eb ice-cc ice-lb">Discover and deploy boilerplate example
       Next.js&nbsp;projects.</p>
   </a>
 
-  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"ice-lc ice-zb ice-ya\\">
+  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group ice-mb border ice-aa ice-pc ice-qc ice-ga ice-q ice-fa ice-c ice-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="ice-lc ice-zb ice-ya">
       Deploy <span
-        class=\\"ice-bb ice-r ice-i ice-f\\">-&gt;</span>
+        class="ice-bb ice-r ice-i ice-f">-&gt;</span>
     </h2>
-    <p class=\\"ice-sc ice-eb ice-cc ice-lb\\">Instantly deploy your Next.js site to a
+    <p class="ice-sc ice-eb ice-cc ice-lb">Instantly deploy your Next.js site to a
       shareable URL with Vercel.</p>
   </a>
 </div>
 </main>
-\`;n(document.querySelector(\\"#counter\\"));
+\`;n(document.querySelector("#counter"));
 "
 `;
 
@@ -899,7 +898,7 @@ exports[`vite build > common build change class prefix 2`] = `
     text-align: center
 }
 .ice-ob {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 .ice-zb {
     font-size: 1.5rem;
@@ -1155,18 +1154,17 @@ exports[`vite build > common build change class prefix 2`] = `
 
 exports[`vite build > common build change class prefix 3`] = `
 "<!DOCTYPE html>
-<html lang=\\"en\\">
+<html lang="en">
   <head>
-    <meta charset=\\"UTF-8\\" />
-    <link rel=\\"icon\\" type=\\"image/svg+xml\\" href=\\"/vite.svg\\" />
-    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\" />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
-    <script type=\\"module\\" crossorigin src=\\"/index.js\\"></script>
-    <link rel=\\"stylesheet\\" href=\\"/index.css\\">
+    <script type="module" crossorigin src="/index.js"></script>
+    <link rel="stylesheet" crossorigin href="/index.css">
   </head>
   <body>
-    <div id=\\"app\\"></div>
-    
+    <div id="app"></div>
   </body>
 </html>
 "

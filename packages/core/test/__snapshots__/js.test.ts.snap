@@ -16,7 +16,7 @@ document.documentElement.animate({
   clipPath
 }, {
   duration: 500,
-  easing: \\"tw-a\\",
+  easing: "tw-a",
   pseudoElement: '::view-transition-new(root)'
 });
 document.documentElement.animate({
@@ -28,40 +28,40 @@ document.documentElement.animate({
 });"
 `;
 
-exports[`js handler > common StringLiteral 1`] = `"element.innerHTML = \\"<div class=\\\\\\"tw-a tw-b\\\\\\">count is counter</div>\\";"`;
+exports[`js handler > common StringLiteral 1`] = `"element.innerHTML = "<div class=\\"tw-a tw-b\\">count is counter</div>";"`;
 
-exports[`js handler > common StringLiteral with splitQuote false 1`] = `"element.innerHTML = '<div class=\\"dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30\\">count is counter</div>';"`;
+exports[`js handler > common StringLiteral with splitQuote false 1`] = `"element.innerHTML = '<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>';"`;
 
 exports[`js handler > common TemplateElement 1`] = `
 "const counter = 0;
-element.innerHTML = \`<div class=\\"tw-a tw-b\\">count is \${counter}</div>\`;"
+element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`;"
 `;
 
 exports[`js handler > eval script case 1`] = `
 "(function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-  \\"use strict\\";
+  "use strict";
 
-  eval(\\"__webpack_require__.r(__webpack_exports__);\\\\n/* harmony export */\\\\n__webpack_require__.d(__webpack_exports__, {\\\\n  /* harmony export */\\\\\\"render\\\\\\": function () {\\\\n    return (/* binding */render\\\\n    );\\\\n  }\\\\n  /* harmony export */\\\\n});\\\\n/* harmony import */\\\\nvar vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( /*! vue */\\\\\\"../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js\\\\\\");\\\\n/* harmony import */\\\\nvar _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( /*! ./assets/logo.png */\\\\\\"./src/assets/logo.png\\\\\\");\\\\nconst _hoisted_1 = {\\\\n  class: \\\\\\"flex tw-a tw-b tw-c tw-d tw-e\\\\\\"\\\\n};\\\\nconst _hoisted_2 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"div\\\\\\", {\\\\n  class: \\\\\\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\\\\\"\\\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"p\\\\\\", {\\\\n  class: \\\\\\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z tw-aa tw-ba tw-ca tw-da tw-ea\\\\\\"\\\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\\\\\" Get started by editing\\\\xA0 \\\\\\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"code\\\\\\", {\\\\n  class: \\\\\\"tw-i tw-fa\\\\\\"\\\\n}, \\\\\\"pages/index.tsx\\\\\\")]), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"div\\\\\\", {\\\\n  class: \\\\\\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\\\\\"\\\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"a\\\\\\", {\\\\n  class: \\\\\\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\\\\\",\\\\n  href: \\\\\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\\\\\",\\\\n  target: \\\\\\"_blank\\\\\\",\\\\n  rel: \\\\\\"noopener noreferrer\\\\\\"\\\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\\\\\" By \\\\\\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"img\\\\\\", {\\\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\\\n  alt: \\\\\\"Vercel Logo\\\\\\",\\\\n  class: \\\\\\"tw-wa\\\\\\",\\\\n  priority: \\\\\\"\\\\\\"\\\\n})])])], -1 /* HOISTED */);\\\\nconst _hoisted_3 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"div\\\\\\", {\\\\n  class: \\\\\\"relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb\\\\\\"\\\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\\\\\"img\\\\\\", {\\\\n  class: \\\\\\"relative tw-xb tw-wa\\\\\\",\\\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\\\n  alt: \\\\\\"Next.js Logo\\\\\\",\\\\n  priority: \\\\\\"\\\\\\"\\\\n})], -1 /* HOISTED */);\\\\nconst _hoisted_4 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)(\\\\\\"<div class=\\\\\\\\\\\\\\"tw-yb grid tw-zb tw-ac tw-bc tw-cc\\\\\\\\\\\\\\"><a href=\\\\\\\\\\\\\\"https://nextjs.org/docs?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\\\\\\\\\" class=\\\\\\\\\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\\\\\\\\\" target=\\\\\\\\\\\\\\"_blank\\\\\\\\\\\\\\" rel=\\\\\\\\\\\\\\"noopener noreferrer\\\\\\\\\\\\\\"><h2 class=\\\\\\\\\\\\\\"tw-mc tw-nc tw-oc\\\\\\\\\\\\\\"> Docs <span class=\\\\\\\\\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\\\\\\\\\">-&gt;</span></h2><p class=\\\\\\\\\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\\\\\\\\\">Find in-depth information about Next.js features and API.</p></a><a href=\\\\\\\\\\\\\\"https://nextjs.org/learn?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\\\\\\\\\" class=\\\\\\\\\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\\\\\\\\\" target=\\\\\\\\\\\\\\"_blank\\\\\\\\\\\\\\" rel=\\\\\\\\\\\\\\"noopener noreferrer\\\\\\\\\\\\\\"><h2 class=\\\\\\\\\\\\\\"tw-mc tw-nc tw-oc tw-wc\\\\\\\\\\\\\\"> Learn <span class=\\\\\\\\\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\\\\\\\\\">-&gt;</span></h2><p class=\\\\\\\\\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\\\\\\\\\">Learn about Next.js in an interactive course with\\\\\\\\xA0quizzes!</p></a><a href=\\\\\\\\\\\\\\"https://vercel.com/templates?framework=next.js&amp;utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\\\\\\\\\" class=\\\\\\\\\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\\\\\\\\\" target=\\\\\\\\\\\\\\"_blank\\\\\\\\\\\\\\" rel=\\\\\\\\\\\\\\"noopener noreferrer\\\\\\\\\\\\\\"><h2 class=\\\\\\\\\\\\\\"tw-mc tw-nc tw-oc\\\\\\\\\\\\\\"> Templates <span class=\\\\\\\\\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\\\\\\\\\">-&gt;</span></h2><p class=\\\\\\\\\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\\\\\\\\\">Discover and deploy boilerplate example Next.js\\\\\\\\xA0projects.</p></a><a href=\\\\\\\\\\\\\\"https://vercel.com/new?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\\\\\\\\\" class=\\\\\\\\\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\\\\\\\\\" target=\\\\\\\\\\\\\\"_blank\\\\\\\\\\\\\\" rel=\\\\\\\\\\\\\\"noopener noreferrer\\\\\\\\\\\\\\"><h2 class=\\\\\\\\\\\\\\"tw-mc tw-nc tw-oc\\\\\\\\\\\\\\"> Deploy <span class=\\\\\\\\\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\\\\\\\\\">-&gt;</span></h2><p class=\\\\\\\\\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\\\\\\\\\">Instantly deploy your Next.js site to a shareable URL with Vercel.</p></a></div>\\\\\\", 1);\\\\nconst _hoisted_5 = [_hoisted_2, _hoisted_3, _hoisted_4];\\\\nfunction render(_ctx, _cache) {\\\\n  return (0, vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(\\\\\\"main\\\\\\", _hoisted_1, _hoisted_5);\\\\n} //# sourceURL=[module]\\\\n\\\\n//# sourceURL=webpack-internal:///../../node_modules/.pnpm/babel-loader@8.3.0_c3tfwv7p35clwcmkb5fnkshzei/node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/App.vue?vue&type=template&id=7ba5bd90\\");
+  eval("__webpack_require__.r(__webpack_exports__);\\n/* harmony export */\\n__webpack_require__.d(__webpack_exports__, {\\n  /* harmony export */\\"render\\": function () {\\n    return /* binding */render;\\n  }\\n  /* harmony export */\\n});\\n/* harmony import */\\nvar vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( /*! vue */\\"../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js\\");\\n/* harmony import */\\nvar _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( /*! ./assets/logo.png */\\"./src/assets/logo.png\\");\\nconst _hoisted_1 = {\\n  class: \\"flex tw-a tw-b tw-c tw-d tw-e\\"\\n};\\nconst _hoisted_2 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"p\\", {\\n  class: \\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z tw-aa tw-ba tw-ca tw-da tw-ea\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" Get started by editing\\xA0 \\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"code\\", {\\n  class: \\"tw-i tw-fa\\"\\n}, \\"pages/index.tsx\\")]), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"a\\", {\\n  class: \\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\",\\n  href: \\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",\\n  target: \\"_blank\\",\\n  rel: \\"noopener noreferrer\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" By \\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Vercel Logo\\",\\n  class: \\"tw-wa\\",\\n  priority: \\"\\"\\n})])])], -1 /* HOISTED */);\\nconst _hoisted_3 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  class: \\"relative tw-xb tw-wa\\",\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Next.js Logo\\",\\n  priority: \\"\\"\\n})], -1 /* HOISTED */);\\nconst _hoisted_4 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)(\\"<div class=\\\\\\"tw-yb grid tw-zb tw-ac tw-bc tw-cc\\\\\\"><a href=\\\\\\"https://nextjs.org/docs?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Docs <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Find in-depth information about Next.js features and API.</p></a><a href=\\\\\\"https://nextjs.org/learn?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc tw-wc\\\\\\"> Learn <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Learn about Next.js in an interactive course with\\\\xA0quizzes!</p></a><a href=\\\\\\"https://vercel.com/templates?framework=next.js&amp;utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Templates <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Discover and deploy boilerplate example Next.js\\\\xA0projects.</p></a><a href=\\\\\\"https://vercel.com/new?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Deploy <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Instantly deploy your Next.js site to a shareable URL with Vercel.</p></a></div>\\", 1);\\nconst _hoisted_5 = [_hoisted_2, _hoisted_3, _hoisted_4];\\nfunction render(_ctx, _cache) {\\n  return (0, vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(\\"main\\", _hoisted_1, _hoisted_5);\\n} //# sourceURL=[module]\\n\\n//# sourceURL=webpack-internal:///../../node_modules/.pnpm/babel-loader@8.3.0_c3tfwv7p35clwcmkb5fnkshzei/node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/App.vue?vue&type=template&id=7ba5bd90");
 });"
 `;
 
-exports[`js handler > minified js true 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:\\"tw-a\\",pseudoElement:\\"::view-transition-new(root)\\"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */\\"ease-out\\",pseudoElement:\\"::view-transition-new(root)\\"});"`;
+exports[`js handler > minified js true 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:"tw-a",pseudoElement:"::view-transition-new(root)"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */"ease-out",pseudoElement:"::view-transition-new(root)"});"`;
 
-exports[`js handler > minified js with NODE_ENV 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:\\"tw-a\\",pseudoElement:\\"::view-transition-new(root)\\"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */\\"ease-out\\",pseudoElement:\\"::view-transition-new(root)\\"});"`;
+exports[`js handler > minified js with NODE_ENV 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:"tw-a",pseudoElement:"::view-transition-new(root)"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */"ease-out",pseudoElement:"::view-transition-new(root)"});"`;
 
 exports[`js handler > nextjs server side mangle 1`] = `
-"\\"use strict\\";
+""use strict";
 
 (() => {
   var exports = {};
   exports.id = 405;
   exports.ids = [405];
   exports.modules = {
-    /***/957: /***/(__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+    /***/957: ( /***/(__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
       __webpack_require__.r(__webpack_exports__);
       /* harmony export */
       __webpack_require__.d(__webpack_exports__, {
-        /* harmony export */\\"default\\": () => /* binding */Home
+        /* harmony export */"default": () => ( /* binding */Home)
         /* harmony export */
       });
       /* harmony import */
@@ -77,104 +77,104 @@ exports[`js handler > nextjs server side mangle 1`] = `
       /* harmony import */
       var next_image__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_image__WEBPACK_IMPORTED_MODULE_1__);
       function Home() {
-        return /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"main\\", {
-          className: \\"flex tw-a tw-b tw-c tw-d tw-e\\",
-          children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"div\\", {
-            className: \\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\",
-            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"p\\", {
-              className: \\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea\\",
-              children: [\\"Get started by editing\\\\xa0\\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"code\\", {
-                className: \\"tw-i tw-fa\\",
-                children: \\"pages/index.tsx\\"
+        return /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("main", {
+          className: "flex tw-a tw-b tw-c tw-d tw-e",
+          children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k",
+            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+              className: "fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea",
+              children: ["Get started by editing\\xa0", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("code", {
+                className: "tw-i tw-fa",
+                children: "pages/index.tsx"
               })]
-            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"div\\", {
-              className: \\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\",
-              children: /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"a\\", {
-                className: \\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\",
-                href: \\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",
-                target: \\"_blank\\",
-                rel: \\"noopener noreferrer\\",
-                children: [\\"By \\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
-                  src: \\"/vercel.svg\\",
-                  alt: \\"Vercel Logo\\",
-                  className: \\"tw-wa\\",
+            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+              className: "fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa",
+              children: /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                className: "tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va",
+                href: "https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                children: ["By ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
+                  src: "/vercel.svg",
+                  alt: "Vercel Logo",
+                  className: "tw-wa",
                   width: 100,
                   height: 24,
                   priority: true
                 })]
               })
             })]
-          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"div\\", {
-            className: \\"relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb\\",
+          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+            className: "relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb",
             children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
-              className: \\"relative tw-xb tw-wa\\",
-              src: \\"/next.svg\\",
-              alt: \\"Next.js Logo\\",
+              className: "relative tw-xb tw-wa",
+              src: "/next.svg",
+              alt: "Next.js Logo",
               width: 180,
               height: 37,
               priority: true
             })
-          }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"div\\", {
-            className: \\"tw-yb grid tw-zb tw-ac tw-bc tw-cc\\",
-            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"a\\", {
-              href: \\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",
-              className: \\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\",
-              target: \\"_blank\\",
-              rel: \\"noopener noreferrer\\",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"h2\\", {
+          }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "tw-yb grid tw-zb tw-ac tw-bc tw-cc",
+            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: [\\"Docs \\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"span\\", {
-                  className: \\"tw-pc tw-qc tw-rc tw-sc\\",
-                  children: \\"->\\"
+                children: ["Docs ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
                 })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"p\\", {
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: \\"Find in-depth information about Next.js features and API.\\"
+                children: "Find in-depth information about Next.js features and API."
               })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"a\\", {
-              href: \\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",
-              className: \\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\",
-              target: \\"_blank\\",
-              rel: \\"noopener noreferrer\\",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"h2\\", {
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: [\\"Learn \\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"span\\", {
-                  className: \\"tw-pc tw-qc tw-rc tw-sc\\",
-                  children: \\"->\\"
+                children: ["Learn ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
                 })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"p\\", {
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: \\"Learn about Next.js in an interactive course with\\\\xa0quizzes!\\"
+                children: "Learn about Next.js in an interactive course with\\xa0quizzes!"
               })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"a\\", {
-              href: \\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",
-              className: \\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\",
-              target: \\"_blank\\",
-              rel: \\"noopener noreferrer\\",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"h2\\", {
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: [\\"Templates \\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"span\\", {
-                  className: \\"tw-pc tw-qc tw-rc tw-sc\\",
-                  children: \\"->\\"
+                children: ["Templates ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
                 })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"p\\", {
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: \\"Discover and deploy boilerplate example Next.js\\\\xa0projects.\\"
+                children: "Discover and deploy boilerplate example Next.js\\xa0projects."
               })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"a\\", {
-              href: \\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",
-              className: \\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\",
-              target: \\"_blank\\",
-              rel: \\"noopener noreferrer\\",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(\\"h2\\", {
+            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+              href: "https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: [\\"Deploy \\", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"span\\", {
-                  className: \\"tw-pc tw-qc tw-rc tw-sc\\",
-                  children: \\"->\\"
+                children: ["Deploy ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                  className: "tw-pc tw-qc tw-rc tw-sc",
+                  children: "->"
                 })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(\\"p\\", {
+              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
                 className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: \\"Instantly deploy your Next.js site to a shareable URL with Vercel.\\"
+                children: "Instantly deploy your Next.js site to a shareable URL with Vercel."
               })]
             })]
           })]
@@ -182,79 +182,67 @@ exports[`js handler > nextjs server side mangle 1`] = `
       }
 
       /***/
-    },
-
-    /***/918: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/amp-context.js\\");
-
-      /***/
-    },
-
-    /***/732: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/amp-mode.js\\");
+    }),
+    /***/918: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/amp-context.js");
 
       /***/
-    },
-
-    /***/796: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/head-manager-context.js\\");
-
-      /***/
-    },
-
-    /***/486: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/image-blur-svg.js\\");
+    }),
+    /***/732: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/amp-mode.js");
 
       /***/
-    },
-
-    /***/744: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/image-config-context.js\\");
-
-      /***/
-    },
-
-    /***/843: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/image-config.js\\");
+    }),
+    /***/796: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/head-manager-context.js");
 
       /***/
-    },
-
-    /***/552: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/image-loader\\");
-
-      /***/
-    },
-
-    /***/470: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/side-effect.js\\");
+    }),
+    /***/486: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/image-blur-svg.js");
 
       /***/
-    },
-
-    /***/618: /***/module => {
-      module.exports = require(\\"next/dist/shared/lib/utils/warn-once.js\\");
-
-      /***/
-    },
-
-    /***/689: /***/module => {
-      module.exports = require(\\"react\\");
+    }),
+    /***/744: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/image-config-context.js");
 
       /***/
-    },
-
-    /***/997: /***/module => {
-      module.exports = require(\\"react/jsx-runtime\\");
+    }),
+    /***/843: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/image-config.js");
 
       /***/
-    }
+    }),
+    /***/552: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/image-loader");
+
+      /***/
+    }),
+    /***/470: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/side-effect.js");
+
+      /***/
+    }),
+    /***/618: ( /***/module => {
+      module.exports = require("next/dist/shared/lib/utils/warn-once.js");
+
+      /***/
+    }),
+    /***/689: ( /***/module => {
+      module.exports = require("react");
+
+      /***/
+    }),
+    /***/997: ( /***/module => {
+      module.exports = require("react/jsx-runtime");
+
+      /***/
+    })
   };
-
   ;
 
   // load runtime
-  var __webpack_require__ = require(\\"../webpack-runtime.js\\");
+  var __webpack_require__ = require("../webpack-runtime.js");
   __webpack_require__.C(exports);
   var __webpack_exec__ = moduleId => __webpack_require__(__webpack_require__.s = moduleId);
   var __webpack_exports__ = __webpack_require__.X(0, [463, 262], () => __webpack_exec__(957));
@@ -263,7 +251,7 @@ exports[`js handler > nextjs server side mangle 1`] = `
 `;
 
 exports[`js handler > preProcessRawCode case 0 1`] = `
-"<script setup lang=\\"ts\\">
+"<script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
 
 const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
@@ -271,12 +259,12 @@ const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class=\\"flex tw-d tw-f tw-e tw-b tw-j \\">
-    <nav :class=\\"aaa\\">aaa</nav>
+  <main class="flex tw-d tw-f tw-e tw-b tw-j ">
+    <nav :class="aaa">aaa</nav>
   </main>
 </template>
 
-<script lang=\\"ts\\">
+<script lang="ts">
 import { onMounted, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -345,7 +333,7 @@ Map {
 `;
 
 exports[`js handler > preProcessRawCode case 1 1`] = `
-"<script setup lang=\\"ts\\">
+"<script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
 // 'hover:bg-dark-red tw-ed tw-fb'
 const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
@@ -353,80 +341,80 @@ const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class=\\"flex tw-kb tw-hc tw-hb tw-sa tw-vc \\">
-    <nav :class=\\"aaa\\">{{ aaa }}</nav>
-    <div class=\\"tw-cd tw-pc tw-dc tw-hb tw-sa tw-xb tw-lc tw-jc\\">
+  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc ">
+    <nav :class="aaa">{{ aaa }}</nav>
+    <div class="tw-cd tw-pc tw-dc tw-hb tw-sa tw-xb tw-lc tw-jc">
       <p
-        class=\\"fixed tw-mc tw-sc flex tw-pc tw-wa tw-fc tw-qa tw-ja tw-db tw-wc tw-xc tw-ca tw-l tw-v tw-ea tw-bc tw-cc  tw-eb tw-zb tw-xa tw-oc tw-m\\">
+        class="fixed tw-mc tw-sc flex tw-pc tw-wa tw-fc tw-qa tw-ja tw-db tw-wc tw-xc tw-ca tw-l tw-v tw-ea tw-bc tw-cc  tw-eb tw-zb tw-xa tw-oc tw-m">
         Get started by editing&nbsp;
-        <code class=\\"tw-xb tw-wb\\">pages/index.tsx</code>
+        <code class="tw-xb tw-wb">pages/index.tsx</code>
       </p>
       <div
-        class=\\"fixed tw-gc tw-mc flex tw-tc tw-pc tw-yb tw-wa tw-ka tw-sb tw-ec tw-ra tw-va tw-bc tw-ac tw-cc tw-tb\\">
-        <a class=\\"tw-w flex tw-ba tw-qc tw-fd tw-n tw-nc\\"
-          href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-          target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+        class="fixed tw-gc tw-mc flex tw-tc tw-pc tw-yb tw-wa tw-ka tw-sb tw-ec tw-ra tw-va tw-bc tw-ac tw-cc tw-tb">
+        <a class="tw-w flex tw-ba tw-qc tw-fd tw-n tw-nc"
+          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+          target="_blank" rel="noopener noreferrer">
           By
-          <img src=\\"/vite.svg\\" alt=\\"Vercel Logo\\" class=\\"tw-mb\\" priority />
+          <img src="/vite.svg" alt="Vercel Logo" class="tw-mb" priority />
         </a>
       </div>
     </div>
 
     <div
-      class=\\"relative flex tw-ba tw-oa tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-pa tw-s tw-ta tw-lb tw-ma tw-na tw-o after:bg-gradient-conic tw-y tw-z tw-ua tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
-      <img class=\\"relative tw-a tw-mb\\" src=\\"./assets/vue.svg\\" alt=\\"Next.js Logo\\"
+      class="relative flex tw-ba tw-oa tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-pa tw-s tw-ta tw-lb tw-ma tw-na tw-o after:bg-gradient-conic tw-y tw-z tw-ua tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
+      <img class="relative tw-a tw-mb" src="./assets/vue.svg" alt="Next.js Logo"
         priority />
     </div>
 
-    <div class=\\"tw-rc grid tw-pb tw-kc tw-ya tw-ib \\">
-      <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-        class=\\"group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e\\"
-        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-        <h2 class=\\"tw-rb tw-uc tw-ic tw-cb\\">
+    <div class="tw-rc grid tw-pb tw-kc tw-ya tw-ib ">
+      <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        target="_blank" rel="noopener noreferrer">
+        <h2 class="tw-rb tw-uc tw-ic tw-cb">
           Docs <span
-            class=\\"tw-gb tw-r tw-i tw-f\\">-&gt;</span>
+            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
         </h2>
-        <p class=\\"tw-dd tw-jb tw-lc tw-ub\\">Find in-depth information about Next.js
+        <p class="tw-dd tw-jb tw-lc tw-ub">Find in-depth information about Next.js
           features and API.</p>
       </a>
 
-      <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-        class=\\"group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e\\"
-        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-        <h2 class=\\"tw-za tw-uc tw-ic tw-cb\\">
+      <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        target="_blank" rel="noopener noreferrer">
+        <h2 class="tw-za tw-uc tw-ic tw-cb">
           Learn <span
-            class=\\"tw-gb tw-r tw-i tw-f\\">-&gt;</span>
+            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
         </h2>
-        <p class=\\"tw-dd tw-jb tw-lc tw-ub\\">Learn about Next.js in an interactive
+        <p class="tw-dd tw-jb tw-lc tw-ub">Learn about Next.js in an interactive
           course with&nbsp;quizzes!</p>
       </a>
 
-      <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-        class=\\"group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e\\"
-        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-        <h2 class=\\"tw-ab tw-uc tw-ic tw-cb\\">
+      <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        target="_blank" rel="noopener noreferrer">
+        <h2 class="tw-ab tw-uc tw-ic tw-cb">
           Templates <span
-            class=\\"tw-gb tw-r tw-i tw-f\\">-&gt;</span>
+            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
         </h2>
-        <p class=\\"tw-dd tw-jb tw-lc tw-ub\\">Discover and deploy boilerplate example
+        <p class="tw-dd tw-jb tw-lc tw-ub">Discover and deploy boilerplate example
           Next.js&nbsp;projects.</p>
       </a>
 
-      <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-        class=\\"group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e\\"
-        target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-        <h2 class=\\"tw-bb tw-uc tw-ic tw-cb\\">
+      <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        target="_blank" rel="noopener noreferrer">
+        <h2 class="tw-bb tw-uc tw-ic tw-cb">
           Deploy <span
-            class=\\"tw-gb tw-r tw-i tw-f\\">-&gt;</span>
+            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
         </h2>
-        <p class=\\"tw-dd tw-jb tw-lc tw-ub\\">Instantly deploy your Next.js site to a
+        <p class="tw-dd tw-jb tw-lc tw-ub">Instantly deploy your Next.js site to a
           shareable URL with Vercel.</p>
       </a>
     </div>
   </main>
 </template>
 
-<script lang=\\"ts\\">
+<script lang="ts">
 import { onMounted, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -594,7 +582,7 @@ Map {
 `;
 
 exports[`js handler > preProcessRawCode case 2 1`] = `
-"<script setup lang=\\"ts\\">
+"<script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
 // 'hover:bg-dark-red tw-n tw-e'
 const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
@@ -602,12 +590,12 @@ const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class=\\"flex tw-g tw-j tw-f tw-d tw-k tw-i\\">
-    <nav :class=\\"aaa\\">{{ aaa }}</nav>
+  <main class="flex tw-g tw-j tw-f tw-d tw-k tw-i">
+    <nav :class="aaa">{{ aaa }}</nav>
   </main>
 </template>
 
-<script lang=\\"ts\\">
+<script lang="ts">
 import { onMounted, defineComponent } from 'vue'
 import { twMerge } from 'tailwind-merge'
 
@@ -661,8 +649,8 @@ Map {
 `;
 
 exports[`js handler > preserve-fn-case0.js case 0 1`] = `
-"import { clsx } from \\"clsx\\";
-import { twMerge } from \\"tailwind-merge\\";
+"import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -676,8 +664,8 @@ twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
 `;
 
 exports[`js handler > preserve-fn-case0.js case 1 1`] = `
-"import { clsx } from \\"clsx\\";
-import { twMerge } from \\"tailwind-merge\\";
+"import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -704,8 +692,8 @@ Map {
 `;
 
 exports[`js handler > preserve-fn-case0.js case 2 1`] = `
-"import { clsx } from \\"clsx\\";
-import { twMerge } from \\"tailwind-merge\\";
+"import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -732,8 +720,8 @@ Map {
 `;
 
 exports[`js handler > preserve-fn-case0.js case 3 1`] = `
-"import { clsx } from \\"clsx\\";
-import { twMerge } from \\"tailwind-merge\\";
+"import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -759,11 +747,11 @@ Map {
 }
 `;
 
-exports[`js handler > trailing slash case 0 1`] = `"document.getElementById(\\"#app\\").classList.add(\\"tw-a tw-b\\");"`;
+exports[`js handler > trailing slash case 0 1`] = `"document.getElementById("#app").classList.add("tw-a tw-b");"`;
 
-exports[`js handler > trailing slash case 1 1`] = `"document.querySelector(\\"#app\\").classList.add(\\"tw-a tw-b\\");"`;
+exports[`js handler > trailing slash case 1 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b");"`;
 
-exports[`js handler > trailing slash case 2 1`] = `"document.querySelector(\\"#app\\").classList.add(\\"tw-a tw-b tw-a s tw-a\\");"`;
+exports[`js handler > trailing slash case 2 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b tw-a s tw-a");"`;
 
 exports[`js handler > ts vanilla-0 1`] = `
 "import './style.css'
@@ -772,72 +760,72 @@ import typescriptLogo from './typescript.svg'
 import { setupCounter } from './counter'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = \`
-<main class=\\"flex tw-fb tw-yb tw-cb tw-ra tw-mc\\">
-<div class=\\"tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac\\">
+<main class="flex tw-fb tw-yb tw-cb tw-ra tw-mc">
+<div class="tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac">
   <p
-    class=\\"fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m\\">
+    class="fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m">
     Get started by editing&nbsp;
-    <code class=\\"tw-ob tw-nb\\">pages/index.tsx</code>
+    <code class="tw-ob tw-nb">pages/index.tsx</code>
   </p>
   <div
-    class=\\"fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb\\">
-    <a class=\\"tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec\\"
-      href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-      target=\\"_blank\\" rel=\\"noopener noreferrer\\">
+    class="fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb">
+    <a class="tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec"
+      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+      target="_blank" rel="noopener noreferrer">
       By
-      <img src=\\"\${typescriptLogo}\\" alt=\\"Vercel Logo\\" class=\\"tw-hb\\" priority />
+      <img src="\${typescriptLogo}" alt="Vercel Logo" class="tw-hb" priority />
     </a>
   </div>
 </div>
 
 <div
-  class=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
-  <img class=\\"relative tw-a tw-hb\\" src=\\"/vite.svg\\" alt=\\"Next.js Logo\\"
+  class="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
+  <img class="relative tw-a tw-hb" src="/vite.svg" alt="Next.js Logo"
     priority />
 </div>
 
-<div class=\\"tw-ic grid tw-ib tw-bc tw-xa tw-db\\">
-  <a href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+<div class="tw-ic grid tw-ib tw-bc tw-xa tw-db">
+  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Docs <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Find in-depth information about Next.js
+    <p class="tw-sc tw-eb tw-cc tw-lb">Find in-depth information about Next.js
       features and API.</p>
   </a>
 
-  <a href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Learn <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Learn about Next.js in an interactive
+    <p class="tw-sc tw-eb tw-cc tw-lb">Learn about Next.js in an interactive
       course with&nbsp;quizzes!</p>
   </a>
 
-  <a href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Templates <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Discover and deploy boilerplate example
+    <p class="tw-sc tw-eb tw-cc tw-lb">Discover and deploy boilerplate example
       Next.js&nbsp;projects.</p>
   </a>
 
-  <a href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-    class=\\"group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e\\"
-    target=\\"_blank\\" rel=\\"noopener noreferrer\\">
-    <h2 class=\\"tw-lc tw-zb tw-ya\\">
+  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
+    target="_blank" rel="noopener noreferrer">
+    <h2 class="tw-lc tw-zb tw-ya">
       Deploy <span
-        class=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
     </h2>
-    <p class=\\"tw-sc tw-eb tw-cc tw-lb\\">Instantly deploy your Next.js site to a
+    <p class="tw-sc tw-eb tw-cc tw-lb">Instantly deploy your Next.js site to a
       shareable URL with Vercel.</p>
   </a>
 </div>
@@ -858,73 +846,73 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <main className=\\"flex tw-fb tw-zb tw-cb tw-ra tw-nc\\">
-      <div className=\\"tw-sc tw-hc tw-vb tw-cb tw-ra tw-pb tw-dc tw-bc\\">
-        <p className=\\"fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m\\">
+    <main className="flex tw-fb tw-zb tw-cb tw-ra tw-nc">
+      <div className="tw-sc tw-hc tw-vb tw-cb tw-ra tw-pb tw-dc tw-bc">
+        <p className="fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m">
           Get started by editing&nbsp;
-          <code className=\\"tw-pb tw-ob\\">pages/index.tsx</code>
+          <code className="tw-pb tw-ob">pages/index.tsx</code>
         </p>
-        <div className=\\"fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-jb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-kb\\">
+        <div className="fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-jb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-kb">
           <a
-            className=\\"tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc\\"
-            href=\\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-            target=\\"_blank\\"
-            rel=\\"noopener noreferrer\\"
+            className="tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc"
+            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            By <img src=\\"/vite.svg\\" alt=\\"Vercel Logo\\" className=\\"tw-hb\\" width={100} height={24} />
+            By <img src="/vite.svg" alt="Vercel Logo" className="tw-hb" width={100} height={24} />
           </a>
         </div>
       </div>
 
-      <div className=\\"relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t\\">
-        <img className=\\"relative tw-a tw-hb\\" src={reactLogo} alt=\\"Next.js Logo\\" width={180} height={37} />
+      <div className="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
+        <img className="relative tw-a tw-hb" src={reactLogo} alt="Next.js Logo" width={180} height={37} />
       </div>
 
-      <div className=\\"tw-jc grid tw-ib tw-cc tw-xa tw-db\\">
+      <div className="tw-jc grid tw-ib tw-cc tw-xa tw-db">
         <a
-          href=\\"https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
-          target=\\"_blank\\"
-          rel=\\"noopener noreferrer\\"
+          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Docs <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+            Docs <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
           </h2>
           <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Find in-depth information about Next.js features and API.</p>
         </a>
 
         <a
-          href=\\"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
-          target=\\"_blank\\"
-          rel=\\"noopener noreferrer\\"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Learn <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+            Learn <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
           </h2>
           <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
         </a>
 
         <a
-          href=\\"https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
-          target=\\"_blank\\"
-          rel=\\"noopener noreferrer\\"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Templates <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+            Templates <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
           </h2>
           <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
         </a>
 
         <a
-          href=\\"https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\"
-          className=\\"group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e\\"
-          target=\\"_blank\\"
-          rel=\\"noopener noreferrer\\"
+          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
+          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Deploy <span className=\\"tw-bb tw-r tw-i tw-f\\">-&gt;</span>
+            Deploy <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
           </h2>
           <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
         </a>
@@ -938,12 +926,12 @@ export default App"
 
 exports[`js handler > z-10 not transform 1`] = `
 "{
-  className: \\"tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h\\";
+  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
 }"
 `;
 
 exports[`js handler > z-10 not transform with splitQuote false 1`] = `
 "{
-  className: \\"tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h\\";
+  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
 }"
 `;

@@ -14,7 +14,7 @@ exports[`common usage > hello-world 1`] = `
 `;
 
 exports[`common usage > hello-world with js 1`] = `
-".bg-\\\\[\\\\#123456\\\\] {
+".bg-\\[\\#123456\\] {
     --tw-bg-opacity: 1;
     background-color: rgb(18 52 86 / var(--tw-bg-opacity))
 }
