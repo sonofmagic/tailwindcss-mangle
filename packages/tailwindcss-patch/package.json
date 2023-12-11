@@ -48,10 +48,10 @@
     "tailwindcss": "^3.3.6"
   },
   "dependencies": {
-    "@babel/generator": "^7.23.5",
-    "@babel/parser": "^7.23.5",
-    "@babel/traverse": "^7.23.5",
-    "@babel/types": "^7.23.5",
+    "@babel/generator": "^7.23.6",
+    "@babel/parser": "^7.23.6",
+    "@babel/traverse": "^7.23.6",
+    "@babel/types": "^7.23.6",
     "@tailwindcss-mangle/config": "workspace:^",
     "cac": "^6.7.14",
     "jiti": "^1.21.0",
