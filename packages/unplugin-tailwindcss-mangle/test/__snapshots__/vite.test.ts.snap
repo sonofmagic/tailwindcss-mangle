@@ -447,6 +447,55 @@ exports[`vite build > common build  2`] = `
         transform: none
     }
 }
+@media (min-width: 1024px) {
+    .tw-n {
+        pointer-events: auto
+    }
+    .tw-sb {
+        position: static
+    }
+    .tw-bc {
+        margin-bottom: 0px
+    }
+    .tw-ac {
+        display: flex
+    }
+    .tw-rb {
+        height: auto
+    }
+    .tw-tb {
+        width: auto
+    }
+    .tw-xa {
+        grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+    .tw-ab {
+        border-radius: 0.75rem
+    }
+    .tw-qb {
+        border-width: 1px
+    }
+    .tw-wa {
+        --tw-bg-opacity: 1;
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+    }
+    .tw-kb {
+        background-image: none
+    }
+    .tw-ec {
+        padding: 0px
+    }
+    .tw-fc {
+        padding: 1rem
+    }
+    .tw-db {
+        text-align: left
+    }
+    .tw-t::before {
+        content: var(--tw-content);
+        height: 360px
+    }
+}
 @media (prefers-color-scheme: dark) {
     .tw-l {
         --tw-border-opacity: 1;
@@ -511,53 +560,6 @@ exports[`vite build > common build  2`] = `
     }
 }
 @media (min-width: 1024px) {
-    .tw-n {
-        pointer-events: auto
-    }
-    .tw-sb {
-        position: static
-    }
-    .tw-bc {
-        margin-bottom: 0px
-    }
-    .tw-ac {
-        display: flex
-    }
-    .tw-rb {
-        height: auto
-    }
-    .tw-tb {
-        width: auto
-    }
-    .tw-xa {
-        grid-template-columns: repeat(4, minmax(0, 1fr))
-    }
-    .tw-ab {
-        border-radius: 0.75rem
-    }
-    .tw-qb {
-        border-width: 1px
-    }
-    .tw-wa {
-        --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
-    }
-    .tw-kb {
-        background-image: none
-    }
-    .tw-ec {
-        padding: 0px
-    }
-    .tw-fc {
-        padding: 1rem
-    }
-    .tw-db {
-        text-align: left
-    }
-    .tw-t::before {
-        content: var(--tw-content);
-        height: 360px
-    }
     @media (prefers-color-scheme: dark) {
         .tw-m {
             background-color: rgb(39 39 42 / 0.3)
@@ -1032,6 +1034,55 @@ exports[`vite build > common build change class prefix 2`] = `
         transform: none
     }
 }
+@media (min-width: 1024px) {
+    .ice-n {
+        pointer-events: auto
+    }
+    .ice-sb {
+        position: static
+    }
+    .ice-bc {
+        margin-bottom: 0px
+    }
+    .ice-ac {
+        display: flex
+    }
+    .ice-rb {
+        height: auto
+    }
+    .ice-tb {
+        width: auto
+    }
+    .ice-xa {
+        grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+    .ice-ab {
+        border-radius: 0.75rem
+    }
+    .ice-qb {
+        border-width: 1px
+    }
+    .ice-wa {
+        --tw-bg-opacity: 1;
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+    }
+    .ice-kb {
+        background-image: none
+    }
+    .ice-ec {
+        padding: 0px
+    }
+    .ice-fc {
+        padding: 1rem
+    }
+    .ice-db {
+        text-align: left
+    }
+    .ice-t::before {
+        content: var(--tw-content);
+        height: 360px
+    }
+}
 @media (prefers-color-scheme: dark) {
     .ice-l {
         --tw-border-opacity: 1;
@@ -1096,53 +1147,6 @@ exports[`vite build > common build change class prefix 2`] = `
     }
 }
 @media (min-width: 1024px) {
-    .ice-n {
-        pointer-events: auto
-    }
-    .ice-sb {
-        position: static
-    }
-    .ice-bc {
-        margin-bottom: 0px
-    }
-    .ice-ac {
-        display: flex
-    }
-    .ice-rb {
-        height: auto
-    }
-    .ice-tb {
-        width: auto
-    }
-    .ice-xa {
-        grid-template-columns: repeat(4, minmax(0, 1fr))
-    }
-    .ice-ab {
-        border-radius: 0.75rem
-    }
-    .ice-qb {
-        border-width: 1px
-    }
-    .ice-wa {
-        --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
-    }
-    .ice-kb {
-        background-image: none
-    }
-    .ice-ec {
-        padding: 0px
-    }
-    .ice-fc {
-        padding: 1rem
-    }
-    .ice-db {
-        text-align: left
-    }
-    .ice-t::before {
-        content: var(--tw-content);
-        height: 360px
-    }
     @media (prefers-color-scheme: dark) {
         .ice-m {
             background-color: rgb(39 39 42 / 0.3)

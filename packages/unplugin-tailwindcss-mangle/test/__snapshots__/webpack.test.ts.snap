@@ -371,6 +371,55 @@ exports[`webpack build > common > assets 1`] = `
         transform: none
     }
 }
+@media (min-width: 1024px) {
+    .lg\\:pointer-events-auto {
+        pointer-events: auto
+    }
+    .lg\\:static {
+        position: static
+    }
+    .lg\\:mb-0 {
+        margin-bottom: 0px
+    }
+    .lg\\:flex {
+        display: flex
+    }
+    .lg\\:h-auto {
+        height: auto
+    }
+    .lg\\:w-auto {
+        width: auto
+    }
+    .lg\\:grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+    .lg\\:rounded-xl {
+        border-radius: 0.75rem
+    }
+    .lg\\:border {
+        border-width: 1px
+    }
+    .lg\\:bg-gray-200 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+    }
+    .lg\\:bg-none {
+        background-image: none
+    }
+    .lg\\:p-0 {
+        padding: 0px
+    }
+    .lg\\:p-4 {
+        padding: 1rem
+    }
+    .lg\\:text-left {
+        text-align: left
+    }
+    .before\\:lg\\:h-\\[360px\\]::before {
+        content: var(--tw-content);
+        height: 360px
+    }
+}
 @media (prefers-color-scheme: dark) {
     .dark\\:border-neutral-800 {
         --tw-border-opacity: 1;
@@ -435,53 +484,6 @@ exports[`webpack build > common > assets 1`] = `
     }
 }
 @media (min-width: 1024px) {
-    .lg\\:pointer-events-auto {
-        pointer-events: auto
-    }
-    .lg\\:static {
-        position: static
-    }
-    .lg\\:mb-0 {
-        margin-bottom: 0px
-    }
-    .lg\\:flex {
-        display: flex
-    }
-    .lg\\:h-auto {
-        height: auto
-    }
-    .lg\\:w-auto {
-        width: auto
-    }
-    .lg\\:grid-cols-4 {
-        grid-template-columns: repeat(4, minmax(0, 1fr))
-    }
-    .lg\\:rounded-xl {
-        border-radius: 0.75rem
-    }
-    .lg\\:border {
-        border-width: 1px
-    }
-    .lg\\:bg-gray-200 {
-        --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
-    }
-    .lg\\:bg-none {
-        background-image: none
-    }
-    .lg\\:p-0 {
-        padding: 0px
-    }
-    .lg\\:p-4 {
-        padding: 1rem
-    }
-    .lg\\:text-left {
-        text-align: left
-    }
-    .before\\:lg\\:h-\\[360px\\]::before {
-        content: var(--tw-content);
-        height: 360px
-    }
     @media (prefers-color-scheme: dark) {
         .lg\\:dark\\:bg-zinc-800\\/30 {
             background-color: rgb(39 39 42 / 0.3)
@@ -872,6 +874,55 @@ exports[`webpack build > with plugin > assets 1`] = `
         transform: none
     }
 }
+@media (min-width: 1024px) {
+    .tw-n {
+        pointer-events: auto
+    }
+    .tw-tb {
+        position: static
+    }
+    .tw-cc {
+        margin-bottom: 0px
+    }
+    .tw-bc {
+        display: flex
+    }
+    .tw-sb {
+        height: auto
+    }
+    .tw-ub {
+        width: auto
+    }
+    .tw-xa {
+        grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+    .tw-ab {
+        border-radius: 0.75rem
+    }
+    .tw-rb {
+        border-width: 1px
+    }
+    .tw-wa {
+        --tw-bg-opacity: 1;
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+    }
+    .tw-lb {
+        background-image: none
+    }
+    .tw-fc {
+        padding: 0px
+    }
+    .tw-gc {
+        padding: 1rem
+    }
+    .tw-eb {
+        text-align: left
+    }
+    .tw-t::before {
+        content: var(--tw-content);
+        height: 360px
+    }
+}
 @media (prefers-color-scheme: dark) {
     .tw-l {
         --tw-border-opacity: 1;
@@ -936,53 +987,6 @@ exports[`webpack build > with plugin > assets 1`] = `
     }
 }
 @media (min-width: 1024px) {
-    .tw-n {
-        pointer-events: auto
-    }
-    .tw-tb {
-        position: static
-    }
-    .tw-cc {
-        margin-bottom: 0px
-    }
-    .tw-bc {
-        display: flex
-    }
-    .tw-sb {
-        height: auto
-    }
-    .tw-ub {
-        width: auto
-    }
-    .tw-xa {
-        grid-template-columns: repeat(4, minmax(0, 1fr))
-    }
-    .tw-ab {
-        border-radius: 0.75rem
-    }
-    .tw-rb {
-        border-width: 1px
-    }
-    .tw-wa {
-        --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
-    }
-    .tw-lb {
-        background-image: none
-    }
-    .tw-fc {
-        padding: 0px
-    }
-    .tw-gc {
-        padding: 1rem
-    }
-    .tw-eb {
-        text-align: left
-    }
-    .tw-t::before {
-        content: var(--tw-content);
-        height: 360px
-    }
     @media (prefers-color-scheme: dark) {
         .tw-m {
             background-color: rgb(39 39 42 / 0.3)
