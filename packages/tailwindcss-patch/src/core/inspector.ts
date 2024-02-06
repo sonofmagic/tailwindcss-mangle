@@ -12,7 +12,7 @@ export function inspectProcessTailwindFeaturesReturnContext(content: string) {
         const rts = n.body.body[0]
         if (t.isFunctionExpression(rts.argument)) {
           const body = rts.argument.body.body
-          const lastStatement = body.at(-1)
+          const lastStatement = body[body.length - 1]
           hasPatched = t.isReturnStatement(lastStatement) && t.isIdentifier(lastStatement.argument) && lastStatement.argument.name === 'context'
           if (!hasPatched) {
             // return context;
@@ -52,7 +52,7 @@ export function inspectPostcssPlugin(content: string) {
 
       if (idx > -1) {
         const prevStatement = n.body[idx - 1]
-        const lastStatement = n.body.at(-1)
+        const lastStatement = n.body[n.body.length - 1]
         const hasPatchedCondition0 =
           prevStatement &&
           t.isVariableDeclaration(prevStatement) &&
@@ -110,7 +110,7 @@ export function inspectPostcssPlugin(content: string) {
               if (pluginsCode[1] && t.isFunctionExpression(pluginsCode[1])) {
                 const targetBlockStatement = pluginsCode[1].body
 
-                const lastStatement = targetBlockStatement.body.at(-1)
+                const lastStatement = targetBlockStatement.body[targetBlockStatement.body.length - 1]
                 if (t.isExpressionStatement(lastStatement)) {
                   // contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));
                   const newExpressionStatement = t.expressionStatement(

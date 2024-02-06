@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "tailwind-merge": "^2.2.0",
-    "unplugin": "^1.6.0"
+    "tailwind-merge": "^2.2.1",
+    "unplugin": "^1.7.1"
   }
 }

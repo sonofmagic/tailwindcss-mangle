@@ -44,25 +44,25 @@
   },
   "dependencies": {
     "@ast-core/escape": "^1.0.1",
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.23.9",
     "@babel/helper-plugin-utils": "^7.22.5",
     "@babel/preset-typescript": "^7.23.3",
-    "@babel/types": "^7.23.6",
+    "@babel/types": "^7.23.9",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.0",
-    "magic-string": "^0.30.5",
+    "magic-string": "^0.30.7",
     "micromatch": "^4.0.5",
     "parse5": "^7.1.2",
-    "postcss": "^8.4.33",
+    "postcss": "^8.4.34",
     "postcss-selector-parser": "^6.0.15"
   },
   "devDependencies": {
     "@parse5/tools": "^0.4.0",
     "@types/babel__core": "^7.20.5",
     "@types/micromatch": "^4.0.6",
-    "@vue/compiler-core": "^3.4.14",
-    "@vue/compiler-sfc": "^3.4.14"
+    "@vue/compiler-core": "^3.4.15",
+    "@vue/compiler-sfc": "^3.4.15"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

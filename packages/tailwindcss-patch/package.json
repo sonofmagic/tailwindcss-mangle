@@ -49,16 +49,16 @@
   },
   "dependencies": {
     "@babel/generator": "^7.23.6",
-    "@babel/parser": "^7.23.6",
-    "@babel/traverse": "^7.23.7",
-    "@babel/types": "^7.23.6",
+    "@babel/parser": "^7.23.9",
+    "@babel/traverse": "^7.23.9",
+    "@babel/types": "^7.23.9",
     "@tailwindcss-mangle/config": "workspace:^",
     "cac": "^6.7.14",
     "jiti": "^1.21.0",
     "lilconfig": "^3.0.0",
-    "postcss": "^8.4.33",
+    "postcss": "^8.4.34",
     "resolve": "^1.22.8",
-    "semver": "^7.5.4"
+    "semver": "^7.6.0"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {
