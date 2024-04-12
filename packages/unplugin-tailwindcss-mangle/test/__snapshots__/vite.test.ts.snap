@@ -127,7 +127,11 @@ exports[`vite build > common build  2`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 ::backdrop {
     --tw-border-spacing-x: 0;
@@ -176,7 +180,11 @@ exports[`vite build > common build  2`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 .tw-w {
     pointer-events: none
@@ -714,7 +722,11 @@ exports[`vite build > common build change class prefix 2`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 ::backdrop {
     --tw-border-spacing-x: 0;
@@ -763,7 +775,11 @@ exports[`vite build > common build change class prefix 2`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 .ice-w {
     pointer-events: none

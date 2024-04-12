@@ -50,7 +50,11 @@ exports[`webpack build > common > assets 1`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 ::backdrop {
     --tw-border-spacing-x: 0;
@@ -99,7 +103,11 @@ exports[`webpack build > common > assets 1`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 .pointer-events-none {
     pointer-events: none
@@ -553,7 +561,11 @@ exports[`webpack build > with plugin > assets 1`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 ::backdrop {
     --tw-border-spacing-x: 0;
@@ -602,7 +614,11 @@ exports[`webpack build > with plugin > assets 1`] = `
     --tw-backdrop-invert:  ;
     --tw-backdrop-opacity:  ;
     --tw-backdrop-saturate:  ;
-    --tw-backdrop-sepia:  
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
 }
 .tw-w {
     pointer-events: none
