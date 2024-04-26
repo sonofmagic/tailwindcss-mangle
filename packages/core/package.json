@@ -51,7 +51,7 @@
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.0",
-    "magic-string": "^0.30.9",
+    "magic-string": "^0.30.10",
     "micromatch": "^4.0.5",
     "parse5": "^7.1.2",
     "postcss": "^8.4.38",
@@ -60,9 +60,9 @@
   "devDependencies": {
     "@parse5/tools": "^0.4.0",
     "@types/babel__core": "^7.20.5",
-    "@types/micromatch": "^4.0.6",
-    "@vue/compiler-core": "^3.4.21",
-    "@vue/compiler-sfc": "^3.4.21"
+    "@types/micromatch": "^4.0.7",
+    "@vue/compiler-core": "^3.4.25",
+    "@vue/compiler-sfc": "^3.4.25"
   },
   "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
   "repository": {

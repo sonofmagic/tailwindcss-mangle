@@ -74,7 +74,7 @@
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "magic-string": "^0.30.9",
+    "magic-string": "^0.30.10",
     "unplugin": "^1.10.1"
   },
   "publishConfig": {
@@ -83,16 +83,16 @@
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "^7.10.3",
-    "astro": "^4.6.0",
+    "astro": "^4.7.0",
     "css-loader": "^7.1.1",
     "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.8.1",
+    "mini-css-extract-plugin": "^2.9.0",
     "normalize-newline": "^4.1.0",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
     "tailwindcss": "^3.4.3",
     "tailwindcss-patch": "workspace:^",
-    "vite": "^5.2.8",
+    "vite": "^5.2.10",
     "webpack": "^5.91.0",
     "webpack-build-utils": "^0.0.7"
   },
