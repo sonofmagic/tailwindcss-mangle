@@ -16,10 +16,10 @@ export async function getCss(raw: string | string[]) {
     tailwindcss({
       content: raw.map((x) => {
         return {
-          raw: x
+          raw: x,
         }
-      })
-    })
+      }),
+    }),
   ]).process('@tailwind utilities;')
   return res.css
 }

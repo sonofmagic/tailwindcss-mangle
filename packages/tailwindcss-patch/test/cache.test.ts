@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { getCss } from './utils'
 import { pkgName } from '@/constants'
-import { TailwindcssPatcher, CacheManager } from '@/core'
+import { CacheManager, TailwindcssPatcher } from '@/core'
 import { getCacheOptions } from '@/core/cache'
 
 describe('cache', () => {
@@ -14,10 +14,10 @@ describe('cache', () => {
     expect(cm.getOptions).toBeDefined()
     expect(cm.getOptions().dir).toBe(path.resolve(process.cwd(), './node_modules/.cache', pkgName))
     expect(getCacheOptions(false)).toEqual({
-      enable: false
+      enable: false,
     })
     expect(getCacheOptions(true)).toEqual({
-      enable: true
+      enable: true,
     })
   })
 
@@ -34,7 +34,7 @@ describe('cache', () => {
     // const opt = getCacheOptions()
     const opt = {
       dir: path.resolve(__dirname, 'fixtures/cache'),
-      file: 'raw-method.json'
+      file: 'raw-method.json',
     }
     cm = new CacheManager(opt)
     let cache: Set<string> | undefined
@@ -51,7 +51,7 @@ describe('cache', () => {
   it('read broken cache', () => {
     // const opt = getCacheOptions()
 
-    const dir = path.resolve(__dirname, './fixtures', pkgName + '-broken')
+    const dir = path.resolve(__dirname, './fixtures', `${pkgName}-broken`)
     const filepath = path.resolve(dir, 'index.json')
     cm.mkdir(dir)
     fs.writeFileSync(
@@ -59,10 +59,10 @@ describe('cache', () => {
       `{
       [ '2',"fuck you",{s:'12}
     }`,
-      'utf8'
+      'utf8',
     )
     cm = new CacheManager({
-      dir
+      dir,
     })
     expect(fs.existsSync(filepath)).toBe(true)
     const cache = cm.read()
@@ -75,15 +75,15 @@ describe('cache', () => {
     const twPatcher = new TailwindcssPatcher({
       cache: {
         dir,
-        file: 'merge-multiple-context.json'
-      }
+        file: 'merge-multiple-context.json',
+      },
     })
     twPatcher.setCache(new Set())
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     let set = twPatcher.getClassSet({
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)

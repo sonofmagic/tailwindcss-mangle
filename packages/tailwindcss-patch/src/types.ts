@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { Rule, Node } from 'postcss'
+import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
+
 export type CacheStrategy = 'merge' | 'overwrite'
 
 export interface CacheOptions {
@@ -37,15 +38,15 @@ export type TailwindcssClassCache = Map<
   string,
   (
     | {
-        layer: string
-        options: Record<string, any>
-        sort: Record<string, any>
-      }
+      layer: string
+      options: Record<string, any>
+      sort: Record<string, any>
+    }
     | Rule
   )[]
 >
 
-export type TailwindcssRuntimeContext = {
+export interface TailwindcssRuntimeContext {
   applyClassCache: Map<any, any>
   candidateRuleCache: Map<
     string | string,
@@ -60,7 +61,7 @@ export type TailwindcssRuntimeContext = {
           parentLayer: string
           variants: any
         },
-        Node
+        Node,
       ]
     >
   >

@@ -1,5 +1,6 @@
 import { getCss, getTestCase } from './utils'
-import { getContexts, getClassCacheSet } from '@/core'
+import { getClassCacheSet, getContexts } from '@/core'
+
 describe('common usage', () => {
   it('hello-world', async () => {
     const result = await getCss(getTestCase('hello-world.html'))
@@ -22,14 +23,14 @@ describe('common usage', () => {
   })
 
   // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin/issues/158
-  it("bg-[url('img_src')] lose efficacy", async () => {
+  it('bg-[url(\'img_src\')] lose efficacy', async () => {
     await getCss([getTestCase('img-url.jsx')])
     const ctxs = getContexts()
     expect(ctxs).toBeTruthy()
     const set = getClassCacheSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
-    expect([...set.values()][1]).toBe("bg-[url('https://xxx.webp')]")
+    expect([...set.values()][1]).toBe('bg-[url(\'https://xxx.webp\')]')
     //
   })
 

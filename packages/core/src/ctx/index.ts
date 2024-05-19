@@ -1,5 +1,6 @@
 import fs from 'node:fs'
-import { resolve, isAbsolute } from 'node:path'
+import { isAbsolute, resolve } from 'node:path'
+import process from 'node:process'
 import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { getConfig } from '@tailwindcss-mangle/config'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
@@ -60,7 +61,7 @@ export class Context {
     this.classGenerator = new ClassGenerator(this.options.classGenerator)
     this.preserveFunctionSet = new Set(this.options?.preserveFunction ?? [])
     this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
-      return new RegExp(escapeStringRegexp(x) + '\\(([^)]*)\\)', 'g')
+      return new RegExp(`${escapeStringRegexp(x)}\\(([^)]*)\\)`, 'g')
     })
   }
 
@@ -94,7 +95,7 @@ export class Context {
   }
 
   loadClassSet(classList: string[]) {
-    const list = sort(classList).desc((c) => c.length)
+    const list = sort(classList).desc(c => c.length)
     for (const className of list) {
       if (this.currentMangleClassFilter(className)) {
         this.classSet.add(className)
@@ -109,7 +110,8 @@ export class Context {
     this.mergeOptions(mangleOptions, config?.mangle)
     if (_classList) {
       this.loadClassSet(_classList)
-    } else {
+    }
+    else {
       let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
       if (!isAbsolute(jsonPath)) {
         jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)

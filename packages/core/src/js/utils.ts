@@ -1,4 +1,4 @@
-import babel from '@babel/core'
+import type babel from '@babel/core'
 // const t = babel.types
 export function getStringLiteralCalleeName(path: babel.NodePath<babel.types.StringLiteral>) {
   if (path.parentPath.isCallExpression()) {

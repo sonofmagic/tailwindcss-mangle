@@ -1,14 +1,15 @@
+import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
-import type { PatchUserConfig, UserConfig, MangleUserConfig } from './types'
+import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
 
 export function getDefaultPatchConfig(): PatchUserConfig {
   return {
     output: {
       filename: '.tw-patch/tw-class-list.json',
       removeUniversalSelector: true,
-      loose: true
+      loose: true,
     },
-    tailwindcss: {}
+    tailwindcss: {},
   }
 }
 
@@ -22,15 +23,15 @@ export function getDefaultMangleUserConfig(): MangleUserConfig {
     classMapOutput: {
       enable: false,
       filename: '.tw-patch/tw-map-list.json',
-      loose: true
+      loose: true,
     },
-    preserveFunction: []
+    preserveFunction: [],
   }
 }
 
 export function getDefaultUserConfig(): UserConfig {
   return {
     patch: getDefaultPatchConfig(),
-    mangle: getDefaultMangleUserConfig()
+    mangle: getDefaultMangleUserConfig(),
   }
 }

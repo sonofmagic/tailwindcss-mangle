@@ -1,7 +1,8 @@
 import type { PluginCreator } from 'postcss'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
-import { ICssHandlerOptions } from '@/types'
+import type { ICssHandlerOptions } from '@/types'
+
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
@@ -23,7 +24,7 @@ export function isVueScoped(s: parser.ClassName): boolean {
 
 export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> = function (options) {
   const { ignoreVueScoped, replaceMap, ctx } = defu(options, {
-    ignoreVueScoped: true
+    ignoreVueScoped: true,
   })
 
   return {
@@ -52,9 +53,9 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
         })
       }).transform(rule, {
         lossless: false,
-        updateSelector: true
+        updateSelector: true,
       })
-    }
+    },
   }
 }
 transformSelectorPostcssPlugin.postcss = true

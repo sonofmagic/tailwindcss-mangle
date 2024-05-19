@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import process from 'node:process'
 
 import { groupBy } from '@tailwindcss-mangle/shared'
 import { pluginName } from './constants'
@@ -22,18 +23,21 @@ export function getGroupedEntries<T>(
     },
     jsMatcher(file: string) {
       return /\.[cm]?js$/.test(file)
-    }
-  }
+    },
+  },
 ) {
   const { cssMatcher, htmlMatcher, jsMatcher } = options
   const groupedEntries = groupBy(entries, ([file]) => {
     if (cssMatcher(file)) {
       return 'css'
-    } else if (htmlMatcher(file)) {
+    }
+    else if (htmlMatcher(file)) {
       return 'html'
-    } else if (jsMatcher(file)) {
+    }
+    else if (jsMatcher(file)) {
       return 'js'
-    } else {
+    }
+    else {
       return 'other'
     }
   })
@@ -59,9 +63,10 @@ export function getCacheDir(basedir = process.cwd()) {
 export async function ensureDir(p: string) {
   try {
     await fs.access(p)
-  } catch {
+  }
+  catch {
     await fs.mkdir(p, {
-      recursive: true
+      recursive: true,
     })
   }
 }

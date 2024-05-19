@@ -47,9 +47,11 @@ npx tw-patch install
 ### 3. add `prepare` script in your `package.json`
 
 ```json
+{
   "scripts": {
     "prepare": "tw-patch install"
-  },
+  }
+}
 ```
 
 ### 4. Run extract command
@@ -109,7 +111,6 @@ module.exports = defineConfig({
     }
   }
 })
-
 ```
 
 #### Nuxt 3
@@ -117,7 +118,7 @@ module.exports = defineConfig({
 ```ts
 import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
 export default defineNuxtConfig({
-  //...
+  // ...
   // https://github.com/nuxt/nuxt/issues/20428
   // you must set this option to false to enable vite extract css
   experimental: {
@@ -132,7 +133,6 @@ export default defineNuxtConfig({
     ]
   ]
 })
-
 ```
 
 ## Options
@@ -150,7 +150,7 @@ because plugin will **traverse** all `html class attr` and `js StringLiteral` to
 it's dangerous to mangle some `js StringLiteral` like:
 
 ```js
-const innerHTML = "i'm flex and relative and grid"
+const innerHTML = 'i\'m flex and relative and grid'
 document.body.innerHTML = innerHTML
 ```
 

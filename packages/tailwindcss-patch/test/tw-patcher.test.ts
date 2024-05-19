@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { getCss, getTestCase } from './utils'
 import { TailwindcssPatcher } from '@/core'
+
 describe('class', () => {
   it('default', async () => {
     // const dir = path.resolve(__dirname, './fixtures/cache')
@@ -11,7 +12,7 @@ describe('class', () => {
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     const set = twPatcher.getClassSet({
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(4)
@@ -21,8 +22,8 @@ describe('class', () => {
     const dir = path.resolve(__dirname, './fixtures/cache')
     const twPatcher = new TailwindcssPatcher({
       cache: {
-        dir
-      }
+        dir,
+      },
     })
     const res = twPatcher.getCache()
     expect(res instanceof Set).toBe(true)
@@ -35,7 +36,7 @@ describe('class', () => {
     expect(ctxs.length).toBe(1)
     const set = twPatcher.getClassSet({
       cacheStrategy: 'overwrite',
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(5)
@@ -47,7 +48,7 @@ describe('class', () => {
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     let set = twPatcher.getClassSet({
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
@@ -59,7 +60,7 @@ describe('class', () => {
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     set = twPatcher.getClassSet({
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)

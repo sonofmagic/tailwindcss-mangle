@@ -2,6 +2,7 @@ import fss from 'node:fs'
 import fs from 'node:fs/promises'
 import type { SyncOpts } from 'resolve'
 import pkg from 'resolve'
+
 const { sync } = pkg
 
 export function ensureFileContent(filepaths: string | string[]) {
@@ -12,7 +13,7 @@ export function ensureFileContent(filepaths: string | string[]) {
   for (const filepath of filepaths) {
     if (fss.existsSync(filepath)) {
       content = fss.readFileSync(filepath, {
-        encoding: 'utf8'
+        encoding: 'utf8',
       })
       break
     }
@@ -27,9 +28,10 @@ export function requireResolve(id: string, opts?: SyncOpts) {
 export async function ensureDir(p: string) {
   try {
     await fs.access(p)
-  } catch {
+  }
+  catch {
     await fs.mkdir(p, {
-      recursive: true
+      recursive: true,
     })
   }
 }

@@ -1,5 +1,5 @@
 import * as t from '@babel/types'
-import { parse, traverse, generate } from '@/babel'
+import { generate, parse, traverse } from '@/babel'
 // crash code
 
 export function inspectProcessTailwindFeaturesReturnContext(content: string) {
@@ -21,12 +21,12 @@ export function inspectProcessTailwindFeaturesReturnContext(content: string) {
           }
         }
       }
-    }
+    },
   })
 
   return {
     code: hasPatched ? content : generate(ast).code,
-    hasPatched
+    hasPatched,
   }
 }
 
@@ -42,28 +42,28 @@ export function inspectPostcssPlugin(content: string) {
       // find module.exports = function tailwindcss(configOrPath)
       const idx = n.body.findIndex((x) => {
         return (
-          t.isExpressionStatement(x) &&
-          t.isAssignmentExpression(x.expression) &&
-          t.isMemberExpression(x.expression.left) &&
-          t.isFunctionExpression(x.expression.right) &&
-          x.expression.right.id?.name === 'tailwindcss'
+          t.isExpressionStatement(x)
+          && t.isAssignmentExpression(x.expression)
+          && t.isMemberExpression(x.expression.left)
+          && t.isFunctionExpression(x.expression.right)
+          && x.expression.right.id?.name === 'tailwindcss'
         )
       })
 
       if (idx > -1) {
         const prevStatement = n.body[idx - 1]
         const lastStatement = n.body[n.body.length - 1]
-        const hasPatchedCondition0 =
-          prevStatement &&
-          t.isVariableDeclaration(prevStatement) &&
-          prevStatement.declarations.length === 1 &&
-          t.isIdentifier(prevStatement.declarations[0].id) &&
-          prevStatement.declarations[0].id.name === variableName
-        const hasPatchedCondition1 =
-          t.isExpressionStatement(lastStatement) &&
-          t.isAssignmentExpression(lastStatement.expression) &&
-          t.isIdentifier(lastStatement.expression.right) &&
-          lastStatement.expression.right.name === variableName
+        const hasPatchedCondition0
+          = prevStatement
+          && t.isVariableDeclaration(prevStatement)
+          && prevStatement.declarations.length === 1
+          && t.isIdentifier(prevStatement.declarations[0].id)
+          && prevStatement.declarations[0].id.name === variableName
+        const hasPatchedCondition1
+          = t.isExpressionStatement(lastStatement)
+          && t.isAssignmentExpression(lastStatement.expression)
+          && t.isIdentifier(lastStatement.expression.right)
+          && lastStatement.expression.right.name === variableName
 
         hasPatched = hasPatchedCondition0 || hasPatchedCondition1
         if (!hasPatched) {
@@ -71,7 +71,7 @@ export function inspectPostcssPlugin(content: string) {
           //   value: []
           // };
           const statement = t.variableDeclaration('const', [
-            t.variableDeclarator(t.identifier(variableName), t.objectExpression([t.objectProperty(t.identifier(valueKey), t.arrayExpression())]))
+            t.variableDeclarator(t.identifier(variableName), t.objectExpression([t.objectProperty(t.identifier(valueKey), t.arrayExpression())])),
           ])
           n.body.splice(idx, 0, statement)
           // module.exports.contextRef = contextRef;
@@ -80,9 +80,9 @@ export function inspectPostcssPlugin(content: string) {
               t.assignmentExpression(
                 '=',
                 t.memberExpression(t.memberExpression(t.identifier('module'), t.identifier('exports')), t.identifier(exportKey)),
-                t.identifier(variableName)
-              )
-            )
+                t.identifier(variableName),
+              ),
+            ),
           )
         }
       }
@@ -100,11 +100,11 @@ export function inspectPostcssPlugin(content: string) {
             const keyMatched = t.isIdentifier(properties[0].key) && properties[0].key.name === 'postcssPlugin'
             const pluginsMatched = t.isIdentifier(properties[1].key) && properties[1].key.name === 'plugins'
             if (
-              pluginsMatched &&
-              keyMatched &&
-              t.isCallExpression(properties[1].value) &&
-              t.isMemberExpression(properties[1].value.callee) &&
-              t.isArrayExpression(properties[1].value.callee.object)
+              pluginsMatched
+              && keyMatched
+              && t.isCallExpression(properties[1].value)
+              && t.isMemberExpression(properties[1].value.callee)
+              && t.isArrayExpression(properties[1].value.callee.object)
             ) {
               const pluginsCode = properties[1].value.callee.object.elements
               if (pluginsCode[1] && t.isFunctionExpression(pluginsCode[1])) {
@@ -118,16 +118,16 @@ export function inspectPostcssPlugin(content: string) {
                       t.memberExpression(
                         t.memberExpression(t.identifier(variableName), t.identifier('value')),
 
-                        t.identifier('push')
+                        t.identifier('push'),
                       ),
 
-                      [lastStatement.expression]
-                    )
+                      [lastStatement.expression],
+                    ),
                   )
                   targetBlockStatement.body[targetBlockStatement.body.length - 1] = newExpressionStatement
                 }
 
-                const ifIdx = targetBlockStatement.body.findIndex((x) => t.isIfStatement(x))
+                const ifIdx = targetBlockStatement.body.findIndex(x => t.isIfStatement(x))
                 if (ifIdx > -1) {
                   const ifRoot = <t.IfStatement>targetBlockStatement.body[ifIdx]
                   if (t.isBlockStatement(ifRoot.consequent) && ifRoot.consequent.body[1] && t.isForOfStatement(ifRoot.consequent.body[1])) {
@@ -138,7 +138,7 @@ export function inspectPostcssPlugin(content: string) {
                         const target = if2.consequent.body[0]
                         // contextRef.value.push((0, _processTailwindFeatures.default)(context)(root1, result));
                         const newExpressionStatement = t.expressionStatement(
-                          t.callExpression(t.memberExpression(t.memberExpression(t.identifier(variableName), t.identifier('value')), t.identifier('push')), [target.expression])
+                          t.callExpression(t.memberExpression(t.memberExpression(t.identifier(variableName), t.identifier('value')), t.identifier('push')), [target.expression]),
                         )
                         if2.consequent.body[0] = newExpressionStatement
                       }
@@ -155,9 +155,9 @@ export function inspectPostcssPlugin(content: string) {
                     t.assignmentExpression(
                       '=',
                       t.memberExpression(t.memberExpression(t.identifier(variableName), t.identifier(valueKey)), t.identifier('length')),
-                      t.numericLiteral(0)
-                    )
-                  )
+                      t.numericLiteral(0),
+                    ),
+                  ),
                 )
               }
             }
@@ -165,7 +165,7 @@ export function inspectPostcssPlugin(content: string) {
         }
       }
       // start = true
-    }
+    },
     // BlockStatement(p) {
     //   const n = p.node
     //   if (start && p.parent.type === 'FunctionExpression' && !p.parent.id) {
@@ -175,6 +175,6 @@ export function inspectPostcssPlugin(content: string) {
   })
   return {
     code: hasPatched ? content : generate(ast).code,
-    hasPatched
+    hasPatched,
   }
 }

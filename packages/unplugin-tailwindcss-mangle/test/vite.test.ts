@@ -15,15 +15,15 @@ describe('vite build', () => {
           output: {
             entryFileNames: `[name].js`,
             chunkFileNames: `[name].js`,
-            assetFileNames: `[name].[ext]`
-          }
-        }
+            assetFileNames: `[name].[ext]`,
+          },
+        },
       },
       plugins: [
         utwm({
-          classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json')
-        })
-      ]
+          classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
+        }),
+      ],
     })) as RollupOutput
     const output = res.output
     expect(output.length).toBe(3)
@@ -51,18 +51,18 @@ describe('vite build', () => {
           output: {
             entryFileNames: `[name].js`,
             chunkFileNames: `[name].js`,
-            assetFileNames: `[name].[ext]`
-          }
-        }
+            assetFileNames: `[name].[ext]`,
+          },
+        },
       },
       plugins: [
         utwm({
           classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
           classGenerator: {
-            classPrefix: 'ice-'
-          }
-        })
-      ]
+            classPrefix: 'ice-',
+          },
+        }),
+      ],
     })) as RollupOutput
     const output = res.output
     expect(output.length).toBe(3)

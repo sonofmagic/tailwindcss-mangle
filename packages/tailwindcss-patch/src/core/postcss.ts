@@ -1,5 +1,5 @@
 import path from 'node:path'
-import url from 'node:url'
+import process from 'node:process'
 import postcss from 'postcss'
 import { lilconfig } from 'lilconfig'
 import createJiti from 'jiti'
@@ -10,7 +10,7 @@ import createJiti from 'jiti'
 // }
 const jiti = createJiti(__filename)
 
-export async function processTailwindcss(options: { cwd?: string; config?: string }) {
+export async function processTailwindcss(options: { cwd?: string, config?: string }) {
   options.cwd = options.cwd ?? process.cwd()
   let config = options.config
   // 没有具体指定的话，就走下面的分支
@@ -23,7 +23,7 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
         `${moduleName}.config.mjs`,
         `${moduleName}.config.ts`,
         `${moduleName}.config.cts`,
-        `${moduleName}.config.mts`
+        `${moduleName}.config.mts`,
       ],
       loaders: {
         // 默认支持 js 和 cjs 2种格式
@@ -32,8 +32,8 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
         '.mjs': jiti,
         '.ts': jiti,
         '.cts': jiti,
-        '.mts': jiti
-      }
+        '.mts': jiti,
+      },
     }).search(options.cwd)
     if (!result) {
       throw new Error(`No TailwindCSS Config found in: ${options.cwd}`)
@@ -43,9 +43,9 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
 
   return await postcss([
     require('tailwindcss')({
-      config
-    })
+      config,
+    }),
   ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {
-    from: undefined
+    from: undefined,
   })
 }

@@ -1,16 +1,17 @@
-import { parse, walk } from '@vue/compiler-sfc'
-import {
-  generate,
-  baseParse,
-  transform,
-  TransformOptions,
+import { parse } from '@vue/compiler-sfc'
+import type {
+  NodeTransform,
   RootNode,
-  locStub,
-  createSimpleExpression,
+} from '@vue/compiler-core'
+import {
   CREATE_VNODE,
   RESOLVE_DIRECTIVE,
+  baseParse,
+  createSimpleExpression,
+  generate,
   helperNameMap,
-  NodeTransform
+  locStub,
+  transform,
 } from '@vue/compiler-core'
 import { getTestCase } from './utils'
 
@@ -41,7 +42,7 @@ const NodeTypes = {
   JS_IF_STATEMENT: 23,
   JS_ASSIGNMENT_EXPRESSION: 24,
   JS_SEQUENCE_EXPRESSION: 25,
-  JS_RETURN_STATEMENT: 26
+  JS_RETURN_STATEMENT: 26,
 } as const
 
 function createRoot(options: Partial<RootNode> = {}): RootNode {
@@ -57,18 +58,18 @@ function createRoot(options: Partial<RootNode> = {}): RootNode {
     temps: 0,
     codegenNode: createSimpleExpression(`null`, false),
     loc: locStub,
-    ...options
+    ...options,
   }
 }
 // https://github.com/vuejs/core/blob/main/packages/compiler-sfc/__tests__/templateTransformAssetUrl.spec.ts
 describe('vue', () => {
-  test('module mode preamble', () => {
+  it('module mode preamble', () => {
     const root = createRoot({
-      helpers: new Set([CREATE_VNODE, RESOLVE_DIRECTIVE])
+      helpers: new Set([CREATE_VNODE, RESOLVE_DIRECTIVE]),
     })
     const { code } = generate(root, { mode: 'module' })
     expect(code).toMatch(
-      `import { ${helperNameMap[CREATE_VNODE]} as _${helperNameMap[CREATE_VNODE]}, ${helperNameMap[RESOLVE_DIRECTIVE]} as _${helperNameMap[RESOLVE_DIRECTIVE]} } from "vue"`
+      `import { ${helperNameMap[CREATE_VNODE]} as _${helperNameMap[CREATE_VNODE]}, ${helperNameMap[RESOLVE_DIRECTIVE]} as _${helperNameMap[RESOLVE_DIRECTIVE]} } from "vue"`,
     )
     expect(code).toMatchSnapshot()
   })
@@ -89,15 +90,15 @@ describe('vue', () => {
               {
                 type: NodeTypes.TEXT,
                 content: 'hello',
-                isEmpty: false
-              }
-            ]
-          })
+                isEmpty: false,
+              },
+            ],
+          }),
         )
       }
     }
     transform(ast, {
-      nodeTransforms: [plugin]
+      nodeTransforms: [plugin],
     })
     const t = generate(ast, { mode: 'module' })
     expect(t.code).toBe(content)

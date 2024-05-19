@@ -4,4 +4,8 @@ export default icebreaker({}, {
   ignores: [
     '**/fixtures/**',
   ],
+}, {
+  rules: {
+    'no-console': 'off',
+  },
 })

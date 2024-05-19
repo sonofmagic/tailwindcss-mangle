@@ -1,4 +1,5 @@
 import type { Context } from './ctx'
+
 export interface IClassGeneratorContextItem {
   name: string
   usedBy: string[]

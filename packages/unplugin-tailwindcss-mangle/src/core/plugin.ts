@@ -2,7 +2,7 @@ import { dirname } from 'node:path'
 import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
-import { htmlHandler, cssHandler, jsHandler, preProcessJs, Context, preProcessRawCode } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, jsHandler, preProcessJs, preProcessRawCode } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
 import { pluginName } from '@/constants'
@@ -17,7 +17,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
     async buildStart() {
       await ctx.initConfig({
-        mangleOptions: options
+        mangleOptions: options,
       })
     },
     transformInclude(id) {
@@ -29,17 +29,17 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
       return /\.[jt]sx?$/.test(id)
         ? preProcessJs({
-            code: s,
-            replaceMap,
-            ctx,
-            id
-          })
+          code: s,
+          replaceMap,
+          ctx,
+          id,
+        })
         : preProcessRawCode({
-            code,
-            ctx,
-            replaceMap,
-            id
-          })
+          code,
+          ctx,
+          replaceMap,
+          id,
+        })
     },
     vite: {
       generateBundle: {
@@ -54,13 +54,13 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
               const { css } = await cssHandler(cssSource.source.toString(), {
                 file,
                 replaceMap,
-                ctx
+                ctx,
               })
               cssSource.source = css
             }
           }
-        }
-      }
+        },
+      },
     },
     webpack(compiler) {
       const { Compilation, sources } = compiler.webpack
@@ -70,7 +70,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
         compilation.hooks.processAssets.tapPromise(
           {
             name: pluginName,
-            stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
+            stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
           },
           async (assets) => {
             const replaceMap = ctx.getReplaceMap()
@@ -82,7 +82,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
                 const code = jsHandler(chunk.source().toString(), {
                   replaceMap,
-                  ctx
+                  ctx,
                 }).code
                 if (code) {
                   const source = new ConcatSource(code)
@@ -98,7 +98,7 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
                 const { css } = await cssHandler(cssSource.source().toString(), {
                   replaceMap,
                   file,
-                  ctx
+                  ctx,
                 })
 
                 const source = new ConcatSource(css)
@@ -113,13 +113,13 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
                 const html = htmlHandler(asset.source().toString(), {
                   ctx,
-                  replaceMap
+                  replaceMap,
                 })
                 const source = new ConcatSource(html)
                 compilation.updateAsset(file, source)
               }
             }
-          }
+          },
         )
       })
     },
@@ -134,16 +134,16 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
               return {
                 origin: x[0],
                 replacement: x[1].name,
-                usedBy: [...x[1].usedBy]
+                usedBy: [...x[1].usedBy],
               }
             }),
             null,
-            opts.loose ? 2 : 0
+            opts.loose ? 2 : 0,
           )
           await fs.writeFile(opts.filename, output, 'utf8')
           console.log(`✨ ${opts.filename} generated!`)
         }
       }
-    }
+    },
   }
 })

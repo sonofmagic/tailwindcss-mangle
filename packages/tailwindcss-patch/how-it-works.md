@@ -2,10 +2,10 @@
 id: 20230630
 title: 'How to get the context of tailwindcss at runtime?'
 date: 2023-06-30
-description: 'The core principle of `tailwindcss-patch`' 
-authors: 
+description: 'The core principle of `tailwindcss-patch`'
+authors:
   - icebreaker
-tags: 
+tags:
   - 'tailwindcss'
   - 'context'
   - 'runtime'
@@ -79,7 +79,7 @@ We install version `3.3.2` of `tailwindcss` (the latest version as of 20230630) 
   "description": "A utility-first CSS framework for rapidly building custom user interfaces",
   "license": "MIT",
   "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "types": "types/index.d.ts"
   // ...
 }
 ```
@@ -172,7 +172,7 @@ module.exports = function tailwindcss (configOrPath) {
       console.time('JIT TOTAL')
       return root
     }, function (root, result) {
-+      // clear context each time        
++      // clear context each time
 +      contextRef.value.length = 0
       let _findAtConfigPath1
       // Use the path for the `@config` directive if it exists, otherwise use the
@@ -257,7 +257,7 @@ function getContexts() {
 
   const distPath = path.dirname(twPath)
 
-  let injectFilePath = path.join(distPath, 'plugin.js')
+  const injectFilePath = path.join(distPath, 'plugin.js')
 
   const mo = require(injectFilePath)
   if (mo.contextRef) {

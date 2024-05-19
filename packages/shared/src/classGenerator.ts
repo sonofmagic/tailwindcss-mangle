@@ -1,6 +1,6 @@
-import type { IClassGeneratorOptions, IClassGeneratorContextItem, IClassGenerator } from './types'
+import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOptions } from './types'
 
-import { acceptChars, stripEscapeSequence, regExpTest } from './utils'
+import { acceptChars, regExpTest, stripEscapeSequence } from './utils'
 
 class ClassGenerator implements IClassGenerator {
   public newClassMap: Record<string, IClassGeneratorContextItem>
@@ -59,7 +59,7 @@ class ClassGenerator implements IClassGenerator {
   transformCssClass(className: string): string {
     const key = stripEscapeSequence(className)
     const cn = this.newClassMap[key]
-    if (cn) return cn.name
+    if (cn) { return cn.name }
     return className
   }
 
@@ -68,7 +68,7 @@ class ClassGenerator implements IClassGenerator {
 
     original = stripEscapeSequence(original)
     const cn = this.newClassMap[original]
-    if (cn) return cn
+    if (cn) { return cn }
 
     let newClassName
     if (opts.customGenerate && typeof opts.customGenerate === 'function') {
@@ -90,7 +90,7 @@ class ClassGenerator implements IClassGenerator {
     }
     const newClass: IClassGeneratorContextItem = {
       name: newClassName,
-      usedBy: new Set<string>()
+      usedBy: new Set<string>(),
     }
     this.newClassMap[original] = newClass
     this.newClassSize++

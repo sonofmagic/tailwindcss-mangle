@@ -1,7 +1,8 @@
 import path from 'node:path'
-import { getMemfsCompiler5, compile, readAssets, getErrors, getWarnings } from 'webpack-build-utils'
+import { compile, getErrors, getMemfsCompiler5, getWarnings, readAssets } from 'webpack-build-utils'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import utwm from '@/webpack'
+
 const context = path.resolve(__dirname, 'fixtures/webpack-repo')
 describe('webpack build', () => {
   it('common', async () => {
@@ -12,16 +13,16 @@ describe('webpack build', () => {
       plugins: [new MiniCssExtractPlugin()],
       output: {
         path: path.resolve(context, './dist'),
-        filename: 'index.js'
+        filename: 'index.js',
       },
       module: {
         rules: [
           {
             test: /\.css$/i,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
-          }
-        ]
-      }
+            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+          },
+        ],
+      },
     })
     const stats = await compile(compiler)
 
@@ -41,20 +42,20 @@ describe('webpack build', () => {
       plugins: [new MiniCssExtractPlugin()],
       output: {
         path: path.resolve(context, './dist'),
-        filename: 'index.js'
+        filename: 'index.js',
       },
       module: {
         rules: [
           {
             test: /\.css$/i,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
-          }
-        ]
-      }
+            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+          },
+        ],
+      },
     })
 
     utwm({
-      classListPath: path.resolve(context, '.tw-patch/tw-class-list.json')
+      classListPath: path.resolve(context, '.tw-patch/tw-class-list.json'),
     }).apply(compiler)
     const stats = await compile(compiler)
 

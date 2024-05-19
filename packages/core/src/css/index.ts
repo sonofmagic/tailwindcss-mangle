@@ -1,5 +1,5 @@
 import postcss from 'postcss'
-import { ICssHandlerOptions } from '../types'
+import type { ICssHandlerOptions } from '../types'
 import { transformSelectorPostcssPlugin } from './plugins'
 
 export function cssHandler(rawSource: string, options: ICssHandlerOptions) {
@@ -7,6 +7,6 @@ export function cssHandler(rawSource: string, options: ICssHandlerOptions) {
   const { file } = options
   return postcss(acceptedPlugins).process(rawSource, {
     from: file,
-    to: file
+    to: file,
   })
 }
