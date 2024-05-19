@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 2.2.4
+
+### Patch Changes
+
+- [`eb9d5e9`](https://github.com/sonofmagic/tailwindcss-mangle/commit/eb9d5e9fab3961f2f4899abdf0ed8864c5ad1c50) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: "npx tw-patch extract" does not look for all valid Tailwind config file paths #57
+
 ## 2.2.3
 
 ### Patch Changes
