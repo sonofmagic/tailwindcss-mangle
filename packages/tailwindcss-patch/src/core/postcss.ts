@@ -17,13 +17,22 @@ export async function processTailwindcss(options: { cwd?: string; config?: strin
   if (!(typeof options.config === 'string' && path.isAbsolute(options.config))) {
     const moduleName = 'tailwind'
     const result = await lilconfig('tailwindcss', {
-      searchPlaces: [`${moduleName}.config.js`, `${moduleName}.config.cjs`],
+      searchPlaces: [
+        `${moduleName}.config.js`,
+        `${moduleName}.config.cjs`,
+        `${moduleName}.config.mjs`,
+        `${moduleName}.config.ts`,
+        `${moduleName}.config.cts`,
+        `${moduleName}.config.mts`
+      ],
       loaders: {
         // 默认支持 js 和 cjs 2种格式
         '.js': jiti,
         '.cjs': jiti,
+        '.mjs': jiti,
         '.ts': jiti,
-        '.mjs': jiti
+        '.cts': jiti,
+        '.mts': jiti
       }
     }).search(options.cwd)
     if (!result) {
