@@ -21,11 +21,11 @@ describe('js handler', async () => {
     const replaceMap = new Map()
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
-    // eslint-disable-next-line no-template-curly-in-string
+
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -34,12 +34,12 @@ describe('js handler', async () => {
     const replaceMap = new Map()
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
-    // eslint-disable-next-line no-template-curly-in-string
+
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
       ctx,
       replaceMap,
-      splitQuote: false
+      splitQuote: false,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -48,11 +48,11 @@ describe('js handler', async () => {
     const replaceMap = new Map()
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
-    // eslint-disable-next-line no-template-curly-in-string
+
     const testCase = 'const counter = 0;element.innerHTML = `<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is ${counter}</div>`'
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -81,7 +81,7 @@ describe('js handler', async () => {
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -96,7 +96,7 @@ describe('js handler', async () => {
     const code = jsHandler(testCase, {
       ctx,
       replaceMap,
-      splitQuote: false
+      splitQuote: false,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -113,7 +113,7 @@ describe('js handler', async () => {
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -127,7 +127,7 @@ describe('js handler', async () => {
     }
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -138,7 +138,7 @@ describe('js handler', async () => {
     replaceMap.set('ease-out', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -150,7 +150,7 @@ describe('js handler', async () => {
     const code = jsHandler(testCase, {
       ctx,
       replaceMap,
-      minified: true
+      minified: true,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -162,7 +162,7 @@ describe('js handler', async () => {
     replaceMap.set('ease-out', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -174,7 +174,7 @@ describe('js handler', async () => {
     replaceMap.set('bg-red-500/50', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -187,7 +187,7 @@ describe('js handler', async () => {
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -200,19 +200,19 @@ describe('js handler', async () => {
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toMatchSnapshot()
   })
 
-  it('LINEFEED case', () => {
+  it('lINEFEED case', () => {
     const testCase = 'const LINEFEED = "\\n";'
     const replaceMap = new Map()
     // replaceMap.set('bg-red-500/50', true)
     // replaceMap.set('bg-red-500', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     }).code
     expect(code).toBe('const LINEFEED="\\n";')
   })
@@ -226,10 +226,10 @@ describe('js handler', async () => {
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {}
+        addToUsedBy: () => {},
       },
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toBe(testCase)
   })
@@ -243,10 +243,10 @@ describe('js handler', async () => {
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {}
+        addToUsedBy: () => {},
       },
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toBe('const LINEFEED = `a${n}a`;')
   })
@@ -260,10 +260,10 @@ describe('js handler', async () => {
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {}
+        addToUsedBy: () => {},
       },
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toBe('const LINEFEED = `a${n}a`;')
   })
@@ -279,7 +279,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toMatchSnapshot()
   })
@@ -290,8 +290,8 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
       mangleOptions: {
-        preserveFunction: ['cn']
-      }
+        preserveFunction: ['cn'],
+      },
     })
 
     //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
@@ -304,7 +304,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
@@ -323,8 +323,8 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
       mangleOptions: {
-        preserveFunction: ['twMerge']
-      }
+        preserveFunction: ['twMerge'],
+      },
     })
 
     const replaceMap = ctx.getReplaceMap()
@@ -333,7 +333,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
@@ -346,8 +346,8 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
       mangleOptions: {
-        preserveFunction: ['twMerge', 'cn']
-      }
+        preserveFunction: ['twMerge', 'cn'],
+      },
     })
 
     const replaceMap = ctx.getReplaceMap()
@@ -361,7 +361,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap
+      replaceMap,
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(8)
@@ -373,8 +373,8 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' '),
       mangleOptions: {
-        preserveFunction: ['twMerge']
-      }
+        preserveFunction: ['twMerge'],
+      },
     })
 
     const replaceMap = ctx.getReplaceMap()
@@ -383,7 +383,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       replaceMap,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(6)
@@ -396,15 +396,15 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: require('./fixtures/preserve-fn-case1.json') as string[],
       mangleOptions: {
-        preserveFunction: ['twMerge']
-      }
+        preserveFunction: ['twMerge'],
+      },
     })
     const replaceMap = ctx.getReplaceMap()
     const code = preProcessRawCode({
       code: testCase,
       ctx,
       replaceMap,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(6)
@@ -417,8 +417,8 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: require('./fixtures/preserve-fn-case2.json') as string[],
       mangleOptions: {
-        preserveFunction: ['twMerge']
-      }
+        preserveFunction: ['twMerge'],
+      },
     })
     const replaceMap = ctx.getReplaceMap()
 
@@ -426,7 +426,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       replaceMap,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(8)
@@ -435,7 +435,7 @@ describe('js handler', async () => {
 
   it('tsx app0', async () => {
     await ctx.initConfig({
-      classList: require('./fixtures/app0.json') as string[]
+      classList: require('./fixtures/app0.json') as string[],
     })
     const replaceMap = ctx.getReplaceMap()
     const code = getTestCase('app0.tsx')
@@ -444,14 +444,14 @@ describe('js handler', async () => {
       code,
       replaceMap,
       ctx,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(res).toMatchSnapshot()
   })
 
   it('ts vanilla-0', async () => {
     await ctx.initConfig({
-      classList: require('./fixtures/vanilla-0.json') as string[]
+      classList: require('./fixtures/vanilla-0.json') as string[],
     })
     const replaceMap = ctx.getReplaceMap()
     const code = getTestCase('vanilla-0.ts')
@@ -460,7 +460,7 @@ describe('js handler', async () => {
       code,
       replaceMap,
       ctx,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(res).toMatchSnapshot()
   })
@@ -476,15 +476,15 @@ describe('js handler', async () => {
     await ctx.initConfig({
       classList: 'p-1 p-2 p-3 p-4'.split(' '),
       mangleOptions: {
-        preserveFunction: ['cn']
-      }
+        preserveFunction: ['cn'],
+      },
     })
     const replaceMap = ctx.getReplaceMap()
     const res = preProcessJs({
       code,
       replaceMap,
       ctx,
-      id: 'xxx'
+      id: 'xxx',
     })
     expect(res).toMatchSnapshot()
   })

@@ -12,7 +12,7 @@ describe('regex', () => {
   it('trailing slash should exact match case 0', () => {
     const testCase = 'bg-red-500 bg-red-500/50'
     const regex = makeRegex('bg-red-500', {
-      exact: false
+      exact: false,
     })
     const arr = [...testCase.matchAll(regex)]
     expect(arr.length).toBe(2)

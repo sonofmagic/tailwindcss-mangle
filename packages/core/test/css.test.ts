@@ -1,6 +1,7 @@
 import { getTestCase } from './utils'
 import { cssHandler } from '@/css'
 import { Context } from '@/ctx'
+
 describe('css', () => {
   let ctx: Context
   beforeEach(() => {
@@ -16,20 +17,20 @@ describe('css', () => {
     ctx.addPreserveClass('gap-y-4')
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     })
     expect(css).toMatchSnapshot()
   })
 
   it('preserveClassNamesSet case 1', async () => {
     await ctx.initConfig({
-      classList: ['gap-y-4']
+      classList: ['gap-y-4'],
     })
     const testCase = `.gap-y-4 {color:red;}`
     ctx.addPreserveClass('gap-y-4')
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap: ctx.getReplaceMap()
+      replaceMap: ctx.getReplaceMap(),
     })
     expect(css).toMatchSnapshot()
   })
@@ -45,7 +46,7 @@ describe('css', () => {
 
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     })
     expect(css).toMatchSnapshot()
   })
@@ -61,7 +62,7 @@ describe('css', () => {
 
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     })
     expect(css).toMatchSnapshot()
   })
@@ -78,7 +79,7 @@ describe('css', () => {
     const { css } = await cssHandler(testCase, {
       ctx,
       replaceMap,
-      ignoreVueScoped: false
+      ignoreVueScoped: false,
     })
     expect(css).toMatchSnapshot()
   })
@@ -95,7 +96,7 @@ describe('css', () => {
 
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     })
     expect(css).toMatchSnapshot()
   })
@@ -109,7 +110,7 @@ describe('css', () => {
     const testCase = getTestCase('vue.scoped.css')
     const { css } = await cssHandler(testCase, {
       ctx,
-      replaceMap
+      replaceMap,
     })
     expect(css).toMatchSnapshot()
   })

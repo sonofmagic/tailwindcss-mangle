@@ -1,22 +1,23 @@
-import type { StringLiteral, TemplateElement, CallExpression } from '@babel/types'
-import { transformSync, type BabelFileResult, type NodePath } from '@babel/core'
+import type { CallExpression, StringLiteral, TemplateElement } from '@babel/types'
+import { type BabelFileResult, type NodePath, transformSync } from '@babel/core'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { isProd as isProduction } from '../env'
+
 export { preProcessJs, preProcessRawCode } from './pre'
 
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
   const { replaceMap, ctx, splitQuote = true } = options
   const clsGen = ctx.classGenerator
   const array = splitCode(raw, {
-    splitQuote
+    splitQuote,
   })
   let rawString = raw
   for (const v of array) {
     if (replaceMap.has(v)) {
       let ignoreFlag = false
       if (Array.isArray(node.leadingComments)) {
-        ignoreFlag = node.leadingComments.findIndex((x) => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
+        ignoreFlag = node.leadingComments.findIndex(x => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
       }
 
       if (!ignoreFlag) {
@@ -39,13 +40,13 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
               enter(p: NodePath<StringLiteral>) {
                 const n = p.node
                 n.value = handleValue(n.value, n, options)
-              }
+              },
             },
             TemplateElement: {
               enter(p: NodePath<TemplateElement>) {
                 const n = p.node
                 n.value.raw = handleValue(n.value.raw, n, options)
-              }
+              },
             },
             CallExpression: {
               enter(p: NodePath<CallExpression>) {
@@ -59,20 +60,20 @@ export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
                         if (res.code) {
                           s.node.value = res.code
                         }
-                      }
-                    }
+                      },
+                    },
                   })
                 }
-              }
-            }
+              },
+            },
             // noScope: true
-          }
+          },
         }
-      }
+      },
     ],
     minified: options.minified ?? isProduction(),
     sourceMaps: false,
-    configFile: false
+    configFile: false,
   })
 
   return result as BabelFileResult

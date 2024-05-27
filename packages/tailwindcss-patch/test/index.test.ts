@@ -5,14 +5,15 @@ const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const versionsPkgDir = path.resolve(tailwindcssCasePath, 'versions/package.json')
 
 function getTailwindcssVersion(str: string) {
-  // eslint-disable-next-line no-useless-escape
   const match = /^tailwindcss([\d.]*)$/.exec(str)
   if (match === null) {
     // 不是 tailwindcss
     return false
-  } else if (match[1] === '') {
+  }
+  else if (match[1] === '') {
     return 'lts'
-  } else {
+  }
+  else {
     return match[1]
   }
 }
@@ -25,7 +26,7 @@ describe('versions-patch', () => {
     const v = getTailwindcssVersion(version)
 
     const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
-      overwrite: false
+      overwrite: false,
     })
     expect(res).toMatchSnapshot()
   })

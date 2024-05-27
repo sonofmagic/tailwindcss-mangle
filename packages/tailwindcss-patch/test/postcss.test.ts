@@ -10,13 +10,13 @@ describe('postcss', () => {
     const p = path.resolve(appRoot, '0.common')
     const twPatcher = new TailwindcssPatcher()
     const res = await processTailwindcss({
-      cwd: p
+      cwd: p,
     })
     expect(res.css).toMatchSnapshot()
     const res0 = twPatcher.getContexts()
     expect(res0.length).toBe(1)
     const set = twPatcher.getClassSet({
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     })
     expect(set.size).toBe(4)
   })
@@ -34,22 +34,22 @@ describe('postcss', () => {
         'min-h-[12rpx]',
         'max-h-[12rpx]',
         'basis-[32rpx]',
-        'text-[length:32rpx]'
+        'text-[length:32rpx]',
       ].map((x) => {
         return {
-          raw: x
+          raw: x,
         }
       }),
       corePlugins: {
-        preflight: false
-      }
+        preflight: false,
+      },
     }
     const { css } = await postcss([
       require('tailwindcss')({
-        config
-      })
+        config,
+      }),
     ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {
-      from: undefined
+      from: undefined,
     })
 
     expect(css).toMatchSnapshot()

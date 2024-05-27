@@ -35,7 +35,7 @@ export function handleValue(options: HandleValueOptions) {
     }
   }
 
-  const arr = sort(splitCode(value)).desc((x) => x.length)
+  const arr = sort(splitCode(value)).desc(x => x.length)
 
   for (const str of arr) {
     if (replaceMap.has(str)) {
@@ -74,11 +74,11 @@ export const JsPlugin = declare((api, options: Options) => {
             replaceMap,
             offset: 1,
             escape: true,
-            markedArray
+            markedArray,
           }
 
           handleValue(opts)
-        }
+        },
       },
       TemplateElement: {
         exit(p) {
@@ -91,13 +91,13 @@ export const JsPlugin = declare((api, options: Options) => {
             replaceMap,
             offset: 0,
             escape: false,
-            markedArray
+            markedArray,
           }
 
           handleValue(opts)
-        }
-      }
-    }
+        },
+      },
+    },
   }
 })
 
@@ -112,7 +112,7 @@ function transformSync(ast: babel.types.Node, code: string, plugins: babel.Plugi
   babel.transformFromAstSync(ast, code, {
     presets: loadPresets(),
     plugins,
-    filename
+    filename,
   })
 }
 
@@ -122,9 +122,9 @@ export function loadPresets() {
       require('@babel/preset-typescript'),
       {
         allExtensions: true,
-        isTSX: true
-      }
-    ]
+        isTSX: true,
+      },
+    ],
   ]
 }
 
@@ -135,14 +135,16 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
   try {
     const file = babel.parseSync(magicString.original, {
       sourceType: 'unambiguous',
-      presets: loadPresets()
+      presets: loadPresets(),
     })
     if (file) {
       ast = file
-    } else {
+    }
+    else {
       return code.toString()
     }
-  } catch {
+  }
+  catch {
     return code.toString()
   }
   const markedArray: [number, number][] = []
@@ -160,32 +162,32 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
               enter(path) {
                 const node = path.node
                 const value = node.value
-                const arr = sort(splitCode(value)).desc((x) => x.length)
+                const arr = sort(splitCode(value)).desc(x => x.length)
 
                 for (const str of arr) {
                   if (replaceMap.has(str)) {
                     ctx.addPreserveClass(str)
                   }
                 }
-              }
+              },
             },
             TemplateElement: {
               enter(path) {
                 const node = path.node
                 const value = node.value.raw
-                const arr = sort(splitCode(value)).desc((x) => x.length)
+                const arr = sort(splitCode(value)).desc(x => x.length)
 
                 for (const str of arr) {
                   if (replaceMap.has(str)) {
                     ctx.addPreserveClass(str)
                   }
                 }
-              }
-            }
+              },
+            },
           })
         }
-      }
-    }
+      },
+    },
   })
 
   transformSync(
@@ -199,11 +201,11 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
           replaceMap,
           id,
           ctx,
-          markedArray
-        }
-      ]
+          markedArray,
+        },
+      ],
     ],
-    id
+    id,
   )
 
   return magicString.toString()
@@ -232,34 +234,35 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
       let ast: ParseResult<babel.types.File> | null
       try {
         ast = babel.parseSync(regExpMatch[0], {
-          sourceType: 'unambiguous'
+          sourceType: 'unambiguous',
         })
 
-        ast &&
-          babel.traverse(ast, {
-            StringLiteral: {
-              enter(p) {
-                const arr = sort(splitCode(p.node.value)).desc((x) => x.length)
+        ast
+        && babel.traverse(ast, {
+          StringLiteral: {
+            enter(p) {
+              const arr = sort(splitCode(p.node.value)).desc(x => x.length)
 
-                for (const v of arr) {
-                  if (replaceMap.has(v)) {
-                    ctx.addPreserveClass(v)
-                  }
+              for (const v of arr) {
+                if (replaceMap.has(v)) {
+                  ctx.addPreserveClass(v)
                 }
               }
             },
-            TemplateElement: {
-              enter(p) {
-                const arr = sort(splitCode(p.node.value.raw)).desc((x) => x.length)
-                for (const v of arr) {
-                  if (replaceMap.has(v)) {
-                    ctx.addPreserveClass(v)
-                  }
+          },
+          TemplateElement: {
+            enter(p) {
+              const arr = sort(splitCode(p.node.value.raw)).desc(x => x.length)
+              for (const v of arr) {
+                if (replaceMap.has(v)) {
+                  ctx.addPreserveClass(v)
                 }
               }
-            }
-          })
-      } catch {
+            },
+          },
+        })
+      }
+      catch {
         continue
       }
     }

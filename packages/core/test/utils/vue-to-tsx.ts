@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-for-each */
 import { parse } from '@vue/compiler-sfc'
 import MagicString from 'magic-string'
 import type { BaseElementNode } from '@vue/compiler-core'
@@ -35,10 +34,10 @@ const NodeTypes = {
   JS_IF_STATEMENT: 23,
   JS_ASSIGNMENT_EXPRESSION: 24,
   JS_SEQUENCE_EXPRESSION: 25,
-  JS_RETURN_STATEMENT: 26
+  JS_RETURN_STATEMENT: 26,
 } as const
 
-export const vueToTsx = (code: string) => {
+export function vueToTsx(code: string) {
   try {
     const parsed = parse(code)
     const fileStr = new MagicString(`<template>${parsed.descriptor.template?.content}</template>` ?? '')
@@ -53,22 +52,23 @@ export const vueToTsx = (code: string) => {
     // recursion-free traversal
     while (stack.length > 0) {
       const node = stack.pop()
-      if (!node) continue
+      if (!node) { continue }
 
       if (node.type === NodeTypes.ELEMENT) {
         node.props.forEach((element) => {
           rewriteProp(element)
         })
-        for (const child of node.children) stack.push(child)
+        for (const child of node.children) { stack.push(child) }
       }
     }
 
-    const scriptContent = (parsed.descriptor.scriptSetup ?? parsed.descriptor.script)?.content + '\n'
+    const scriptContent = `${(parsed.descriptor.scriptSetup ?? parsed.descriptor.script)?.content}\n`
 
     const transformed = new MagicString(`${scriptContent}\nconst render = ${fileStr.toString()}`)
 
     return transformed.toString()
-  } catch {
+  }
+  catch {
     return ''
   }
 }

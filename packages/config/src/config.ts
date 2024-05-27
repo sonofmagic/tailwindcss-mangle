@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { loadConfig, createDefineConfig } from 'c12'
+import { createDefineConfig, loadConfig } from 'c12'
 import dedent from 'dedent'
 import type { UserConfig } from './types'
 import { getDefaultUserConfig } from './defaults'
@@ -10,9 +10,9 @@ export function getConfig(cwd?: string) {
   return loadConfig<UserConfig>({
     name: configName,
     defaults: {
-      ...getDefaultUserConfig()
+      ...getDefaultUserConfig(),
     },
-    cwd
+    cwd,
   })
 }
 
@@ -26,6 +26,6 @@ export function initConfig(cwd: string) {
 
       export default defineConfig({})
     `,
-    'utf8'
+    'utf8',
   )
 }

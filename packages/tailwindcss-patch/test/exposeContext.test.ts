@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { getTailwindcssEntry } from '@/core/exposeContext'
+
 describe('exposeContext', () => {
   it('getTailwindcssEntry', () => {
     const dirname = __dirname

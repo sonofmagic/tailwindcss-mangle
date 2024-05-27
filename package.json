@@ -2,6 +2,7 @@
   "name": "tailwindcss-mangle",
   "version": "2.2.2",
   "private": true,
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -11,7 +12,7 @@
     "dev": "pnpm -r run dev",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest --coverage.enabled",
-    "lint": "pnpm run -r lint",
+    "lint": "eslint packages/**/*ts --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
@@ -20,7 +21,8 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.2",
+    "@changesets/cli": "^2.27.3",
+    "@icebreakers/eslint-config": "^0.3.3",
     "@tailwindcss-mangle/core": "workspace:*",
     "@tailwindcss-mangle/shared": "workspace:*",
     "@tsconfig/recommended": "^1.0.6",
@@ -39,7 +41,7 @@
     "lodash-es": "^4.17.21",
     "only-allow": "^1.2.1",
     "prettier": "^3.2.5",
-    "rollup": "^4.17.2",
+    "rollup": "^4.18.0",
     "tailwindcss-patch": "workspace:*",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
@@ -52,5 +54,5 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@9.1.0"
+  "packageManager": "pnpm@9.1.2"
 }

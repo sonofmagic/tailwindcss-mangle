@@ -44,18 +44,19 @@
   },
   "dependencies": {
     "@ast-core/escape": "^1.0.1",
-    "@babel/core": "^7.24.5",
-    "@babel/helper-plugin-utils": "^7.24.5",
-    "@babel/preset-typescript": "^7.24.1",
-    "@babel/types": "^7.24.5",
+    "@babel/core": "^7.24.6",
+    "@babel/helper-plugin-utils": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
+    "@babel/types": "^7.24.6",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
+    "@vue/compiler-sfc": "^3.4.27",
     "fast-sort": "^3.4.0",
     "magic-string": "^0.30.10",
-    "micromatch": "^4.0.5",
+    "micromatch": "^4.0.7",
     "parse5": "^7.1.2",
     "postcss": "^8.4.38",
-    "postcss-selector-parser": "^6.0.16"
+    "postcss-selector-parser": "^6.1.0"
   },
   "devDependencies": {
     "@parse5/tools": "^0.5.0",

@@ -5,7 +5,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
     <button id="counter">counter</button>
   </div>
-` + `
+  ` + `
 <main class="flex min-h-screen flex-col items-center justify-between p-24">
 <div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
   <p

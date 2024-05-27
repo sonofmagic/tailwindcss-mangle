@@ -5,7 +5,7 @@ import { requireResolve } from '@/utils'
 
 export function getTailwindcssEntry(basedir?: string) {
   return requireResolve('tailwindcss', {
-    basedir
+    basedir,
   })
 }
 
@@ -28,7 +28,7 @@ export function getContexts(basedir?: string): TailwindcssRuntimeContext[] {
 
 export function getClassCaches(basedir?: string): TailwindcssClassCache[] {
   const contexts = getContexts(basedir)
-  return contexts.map((x) => x.classCache)
+  return contexts.map(x => x.classCache)
 }
 
 export function getClassCacheSet(basedir?: string, options?: { removeUniversalSelector?: boolean }): Set<string> {

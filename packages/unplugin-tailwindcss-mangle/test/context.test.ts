@@ -5,7 +5,7 @@ function createContext() {
   }
   return {
     a,
-    inc
+    inc,
   }
 }
 

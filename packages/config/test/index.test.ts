@@ -2,8 +2,8 @@ import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { deleteAsync } from 'del'
 import { fixturesRoot } from './utils'
-import { initConfig, getConfig } from '@/index'
-import { getDefaultUserConfig, getDefaultMangleUserConfig } from '@/defaults'
+import { getConfig, initConfig } from '@/index'
+import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
 import { configName } from '@/constants'
 
 describe('config', () => {
@@ -29,13 +29,13 @@ describe('config', () => {
         output: {
           filename: 'xxx/yyy/zzz.json',
           loose: false,
-          removeUniversalSelector: false
+          removeUniversalSelector: false,
         },
         tailwindcss: {
-          cwd: 'aaa/bbb/cc'
-        }
+          cwd: 'aaa/bbb/cc',
+        },
       },
-      mangle: getDefaultMangleUserConfig()
+      mangle: getDefaultMangleUserConfig(),
     })
   })
 

@@ -10,7 +10,7 @@ describe('patcher', () => {
 
   it('getInstalledPkgJsonPath baseDir options', () => {
     const pkgJsonPath = getInstalledPkgJsonPath({
-      basedir: path.resolve(__dirname, '../../../')
+      basedir: path.resolve(__dirname, '../../../'),
     })
     expect(pkgJsonPath).toBeTruthy()
   })

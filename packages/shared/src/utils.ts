@@ -4,17 +4,16 @@ export const preserveClassNames = [
   'ease-out',
   'ease-linear',
   'ease-in',
-  'ease-in-out'
+  'ease-in-out',
   // https://tailwindcss.com/docs/transition-timing-function end
 ]
 
-// eslint-disable-next-line unicorn/no-array-reduce
 const preserveClassNamesMap = preserveClassNames.reduce<Record<(typeof preserveClassNames)[number], true>>((acc, cur) => {
   acc[cur] = true
   return acc
 }, {})
 
-export const defaultMangleClassFilter = (className: string) => {
+export function defaultMangleClassFilter(className: string) {
   if (preserveClassNamesMap[className]) {
     return false
   }
@@ -40,7 +39,8 @@ export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]
 
     if (Array.isArray(bucket)) {
       result[bucketCategory].push(item)
-    } else {
+    }
+    else {
       result[bucketCategory] = [item]
     }
   }
@@ -69,7 +69,8 @@ export function regExpTest(arr: (string | RegExp)[] = [], str: string) {
         if (item === str) {
           return true
         }
-      } else if (isRegexp(item)) {
+      }
+      else if (isRegexp(item)) {
         item.lastIndex = 0
         if (item.test(str)) {
           return true
@@ -78,5 +79,5 @@ export function regExpTest(arr: (string | RegExp)[] = [], str: string) {
     }
     return false
   }
-  throw new TypeError("paramater 'arr' should be a Array of Regexp | String !")
+  throw new TypeError('paramater \'arr\' should be a Array of Regexp | String !')
 }

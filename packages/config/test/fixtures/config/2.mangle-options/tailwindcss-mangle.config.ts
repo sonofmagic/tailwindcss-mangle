@@ -5,11 +5,11 @@ export default defineConfig({
     output: {
       filename: 'xxx/yyy/zzz.json',
       loose: false,
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     },
     tailwindcss: {
-      cwd: 'aaa/bbb/cc'
-    }
+      cwd: 'aaa/bbb/cc',
+    },
   },
   mangle: {
     mangleClassFilter(className) {
@@ -17,13 +17,13 @@ export default defineConfig({
     },
     classListPath: 'zzzzz.json',
     classGenerator: {
-      log: true
+      log: true,
     },
     disabled: false,
     classMapOutput: {
       enable: true,
       loose: false,
-      filename: 'ffff.json'
-    }
-  }
+      filename: 'ffff.json',
+    },
+  },
 })

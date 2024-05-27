@@ -4,9 +4,10 @@ import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeCont
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
 import { processTailwindcss } from './postcss'
-import { UserConfig } from '@/config'
+import type { UserConfig } from '@/config'
 import { ensureDir } from '@/utils'
-import type { InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions, CacheStrategy } from '@/types'
+import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions } from '@/types'
+
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
@@ -43,14 +44,15 @@ export class TailwindcssPatcher {
    * @param basedir
    * @returns
    */
-  getClassSet(options?: { basedir?: string; cacheStrategy?: CacheStrategy; removeUniversalSelector?: boolean }) {
+  getClassSet(options?: { basedir?: string, cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
     const { basedir, cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
     const set = getClassCacheSet(basedir, {
-      removeUniversalSelector
+      removeUniversalSelector,
     })
     if (cacheStrategy === 'overwrite') {
       set.size > 0 && this.setCache(set)
-    } else if (cacheStrategy === 'merge') {
+    }
+    else if (cacheStrategy === 'merge') {
       const cacheSet = this.getCache()
       if (cacheSet) {
         for (const x of cacheSet) {
@@ -75,7 +77,7 @@ export class TailwindcssPatcher {
       await processTailwindcss(tailwindcss)
 
       const set = this.getClassSet({
-        removeUniversalSelector
+        removeUniversalSelector,
       })
       if (filename) {
         await ensureDir(dirname(filename))

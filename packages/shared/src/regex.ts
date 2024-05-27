@@ -10,8 +10,8 @@ export function makeRegex(
   options: {
     exact: boolean
   } = {
-    exact: true
-  }
+    exact: true,
+  },
 ) {
-  return new RegExp('(?<=^|[\\s"])' + escapeStringRegexp(str) + (options.exact ? '(?=$|[\\s"])' : ''), 'g')
+  return new RegExp(`(?<=^|[\\s"])${escapeStringRegexp(str)}${options.exact ? '(?=$|[\\s"])' : ''}`, 'g')
 }

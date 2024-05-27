@@ -1,6 +1,6 @@
 import cac from 'cac'
-import { getConfig, initConfig, configName } from './config'
-import { createPatch, getPatchOptions, TailwindcssPatcher } from './core'
+import { configName, getConfig, initConfig } from './config'
+import { TailwindcssPatcher, createPatch, getPatchOptions } from './core'
 
 function init() {
   const cwd = process.cwd()
@@ -25,7 +25,7 @@ cli.command('extract').action(async () => {
   if (config) {
     const twPatcher = new TailwindcssPatcher()
     const p = await twPatcher.extract(config.patch)
-    console.log('✨ tailwindcss-patch extract success! file path: ' + p)
+    console.log(`✨ tailwindcss-patch extract success! file path: ${p}`)
   }
 })
 

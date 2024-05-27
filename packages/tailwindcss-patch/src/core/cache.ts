@@ -9,13 +9,13 @@ export function getCacheOptions(options?: CacheOptions | boolean) {
   switch (typeof options) {
     case 'undefined': {
       cache = {
-        enable: false
+        enable: false,
       }
       break
     }
     case 'boolean': {
       cache = {
-        enable: options
+        enable: options,
       }
       break
     }
@@ -38,7 +38,7 @@ export class CacheManager {
     const exists = fs.existsSync(cacheDirectory)
     if (!exists) {
       fs.mkdirSync(cacheDirectory, {
-        recursive: true
+        recursive: true,
       })
     }
     return cacheDirectory
@@ -54,7 +54,7 @@ export class CacheManager {
       dir,
       file,
       filename,
-      strategy: 'merge'
+      strategy: 'merge',
     }
   }
 
@@ -64,7 +64,8 @@ export class CacheManager {
       this.mkdir(dir)
       fs.writeFileSync(filename, JSON.stringify([...data], undefined, 2), 'utf8')
       return filename
-    } catch {
+    }
+    catch {
       log('write cache file fail!')
     }
   }
@@ -76,12 +77,14 @@ export class CacheManager {
         const data = fs.readFileSync(filename, 'utf8')
         return new Set<string>(JSON.parse(data))
       }
-    } catch {
-      log('parse cache content fail! path:' + filename)
+    }
+    catch {
+      log(`parse cache content fail! path:${filename}`)
       try {
         fs.unlinkSync(filename)
-      } catch {
-        log('delete cache file fail! path:' + filename)
+      }
+      catch {
+        log(`delete cache file fail! path:${filename}`)
       }
     }
   }

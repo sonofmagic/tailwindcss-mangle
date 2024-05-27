@@ -5,10 +5,10 @@ export default defineConfig({
     output: {
       filename: 'xxx/yyy/zzz.json',
       loose: false,
-      removeUniversalSelector: false
+      removeUniversalSelector: false,
     },
     tailwindcss: {
-      cwd: 'aaa/bbb/cc'
-    }
-  }
+      cwd: 'aaa/bbb/cc',
+    },
+  },
 })

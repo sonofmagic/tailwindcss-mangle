@@ -83,8 +83,8 @@
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "^7.10.3",
-    "astro": "^4.8.6",
-    "css-loader": "^7.1.1",
+    "astro": "^4.9.1",
+    "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
     "normalize-newline": "^4.1.0",

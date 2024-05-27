@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable camelcase */
+
 import MagicString from 'magic-string'
 
 /** @see https://github.com/sveltejs/svelte/blob/d3297e2a2595db08c85356d65fd5f953b04a681f/packages/svelte/src/compiler/preprocess/index.js#L255C1-L255C85 */
-const regex_style_tags = /<!--[^]*?-->|<style(\s[^]*?)?(?:>([^]*?)<\/style>|\/>)/gi
+const regex_style_tags = /<!--[\s\S]*?-->|<style(\s[\s\S]*?)?(?:>([\s\S]*?)<\/style>|\/>)/gi
 
 /** @see https://github.com/sveltejs/svelte/blob/d3297e2a2595db08c85356d65fd5f953b04a681f/packages/svelte/src/compiler/preprocess/index.js#L256C1-L256C88 */
-const regex_script_tags = /<!--[^]*?-->|<script(\s[^]*?)?(?:>([^]*?)<\/script>|\/>)/gi
+const regex_script_tags = /<!--[\s\S]*?-->|<script(\s[\s\S]*?)?(?:>([\s\S]*?)<\/script>|\/>)/gi
 
-export const svelteToTsx = (code: string) => {
+export function svelteToTsx(code: string) {
   try {
     const scripts = []
     const original = new MagicString(code)
@@ -27,7 +27,8 @@ export const svelteToTsx = (code: string) => {
     const transformed = `${scripts.join('')}\nconst render = <div>${templateContent}</div>`
 
     return transformed.toString().trim()
-  } catch {
+  }
+  catch {
     return ''
   }
 }
