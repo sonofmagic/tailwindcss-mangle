@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "^7.10.3",
-    "astro": "^4.9.1",
+    "astro": "^4.9.2",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
@@ -92,7 +92,7 @@
     "postcss-loader": "^8.1.1",
     "tailwindcss": "^3.4.3",
     "tailwindcss-patch": "workspace:^",
-    "vite": "^5.2.11",
+    "vite": "^5.2.12",
     "webpack": "^5.91.0",
     "webpack-build-utils": "^0.0.7"
   },
