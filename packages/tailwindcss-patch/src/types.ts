@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
 

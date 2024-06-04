@@ -2,6 +2,22 @@
   "name": "tailwindcss-patch",
   "version": "2.2.4",
   "description": "patch tailwindcss for exposing context and extract classes",
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
+  },
+  "keywords": [
+    "tailwindcss",
+    "patch",
+    "extract",
+    "class"
+  ],
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "bin": {
@@ -9,8 +25,8 @@
     "tailwindcss-patch": "bin/tw-patch.js"
   },
   "files": [
-    "dist",
-    "bin"
+    "bin",
+    "dist"
   ],
   "scripts": {
     "dev": "unbuild --sourcemap",
@@ -19,14 +35,6 @@
     "test:dev": "vitest",
     "patch": "node bin/tw-patch.js install"
   },
-  "keywords": [
-    "tailwindcss",
-    "patch",
-    "extract",
-    "class"
-  ],
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
-  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -38,14 +46,6 @@
     "tailwindcss": {
       "optional": true
     }
-  },
-  "devDependencies": {
-    "@types/babel__generator": "^7.6.8",
-    "@types/babel__traverse": "^7.20.6",
-    "@types/resolve": "^1.20.6",
-    "@types/semver": "^7.5.8",
-    "pkg-types": "^1.1.1",
-    "tailwindcss": "^3.4.3"
   },
   "dependencies": {
     "@babel/generator": "^7.24.6",
@@ -60,13 +60,14 @@
     "resolve": "^1.22.8",
     "semver": "^7.6.2"
   },
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/resolve": "^1.20.6",
+    "@types/semver": "^7.5.8",
+    "pkg-types": "^1.1.1",
+    "tailwindcss": "^3.4.3",
+    "tailwindcss2": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
   "directories": {
     "test": "test"

@@ -1,4 +1,5 @@
 import path from 'node:path'
+import process from 'node:process'
 import postcss from 'postcss'
 import { lilconfig } from 'lilconfig'
 import createJiti from 'jiti'
@@ -41,6 +42,7 @@ export async function processTailwindcss(options: { cwd?: string, config?: strin
   }
 
   return await postcss([
+    // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
     require('tailwindcss')({
       config,
     }),

@@ -19,6 +19,7 @@ export function getContexts(basedir?: string): TailwindcssRuntimeContext[] {
     injectFilePath = path.join(distPath, 'index.js')
   }
 
+  // eslint-disable-next-line ts/no-require-imports, ts/no-var-requires
   const mo = require(injectFilePath)
   if (mo.contextRef) {
     return mo.contextRef.value

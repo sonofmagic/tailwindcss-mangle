@@ -40,9 +40,6 @@ export class TailwindcssPatcher {
 
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
-   * 详见 taro weapp-tailwindcss 独立分包
-   * @param basedir
-   * @returns
    */
   getClassSet(options?: { basedir?: string, cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
     const { basedir, cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}

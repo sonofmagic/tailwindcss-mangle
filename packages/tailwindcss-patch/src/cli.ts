@@ -1,3 +1,4 @@
+import process from 'node:process'
 import cac from 'cac'
 import { configName, getConfig, initConfig } from './config'
 import { TailwindcssPatcher, createPatch, getPatchOptions } from './core'

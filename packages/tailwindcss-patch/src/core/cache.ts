@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import process from 'node:process'
 import { pkgName } from '@/constants'
 import type { CacheOptions, InternalCacheOptions } from '@/types'
 import { log } from '@/logger'
