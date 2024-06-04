@@ -225,6 +225,9 @@ importers:
       pkg-types:
         specifier: ^1.1.1
         version: 1.1.1
+      postcss7:
+        specifier: npm:postcss@7
+        version: postcss@7.0.39
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.3(ts-node@10.9.2(@types/node@20.14.1)(typescript@5.4.5))
@@ -12453,7 +12456,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       vite: 5.2.12(@types/node@20.14.1)(terser@5.30.3)
     transitivePeerDependencies:
       - '@types/node'

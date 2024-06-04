@@ -1,5 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs'
+import process from 'node:process'
 import { gte } from 'semver'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
@@ -48,7 +49,7 @@ export function createPatch(opt: InternalPatchOptions) {
   }
 }
 
-export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchOptions) {
+export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatchOptions) {
   const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/processTailwindFeatures.js')
 
   const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
@@ -84,12 +85,18 @@ export function monkeyPatchForExposingContext(twDir: string, opt: InternalPatchO
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
+    // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
     const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
     if (gte(pkgJson.version!, '3.0.0')) {
       options.version = pkgJson.version
-      const result = monkeyPatchForExposingContext(twDir, options)
+      const result = monkeyPatchForExposingContextV3(twDir, options)
       return result
+    }
+    else if (gte(pkgJson.version!, '2.0.0')) {
+      options.version = pkgJson.version
+      // const result = monkeyPatchForExposingContext(twDir, options)
+      // return result
     }
     // no sth
   }
