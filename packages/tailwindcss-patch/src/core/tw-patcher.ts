@@ -1,12 +1,11 @@
-import fs from 'node:fs/promises'
-import { dirname } from 'node:path'
-import { getClassCacheSet, getContexts, getTailwindcssEntry } from './exposeContext'
+import path from 'node:path'
+import fs from 'node:fs'
 import { CacheManager, getCacheOptions } from './cache'
 import { createPatch, getPatchOptions } from './runtime-patcher'
 import { processTailwindcss } from './postcss'
 import type { UserConfig } from '@/config'
-import { ensureDir } from '@/utils'
-import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, TailwindcssPatcherOptions } from '@/types'
+import { ensureDir, getPackageInfoSync, isObject } from '@/utils'
+import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '@/types'
 
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
@@ -14,16 +13,19 @@ export class TailwindcssPatcher {
   public patchOptions: InternalPatchOptions
   public patch: () => void
   public cacheManager: CacheManager
+  public packageInfo?: PackageInfo
+  public majorVersion?: number
+
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
     this.cacheOptions = getCacheOptions(options.cache)
     this.patchOptions = getPatchOptions(options.patch)
     this.patch = createPatch(this.patchOptions)
     this.cacheManager = new CacheManager(this.cacheOptions)
-  }
-
-  getPkgEntry(basedir?: string) {
-    return getTailwindcssEntry(basedir)
+    this.packageInfo = getPackageInfoSync('tailwindcss', { basedir: this.patchOptions.basedir })
+    if (this.packageInfo && this.packageInfo.version) {
+      this.majorVersion = Number.parseInt(this.packageInfo.version[0])
+    }
   }
 
   setCache(set: Set<string>) {
@@ -33,17 +35,61 @@ export class TailwindcssPatcher {
   }
 
   getCache() {
-    // if(this.cache.enable){
     return this.cacheManager.read()
-    // }
+  }
+
+  getContexts(): TailwindcssRuntimeContext[] {
+    if (this.packageInfo) {
+      const distPath = path.join(this.packageInfo.rootPath, 'lib')
+      let injectFilePath: string | undefined
+      if (this.majorVersion === 2) {
+        injectFilePath = path.join(distPath, 'jit/index.js')
+      }
+      else {
+        injectFilePath = path.join(distPath, 'plugin.js')
+        if (!fs.existsSync(injectFilePath)) {
+          injectFilePath = path.join(distPath, 'index.js')
+        }
+      }
+      if (injectFilePath) {
+        // eslint-disable-next-line ts/no-require-imports, ts/no-var-requires
+        const mo = require(injectFilePath)
+        if (mo.contextRef) {
+          return mo.contextRef.value
+        }
+      }
+    }
+
+    return []
+  }
+
+  getClassCaches(): TailwindcssClassCache[] {
+    const contexts = this.getContexts()
+    return contexts.filter(x => isObject(x)).map(x => x.classCache)
+  }
+
+  getClassCacheSet(options?: { removeUniversalSelector?: boolean }): Set<string> {
+    const classCaches = this.getClassCaches()
+    const classSet = new Set<string>()
+    for (const classCacheMap of classCaches) {
+      const keys = classCacheMap.keys()
+      for (const key of keys) {
+        const v = key.toString()
+        if (options?.removeUniversalSelector && v === '*') {
+          continue
+        }
+        classSet.add(v)
+      }
+    }
+    return classSet
   }
 
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
-  getClassSet(options?: { basedir?: string, cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
-    const { basedir, cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
-    const set = getClassCacheSet(basedir, {
+  getClassSet(options?: { cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
+    const { cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
+    const set = this.getClassCacheSet({
       removeUniversalSelector,
     })
     if (cacheStrategy === 'overwrite') {
@@ -62,10 +108,6 @@ export class TailwindcssPatcher {
     return set
   }
 
-  getContexts(basedir?: string) {
-    return getContexts(basedir)
-  }
-
   async extract(options?: UserConfig['patch']) {
     const { output, tailwindcss } = options ?? {}
     if (output && tailwindcss) {
@@ -77,9 +119,9 @@ export class TailwindcssPatcher {
         removeUniversalSelector,
       })
       if (filename) {
-        await ensureDir(dirname(filename))
+        await ensureDir(path.dirname(filename))
         const classList = [...set]
-        await fs.writeFile(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
+        fs.writeFileSync(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
         return filename
       }
     }

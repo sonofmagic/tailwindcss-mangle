@@ -96,7 +96,10 @@ export function inspectPostcssPlugin(content: string) {
           if (t.isFunctionExpression(targetFn)) {
             // 函数体
             const targetBlockStatement = targetFn.body
-
+            if (t.isExpressionStatement(targetBlockStatement.body[0]) && t.isAssignmentExpression(targetBlockStatement.body[0].expression) && t.isNumericLiteral(targetBlockStatement.body[0].expression.right)) {
+              hasPatched = true
+              return
+            }
             const lastStatement = targetBlockStatement.body[targetBlockStatement.body.length - 1]
             if (t.isExpressionStatement(lastStatement)) {
               // contextRef.value.push((0, _processTailwindFeatures.default)(context)(root, result));

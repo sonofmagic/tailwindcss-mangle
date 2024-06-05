@@ -3,6 +3,13 @@ import type { Config } from 'tailwindcss'
 
 export type CacheStrategy = 'merge' | 'overwrite'
 
+export interface PackageInfo {
+  name: string
+  version: string | undefined
+  rootPath: string
+  packageJsonPath: string
+}
+
 export interface CacheOptions {
   // enable?: boolean
   dir?: string

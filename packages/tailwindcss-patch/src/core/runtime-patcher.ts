@@ -5,6 +5,7 @@ import { gte } from 'semver'
 import type { PackageJson } from 'pkg-types'
 import { defu } from 'defu'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
+import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './inspector-postcss7-compat'
 import type { InternalPatchOptions, PatchOptions } from '@/types'
 import { getDefaultPatchOptions } from '@/defaults'
 import { ensureFileContent, requireResolve } from '@/utils'
@@ -14,6 +15,7 @@ export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
     // const cwd = process.cwd()
     const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
       paths: options.paths,
+      basedir: options.basedir,
     })
 
     return tmpJsonPath
@@ -89,7 +91,7 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
   const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
   const result: { processTailwindFeatures?: string, plugin?: string } & Record<string, any> = {}
   if (processTailwindFeaturesContent) {
-    const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
+    const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContextCompat(processTailwindFeaturesContent)
     if (!hasPatched && opt.overwrite) {
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
         encoding: 'utf8',
@@ -102,7 +104,7 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
   const indexFilePath = path.resolve(twDir, 'lib/jit/index.js')
   const pluginContent = ensureFileContent([indexFilePath])
   if (pluginContent) {
-    const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
+    const { code, hasPatched } = inspectPostcssPluginCompat(pluginContent)
     if (!hasPatched && opt.overwrite) {
       fs.writeFileSync(indexFilePath, code, {
         encoding: 'utf8',

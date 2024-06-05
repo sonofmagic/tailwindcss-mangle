@@ -17,6 +17,15 @@ describe('postcss7-compat', () => {
     expect(r.code).toMatchSnapshot()
     expect(r.hasPatched).toBe(false)
   })
+
+  it('jit plugins patch case 0', async () => {
+    const code = getTestCase('postcss7-compat/lib/jit/index.js')
+    let r = inspectPostcssPlugin(code)
+    expect(r.hasPatched).toBe(false)
+    r = inspectPostcssPlugin(r.code)
+    expect(r.code).toMatchSnapshot()
+    expect(r.hasPatched).toBe(true)
+  })
 })
 
 // const XXXEnum = {

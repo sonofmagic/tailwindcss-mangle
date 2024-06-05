@@ -1,9 +1,14 @@
 const fs = require('node:fs')
 const path = require('node:path')
+const process = require('node:process')
 const postcss = require('postcss')
 const tailwindcss = require('tailwindcss')
+const { TailwindcssPatcher } = require('tailwindcss-patch')
 
 async function main() {
+  const twPatcher = new TailwindcssPatcher()
+  twPatcher.patch()
+
   const tw = tailwindcss({
     mode: 'jit',
     purge: {
@@ -21,7 +26,10 @@ async function main() {
   // console.log(result.css)
   fs.writeFileSync(path.join(__dirname, 'result.css'), result.css, 'utf8')
 
-  const ctx = require('tailwindcss/lib/jit/index')
+  // const ctx = require('tailwindcss/lib/jit/index')
+  // console.log(ctx)
+
+  const ctx = twPatcher.getClassSet()
   console.log(ctx)
 }
 
