@@ -16,7 +16,7 @@ importers:
         version: 2.27.5
       '@icebreakers/eslint-config':
         specifier: ^0.3.5
-        version: 0.3.5(@types/eslint@8.56.10)(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(prettier@3.3.0)(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.2)(terser@5.31.0))
+        version: 0.3.5(@types/eslint@8.56.10)(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(prettier@3.3.1)(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.2)(terser@5.31.0))
       '@tailwindcss-mangle/core':
         specifier: workspace:*
         version: link:packages/core
@@ -61,7 +61,7 @@ importers:
         version: 9.1.0(eslint@9.4.0)
       eslint-plugin-prettier:
         specifier: ^5.1.3
-        version: 5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.0)
+        version: 5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.1)
       local-pkg:
         specifier: ^0.5.0
         version: 0.5.0
@@ -75,8 +75,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       prettier:
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^3.3.1
+        version: 3.3.1
       rollup:
         specifier: ^4.18.0
         version: 4.18.0
@@ -201,8 +201,8 @@ importers:
         specifier: ^6.7.14
         version: 6.7.14
       jiti:
-        specifier: ^1.21.1
-        version: 1.21.1
+        specifier: ^1.21.3
+        version: 1.21.3
       lilconfig:
         specifier: ^3.1.1
         version: 3.1.1
@@ -272,8 +272,8 @@ importers:
         specifier: ^7.10.3
         version: 7.10.3
       astro:
-        specifier: ^4.9.2
-        version: 4.9.2(@types/node@20.14.2)(terser@5.31.0)(typescript@5.4.5)
+        specifier: ^4.9.3
+        version: 4.9.3(@types/node@20.14.2)(terser@5.31.0)(typescript@5.4.5)
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.91.0)
@@ -1589,8 +1589,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@shikijs/core@1.6.1':
-    resolution: {integrity: sha512-CqYyepN4SnBopaoXYwng4NO8riB5ask/LTCkhOFq+GNGtr2X+aKeD767eYdqYukeixEUvv4bXdyTYVaogj7KBw==}
+  '@shikijs/core@1.6.2':
+    resolution: {integrity: sha512-guW5JeDzZ7uwOjTfCOFZ2VtVXk5tmkMzBYbKGfXsmAH1qYOej49L5jQDcGmwd6/OgvpmWhzO2GNJkQIFnbwLPQ==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -2153,8 +2153,8 @@ packages:
   assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
 
-  astro@4.9.2:
-    resolution: {integrity: sha512-apzpRoISk6L8g99m3zKIW5SYxw2GhOju/1Gq0Ccf3SH+X2UcFXF+MTdxPOFl5yJUQg7X0qsVQDOIVf8zHRRKFg==}
+  astro@4.9.3:
+    resolution: {integrity: sha512-LhiKZMee56GI7+zIt15bXZVX4JSnj4syTrQdkYNgE+Y0udMad0x8RgJGzc2NMOK31e6w/SL+NFSvnt/d1kgs5w==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -3867,8 +3867,8 @@ packages:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
 
-  jiti@1.21.1:
-    resolution: {integrity: sha512-KMXpzEJMsOFyRj6ZpDTnnlJrdr9umUY+eut5vlRvjVixohitnRFIRTFw9MEu9zPlBxTHZo6xD5ftKYiQZuJYQw==}
+  jiti@1.21.3:
+    resolution: {integrity: sha512-uy2bNX5zQ+tESe+TiC7ilGRz8AtRGmnJH55NC5S0nSUjvvvM2hJHmefHErugGXN4pNv4Qx7vLsnNw9qJ9mtIsw==}
     hasBin: true
 
   joycon@3.1.1:
@@ -4849,8 +4849,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.3.0:
-    resolution: {integrity: sha512-J9odKxERhCQ10OC2yb93583f6UnYutOeiV5i0zEDS7UGTdUt0u+y8erxl3lBKvwo/JHyyoEdXjwp4dke9oyZ/g==}
+  prettier@3.3.1:
+    resolution: {integrity: sha512-7CAwy5dRsxs8PHXT3twixW9/OEll8MLE0VRPCJyl7CkS6VHGPSlsVaWTiASPTyGyYRyApxlaWTzwUxVNrhcwDg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5184,8 +5184,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  shiki@1.6.1:
-    resolution: {integrity: sha512-1Pu/A1rtsG6HZvQm4W0NExQ45e02og+rPog7PDaFDiMumZgOYnZIu4JtGQeAIfMwdbKSjJQoCUr79vDLKUUxWA==}
+  shiki@1.6.2:
+    resolution: {integrity: sha512-X3hSm5GzzBd/BmPmGfkueOUADLyBoZo1ojYQXhd+NU2VJn458yt4duaS0rVzC+WtqftSV7mTVvDw+OB9AHi3Eg==}
 
   side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
@@ -6127,7 +6127,7 @@ snapshots:
       remark-parse: 11.0.0
       remark-rehype: 11.1.0
       remark-smartypants: 2.1.0
-      shiki: 1.6.1
+      shiki: 1.6.2
       unified: 11.0.4
       unist-util-remove-position: 5.0.0
       unist-util-visit: 5.0.0
@@ -6878,12 +6878,12 @@ snapshots:
 
   '@humanwhocodes/retry@0.3.0': {}
 
-  '@icebreakers/eslint-config@0.3.5(@types/eslint@8.56.10)(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(prettier@3.3.0)(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.2)(terser@5.31.0))':
+  '@icebreakers/eslint-config@0.3.5(@types/eslint@8.56.10)(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(prettier@3.3.1)(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.2)(terser@5.31.0))':
     dependencies:
       '@antfu/eslint-config': 2.20.0(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.2)(terser@5.31.0))
       eslint-config-prettier: 9.1.0(eslint@9.4.0)
       eslint-plugin-mdx: 3.1.5(eslint@9.4.0)
-      eslint-plugin-prettier: 5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.0)
+      eslint-plugin-prettier: 5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.1)
       eslint-plugin-tailwindcss: 3.17.0(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
       local-pkg: 0.5.0
     transitivePeerDependencies:
@@ -7193,7 +7193,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
 
-  '@shikijs/core@1.6.1': {}
+  '@shikijs/core@1.6.2': {}
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -7940,7 +7940,7 @@ snapshots:
 
   assertion-error@1.1.0: {}
 
-  astro@4.9.2(@types/node@20.14.2)(terser@5.31.0)(typescript@5.4.5):
+  astro@4.9.3(@types/node@20.14.2)(terser@5.31.0)(typescript@5.4.5):
     dependencies:
       '@astrojs/compiler': 2.8.0
       '@astrojs/internal-helpers': 0.4.0
@@ -7993,7 +7993,7 @@ snapshots:
       rehype: 13.0.1
       resolve: 1.22.8
       semver: 7.6.2
-      shiki: 1.6.1
+      shiki: 1.6.2
       string-width: 7.1.0
       strip-ansi: 7.1.0
       tsconfck: 3.1.0(typescript@5.4.5)
@@ -9066,10 +9066,10 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-prettier@5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.0):
+  eslint-plugin-prettier@5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.4.0))(eslint@9.4.0)(prettier@3.3.1):
     dependencies:
       eslint: 9.4.0
-      prettier: 3.3.0
+      prettier: 3.3.1
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.8
     optionalDependencies:
@@ -10031,7 +10031,7 @@ snapshots:
 
   jiti@1.21.0: {}
 
-  jiti@1.21.1: {}
+  jiti@1.21.3: {}
 
   joycon@3.1.1: {}
 
@@ -10773,7 +10773,7 @@ snapshots:
       esbuild: 0.18.20
       fs-extra: 11.2.0
       globby: 13.2.2
-      jiti: 1.21.1
+      jiti: 1.21.3
       mlly: 1.7.0
       mri: 1.2.0
       pathe: 1.1.2
@@ -11174,7 +11174,7 @@ snapshots:
   postcss-loader@8.1.1(postcss@8.4.38)(typescript@5.4.5)(webpack@5.91.0):
     dependencies:
       cosmiconfig: 9.0.0(typescript@5.4.5)
-      jiti: 1.21.1
+      jiti: 1.21.3
       postcss: 8.4.38
       semver: 7.6.2
     optionalDependencies:
@@ -11259,7 +11259,7 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.3.0: {}
+  prettier@3.3.1: {}
 
   pretty-bytes@6.1.1: {}
 
@@ -11689,9 +11689,9 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  shiki@1.6.1:
+  shiki@1.6.2:
     dependencies:
-      '@shikijs/core': 1.6.1
+      '@shikijs/core': 1.6.2
 
   side-channel@1.0.4:
     dependencies:
@@ -11914,7 +11914,7 @@ snapshots:
       fast-glob: 3.3.2
       glob-parent: 6.0.2
       is-glob: 4.0.3
-      jiti: 1.21.1
+      jiti: 1.21.3
       lilconfig: 2.1.0
       micromatch: 4.0.7
       normalize-path: 3.0.0
@@ -12180,7 +12180,7 @@ snapshots:
       esbuild: 0.19.2
       globby: 13.2.2
       hookable: 5.5.3
-      jiti: 1.21.1
+      jiti: 1.21.3
       magic-string: 0.30.10
       mkdist: 1.3.0(typescript@5.4.5)
       mlly: 1.4.0
@@ -12339,7 +12339,7 @@ snapshots:
       '@babel/standalone': 7.22.10
       '@babel/types': 7.24.6
       defu: 6.1.4
-      jiti: 1.21.1
+      jiti: 1.21.3
       mri: 1.2.0
       scule: 1.0.0
     transitivePeerDependencies:
