@@ -1,12 +1,16 @@
 {
   "name": "tailwindcss-mangle",
+  "type": "module",
   "version": "2.2.2",
   "private": true,
-  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "packageManager": "pnpm@9.1.4",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "pnpm run -r build",
     "dev": "pnpm -r run dev",
@@ -52,9 +56,5 @@
     "unbuild": "^2.0.0",
     "unplugin-tailwindcss-mangle": "workspace:*",
     "vitest": "^1.6.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "packageManager": "pnpm@9.1.4"
+  }
 }

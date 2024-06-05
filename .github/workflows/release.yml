@@ -14,14 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'pnpm'
 
       - name: Install Dependencies
@@ -48,4 +48,4 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           npm_config_registry: https://registry.npmjs.org
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
