@@ -1,55 +1,11 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import process from 'node:process'
 import { gte } from 'semver'
 import type { PackageJson } from 'pkg-types'
-import { defu } from 'defu'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './inspector'
 import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './inspector-postcss7-compat'
-import type { InternalPatchOptions, PatchOptions } from '@/types'
-import { getDefaultPatchOptions } from '@/defaults'
-import { ensureFileContent, requireResolve } from '@/utils'
-
-export function getInstalledPkgJsonPath(options: PatchOptions = {}) {
-  try {
-    // const cwd = process.cwd()
-    const tmpJsonPath = requireResolve(`tailwindcss/package.json`, {
-      paths: options.paths,
-      basedir: options.basedir,
-    })
-
-    return tmpJsonPath
-    // https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin
-    // only tailwindcss version > 3.0.0
-  }
-  catch (error) {
-    if ((<Error & { code: string }>error).code === 'MODULE_NOT_FOUND') {
-      console.warn('Can\'t find npm pkg: `tailwindcss`, Please ensure it has been installed!')
-    }
-  }
-}
-
-export function getPatchOptions(options: PatchOptions = {}) {
-  return defu(
-    options,
-    {
-      basedir: process.cwd(),
-    },
-    getDefaultPatchOptions(),
-  ) as InternalPatchOptions
-}
-
-export function createPatch(opt: InternalPatchOptions) {
-  return () => {
-    try {
-      const pkgJsonPath = getInstalledPkgJsonPath(opt)
-      return internalPatch(pkgJsonPath, opt)
-    }
-    catch (error) {
-      console.warn(`patch tailwindcss failed:${(<Error>error).message}`)
-    }
-  }
-}
+import type { InternalPatchOptions } from '@/types'
+import { ensureFileContent } from '@/utils'
 
 export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatchOptions) {
   const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/processTailwindFeatures.js')

@@ -1,7 +1,8 @@
 import process from 'node:process'
 import cac from 'cac'
 import { configName, getConfig, initConfig } from './config'
-import { TailwindcssPatcher, createPatch, getPatchOptions } from './core'
+import { TailwindcssPatcher } from './core'
+import { getPatchOptions } from '@/defaults'
 
 function init() {
   const cwd = process.cwd()
@@ -11,9 +12,10 @@ function init() {
 const cli = cac()
 
 cli.command('install', 'patch install').action(() => {
-  const opt = getPatchOptions()
-  const patch = createPatch(opt)
-  patch()
+  const twPatcher = new TailwindcssPatcher({
+    patch: getPatchOptions(),
+  })
+  twPatcher.patch()
 })
 
 cli.command('init').action(async () => {

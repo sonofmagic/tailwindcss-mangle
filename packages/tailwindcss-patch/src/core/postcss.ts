@@ -3,11 +3,7 @@ import process from 'node:process'
 import postcss from 'postcss'
 import { lilconfig } from 'lilconfig'
 import createJiti from 'jiti'
-// const jiti = require('jiti')(__filename)
-// const importDefault = async (filepath: string) => {
-//   const module = await import(url.pathToFileURL(filepath).href)
-//   return module.default
-// }
+
 const jiti = createJiti(__filename)
 
 export async function processTailwindcss(options: { cwd?: string, config?: string }) {

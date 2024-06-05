@@ -1,9 +1,10 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import { CacheManager, getCacheOptions } from './cache'
-import { createPatch, getPatchOptions } from './runtime-patcher'
+import { internalPatch } from './runtime-patcher'
 import { processTailwindcss } from './postcss'
 import type { UserConfig } from '@/config'
+import { getPatchOptions } from '@/defaults'
 import { ensureDir, getPackageInfoSync, isObject } from '@/utils'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '@/types'
 
@@ -20,11 +21,19 @@ export class TailwindcssPatcher {
     this.rawOptions = options
     this.cacheOptions = getCacheOptions(options.cache)
     this.patchOptions = getPatchOptions(options.patch)
-    this.patch = createPatch(this.patchOptions)
+
     this.cacheManager = new CacheManager(this.cacheOptions)
     this.packageInfo = getPackageInfoSync('tailwindcss', { basedir: this.patchOptions.basedir })
     if (this.packageInfo && this.packageInfo.version) {
       this.majorVersion = Number.parseInt(this.packageInfo.version[0])
+    }
+    this.patch = () => {
+      try {
+        return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
+      }
+      catch (error) {
+        console.warn(`patch tailwindcss failed: ${(<Error>error).message}`)
+      }
     }
   }
 
