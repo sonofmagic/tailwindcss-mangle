@@ -36,8 +36,7 @@ function processTailwindFeatures(setupContext) {
     }
 
     let tailwindDirectives = (0, _normalizeTailwindDirectives.default)(root);
-    let 
-     = setupContext({
+    let context = setupContext({
       tailwindDirectives,
 
       registerDependency(dependency) {

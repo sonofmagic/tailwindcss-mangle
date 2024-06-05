@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "pnpm start",
+      "name": "[scripts] postcss7-compat run",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/scripts/postcss7-compat"
+    },
+    {
       "command": "yarn dev",
       "name": "[vite-vue] dev",
       "request": "launch",

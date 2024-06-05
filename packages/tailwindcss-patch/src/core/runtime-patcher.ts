@@ -83,6 +83,39 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
   return result
 }
 
+export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatchOptions) {
+  const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/jit/processTailwindFeatures.js')
+
+  const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
+  const result: { processTailwindFeatures?: string, plugin?: string } & Record<string, any> = {}
+  if (processTailwindFeaturesContent) {
+    const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
+    if (!hasPatched && opt.overwrite) {
+      fs.writeFileSync(processTailwindFeaturesFilePath, code, {
+        encoding: 'utf8',
+      })
+      console.log('patch tailwindcss processTailwindFeatures for return content successfully!')
+    }
+    result.processTailwindFeatures = code
+  }
+
+  const indexFilePath = path.resolve(twDir, 'lib/jit/index.js')
+  const pluginContent = ensureFileContent([indexFilePath])
+  if (pluginContent) {
+    const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
+    if (!hasPatched && opt.overwrite) {
+      fs.writeFileSync(indexFilePath, code, {
+        encoding: 'utf8',
+      })
+      console.log('patch tailwindcss for expose runtime content successfully!')
+    }
+    result.plugin = code
+  }
+
+  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
+  return result
+}
+
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
   if (pkgJsonPath) {
     // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
@@ -95,8 +128,8 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
     }
     else if (gte(pkgJson.version!, '2.0.0')) {
       options.version = pkgJson.version
-      // const result = monkeyPatchForExposingContext(twDir, options)
-      // return result
+      const result = monkeyPatchForExposingContextV2(twDir, options)
+      return result
     }
     // no sth
   }
