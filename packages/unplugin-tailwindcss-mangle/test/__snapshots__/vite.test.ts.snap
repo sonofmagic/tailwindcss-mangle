@@ -5,7 +5,7 @@ exports[`vite build > common build  1`] = `
   <div>
     <button id="counter">counter</button>
   </div>
-
+  
 <main class="flex tw-fb tw-yb tw-cb tw-ra tw-mc">
 <div class="tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac">
   <p
@@ -600,7 +600,7 @@ exports[`vite build > common build change class prefix 1`] = `
   <div>
     <button id="counter">counter</button>
   </div>
-
+  
 <main class="flex ice-fb ice-yb ice-cb ice-ra ice-mc">
 <div class="ice-rc ice-gc ice-ub ice-cb ice-ra ice-ob ice-cc ice-ac">
   <p
