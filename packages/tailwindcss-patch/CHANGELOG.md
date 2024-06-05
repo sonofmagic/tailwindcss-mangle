@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 3.0.0
+
+### Major Changes
+
+- 3e7d646: support tailwindcss@2 postcss7 compat
+
 ## 2.2.4
 
 ### Patch Changes
