@@ -5,6 +5,8 @@ import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
 import type { ParseResult } from '@babel/parser'
+// @ts-ignore
+import babelTypescript from '@babel/preset-typescript'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
@@ -44,7 +46,7 @@ export function handleValue(options: HandleValueOptions) {
 
       // replace
       const v = replaceMap.get(str)
-      if (v) {
+      if (v && typeof v === 'string') {
         value = value.replaceAll(str, v)
       }
     }
@@ -107,7 +109,7 @@ function transformSync(ast: babel.types.Node, code: string, plugins: babel.Plugi
 export function loadPresets() {
   return [
     [
-      require('@babel/preset-typescript'),
+      babelTypescript,
       {
         allExtensions: true,
         isTSX: true,
@@ -208,6 +210,7 @@ export function preProcessRawCode(options: IPreProcessJsOptions): string {
   for (const regex of ctx.preserveFunctionRegexs) {
     const allArr: RegExpExecArray[] = []
     let arr: RegExpExecArray | null = null
+    // eslint-disable-next-line no-cond-assign
     while ((arr = regex.exec(magicString.original)) !== null) {
       allArr.push(arr)
       markArr.push([arr.index, arr.index + arr[0].length])
@@ -254,6 +257,7 @@ export function preProcessRawCode(options: IPreProcessJsOptions): string {
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
     const regex = new RegExp(escapeStringRegexp(key), 'g')
     let arr: RegExpExecArray | null = null
+    // eslint-disable-next-line no-cond-assign
     while ((arr = regex.exec(magicString.original)) !== null) {
       const start = arr.index
       const end = arr.index + arr[0].length
@@ -264,7 +268,7 @@ export function preProcessRawCode(options: IPreProcessJsOptions): string {
           break
         }
       }
-      if (shouldUpdate) {
+      if (shouldUpdate && typeof value === 'string') {
         magicString.update(start, end, value)
         markArr.push([start, end])
       }

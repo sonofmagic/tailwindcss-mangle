@@ -6,7 +6,7 @@ const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex min-h-screen flex-col items-center justify-between p-24 ">
+  <main class="flex min-h-screen flex-col items-center justify-between p-24 " :class="['before:text-[#123456]']">
     <nav :class="aaa">{{ aaa }}</nav>
     <div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
       <p

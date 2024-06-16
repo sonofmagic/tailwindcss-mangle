@@ -27,6 +27,10 @@ export interface IJsHandlerOptions extends IHandlerOptions {
   minified?: boolean
 }
 
+export interface IVueHandlerOptions extends IHandlerOptions {
+
+}
+
 export interface ICssHandlerOptions extends IHandlerOptions {
   // scene?: 'loader' | 'process'
   ignoreVueScoped?: boolean
@@ -36,5 +40,4 @@ export interface ICssHandlerOptions extends IHandlerOptions {
 export interface IPreProcessJsOptions extends IHandlerOptions {
   code: string | MagicString
   id: string
-
 }

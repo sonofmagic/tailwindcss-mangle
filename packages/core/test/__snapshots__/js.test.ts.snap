@@ -259,7 +259,7 @@ const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex tw-d tw-f tw-e tw-b tw-j ">
+  <main class="flex tw-d tw-f tw-e tw-b tw-j " :class="['before:text-[#123456]']">
     <nav :class="aaa">aaa</nav>
   </main>
 </template>
@@ -341,7 +341,7 @@ const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc ">
+  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc " :class="['before:text-[#123456]']">
     <nav :class="aaa">{{ aaa }}</nav>
     <div class="tw-cd tw-pc tw-dc tw-hb tw-sa tw-xb tw-lc tw-jc">
       <p
