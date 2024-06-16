@@ -206,19 +206,19 @@ describe('js handler', async () => {
 
   it('lINEFEED case', () => {
     const testCase = 'const LINEFEED = "\\n";'
-    const replaceMap = ctx.replaceMap
+
     // replaceMap.set('bg-red-500/50', true)
     // replaceMap.set('bg-red-500', true)
     const code = jsHandler(testCase, {
       ctx,
 
     }).code
-    expect(code).toBe('const LINEFEED="\\n";')
+    expect(code).toBe('const LINEFEED = "\\n";')
   })
 
   it('preProcessJs case', () => {
     const testCase = 'const LINEFEED = "\\n";'
-    const replaceMap = ctx.replaceMap
+
     // replaceMap.set('bg-red-500/50', true)
     // replaceMap.set('bg-red-500', true)
     const code = preProcessJs({
@@ -478,7 +478,7 @@ describe('js handler', async () => {
         preserveFunction: ['cn'],
       },
     })
-    const replaceMap = ctx.getReplaceMap()
+
     const res = preProcessJs({
       code,
 

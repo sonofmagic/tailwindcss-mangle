@@ -1,16 +1,13 @@
-import babel from '@babel/core'
-import { declare } from '@babel/helper-plugin-utils'
 import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
 import type { ParseResult } from '@babel/parser'
-// @ts-ignore
-import babelTypescript from '@babel/preset-typescript'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
 import type { IPreProcessJsOptions } from '@/types'
+import { parse, traverse } from '@/babel'
 
 interface Options {
   magicString: MagicString
@@ -61,72 +58,15 @@ export function handleValue(options: HandleValueOptions) {
   }
 }
 
-export const JsPlugin = declare((api, options: Options) => {
-  api.assertVersion(7)
-  const { magicString, id, ctx, markedArray } = options
-  return {
-    visitor: {
-      StringLiteral: {
-        exit(p) {
-          handleValue({
-            ctx,
-            id,
-            magicString,
-            path: p,
-            raw: p.node.value,
-            offset: 1,
-            escape: true,
-            markedArray,
-          })
-        },
-      },
-      TemplateElement: {
-        exit(p) {
-          handleValue({
-            ctx,
-            id,
-            magicString,
-            path: p,
-            raw: p.node.value.raw,
-            offset: 0,
-            escape: false,
-            markedArray,
-          })
-        },
-      },
-    },
-  }
-})
-
-function transformSync(ast: babel.types.Node, code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
-  babel.transformFromAstSync(ast, code, {
-    presets: loadPresets(),
-    plugins,
-    filename,
-  })
-}
-
-export function loadPresets() {
-  return [
-    [
-      babelTypescript,
-      {
-        allExtensions: true,
-        isTSX: true,
-      },
-    ],
-  ]
-}
-
 export function preProcessJs(options: IPreProcessJsOptions): string {
   const { code, id, ctx } = options
   const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   let ast: ParseResult<babel.types.File>
   try {
-    const file = babel.parseSync(magicString.original, {
+    const file = parse(magicString.original, {
       sourceType: 'unambiguous',
-      presets: loadPresets(),
+      plugins: ['typescript', 'jsx'],
     })
     if (file) {
       ast = file
@@ -139,7 +79,7 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
     return code.toString()
   }
   const markedArray: [number, number][] = []
-  babel.traverse(ast, {
+  traverse(ast, {
     CallExpression: {
       enter(p) {
         const callee = p.get('callee')
@@ -179,25 +119,35 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
         }
       },
     },
-  })
-
-  transformSync(
-    ast,
-    magicString.original,
-    [
-      [
-        JsPlugin,
-        {
-          magicString,
-          replaceMap,
-          id,
+    StringLiteral: {
+      exit(p) {
+        handleValue({
           ctx,
+          id,
+          magicString,
+          path: p,
+          raw: p.node.value,
+          offset: 1,
+          escape: true,
           markedArray,
-        },
-      ],
-    ],
-    id,
-  )
+        })
+      },
+    },
+    TemplateElement: {
+      exit(p) {
+        handleValue({
+          ctx,
+          id,
+          magicString,
+          path: p,
+          raw: p.node.value.raw,
+          offset: 0,
+          escape: false,
+          markedArray,
+        })
+      },
+    },
+  })
 
   return magicString.toString()
 }
@@ -219,12 +169,12 @@ export function preProcessRawCode(options: IPreProcessJsOptions): string {
     for (const regExpMatch of allArr) {
       let ast: ParseResult<babel.types.File> | null
       try {
-        ast = babel.parseSync(regExpMatch[0], {
+        ast = parse(regExpMatch[0], {
           sourceType: 'unambiguous',
         })
 
         ast
-        && babel.traverse(ast, {
+        && traverse(ast, {
           StringLiteral: {
             enter(p) {
               const arr = sort(splitCode(p.node.value)).desc(x => x.length)

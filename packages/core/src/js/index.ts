@@ -1,12 +1,13 @@
-import type { CallExpression, StringLiteral, TemplateElement } from '@babel/types'
-import { type BabelFileResult, type NodePath, transformSync } from '@babel/core'
+import type { StringLiteral, TemplateElement } from '@babel/types'
+import MagicString from 'magic-string'
+import { jsStringEscape } from '@ast-core/escape'
 import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
-import { isProd as isProduction } from '../env'
+import { parse, traverse } from '@/babel'
 
 export { preProcessJs, preProcessRawCode } from './pre'
 
-export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions) {
+export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
   const { ctx, splitQuote = true } = options
   const { replaceMap, classGenerator: clsGen } = ctx
 
@@ -14,6 +15,7 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
     splitQuote,
   })
   let rawString = raw
+  let needUpdate = false
   for (const v of array) {
     if (replaceMap.has(v)) {
       let ignoreFlag = false
@@ -23,59 +25,64 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
 
       if (!ignoreFlag) {
         rawString = rawString.replace(makeRegex(v), clsGen.generateClassName(v).name)
+        needUpdate = true
       }
+    }
+  }
+  if (needUpdate && typeof node.start === 'number' && typeof node.end === 'number') {
+    const start = node.start + offset
+    const end = node.end - offset
+
+    if (start < end && raw !== rawString) {
+      ms.update(start, end, escape ? jsStringEscape(rawString) : rawString)
     }
   }
   return rawString
 }
 
-export function jsHandler(rawSource: string, options: IJsHandlerOptions) {
-  const result = transformSync(rawSource, {
-    babelrc: false,
-    ast: true,
-    plugins: [
-      () => {
-        return {
-          visitor: {
-            StringLiteral: {
-              enter(p: NodePath<StringLiteral>) {
-                const n = p.node
-                n.value = handleValue(n.value, n, options)
-              },
-            },
-            TemplateElement: {
-              enter(p: NodePath<TemplateElement>) {
-                const n = p.node
-                n.value.raw = handleValue(n.value.raw, n, options)
-              },
-            },
-            CallExpression: {
-              enter(p: NodePath<CallExpression>) {
-                const calleePath = p.get('callee')
-                if (calleePath.isIdentifier() && calleePath.node.name === 'eval') {
-                  p.traverse({
-                    StringLiteral: {
-                      enter(s) {
-                        // ___CSS_LOADER_EXPORT___
-                        const res = jsHandler(s.node.value, options)
-                        if (res.code) {
-                          s.node.value = res.code
-                        }
-                      },
-                    },
-                  })
-                }
-              },
-            },
-            // noScope: true
-          },
-        }
+export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOptions) {
+  const ms: MagicString = typeof rawSource === 'string' ? new MagicString(rawSource) : rawSource
+  const ast = parse(ms.original, {
+    sourceType: 'unambiguous',
+    plugins: ['typescript', 'jsx'],
+  })
+  traverse(ast, {
+    StringLiteral: {
+      enter(p) {
+        const n = p.node
+        handleValue(n.value, n, options, ms, 1, true)
       },
-    ],
-    minified: options.minified ?? isProduction(),
-    sourceMaps: false,
-    configFile: false,
+    },
+    TemplateElement: {
+      enter(p) {
+        const n = p.node
+        handleValue(n.value.raw, n, options, ms, 0, false)
+      },
+    },
+    // CallExpression: {
+    //   enter(p: NodePath<CallExpression>) {
+    //     const calleePath = p.get('callee')
+    //     if (calleePath.isIdentifier() && calleePath.node.name === 'eval') {
+    //       p.traverse({
+    //         StringLiteral: {
+    //           enter(s) {
+    //             // ___CSS_LOADER_EXPORT___
+    //             const res = jsHandler(s.node.value, options)
+    //             if (res.code) {
+    //               s.node.value = res.code
+    //             }
+    //           },
+    //         },
+    //       })
+    //     }
+    //   },
+    // },
   })
 
-  return result as BabelFileResult
+  return {
+    code: ms.toString(),
+    get map() {
+      return ms.generateMap()
+    },
+  }
 }

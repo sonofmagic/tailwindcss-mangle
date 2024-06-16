@@ -3,7 +3,7 @@ import MagicString from 'magic-string'
 import type { IHtmlHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 
-export function htmlHandler(raw: string, options: IHtmlHandlerOptions) {
+export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOptions) {
   const { ctx } = options
   const { replaceMap } = ctx
   const ms: MagicString = typeof raw === 'string' ? new MagicString(raw) : raw

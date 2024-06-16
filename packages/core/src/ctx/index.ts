@@ -47,9 +47,6 @@ export class Context {
   }
 
   isPreserveFunction(calleeName: string) {
-    // if (callee === undefined) {
-    //   return false
-    // }
     return this.preserveFunctionSet.has(calleeName)
   }
 
@@ -78,12 +75,6 @@ export class Context {
   }
 
   getReplaceMap() {
-    // const map = new Map<string, string>()
-    // for (const [key, value] of sort([...this.replaceMap.entries()]).desc((x) => x[0].length)) {
-    //   if (!this.isPreserveClass(key)) {
-    //     map.set(key, value)
-    //   }
-    // }
     return this.replaceMap // map
   }
 
