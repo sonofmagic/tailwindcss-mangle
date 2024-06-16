@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "description": "To merge Tailwind CSS classes at compile time!",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
   "author": "",
   "license": "MIT",
+  "keywords": [],
+  "main": "index.js",
+  "scripts": {},
   "dependencies": {
     "tailwind-merge": "^2.3.0",
     "unplugin": "^1.10.1"

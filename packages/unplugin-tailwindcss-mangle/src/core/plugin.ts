@@ -25,26 +25,22 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
     },
     transform(code, id) {
       const s = new MagicString(code)
-      const replaceMap = ctx.getReplaceMap()
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
       return /\.[jt]sx?$/.test(id)
         ? preProcessJs({
           code: s,
-          replaceMap,
           ctx,
           id,
         })
         : preProcessRawCode({
           code,
           ctx,
-          replaceMap,
           id,
         })
     },
     vite: {
       generateBundle: {
         async handler(options, bundle) {
-          const replaceMap = ctx.getReplaceMap()
           const groupedEntries = getGroupedEntries(Object.entries(bundle))
 
           if (Array.isArray(groupedEntries.css) && groupedEntries.css.length > 0) {
@@ -53,7 +49,6 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
               const { css } = await cssHandler(cssSource.source.toString(), {
                 file,
-                replaceMap,
                 ctx,
               })
               cssSource.source = css
@@ -73,7 +68,6 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
             stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
           },
           async (assets) => {
-            const replaceMap = ctx.getReplaceMap()
             const groupedEntries = getGroupedEntries(Object.entries(assets))
 
             if (groupedEntries.js.length > 0) {
@@ -81,7 +75,6 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
                 const [file, chunk] = groupedEntries.js[i]
 
                 const code = jsHandler(chunk.source().toString(), {
-                  replaceMap,
                   ctx,
                 }).code
                 if (code) {
@@ -96,7 +89,6 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
                 const [file, cssSource] = groupedEntries.css[i]
 
                 const { css } = await cssHandler(cssSource.source().toString(), {
-                  replaceMap,
                   file,
                   ctx,
                 })
@@ -113,7 +105,6 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
 
                 const html = htmlHandler(asset.source().toString(), {
                   ctx,
-                  replaceMap,
                 })
                 const source = new ConcatSource(html)
                 compilation.updateAsset(file, source)
