@@ -8,9 +8,9 @@ import type { ParseResult } from '@babel/parser'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
+import type { IPreProcessJsOptions } from '@/types'
 
 interface Options {
-  replaceMap: Map<string, string>
   magicString: MagicString
   id: string
   ctx: Context
@@ -25,7 +25,8 @@ type HandleValueOptions = {
 } & Options
 
 export function handleValue(options: HandleValueOptions) {
-  const { ctx, id, path, magicString, raw, replaceMap, offset = 0, escape = false, markedArray } = options
+  const { ctx, id, path, magicString, raw, offset = 0, escape = false, markedArray } = options
+  const { replaceMap } = ctx
   const node = path.node
   let value = raw
   // why 字符串字面量只要开始和结束 在 方法节点内就保留, 另外不可能出现 字符串字面量 开始和结束的下标整个包括 方法体，这是不可能出现的事情
@@ -60,53 +61,40 @@ export function handleValue(options: HandleValueOptions) {
 
 export const JsPlugin = declare((api, options: Options) => {
   api.assertVersion(7)
-  const { magicString, replaceMap, id, ctx, markedArray } = options
+  const { magicString, id, ctx, markedArray } = options
   return {
     visitor: {
       StringLiteral: {
         exit(p) {
-          const opts: HandleValueOptions = {
+          handleValue({
             ctx,
             id,
             magicString,
             path: p,
             raw: p.node.value,
-            replaceMap,
             offset: 1,
             escape: true,
             markedArray,
-          }
-
-          handleValue(opts)
+          })
         },
       },
       TemplateElement: {
         exit(p) {
-          const opts: HandleValueOptions = {
+          handleValue({
             ctx,
             id,
             magicString,
             path: p,
             raw: p.node.value.raw,
-            replaceMap,
             offset: 0,
             escape: false,
             markedArray,
-          }
-
-          handleValue(opts)
+          })
         },
       },
     },
   }
 })
-
-interface IPreProcessJsOptions {
-  code: string | MagicString
-  replaceMap: Map<string, string>
-  id: string
-  ctx: Context
-}
 
 function transformSync(ast: babel.types.Node, code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
   babel.transformFromAstSync(ast, code, {
@@ -129,7 +117,8 @@ export function loadPresets() {
 }
 
 export function preProcessJs(options: IPreProcessJsOptions): string {
-  const { code, replaceMap, id, ctx } = options
+  const { code, id, ctx } = options
+  const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   let ast: ParseResult<babel.types.File>
   try {
@@ -211,15 +200,9 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
   return magicString.toString()
 }
 
-interface IPreProcessRawCodeOptions {
-  code: string | MagicString
-  replaceMap: Map<string, string>
-  id: string
-  ctx: Context
-}
-
-export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
-  const { code, replaceMap, ctx } = options
+export function preProcessRawCode(options: IPreProcessJsOptions): string {
+  const { code, ctx } = options
+  const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   const markArr: [number, number][] = []
   for (const regex of ctx.preserveFunctionRegexs) {

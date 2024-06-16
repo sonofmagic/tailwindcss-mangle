@@ -4,7 +4,9 @@ import type { IHtmlHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 // const { traverse } = await import('@parse5/tools')
 export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
-  const { replaceMap, ctx } = options
+  const { ctx } = options
+  const { replaceMap } = ctx
+
   const fragment = parse(rawSource)
   traverse(fragment, {
     element(node) {

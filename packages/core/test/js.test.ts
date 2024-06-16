@@ -18,47 +18,46 @@ describe('js handler', async () => {
     ctx = new Context()
   })
   it('common StringLiteral', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
 
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('common StringLiteral with splitQuote false', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
 
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
       splitQuote: false,
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('common TemplateElement', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('dark:bg-zinc-800/30', true)
     replaceMap.set('lg:dark:bg-zinc-800/30', true)
 
     const testCase = 'const counter = 0;element.innerHTML = `<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is ${counter}</div>`'
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   // it('text-[red]', () => {
-  //   const replaceMap = new Map()
+  //   const replaceMap = ctx.replaceMap
 
   //   // eslint-disable-next-line no-template-curly-in-string
   //   const testCase = ''
@@ -73,7 +72,7 @@ describe('js handler', async () => {
   // })
 
   it('z-10 not transform', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
       replaceMap.set(cls, true)
     }
@@ -81,13 +80,13 @@ describe('js handler', async () => {
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('z-10 not transform with splitQuote false', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
       replaceMap.set(cls, true)
     }
@@ -95,7 +94,7 @@ describe('js handler', async () => {
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
       splitQuote: false,
     }).code
     expect(code).toMatchSnapshot()
@@ -105,7 +104,7 @@ describe('js handler', async () => {
     const testCase = getTestCase('next-server-page.js')
     getCss(testCase)
     const list = require('./fixtures/tw-class-set.json') as string[]
-    const replaceMap = new Map() // getClassCacheSet()
+    const replaceMap = ctx.replaceMap // getClassCacheSet()
     for (const cls of list) {
       replaceMap.set(cls, true)
     }
@@ -113,7 +112,7 @@ describe('js handler', async () => {
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -121,35 +120,35 @@ describe('js handler', async () => {
   it('eval script case', () => {
     const testCase = getTestCase('webpack-dev-content.js')
     const list = require('./fixtures/tw-class-set.json') as string[]
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     for (const cls of list) {
       replaceMap.set(cls, true)
     }
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('comment-ignore case', () => {
     const testCase = getTestCase('comment-ignore.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('ease-out', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('minified js true', () => {
     const testCase = getTestCase('comment-ignore.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('ease-out', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
       minified: true,
     }).code
     expect(code).toMatchSnapshot()
@@ -158,112 +157,114 @@ describe('js handler', async () => {
   it('minified js with NODE_ENV', () => {
     process.env.NODE_ENV = 'production'
     const testCase = getTestCase('comment-ignore.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('ease-out', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
   // https://github.com/sonofmagic/tailwindcss-mangle/issues/24
   it('trailing slash case 0', () => {
     const testCase = getTestCase('trailing-slash-0.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500', true)
     replaceMap.set('bg-red-500/50', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('trailing slash case 1', () => {
     const testCase = getTestCase('trailing-slash-1.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', true)
     replaceMap.set('bg-red-500', true)
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('trailing slash case 2', () => {
     const testCase = getTestCase('trailing-slash-2.js')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', true)
     replaceMap.set('bg-red-500', true)
 
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toMatchSnapshot()
   })
 
   it('lINEFEED case', () => {
     const testCase = 'const LINEFEED = "\\n";'
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     // replaceMap.set('bg-red-500/50', true)
     // replaceMap.set('bg-red-500', true)
     const code = jsHandler(testCase, {
       ctx,
-      replaceMap,
+
     }).code
     expect(code).toBe('const LINEFEED="\\n";')
   })
 
   it('preProcessJs case', () => {
     const testCase = 'const LINEFEED = "\\n";'
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     // replaceMap.set('bg-red-500/50', true)
     // replaceMap.set('bg-red-500', true)
     const code = preProcessJs({
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {},
+        addToUsedBy: () => { },
       },
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toBe(testCase)
   })
 
   it('preProcessJs TemplateElement case', () => {
     const testCase = 'const LINEFEED = `bg-red-500/50${n}bg-red-500/50`;'
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
     const code = preProcessJs({
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {},
+        addToUsedBy: () => { },
+        replaceMap,
       },
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toBe('const LINEFEED = `a${n}a`;')
   })
 
   it('preProcessJs MagicString TemplateElement case', () => {
     const testCase = new MagicString('const LINEFEED = `bg-red-500/50${n}bg-red-500/50`;')
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
     const code = preProcessJs({
       code: testCase,
       // @ts-ignore
       ctx: {
-        addToUsedBy: () => {},
+        addToUsedBy: () => { },
+        replaceMap,
       },
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toBe('const LINEFEED = `a${n}a`;')
   })
@@ -272,14 +273,13 @@ describe('js handler', async () => {
     const testCase = getTestCase('preserve-fn-case0.js')
 
     await ctx.initConfig()
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
     const code = preProcessJs({
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap,
     })
     expect(code).toMatchSnapshot()
   })
@@ -304,7 +304,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
@@ -333,7 +333,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(4)
@@ -361,7 +361,7 @@ describe('js handler', async () => {
       code: testCase,
       ctx,
       id: 'xxx',
-      replaceMap,
+
     })
     expect(code).toMatchSnapshot()
     expect(ctx.preserveClassNamesSet.size).toBe(8)
@@ -382,7 +382,7 @@ describe('js handler', async () => {
     const code = preProcessRawCode({
       code: testCase,
       ctx,
-      replaceMap,
+
       id: 'xxx',
     })
     expect(code).toMatchSnapshot()
@@ -403,7 +403,7 @@ describe('js handler', async () => {
     const code = preProcessRawCode({
       code: testCase,
       ctx,
-      replaceMap,
+
       id: 'xxx',
     })
     expect(code).toMatchSnapshot()
@@ -425,7 +425,6 @@ describe('js handler', async () => {
     const code = preProcessRawCode({
       code: testCase,
       ctx,
-      replaceMap,
       id: 'xxx',
     })
     expect(code).toMatchSnapshot()
@@ -442,7 +441,7 @@ describe('js handler', async () => {
 
     const res = preProcessJs({
       code,
-      replaceMap,
+
       ctx,
       id: 'xxx',
     })
@@ -458,7 +457,7 @@ describe('js handler', async () => {
 
     const res = preProcessJs({
       code,
-      replaceMap,
+
       ctx,
       id: 'xxx',
     })
@@ -482,7 +481,7 @@ describe('js handler', async () => {
     const replaceMap = ctx.getReplaceMap()
     const res = preProcessJs({
       code,
-      replaceMap,
+
       ctx,
       id: 'xxx',
     })

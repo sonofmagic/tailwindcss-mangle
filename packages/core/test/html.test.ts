@@ -11,20 +11,19 @@ describe('html handler', () => {
     ctx = new Context()
   })
   it('common usage', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('text-3xl font-bold underline')) {
       replaceMap.set(x, true)
     }
     const res = htmlHandler(getTestCase('hello-world.html'), {
       ctx,
-      replaceMap,
     })
     expect(res).toMatchSnapshot()
   })
 
   it('trailing slash case', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
       replaceMap.set(x, true)
@@ -37,7 +36,7 @@ describe('html handler', () => {
   })
 
   it('trailing slash case 0', () => {
-    const replaceMap = new Map()
+    const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
       replaceMap.set(x, true)

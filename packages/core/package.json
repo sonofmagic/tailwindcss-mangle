@@ -2,6 +2,22 @@
   "name": "@tailwindcss-mangle/core",
   "version": "2.2.2",
   "description": "The core of tailwindcss-mangle",
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
+  },
+  "keywords": [
+    "tailwindcss",
+    "patch",
+    "core",
+    "mangle"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -9,6 +25,9 @@
       "require": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
@@ -17,9 +36,6 @@
       ]
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -30,14 +46,6 @@
     "test:dev": "vitest",
     "coverage": "vitest run --coverage"
   },
-  "keywords": [
-    "tailwindcss",
-    "patch",
-    "core",
-    "mangle"
-  ],
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
-  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -65,14 +73,6 @@
     "@types/micromatch": "^4.0.7",
     "@vue/compiler-core": "^3.4.29",
     "@vue/compiler-sfc": "^3.4.27"
-  },
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
   },
   "directories": {
     "test": "test"

@@ -1,3 +1,4 @@
+import type MagicString from 'magic-string'
 import type { Context } from './ctx'
 
 export interface IClassGeneratorContextItem {
@@ -16,7 +17,6 @@ export interface IClassGeneratorOptions {
 }
 
 export interface IHandlerOptions {
-  replaceMap: Map<string, string>
   ctx: Context
 }
 
@@ -31,4 +31,10 @@ export interface ICssHandlerOptions extends IHandlerOptions {
   // scene?: 'loader' | 'process'
   ignoreVueScoped?: boolean
   file?: string
+}
+
+export interface IPreProcessJsOptions extends IHandlerOptions {
+  code: string | MagicString
+  id: string
+
 }

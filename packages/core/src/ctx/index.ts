@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import { isAbsolute, resolve } from 'node:path'
+import process from 'node:process'
 import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { getConfig } from '@tailwindcss-mangle/config'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
@@ -17,7 +18,7 @@ export class Context {
   options: MangleUserConfig
   private includeMatcher: (file: string) => boolean
   private excludeMatcher: (file: string) => boolean
-  private replaceMap: Map<string, string>
+  public replaceMap: Map<string, string>
   classSet: Set<string>
 
   classGenerator: ClassGenerator
