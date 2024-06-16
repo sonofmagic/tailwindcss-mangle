@@ -1,27 +1,29 @@
-import { parse, serialize } from 'parse5'
-import { traverse } from '@parse5/tools'
+import { Parser } from 'htmlparser2'
+import MagicString from 'magic-string'
 import type { IHtmlHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
-// const { traverse } = await import('@parse5/tools')
-export function htmlHandler(rawSource: string, options: IHtmlHandlerOptions) {
+
+export function htmlHandler(raw: string, options: IHtmlHandlerOptions) {
   const { ctx } = options
   const { replaceMap } = ctx
-
-  const fragment = parse(rawSource)
-  traverse(fragment, {
-    element(node) {
-      const attribute = node.attrs.find(x => x.name === 'class')
-      if (attribute) {
-        const array = splitCode(attribute.value, {
+  const ms: MagicString = typeof raw === 'string' ? new MagicString(raw) : raw
+  const parser = new Parser({
+    onattribute(name, value) {
+      if (name === 'class') {
+        const arr = splitCode(value, {
           splitQuote: false,
         })
-        for (const v of array) {
+        let rawValue = value
+        for (const v of arr) {
           if (replaceMap.has(v)) {
-            attribute.value = attribute.value.replace(makeRegex(v), ctx.classGenerator.generateClassName(v).name)
+            rawValue = rawValue.replace(makeRegex(v), ctx.classGenerator.generateClassName(v).name)
           }
         }
+        ms.update(parser.startIndex + name.length + 2, parser.endIndex - 1, rawValue)
       }
     },
   })
-  return serialize(fragment)
+  parser.write(ms.original)
+  parser.end()
+  return ms.toString()
 }

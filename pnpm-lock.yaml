@@ -153,7 +153,7 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0
       htmlparser2:
-        specifier: ^9.1.0
+        specifier: 9.1.0
         version: 9.1.0
       magic-string:
         specifier: ^0.30.10
@@ -161,9 +161,6 @@ importers:
       micromatch:
         specifier: ^4.0.7
         version: 4.0.7
-      parse5:
-        specifier: ^7.1.2
-        version: 7.1.2
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -171,9 +168,6 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0
     devDependencies:
-      '@parse5/tools':
-        specifier: ^0.5.0
-        version: 0.5.0
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -1452,9 +1446,6 @@ packages:
   '@npmcli/name-from-folder@2.0.0':
     resolution: {integrity: sha512-pwK+BfEBZJbKdNYpHHRTNBwBoqrN/iIMO0AiGvYsp3Hoaq0WbgGSWQR6SCldZovoDpY3yje5lkFUe6gsDgJ2vg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-
-  '@parse5/tools@0.5.0':
-    resolution: {integrity: sha512-vyYK20atGm9Kwwk/vi5jTFxb7m67EG1PLTUN31+WAUsvgOThu/PjsZD57P6A1hAm2TunkzxSD9esnYv6gcWrdA==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -7142,10 +7133,6 @@ snapshots:
       read-package-json-fast: 3.0.2
 
   '@npmcli/name-from-folder@2.0.0': {}
-
-  '@parse5/tools@0.5.0':
-    dependencies:
-      parse5: 7.1.2
 
   '@pkgjs/parseargs@0.11.0':
     optional: true

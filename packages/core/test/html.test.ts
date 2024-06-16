@@ -30,7 +30,6 @@ describe('html handler', () => {
     }
     const res = htmlHandler(getTestCase('trailing-slash.html'), {
       ctx,
-      replaceMap,
     })
     expect(res).toMatchSnapshot()
   })
@@ -43,7 +42,6 @@ describe('html handler', () => {
     }
     const res = htmlHandler(getTestCase('trailing-slash-0.html'), {
       ctx,
-      replaceMap,
     })
     expect(res).toMatchSnapshot()
   })

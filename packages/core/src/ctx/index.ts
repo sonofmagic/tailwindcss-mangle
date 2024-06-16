@@ -18,7 +18,7 @@ export class Context {
   options: MangleUserConfig
   private includeMatcher: (file: string) => boolean
   private excludeMatcher: (file: string) => boolean
-  public replaceMap: Map<string, string | boolean>
+  public replaceMap: Map<string, string>
   classSet: Set<string>
 
   classGenerator: ClassGenerator
