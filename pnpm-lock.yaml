@@ -149,9 +149,6 @@ importers:
       magic-string:
         specifier: ^0.30.10
         version: 0.30.10
-      micromatch:
-        specifier: ^4.0.7
-        version: 4.0.7
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -162,12 +159,6 @@ importers:
       '@types/babel__traverse':
         specifier: ^7.20.6
         version: 7.20.6
-      '@types/micromatch':
-        specifier: ^4.0.7
-        version: 4.0.7
-      '@vue/compiler-core':
-        specifier: ^3.4.29
-        version: 3.4.29
 
   packages/shared: {}
 
@@ -243,6 +234,9 @@ importers:
 
   packages/unplugin-tailwindcss-mangle:
     dependencies:
+      '@rollup/pluginutils':
+        specifier: ^5.1.0
+        version: 5.1.0(rollup@4.18.0)
       '@tailwindcss-mangle/config':
         specifier: workspace:^
         version: link:../config
@@ -1449,6 +1443,15 @@ packages:
       rollup:
         optional: true
 
+  '@rollup/pluginutils@5.1.0':
+    resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
   '@rollup/rollup-android-arm-eabi@4.18.0':
     resolution: {integrity: sha512-Tya6xypR10giZV1XzxmH5wr25VcZSncG0pZIjfePT0OVBvqNEurzValetGNarVrGiq66EBVAFn15iYX4w6FKgQ==}
     cpu: [arm]
@@ -1614,9 +1617,6 @@ packages:
   '@types/babel__traverse@7.20.6':
     resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
 
-  '@types/braces@3.0.4':
-    resolution: {integrity: sha512-0WR3b8eaISjEW7RpZnclONaLFDf7buaowRHdqLp4vLj54AsSAYWfh3DRbfiYJY9XDxMgx1B4sE1Afw2PGpuHOA==}
-
   '@types/concat-stream@2.0.3':
     resolution: {integrity: sha512-3qe4oQAPNwVNwK4C9c8u+VJqv9kez+2MR4qJpoPFfXtgxxif1QbFusvXzK0/Wra2VX07smostI2VMmJNSpZjuQ==}
 
@@ -1670,9 +1670,6 @@ packages:
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
-
-  '@types/micromatch@4.0.7':
-    resolution: {integrity: sha512-C/FMQ8HJAZhTsDpl4wDKZdMeeW5USjgzOczUwTGbRc1ZopPgOhIEnxY2ZgUrsuyy4DwK1JVOJZKFakv3TbCKiA==}
 
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
@@ -7059,6 +7056,14 @@ snapshots:
     optionalDependencies:
       rollup: 3.29.4
 
+  '@rollup/pluginutils@5.1.0(rollup@4.18.0)':
+    dependencies:
+      '@types/estree': 1.0.5
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+    optionalDependencies:
+      rollup: 4.18.0
+
   '@rollup/rollup-android-arm-eabi@4.18.0':
     optional: true
 
@@ -7241,8 +7246,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.7
 
-  '@types/braces@3.0.4': {}
-
   '@types/concat-stream@2.0.3':
     dependencies:
       '@types/node': 20.14.5
@@ -7303,10 +7306,6 @@ snapshots:
   '@types/mdast@4.0.4':
     dependencies:
       '@types/unist': 3.0.2
-
-  '@types/micromatch@4.0.7':
-    dependencies:
-      '@types/braces': 3.0.4
 
   '@types/minimist@1.2.5': {}
 

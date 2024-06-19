@@ -76,6 +76,7 @@
     "test:dev": "vitest"
   },
   "dependencies": {
+    "@rollup/pluginutils": "^5.1.0",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",

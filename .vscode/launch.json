@@ -19,63 +19,63 @@
       "cwd": "${workspaceFolder}/scripts/postcss7-compat"
     },
     {
-      "command": "yarn dev",
+      "command": "pnpm dev",
       "name": "[vite-vue] dev",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-vue"
     },
     {
-      "command": "yarn build",
+      "command": "pnpm build",
       "name": "[vite-vue] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-vue"
     },
     {
-      "command": "yarn dev",
+      "command": "pnpm dev",
       "name": "[vite-react] dev",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-react"
     },
     {
-      "command": "yarn build",
+      "command": "pnpm build",
       "name": "[vite-react] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-react"
     },
     {
-      "command": "yarn dev",
+      "command": "pnpm dev",
       "name": "[vite-vanilla] dev",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-vanilla"
     },
     {
-      "command": "yarn build",
+      "command": "pnpm build",
       "name": "[vite-vanilla] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/vite-vanilla"
     },
     {
-      "command": "yarn dev",
+      "command": "pnpm dev",
       "name": "[webpack5-vue3] dev",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/webpack5-vue3"
     },
     {
-      "command": "yarn build",
+      "command": "pnpm build",
       "name": "[webpack5-vue3] build",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/apps/webpack5-vue3"
     },
     {
-      "command": "yarn patch",
+      "command": "pnpm patch",
       "name": "do tailwindcss-patch",
       "request": "launch",
       "type": "node-terminal",

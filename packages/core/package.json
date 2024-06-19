@@ -61,17 +61,10 @@
     "fast-sort": "^3.4.0",
     "htmlparser2": "9.1.0",
     "magic-string": "^0.30.10",
-    "micromatch": "^4.0.7",
     "postcss": "^8.4.38",
     "postcss-selector-parser": "^6.1.0"
   },
   "devDependencies": {
-    "@types/babel__traverse": "^7.20.6",
-    "@types/micromatch": "^4.0.7",
-    "@vue/compiler-core": "^3.4.29",
-    "@vue/compiler-sfc": "^3.4.27"
-  },
-  "directories": {
-    "test": "test"
+    "@types/babel__traverse": "^7.20.6"
   }
 }
