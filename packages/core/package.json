@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/core",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "The core of tailwindcss-mangle",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
