@@ -2,7 +2,7 @@ import { dirname } from 'node:path'
 import fs from 'node:fs/promises'
 import { createUnplugin } from 'unplugin'
 import type { OutputAsset } from 'rollup'
-import { Context, cssHandler, htmlHandler, jsHandler, preProcessJs, preProcessRawCode } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, jsHandler, preProcessJs, preProcessRawCode, vueHandler } from '@tailwindcss-mangle/core'
 import type { ClassMapOutputOptions, MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
 import { pluginName } from '@/constants'
@@ -26,17 +26,25 @@ export const unplugin = createUnplugin((options?: MangleUserConfig) => {
     transform(code, id) {
       const s = new MagicString(code)
       // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-      return /\.[jt]sx?$/.test(id)
-        ? preProcessJs({
+      if (/\.[jt]sx?$/.test(id)) {
+        return preProcessJs({
           code: s,
           ctx,
           id,
         })
-        : preProcessRawCode({
+      }
+      else if (/\.vue/.test(id)) {
+        return vueHandler(code, {
+          ctx,
+        })
+      }
+      else {
+        return preProcessRawCode({
           code,
           ctx,
           id,
         })
+      }
     },
     vite: {
       generateBundle: {
