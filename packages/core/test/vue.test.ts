@@ -9,6 +9,9 @@ describe('vue', () => {
     ctx = new Context()
   })
   it('test for vue', () => {
+    ctx.replaceMap.set('bg-[#B91C1C]', 'xx')
+    ctx.replaceMap.set('before:text-[#123456]', 'yy')
+    ctx.replaceMap.set('justify-between', 'zz')
     const testCase = getTestCase('preserve-fn-case1.vue')
     expect(vueHandler(testCase, {
       ctx,

@@ -3,6 +3,8 @@ import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
 import type { ParseResult } from '@babel/parser'
+import type { NodePath } from '@babel/traverse'
+import type { File, StringLiteral, TemplateElement } from '@babel/types'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
@@ -18,7 +20,7 @@ interface Options {
 
 type HandleValueOptions = {
   raw: string
-  path: babel.NodePath<babel.types.StringLiteral | babel.types.TemplateElement>
+  path: NodePath<StringLiteral | TemplateElement>
   offset: number
   escape: boolean
 } & Options
@@ -62,7 +64,7 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
   const { code, id, ctx } = options
   const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
-  let ast: ParseResult<babel.types.File>
+  let ast: ParseResult<File>
   try {
     const file = parse(magicString.original, {
       sourceType: 'unambiguous',
@@ -167,7 +169,7 @@ export function preProcessRawCode(options: IPreProcessJsOptions): string {
     }
     //  magicString.original.matchAll(regex)
     for (const regExpMatch of allArr) {
-      let ast: ParseResult<babel.types.File> | null
+      let ast: ParseResult<File> | null
       try {
         ast = parse(regExpMatch[0], {
           sourceType: 'unambiguous',

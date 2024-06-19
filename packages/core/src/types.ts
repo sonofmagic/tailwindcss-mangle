@@ -20,7 +20,9 @@ export interface IHandlerOptions {
   ctx: Context
 }
 
-export interface IHtmlHandlerOptions extends IHandlerOptions {}
+export interface IHtmlHandlerOptions extends IHandlerOptions {
+  isVue?: boolean
+}
 
 export interface IJsHandlerOptions extends IHandlerOptions {
   splitQuote?: boolean
