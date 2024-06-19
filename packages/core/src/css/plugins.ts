@@ -7,8 +7,6 @@ export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
 
-const clonedKey = '__tw_mangle_cloned__'
-
 export function isVueScoped(s: parser.ClassName): boolean {
   if (s.parent) {
     const index = s.parent.nodes.indexOf(s)
@@ -23,39 +21,37 @@ export function isVueScoped(s: parser.ClassName): boolean {
 }
 
 export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> = function (options) {
-  const { ignoreVueScoped, replaceMap, ctx } = defu(options, {
+  const { ignoreVueScoped, ctx } = defu(options, {
     ignoreVueScoped: true,
   })
+  const replaceMap = ctx.replaceMap
 
   return {
     postcssPlugin,
-    async Rule(rule) {
-      // @ts-ignore
-      if (rule[clonedKey]) {
-        return
-      }
-      await parser((selectors) => {
-        selectors.walkClasses((s) => {
-          if (s.value && replaceMap && replaceMap.has(s.value)) {
-            if (ignoreVueScoped && isVueScoped(s)) {
-              return
-            }
-            const v = replaceMap.get(s.value)
-            if (v) {
-              if (ctx.isPreserveClass(s.value)) {
-                const r = rule.cloneBefore()
-                // @ts-ignore
-                r[clonedKey] = true
+    Once(root) {
+      root.walkRules((rule) => {
+        parser((selectors) => {
+          selectors.walkClasses((s) => {
+            if (s.value && replaceMap && replaceMap.has(s.value)) {
+              if (ignoreVueScoped && isVueScoped(s)) {
+                return
               }
-              s.value = v
+              const v = replaceMap.get(s.value)
+              if (v) {
+                if (ctx.isPreserveClass(s.value)) {
+                  rule.cloneBefore()
+                }
+                s.value = v
+              }
             }
-          }
+          })
+        }).transformSync(rule, {
+          lossless: false,
+          updateSelector: true,
         })
-      }).transform(rule, {
-        lossless: false,
-        updateSelector: true,
       })
     },
+
   }
 }
 transformSelectorPostcssPlugin.postcss = true

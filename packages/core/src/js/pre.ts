@@ -1,16 +1,17 @@
-import babel from '@babel/core'
-import { declare } from '@babel/helper-plugin-utils'
 import MagicString from 'magic-string'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { sort } from 'fast-sort'
 import { jsStringEscape } from '@ast-core/escape'
 import type { ParseResult } from '@babel/parser'
+import type { NodePath } from '@babel/traverse'
+import type { File, StringLiteral, TemplateElement } from '@babel/types'
 import { escapeStringRegexp } from '@/utils'
 import type { Context } from '@/ctx'
 import { between } from '@/math'
+import type { IPreProcessJsOptions } from '@/types'
+import { parse, traverse } from '@/babel'
 
 interface Options {
-  replaceMap: Map<string, string>
   magicString: MagicString
   id: string
   ctx: Context
@@ -19,13 +20,14 @@ interface Options {
 
 type HandleValueOptions = {
   raw: string
-  path: babel.NodePath<babel.types.StringLiteral | babel.types.TemplateElement>
+  path: NodePath<StringLiteral | TemplateElement>
   offset: number
   escape: boolean
 } & Options
 
 export function handleValue(options: HandleValueOptions) {
-  const { ctx, id, path, magicString, raw, replaceMap, offset = 0, escape = false, markedArray } = options
+  const { ctx, id, path, magicString, raw, offset = 0, escape = false, markedArray } = options
+  const { replaceMap } = ctx
   const node = path.node
   let value = raw
   // why 字符串字面量只要开始和结束 在 方法节点内就保留, 另外不可能出现 字符串字面量 开始和结束的下标整个包括 方法体，这是不可能出现的事情
@@ -43,7 +45,7 @@ export function handleValue(options: HandleValueOptions) {
 
       // replace
       const v = replaceMap.get(str)
-      if (v) {
+      if (v && typeof v === 'string') {
         value = value.replaceAll(str, v)
       }
     }
@@ -58,84 +60,15 @@ export function handleValue(options: HandleValueOptions) {
   }
 }
 
-export const JsPlugin = declare((api, options: Options) => {
-  api.assertVersion(7)
-  const { magicString, replaceMap, id, ctx, markedArray } = options
-  return {
-    visitor: {
-      StringLiteral: {
-        exit(p) {
-          const opts: HandleValueOptions = {
-            ctx,
-            id,
-            magicString,
-            path: p,
-            raw: p.node.value,
-            replaceMap,
-            offset: 1,
-            escape: true,
-            markedArray,
-          }
-
-          handleValue(opts)
-        },
-      },
-      TemplateElement: {
-        exit(p) {
-          const opts: HandleValueOptions = {
-            ctx,
-            id,
-            magicString,
-            path: p,
-            raw: p.node.value.raw,
-            replaceMap,
-            offset: 0,
-            escape: false,
-            markedArray,
-          }
-
-          handleValue(opts)
-        },
-      },
-    },
-  }
-})
-
-interface IPreProcessJsOptions {
-  code: string | MagicString
-  replaceMap: Map<string, string>
-  id: string
-  ctx: Context
-}
-
-function transformSync(ast: babel.types.Node, code: string, plugins: babel.PluginItem[] | null | undefined, filename: string | null | undefined) {
-  babel.transformFromAstSync(ast, code, {
-    presets: loadPresets(),
-    plugins,
-    filename,
-  })
-}
-
-export function loadPresets() {
-  return [
-    [
-      require('@babel/preset-typescript'),
-      {
-        allExtensions: true,
-        isTSX: true,
-      },
-    ],
-  ]
-}
-
 export function preProcessJs(options: IPreProcessJsOptions): string {
-  const { code, replaceMap, id, ctx } = options
+  const { code, id, ctx } = options
+  const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
-  let ast: ParseResult<babel.types.File>
+  let ast: ParseResult<File>
   try {
-    const file = babel.parseSync(magicString.original, {
+    const file = parse(magicString.original, {
       sourceType: 'unambiguous',
-      presets: loadPresets(),
+      plugins: ['typescript', 'jsx'],
     })
     if (file) {
       ast = file
@@ -148,7 +81,7 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
     return code.toString()
   }
   const markedArray: [number, number][] = []
-  babel.traverse(ast, {
+  traverse(ast, {
     CallExpression: {
       enter(p) {
         const callee = p.get('callee')
@@ -188,57 +121,62 @@ export function preProcessJs(options: IPreProcessJsOptions): string {
         }
       },
     },
-  })
-
-  transformSync(
-    ast,
-    magicString.original,
-    [
-      [
-        JsPlugin,
-        {
-          magicString,
-          replaceMap,
-          id,
+    StringLiteral: {
+      exit(p) {
+        handleValue({
           ctx,
+          id,
+          magicString,
+          path: p,
+          raw: p.node.value,
+          offset: 1,
+          escape: true,
           markedArray,
-        },
-      ],
-    ],
-    id,
-  )
+        })
+      },
+    },
+    TemplateElement: {
+      exit(p) {
+        handleValue({
+          ctx,
+          id,
+          magicString,
+          path: p,
+          raw: p.node.value.raw,
+          offset: 0,
+          escape: false,
+          markedArray,
+        })
+      },
+    },
+  })
 
   return magicString.toString()
 }
 
-interface IPreProcessRawCodeOptions {
-  code: string | MagicString
-  replaceMap: Map<string, string>
-  id: string
-  ctx: Context
-}
-
-export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
-  const { code, replaceMap, ctx } = options
+export function preProcessRawCode(options: IPreProcessJsOptions): string {
+  const { code, ctx } = options
+  const { replaceMap } = ctx
   const magicString = typeof code === 'string' ? new MagicString(code) : code
   const markArr: [number, number][] = []
   for (const regex of ctx.preserveFunctionRegexs) {
     const allArr: RegExpExecArray[] = []
     let arr: RegExpExecArray | null = null
+    // eslint-disable-next-line no-cond-assign
     while ((arr = regex.exec(magicString.original)) !== null) {
       allArr.push(arr)
       markArr.push([arr.index, arr.index + arr[0].length])
     }
     //  magicString.original.matchAll(regex)
     for (const regExpMatch of allArr) {
-      let ast: ParseResult<babel.types.File> | null
+      let ast: ParseResult<File> | null
       try {
-        ast = babel.parseSync(regExpMatch[0], {
+        ast = parse(regExpMatch[0], {
           sourceType: 'unambiguous',
         })
 
         ast
-        && babel.traverse(ast, {
+        && traverse(ast, {
           StringLiteral: {
             enter(p) {
               const arr = sort(splitCode(p.node.value)).desc(x => x.length)
@@ -271,6 +209,7 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
     const regex = new RegExp(escapeStringRegexp(key), 'g')
     let arr: RegExpExecArray | null = null
+    // eslint-disable-next-line no-cond-assign
     while ((arr = regex.exec(magicString.original)) !== null) {
       const start = arr.index
       const end = arr.index + arr[0].length
@@ -281,7 +220,7 @@ export function preProcessRawCode(options: IPreProcessRawCodeOptions): string {
           break
         }
       }
-      if (shouldUpdate) {
+      if (shouldUpdate && typeof value === 'string') {
         magicString.update(start, end, value)
         markArr.push([start, end])
       }

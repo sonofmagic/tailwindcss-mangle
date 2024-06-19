@@ -1,7 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`html handler > common usage 1`] = `
-"<!DOCTYPE html><html><head>
+"<!doctype html>
+<html>
+
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/main.css" rel="stylesheet">
@@ -11,13 +14,16 @@ exports[`html handler > common usage 1`] = `
   <h1 class="tw-a tw-b tw-c">
     Hello world!
   </h1>
+</body>
 
-
-</body></html>"
+</html>"
 `;
 
 exports[`html handler > trailing slash case 0 1`] = `
-"<!DOCTYPE html><html lang="en"><head>
+"<!DOCTYPE html>
+<html lang="en">
+
+<head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,13 +39,16 @@ exports[`html handler > trailing slash case 0 1`] = `
       Block with bg-red-500 class
     </div>
   </div>
+</body>
 
-
-</body></html>"
+</html>"
 `;
 
 exports[`html handler > trailing slash case 1`] = `
-"<!DOCTYPE html><html lang="en"><head>
+"<!DOCTYPE html>
+<html lang="en">
+
+<head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +64,7 @@ exports[`html handler > trailing slash case 1`] = `
       Block with bg-red-500/50 class
     </div>
   </div>
+</body>
 
-
-</body></html>"
+</html>"
 `;

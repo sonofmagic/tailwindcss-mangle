@@ -11,242 +11,360 @@ exports[`js handler > cn 1`] = `
 `;
 
 exports[`js handler > comment-ignore case 1`] = `
-"const clipPath = [\`circle()\`];
-document.documentElement.animate({
-  clipPath
-}, {
-  duration: 500,
-  easing: "tw-a",
-  pseudoElement: '::view-transition-new(root)'
-});
-document.documentElement.animate({
-  clipPath
-}, {
-  duration: 500,
-  easing: /* tw-mangle ignore */'ease-out',
-  pseudoElement: '::view-transition-new(root)'
-});"
+"const clipPath = [\`circle()\`]
+
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: 'tw-a',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: /* tw-mangle ignore */ 'ease-out',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+"
 `;
 
-exports[`js handler > common StringLiteral 1`] = `"element.innerHTML = "<div class=\\"tw-a tw-b\\">count is counter</div>";"`;
+exports[`js handler > common StringLiteral 1`] = `"element.innerHTML = '<div class=\\"tw-a tw-b\\">count is counter</div>'"`;
 
-exports[`js handler > common StringLiteral with splitQuote false 1`] = `"element.innerHTML = '<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>';"`;
+exports[`js handler > common StringLiteral with splitQuote false 1`] = `"element.innerHTML = '<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>'"`;
 
-exports[`js handler > common TemplateElement 1`] = `
-"const counter = 0;
-element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`;"
-`;
+exports[`js handler > common TemplateElement 1`] = `"const counter = 0;element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`"`;
 
 exports[`js handler > eval script case 1`] = `
 "(function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
   "use strict";
-
-  eval("__webpack_require__.r(__webpack_exports__);\\n/* harmony export */\\n__webpack_require__.d(__webpack_exports__, {\\n  /* harmony export */\\"render\\": function () {\\n    return /* binding */render;\\n  }\\n  /* harmony export */\\n});\\n/* harmony import */\\nvar vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( /*! vue */\\"../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js\\");\\n/* harmony import */\\nvar _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( /*! ./assets/logo.png */\\"./src/assets/logo.png\\");\\nconst _hoisted_1 = {\\n  class: \\"flex tw-a tw-b tw-c tw-d tw-e\\"\\n};\\nconst _hoisted_2 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"p\\", {\\n  class: \\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z tw-aa tw-ba tw-ca tw-da tw-ea\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" Get started by editing\\xA0 \\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"code\\", {\\n  class: \\"tw-i tw-fa\\"\\n}, \\"pages/index.tsx\\")]), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"a\\", {\\n  class: \\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\",\\n  href: \\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",\\n  target: \\"_blank\\",\\n  rel: \\"noopener noreferrer\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" By \\"), /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Vercel Logo\\",\\n  class: \\"tw-wa\\",\\n  priority: \\"\\"\\n})])])], -1 /* HOISTED */);\\nconst _hoisted_3 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb\\"\\n}, [/*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  class: \\"relative tw-xb tw-wa\\",\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Next.js Logo\\",\\n  priority: \\"\\"\\n})], -1 /* HOISTED */);\\nconst _hoisted_4 = /*#__PURE__*/(0, vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)(\\"<div class=\\\\\\"tw-yb grid tw-zb tw-ac tw-bc tw-cc\\\\\\"><a href=\\\\\\"https://nextjs.org/docs?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Docs <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Find in-depth information about Next.js features and API.</p></a><a href=\\\\\\"https://nextjs.org/learn?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc tw-wc\\\\\\"> Learn <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Learn about Next.js in an interactive course with\\\\xA0quizzes!</p></a><a href=\\\\\\"https://vercel.com/templates?framework=next.js&amp;utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Templates <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Discover and deploy boilerplate example Next.js\\\\xA0projects.</p></a><a href=\\\\\\"https://vercel.com/new?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-mc tw-nc tw-oc\\\\\\"> Deploy <span class=\\\\\\"tw-pc tw-qc tw-rc tw-sc\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-tc tw-uc tw-j tw-vc\\\\\\">Instantly deploy your Next.js site to a shareable URL with Vercel.</p></a></div>\\", 1);\\nconst _hoisted_5 = [_hoisted_2, _hoisted_3, _hoisted_4];\\nfunction render(_ctx, _cache) {\\n  return (0, vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(\\"main\\", _hoisted_1, _hoisted_5);\\n} //# sourceURL=[module]\\n\\n//# sourceURL=webpack-internal:///../../node_modules/.pnpm/babel-loader@8.3.0_c3tfwv7p35clwcmkb5fnkshzei/node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/App.vue?vue&type=template&id=7ba5bd90");
-});"
+  eval("__webpack_require__.r(__webpack_exports__);\\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\\n/* harmony export */   \\"render\\": function() { return /* binding */ render; }\\n/* harmony export */ });\\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \\"../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js\\");\\n/* harmony import */ var _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/logo.png */ \\"./src/assets/logo.png\\");\\n\\n\\nconst _hoisted_1 = {\\n  class: \\"flex tw-a tw-b tw-c tw-d tw-e\\"\\n};\\nconst _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k\\"\\n}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"p\\", {\\n  class: \\"fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z tw-aa tw-ba tw-ca tw-da tw-ea\\"\\n}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" Get started by editing  \\"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"code\\", {\\n  class: \\"tw-i tw-fa\\"\\n}, \\"pages/index.tsx\\")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa\\"\\n}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"a\\", {\\n  class: \\"tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va\\",\\n  href: \\"https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app\\",\\n  target: \\"_blank\\",\\n  rel: \\"noopener noreferrer\\"\\n}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(\\" By \\"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Vercel Logo\\",\\n  class: \\"tw-wa\\",\\n  priority: \\"\\"\\n})])])], -1 /* HOISTED */);\\nconst _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"div\\", {\\n  class: \\"relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb\\"\\n}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(\\"img\\", {\\n  class: \\"relative tw-xb tw-wa\\",\\n  src: _assets_logo_png__WEBPACK_IMPORTED_MODULE_1__,\\n  alt: \\"Next.js Logo\\",\\n  priority: \\"\\"\\n})], -1 /* HOISTED */);\\nconst _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)(\\"<div class=\\\\\\"tw-yb grid tw-zb tw-ac tw-bc lg:text-left\\\\\\"><a href=\\\\\\"https://nextjs.org/docs?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-cc border tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc hover:dark:bg-neutral-800/30\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-kc tw-lc font-semibold\\\\\\"> Docs <span class=\\\\\\"tw-mc tw-nc tw-oc motion-reduce:transform-none\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-pc tw-qc tw-j opacity-50\\\\\\">Find in-depth information about Next.js features and API.</p></a><a href=\\\\\\"https://nextjs.org/learn?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-cc border tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc hover:dark:bg-neutral-800/30\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-kc tw-lc tw-rc text-[red]\\\\\\"> Learn <span class=\\\\\\"tw-mc tw-nc tw-oc motion-reduce:transform-none\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-pc tw-qc tw-j opacity-50\\\\\\">Learn about Next.js in an interactive course with quizzes!</p></a><a href=\\\\\\"https://vercel.com/templates?framework=next.js&amp;utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-cc border tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc hover:dark:bg-neutral-800/30\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-kc tw-lc font-semibold\\\\\\"> Templates <span class=\\\\\\"tw-mc tw-nc tw-oc motion-reduce:transform-none\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-pc tw-qc tw-j opacity-50\\\\\\">Discover and deploy boilerplate example Next.js projects.</p></a><a href=\\\\\\"https://vercel.com/new?utm_source=create-next-app&amp;utm_medium=default-template-tw&amp;utm_campaign=create-next-app\\\\\\" class=\\\\\\"group tw-cc border tw-dc tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc hover:dark:bg-neutral-800/30\\\\\\" target=\\\\\\"_blank\\\\\\" rel=\\\\\\"noopener noreferrer\\\\\\"><h2 class=\\\\\\"tw-kc tw-lc font-semibold\\\\\\"> Deploy <span class=\\\\\\"tw-mc tw-nc tw-oc motion-reduce:transform-none\\\\\\">-&gt;</span></h2><p class=\\\\\\"tw-pc tw-qc tw-j opacity-50\\\\\\">Instantly deploy your Next.js site to a shareable URL with Vercel.</p></a></div>\\", 1);\\nconst _hoisted_5 = [_hoisted_2, _hoisted_3, _hoisted_4];\\nfunction render(_ctx, _cache) {\\n  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(\\"main\\", _hoisted_1, _hoisted_5);\\n}//# sourceURL=[module]\\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi4vLi4vbm9kZV9tb2R1bGVzLy5wbnBtL2JhYmVsLWxvYWRlckA4LjMuMF9jM3Rmd3Y3cDM1Y2x3Y21rYjVmbmtzaHplaS9ub2RlX21vZHVsZXMvYmFiZWwtbG9hZGVyL2xpYi9pbmRleC5qcz8/Y2xvbmVkUnVsZVNldC00MC51c2VbMF0hLi4vLi4vbm9kZV9tb2R1bGVzLy5wbnBtL3Z1ZS1sb2FkZXJAMTcuMC4xX3Z1ZUAzLjIuNDcrd2VicGFja0A1Ljc5LjAvbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvZGlzdC90ZW1wbGF0ZUxvYWRlci5qcz8/cnVsZVNldFsxXS5ydWxlc1s0XSEuLi8uLi9ub2RlX21vZHVsZXMvLnBucG0vdnVlLWxvYWRlckAxNy4wLjFfdnVlQDMuMi40Nyt3ZWJwYWNrQDUuNzkuMC9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9kaXN0L2luZGV4LmpzPz9ydWxlU2V0WzBdLnVzZVswXSEuL3NyYy9BcHAudnVlP3Z1ZSZ0eXBlPXRlbXBsYXRlJmlkPTdiYTViZDkwLmpzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFjQTs7QUFiQTtBQUFBO0FBQ0E7QUFBQTtBQUFBO0FBRUE7QUFBQTtBQUVBO0FBQUE7QUFHQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQUE7QUFBQTtBQUVBO0FBQUE7QUFBQTtBQUFBOztBQUtBO0FBQ0E7QUFBQTtBQUNBO0FBQUE7QUFBQTtBQUNBOzs7QUFwQkE7O0FBREEiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly93ZWJwYWNrNS12dWUzLy4vc3JjL0FwcC52dWU/OTFhMCJdLCJzb3VyY2VzQ29udGVudCI6WyI8dGVtcGxhdGU+XG4gIDxtYWluIGNsYXNzPVwiZmxleCBtaW4taC1zY3JlZW4gZmxleC1jb2wgaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBwLTI0XCI+XG4gICAgPGRpdiBjbGFzcz1cInotMTAgdy1mdWxsIG1heC13LTV4bCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGZvbnQtbW9ubyB0ZXh0LXNtIGxnOmZsZXhcIj5cbiAgICAgIDxwXG4gICAgICAgIGNsYXNzPVwiZml4ZWQgbGVmdC0wIHRvcC0wIGZsZXggdy1mdWxsIGp1c3RpZnktY2VudGVyIGJvcmRlci1iIGJvcmRlci1ncmF5LTMwMCBiZy1ncmFkaWVudC10by1iIGZyb20temluYy0yMDAgcGItNiBwdC04IGJhY2tkcm9wLWJsdXItMnhsIGRhcms6Ym9yZGVyLW5ldXRyYWwtODAwIGRhcms6YmctemluYy04MDAvMzAgZGFyazpmcm9tLWluaGVyaXQgbGc6c3RhdGljIGxnOnctYXV0byAgbGc6cm91bmRlZC14bCBsZzpib3JkZXIgbGc6YmctZ3JheS0yMDAgbGc6cC00IGxnOmRhcms6YmctemluYy04MDAvMzBcIj5cbiAgICAgICAgR2V0IHN0YXJ0ZWQgYnkgZWRpdGluZyZuYnNwO1xuICAgICAgICA8Y29kZSBjbGFzcz1cImZvbnQtbW9ubyBmb250LWJvbGRcIj5wYWdlcy9pbmRleC50c3g8L2NvZGU+XG4gICAgICA8L3A+XG4gICAgICA8ZGl2XG4gICAgICAgIGNsYXNzPVwiZml4ZWQgYm90dG9tLTAgbGVmdC0wIGZsZXggaC00OCB3LWZ1bGwgaXRlbXMtZW5kIGp1c3RpZnktY2VudGVyIGJnLWdyYWRpZW50LXRvLXQgZnJvbS13aGl0ZSB2aWEtd2hpdGUgZGFyazpmcm9tLWJsYWNrIGRhcms6dmlhLWJsYWNrIGxnOnN0YXRpYyBsZzpoLWF1dG8gbGc6dy1hdXRvIGxnOmJnLW5vbmVcIj5cbiAgICAgICAgPGEgY2xhc3M9XCJwb2ludGVyLWV2ZW50cy1ub25lIGZsZXggcGxhY2UtaXRlbXMtY2VudGVyIGdhcC0yIHAtOCBsZzpwb2ludGVyLWV2ZW50cy1hdXRvIGxnOnAtMFwiXG4gICAgICAgICAgaHJlZj1cImh0dHBzOi8vdmVyY2VsLmNvbT91dG1fc291cmNlPWNyZWF0ZS1uZXh0LWFwcCZ1dG1fbWVkaXVtPWRlZmF1bHQtdGVtcGxhdGUtdHcmdXRtX2NhbXBhaWduPWNyZWF0ZS1uZXh0LWFwcFwiXG4gICAgICAgICAgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXIgbm9yZWZlcnJlclwiPlxuICAgICAgICAgIEJ5XG4gICAgICAgICAgPGltZyBzcmM9XCIuL2Fzc2V0cy9sb2dvLnBuZ1wiIGFsdD1cIlZlcmNlbCBMb2dvXCIgY2xhc3M9XCJkYXJrOmludmVydFwiIHByaW9yaXR5IC8+XG4gICAgICAgIDwvYT5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuXG4gICAgPGRpdlxuICAgICAgY2xhc3M9XCJyZWxhdGl2ZSBmbGV4IHBsYWNlLWl0ZW1zLWNlbnRlciBiZWZvcmU6YWJzb2x1dGUgYmVmb3JlOmgtWzMwMHB4XSBiZWZvcmU6dy1bNDgwcHhdIGJlZm9yZTotdHJhbnNsYXRlLXgtMS8yIGJlZm9yZTpyb3VuZGVkLWZ1bGwgYmVmb3JlOmJnLWdyYWRpZW50LXJhZGlhbCBiZWZvcmU6ZnJvbS13aGl0ZSBiZWZvcmU6dG8tdHJhbnNwYXJlbnQgYmVmb3JlOmJsdXItMnhsIGJlZm9yZTpjb250ZW50LVsnJ10gYWZ0ZXI6YWJzb2x1dGUgYWZ0ZXI6LXotMjAgYWZ0ZXI6aC1bMTgwcHhdIGFmdGVyOnctWzI0MHB4XSBhZnRlcjp0cmFuc2xhdGUteC0xLzMgYWZ0ZXI6YmctZ3JhZGllbnQtY29uaWMgYWZ0ZXI6ZnJvbS1za3ktMjAwIGFmdGVyOnZpYS1ibHVlLTIwMCBhZnRlcjpibHVyLTJ4bCBhZnRlcjpjb250ZW50LVsnJ10gYmVmb3JlOmRhcms6YmctZ3JhZGllbnQtdG8tYnIgYmVmb3JlOmRhcms6ZnJvbS10cmFuc3BhcmVudCBiZWZvcmU6ZGFyazp0by1ibHVlLTcwMC8xMCBhZnRlcjpkYXJrOmZyb20tc2t5LTkwMCBhZnRlcjpkYXJrOnZpYS1bIzAxNDFmZl0vNDAgYmVmb3JlOmxnOmgtWzM2MHB4XVwiPlxuICAgICAgPGltZyBjbGFzcz1cInJlbGF0aXZlIGRhcms6ZHJvcC1zaGFkb3ctWzBfMF8wLjNyZW1fI2ZmZmZmZjcwXSBkYXJrOmludmVydFwiIHNyYz1cIi4vYXNzZXRzL2xvZ28ucG5nXCIgYWx0PVwiTmV4dC5qcyBMb2dvXCJcbiAgICAgICAgcHJpb3JpdHkgLz5cbiAgICA8L2Rpdj5cblxuICAgIDxkaXYgY2xhc3M9XCJtYi0zMiBncmlkIHRleHQtY2VudGVyIGxnOm1iLTAgbGc6Z3JpZC1jb2xzLTQgbGc6dGV4dC1sZWZ0XCI+XG4gICAgICA8YSBocmVmPVwiaHR0cHM6Ly9uZXh0anMub3JnL2RvY3M/dXRtX3NvdXJjZT1jcmVhdGUtbmV4dC1hcHAmdXRtX21lZGl1bT1kZWZhdWx0LXRlbXBsYXRlLXR3JnV0bV9jYW1wYWlnbj1jcmVhdGUtbmV4dC1hcHBcIlxuICAgICAgICBjbGFzcz1cImdyb3VwIHJvdW5kZWQtbGcgYm9yZGVyIGJvcmRlci10cmFuc3BhcmVudCBweC01IHB5LTQgdHJhbnNpdGlvbi1jb2xvcnMgaG92ZXI6Ym9yZGVyLWdyYXktMzAwIGhvdmVyOmJnLWdyYXktMTAwIGhvdmVyOmRhcms6Ym9yZGVyLW5ldXRyYWwtNzAwIGhvdmVyOmRhcms6YmctbmV1dHJhbC04MDAvMzBcIlxuICAgICAgICB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lciBub3JlZmVycmVyXCI+XG4gICAgICAgIDxoMiBjbGFzcz1cIm1iLTMgdGV4dC0yeGwgZm9udC1zZW1pYm9sZFwiPlxuICAgICAgICAgIERvY3MgPHNwYW5cbiAgICAgICAgICAgIGNsYXNzPVwiaW5saW5lLWJsb2NrIHRyYW5zaXRpb24tdHJhbnNmb3JtIGdyb3VwLWhvdmVyOnRyYW5zbGF0ZS14LTEgbW90aW9uLXJlZHVjZTp0cmFuc2Zvcm0tbm9uZVwiPi0mZ3Q7PC9zcGFuPlxuICAgICAgICA8L2gyPlxuICAgICAgICA8cCBjbGFzcz1cIm0tMCBtYXgtdy1bMzBjaF0gdGV4dC1zbSBvcGFjaXR5LTUwXCI+RmluZCBpbi1kZXB0aCBpbmZvcm1hdGlvbiBhYm91dCBOZXh0LmpzXG4gICAgICAgICAgZmVhdHVyZXMgYW5kIEFQSS48L3A+XG4gICAgICA8L2E+XG5cbiAgICAgIDxhIGhyZWY9XCJodHRwczovL25leHRqcy5vcmcvbGVhcm4/dXRtX3NvdXJjZT1jcmVhdGUtbmV4dC1hcHAmdXRtX21lZGl1bT1kZWZhdWx0LXRlbXBsYXRlLXR3JnV0bV9jYW1wYWlnbj1jcmVhdGUtbmV4dC1hcHBcIlxuICAgICAgICBjbGFzcz1cImdyb3VwIHJvdW5kZWQtbGcgYm9yZGVyIGJvcmRlci10cmFuc3BhcmVudCBweC01IHB5LTQgdHJhbnNpdGlvbi1jb2xvcnMgaG92ZXI6Ym9yZGVyLWdyYXktMzAwIGhvdmVyOmJnLWdyYXktMTAwIGhvdmVyOmRhcms6Ym9yZGVyLW5ldXRyYWwtNzAwIGhvdmVyOmRhcms6YmctbmV1dHJhbC04MDAvMzBcIlxuICAgICAgICB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lciBub3JlZmVycmVyXCI+XG4gICAgICAgIDxoMiBjbGFzcz1cIm1iLTMgdGV4dC0yeGwgZm9udC1zZW1pYm9sZCB0ZXh0LVtyZWRdXCI+XG4gICAgICAgICAgTGVhcm4gPHNwYW5cbiAgICAgICAgICAgIGNsYXNzPVwiaW5saW5lLWJsb2NrIHRyYW5zaXRpb24tdHJhbnNmb3JtIGdyb3VwLWhvdmVyOnRyYW5zbGF0ZS14LTEgbW90aW9uLXJlZHVjZTp0cmFuc2Zvcm0tbm9uZVwiPi0mZ3Q7PC9zcGFuPlxuICAgICAgICA8L2gyPlxuICAgICAgICA8cCBjbGFzcz1cIm0tMCBtYXgtdy1bMzBjaF0gdGV4dC1zbSBvcGFjaXR5LTUwXCI+TGVhcm4gYWJvdXQgTmV4dC5qcyBpbiBhbiBpbnRlcmFjdGl2ZVxuICAgICAgICAgIGNvdXJzZSB3aXRoJm5ic3A7cXVpenplcyE8L3A+XG4gICAgICA8L2E+XG5cbiAgICAgIDxhIGhyZWY9XCJodHRwczovL3ZlcmNlbC5jb20vdGVtcGxhdGVzP2ZyYW1ld29yaz1uZXh0LmpzJnV0bV9zb3VyY2U9Y3JlYXRlLW5leHQtYXBwJnV0bV9tZWRpdW09ZGVmYXVsdC10ZW1wbGF0ZS10dyZ1dG1fY2FtcGFpZ249Y3JlYXRlLW5leHQtYXBwXCJcbiAgICAgICAgY2xhc3M9XCJncm91cCByb3VuZGVkLWxnIGJvcmRlciBib3JkZXItdHJhbnNwYXJlbnQgcHgtNSBweS00IHRyYW5zaXRpb24tY29sb3JzIGhvdmVyOmJvcmRlci1ncmF5LTMwMCBob3ZlcjpiZy1ncmF5LTEwMCBob3ZlcjpkYXJrOmJvcmRlci1uZXV0cmFsLTcwMCBob3ZlcjpkYXJrOmJnLW5ldXRyYWwtODAwLzMwXCJcbiAgICAgICAgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXIgbm9yZWZlcnJlclwiPlxuICAgICAgICA8aDIgY2xhc3M9XCJtYi0zIHRleHQtMnhsIGZvbnQtc2VtaWJvbGRcIj5cbiAgICAgICAgICBUZW1wbGF0ZXMgPHNwYW5cbiAgICAgICAgICAgIGNsYXNzPVwiaW5saW5lLWJsb2NrIHRyYW5zaXRpb24tdHJhbnNmb3JtIGdyb3VwLWhvdmVyOnRyYW5zbGF0ZS14LTEgbW90aW9uLXJlZHVjZTp0cmFuc2Zvcm0tbm9uZVwiPi0mZ3Q7PC9zcGFuPlxuICAgICAgICA8L2gyPlxuICAgICAgICA8cCBjbGFzcz1cIm0tMCBtYXgtdy1bMzBjaF0gdGV4dC1zbSBvcGFjaXR5LTUwXCI+RGlzY292ZXIgYW5kIGRlcGxveSBib2lsZXJwbGF0ZSBleGFtcGxlXG4gICAgICAgICAgTmV4dC5qcyZuYnNwO3Byb2plY3RzLjwvcD5cbiAgICAgIDwvYT5cblxuICAgICAgPGEgaHJlZj1cImh0dHBzOi8vdmVyY2VsLmNvbS9uZXc/dXRtX3NvdXJjZT1jcmVhdGUtbmV4dC1hcHAmdXRtX21lZGl1bT1kZWZhdWx0LXRlbXBsYXRlLXR3JnV0bV9jYW1wYWlnbj1jcmVhdGUtbmV4dC1hcHBcIlxuICAgICAgICBjbGFzcz1cImdyb3VwIHJvdW5kZWQtbGcgYm9yZGVyIGJvcmRlci10cmFuc3BhcmVudCBweC01IHB5LTQgdHJhbnNpdGlvbi1jb2xvcnMgaG92ZXI6Ym9yZGVyLWdyYXktMzAwIGhvdmVyOmJnLWdyYXktMTAwIGhvdmVyOmRhcms6Ym9yZGVyLW5ldXRyYWwtNzAwIGhvdmVyOmRhcms6YmctbmV1dHJhbC04MDAvMzBcIlxuICAgICAgICB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lciBub3JlZmVycmVyXCI+XG4gICAgICAgIDxoMiBjbGFzcz1cIm1iLTMgdGV4dC0yeGwgZm9udC1zZW1pYm9sZFwiPlxuICAgICAgICAgIERlcGxveSA8c3BhblxuICAgICAgICAgICAgY2xhc3M9XCJpbmxpbmUtYmxvY2sgdHJhbnNpdGlvbi10cmFuc2Zvcm0gZ3JvdXAtaG92ZXI6dHJhbnNsYXRlLXgtMSBtb3Rpb24tcmVkdWNlOnRyYW5zZm9ybS1ub25lXCI+LSZndDs8L3NwYW4+XG4gICAgICAgIDwvaDI+XG4gICAgICAgIDxwIGNsYXNzPVwibS0wIG1heC13LVszMGNoXSB0ZXh0LXNtIG9wYWNpdHktNTBcIj5JbnN0YW50bHkgZGVwbG95IHlvdXIgTmV4dC5qcyBzaXRlIHRvIGFcbiAgICAgICAgICBzaGFyZWFibGUgVVJMIHdpdGggVmVyY2VsLjwvcD5cbiAgICAgIDwvYT5cbiAgICA8L2Rpdj5cbiAgPC9tYWluPlxuPC90ZW1wbGF0ZT5cblxuPHN0eWxlIGxhbmc9XCJzY3NzXCI+XG5AdGFpbHdpbmQgYmFzZTtcbkB0YWlsd2luZCBjb21wb25lbnRzO1xuQHRhaWx3aW5kIHV0aWxpdGllcztcblxuI2FwcCB7XG4gIGZvbnQtZmFtaWx5OiBBdmVuaXIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7XG4gIC13ZWJraXQtZm9udC1zbW9vdGhpbmc6IGFudGlhbGlhc2VkO1xuICAtbW96LW9zeC1mb250LXNtb290aGluZzogZ3JheXNjYWxlO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGNvbG9yOiAjMmMzZTUwO1xufVxuXG5uYXYge1xuICBwYWRkaW5nOiAzMHB4O1xuXG4gIGEge1xuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xuICAgIGNvbG9yOiAjMmMzZTUwO1xuXG4gICAgJi5yb3V0ZXItbGluay1leGFjdC1hY3RpdmUge1xuICAgICAgY29sb3I6ICM0MmI5ODM7XG4gICAgfVxuICB9XG59XG48L3N0eWxlPlxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\\n//# sourceURL=webpack-internal:///../../node_modules/.pnpm/babel-loader@8.3.0_c3tfwv7p35clwcmkb5fnkshzei/node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../node_modules/.pnpm/vue-loader@17.0.1_vue@3.2.47+webpack@5.79.0/node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/App.vue?vue&type=template&id=7ba5bd90\\n");
+})"
 `;
 
-exports[`js handler > minified js true 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:"tw-a",pseudoElement:"::view-transition-new(root)"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */"ease-out",pseudoElement:"::view-transition-new(root)"});"`;
+exports[`js handler > minified js true 1`] = `
+"const clipPath = [\`circle()\`]
 
-exports[`js handler > minified js with NODE_ENV 1`] = `"const clipPath=[\`circle()\`];document.documentElement.animate({clipPath},{duration:500,easing:"tw-a",pseudoElement:"::view-transition-new(root)"});document.documentElement.animate({clipPath},{duration:500,easing:/* tw-mangle ignore */"ease-out",pseudoElement:"::view-transition-new(root)"});"`;
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: 'tw-a',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: /* tw-mangle ignore */ 'ease-out',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+"
+`;
+
+exports[`js handler > minified js with NODE_ENV 1`] = `
+"const clipPath = [\`circle()\`]
+
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: 'tw-a',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+
+document.documentElement.animate(
+  {
+    clipPath
+  },
+  {
+    duration: 500,
+    easing: /* tw-mangle ignore */ 'ease-out',
+    pseudoElement: '::view-transition-new(root)'
+  }
+)
+"
+`;
 
 exports[`js handler > nextjs server side mangle 1`] = `
 ""use strict";
-
 (() => {
-  var exports = {};
-  exports.id = 405;
-  exports.ids = [405];
-  exports.modules = {
-    /***/957: ( /***/(__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-      __webpack_require__.r(__webpack_exports__);
-      /* harmony export */
-      __webpack_require__.d(__webpack_exports__, {
-        /* harmony export */"default": () => ( /* binding */Home)
-        /* harmony export */
-      });
-      /* harmony import */
-      var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
-      /* harmony import */
-      var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-      /* harmony import */
-      var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(941);
-      /* harmony import */
-      var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__);
-      /* harmony import */
-      var next_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
-      /* harmony import */
-      var next_image__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_image__WEBPACK_IMPORTED_MODULE_1__);
-      function Home() {
-        return /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("main", {
-          className: "flex tw-a tw-b tw-c tw-d tw-e",
-          children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k",
-            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-              className: "fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea",
-              children: ["Get started by editing\\xa0", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("code", {
-                className: "tw-i tw-fa",
-                children: "pages/index.tsx"
-              })]
-            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
-              className: "fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa",
-              children: /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-                className: "tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va",
-                href: "https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                children: ["By ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
-                  src: "/vercel.svg",
-                  alt: "Vercel Logo",
-                  className: "tw-wa",
-                  width: 100,
-                  height: 24,
-                  priority: true
-                })]
-              })
-            })]
-          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
-            className: "relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb",
-            children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(next_image__WEBPACK_IMPORTED_MODULE_1___default(), {
-              className: "relative tw-xb tw-wa",
-              src: "/next.svg",
-              alt: "Next.js Logo",
-              width: 180,
-              height: 37,
-              priority: true
+var exports = {};
+exports.id = 405;
+exports.ids = [405];
+exports.modules = {
+
+/***/ 957:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Home)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(941);
+/* harmony import */ var next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var next_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
+/* harmony import */ var next_image__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_image__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function Home() {
+    return /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("main", {
+        className: "flex tw-a tw-b tw-c tw-d tw-e",
+        children: [
+            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "tw-f tw-g tw-h tw-c tw-d tw-i tw-j tw-k",
+                children: [
+                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                        className: "fixed tw-l tw-m flex tw-g tw-n tw-o tw-p tw-q tw-r tw-s tw-t tw-u tw-v tw-w tw-x tw-y tw-z  tw-aa tw-ba tw-ca tw-da tw-ea",
+                        children: [
+                            "Get started by editing\\xa0",
+                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("code", {
+                                className: "tw-i tw-fa",
+                                children: "pages/index.tsx"
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                        className: "fixed tw-ga tw-l flex tw-ha tw-g tw-ia tw-n tw-ja tw-ka tw-la tw-ma tw-na tw-y tw-oa tw-z tw-pa",
+                        children: /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                            className: "tw-qa flex tw-ra tw-sa tw-ta tw-ua tw-va",
+                            href: "https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            children: [
+                                "By ",
+                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((next_image__WEBPACK_IMPORTED_MODULE_1___default()), {
+                                    src: "/vercel.svg",
+                                    alt: "Vercel Logo",
+                                    className: "tw-wa",
+                                    width: 100,
+                                    height: 24,
+                                    priority: true
+                                })
+                            ]
+                        })
+                    })
+                ]
+            }),
+            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                className: "relative flex tw-ra tw-xa tw-ya tw-za tw-ab tw-bb tw-cb tw-db tw-eb tw-fb tw-gb tw-hb tw-ib tw-jb tw-kb tw-lb tw-mb tw-nb tw-ob tw-pb tw-qb tw-rb tw-sb tw-tb tw-ub tw-vb tw-wb",
+                children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((next_image__WEBPACK_IMPORTED_MODULE_1___default()), {
+                    className: "relative tw-xb tw-wa",
+                    src: "/next.svg",
+                    alt: "Next.js Logo",
+                    width: 180,
+                    height: 37,
+                    priority: true
+                })
+            }),
+            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "tw-yb grid tw-zb tw-ac tw-bc tw-cc",
+                children: [
+                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                        href: "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                        className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        children: [
+                            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-mc tw-nc tw-oc\`,
+                                children: [
+                                    "Docs ",
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                                        className: "tw-pc tw-qc tw-rc tw-sc",
+                                        children: "->"
+                                    })
+                                ]
+                            }),
+                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-tc tw-uc tw-j tw-vc\`,
+                                children: "Find in-depth information about Next.js features and API."
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                        href: "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                        className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        children: [
+                            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-mc tw-nc tw-oc\`,
+                                children: [
+                                    "Learn ",
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                                        className: "tw-pc tw-qc tw-rc tw-sc",
+                                        children: "->"
+                                    })
+                                ]
+                            }),
+                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-tc tw-uc tw-j tw-vc\`,
+                                children: "Learn about Next.js in an interactive course with\\xa0quizzes!"
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                        href: "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                        className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        children: [
+                            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-mc tw-nc tw-oc\`,
+                                children: [
+                                    "Templates ",
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                                        className: "tw-pc tw-qc tw-rc tw-sc",
+                                        children: "->"
+                                    })
+                                ]
+                            }),
+                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-tc tw-uc tw-j tw-vc\`,
+                                children: "Discover and deploy boilerplate example Next.js\\xa0projects."
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                        href: "https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
+                        className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        children: [
+                            /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-mc tw-nc tw-oc\`,
+                                children: [
+                                    "Deploy ",
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                                        className: "tw-pc tw-qc tw-rc tw-sc",
+                                        children: "->"
+                                    })
+                                ]
+                            }),
+                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                                className: \`\${(next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className)} tw-tc tw-uc tw-j tw-vc\`,
+                                children: "Instantly deploy your Next.js site to a shareable URL with Vercel."
+                            })
+                        ]
+                    })
+                ]
             })
-          }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "tw-yb grid tw-zb tw-ac tw-bc tw-cc",
-            children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-              href: "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
-              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
-              target: "_blank",
-              rel: "noopener noreferrer",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: ["Docs ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
-                  className: "tw-pc tw-qc tw-rc tw-sc",
-                  children: "->"
-                })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: "Find in-depth information about Next.js features and API."
-              })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-              href: "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
-              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
-              target: "_blank",
-              rel: "noopener noreferrer",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: ["Learn ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
-                  className: "tw-pc tw-qc tw-rc tw-sc",
-                  children: "->"
-                })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: "Learn about Next.js in an interactive course with\\xa0quizzes!"
-              })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-              href: "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
-              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
-              target: "_blank",
-              rel: "noopener noreferrer",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: ["Templates ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
-                  className: "tw-pc tw-qc tw-rc tw-sc",
-                  children: "->"
-                })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: "Discover and deploy boilerplate example Next.js\\xa0projects."
-              })]
-            }), /*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-              href: "https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app",
-              className: "group tw-dc border tw-ec tw-fc tw-gc tw-hc tw-ic tw-jc tw-kc tw-lc",
-              target: "_blank",
-              rel: "noopener noreferrer",
-              children: [/*#__PURE__*/(0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-mc tw-nc tw-oc\`,
-                children: ["Deploy ", /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
-                  className: "tw-pc tw-qc tw-rc tw-sc",
-                  children: "->"
-                })]
-              }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
-                className: \`\${next_font_google_target_css_path_pages_index_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className} tw-tc tw-uc tw-j tw-vc\`,
-                children: "Instantly deploy your Next.js site to a shareable URL with Vercel."
-              })]
-            })]
-          })]
-        });
-      }
+        ]
+    });
+}
 
-      /***/
-    }),
-    /***/918: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/amp-context.js");
 
-      /***/
-    }),
-    /***/732: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/amp-mode.js");
+/***/ }),
 
-      /***/
-    }),
-    /***/796: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/head-manager-context.js");
+/***/ 918:
+/***/ ((module) => {
 
-      /***/
-    }),
-    /***/486: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/image-blur-svg.js");
+module.exports = require("next/dist/shared/lib/amp-context.js");
 
-      /***/
-    }),
-    /***/744: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/image-config-context.js");
+/***/ }),
 
-      /***/
-    }),
-    /***/843: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/image-config.js");
+/***/ 732:
+/***/ ((module) => {
 
-      /***/
-    }),
-    /***/552: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/image-loader");
+module.exports = require("next/dist/shared/lib/amp-mode.js");
 
-      /***/
-    }),
-    /***/470: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/side-effect.js");
+/***/ }),
 
-      /***/
-    }),
-    /***/618: ( /***/module => {
-      module.exports = require("next/dist/shared/lib/utils/warn-once.js");
+/***/ 796:
+/***/ ((module) => {
 
-      /***/
-    }),
-    /***/689: ( /***/module => {
-      module.exports = require("react");
+module.exports = require("next/dist/shared/lib/head-manager-context.js");
 
-      /***/
-    }),
-    /***/997: ( /***/module => {
-      module.exports = require("react/jsx-runtime");
+/***/ }),
 
-      /***/
-    })
-  };
-  ;
+/***/ 486:
+/***/ ((module) => {
 
-  // load runtime
-  var __webpack_require__ = require("../webpack-runtime.js");
-  __webpack_require__.C(exports);
-  var __webpack_exec__ = moduleId => __webpack_require__(__webpack_require__.s = moduleId);
-  var __webpack_exports__ = __webpack_require__.X(0, [463, 262], () => __webpack_exec__(957));
-  module.exports = __webpack_exports__;
+module.exports = require("next/dist/shared/lib/image-blur-svg.js");
+
+/***/ }),
+
+/***/ 744:
+/***/ ((module) => {
+
+module.exports = require("next/dist/shared/lib/image-config-context.js");
+
+/***/ }),
+
+/***/ 843:
+/***/ ((module) => {
+
+module.exports = require("next/dist/shared/lib/image-config.js");
+
+/***/ }),
+
+/***/ 552:
+/***/ ((module) => {
+
+module.exports = require("next/dist/shared/lib/image-loader");
+
+/***/ }),
+
+/***/ 470:
+/***/ ((module) => {
+
+module.exports = require("next/dist/shared/lib/side-effect.js");
+
+/***/ }),
+
+/***/ 618:
+/***/ ((module) => {
+
+module.exports = require("next/dist/shared/lib/utils/warn-once.js");
+
+/***/ }),
+
+/***/ 689:
+/***/ ((module) => {
+
+module.exports = require("react");
+
+/***/ }),
+
+/***/ 997:
+/***/ ((module) => {
+
+module.exports = require("react/jsx-runtime");
+
+/***/ })
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require("../webpack-runtime.js");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = __webpack_require__.X(0, [463,262], () => (__webpack_exec__(957)));
+module.exports = __webpack_exports__;
+
 })();"
 `;
 
@@ -259,7 +377,7 @@ const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex tw-d tw-f tw-e tw-b tw-j ">
+  <main class="flex tw-d tw-f tw-e tw-b tw-j " :class="['before:text-[#123456]']">
     <nav :class="aaa">aaa</nav>
   </main>
 </template>
@@ -341,7 +459,7 @@ const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc ">
+  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc " :class="['before:text-[#123456]']">
     <nav :class="aaa">{{ aaa }}</nav>
     <div class="tw-cd tw-pc tw-dc tw-hb tw-sa tw-xb tw-lc tw-jc">
       <p
@@ -747,11 +865,20 @@ Map {
 }
 `;
 
-exports[`js handler > trailing slash case 0 1`] = `"document.getElementById("#app").classList.add("tw-a tw-b");"`;
+exports[`js handler > trailing slash case 0 1`] = `
+"document.getElementById('#app').classList.add('tw-a tw-b')
+"
+`;
 
-exports[`js handler > trailing slash case 1 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b");"`;
+exports[`js handler > trailing slash case 1 1`] = `
+"document.querySelector('#app').classList.add('tw-a tw-b')
+"
+`;
 
-exports[`js handler > trailing slash case 2 1`] = `"document.querySelector("#app").classList.add("tw-a tw-b tw-a s tw-a");"`;
+exports[`js handler > trailing slash case 2 1`] = `
+"document.querySelector('#app').classList.add('tw-a tw-b tw-a s tw-a')
+"
+`;
 
 exports[`js handler > ts vanilla-0 1`] = `
 "import './style.css'
@@ -924,14 +1051,6 @@ function App() {
 export default App"
 `;
 
-exports[`js handler > z-10 not transform 1`] = `
-"{
-  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
-}"
-`;
+exports[`js handler > z-10 not transform 1`] = `"{ className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h" }"`;
 
-exports[`js handler > z-10 not transform with splitQuote false 1`] = `
-"{
-  className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h";
-}"
-`;
+exports[`js handler > z-10 not transform with splitQuote false 1`] = `"{ className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h" }"`;

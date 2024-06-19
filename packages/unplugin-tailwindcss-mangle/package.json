@@ -2,64 +2,13 @@
   "name": "unplugin-tailwindcss-mangle",
   "version": "2.2.2",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
-    },
-    "./vite": {
-      "types": "./dist/vite.d.ts",
-      "require": "./dist/vite.cjs",
-      "import": "./dist/vite.mjs"
-    },
-    "./webpack": {
-      "types": "./dist/webpack.d.ts",
-      "require": "./dist/webpack.cjs",
-      "import": "./dist/webpack.mjs"
-    },
-    "./rollup": {
-      "types": "./dist/rollup.d.ts",
-      "require": "./dist/rollup.cjs",
-      "import": "./dist/rollup.mjs"
-    },
-    "./esbuild": {
-      "types": "./dist/esbuild.d.ts",
-      "require": "./dist/esbuild.cjs",
-      "import": "./dist/esbuild.mjs"
-    },
-    "./nuxt": {
-      "types": "./dist/nuxt.d.ts",
-      "require": "./dist/nuxt.cjs",
-      "import": "./dist/nuxt.mjs"
-    },
-    "./utils": {
-      "types": "./dist/utils.d.ts",
-      "require": "./dist/utils.cjs",
-      "import": "./dist/utils.mjs"
-    },
-    "./*": "./*"
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
   },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
-  "scripts": {
-    "dev": "unbuild --sourcemap",
-    "build": "unbuild",
-    "test": "vitest run --coverage.enabled",
-    "test:dev": "vitest"
-  },
-  "files": [
-    "dist"
-  ],
   "keywords": [
     "tailwindcss",
     "utilities",
@@ -68,8 +17,64 @@
     "obfuscator",
     "obfuscation"
   ],
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
-  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.mjs",
+      "require": "./dist/vite.cjs"
+    },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "import": "./dist/webpack.mjs",
+      "require": "./dist/webpack.cjs"
+    },
+    "./rollup": {
+      "types": "./dist/rollup.d.ts",
+      "import": "./dist/rollup.mjs",
+      "require": "./dist/rollup.cjs"
+    },
+    "./esbuild": {
+      "types": "./dist/esbuild.d.ts",
+      "import": "./dist/esbuild.mjs",
+      "require": "./dist/esbuild.cjs"
+    },
+    "./nuxt": {
+      "types": "./dist/nuxt.d.ts",
+      "import": "./dist/nuxt.mjs",
+      "require": "./dist/nuxt.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.cjs"
+    },
+    "./*": "./*"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "unbuild --sourcemap",
+    "build": "unbuild",
+    "test": "vitest run --coverage.enabled",
+    "test:dev": "vitest"
+  },
   "dependencies": {
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
@@ -83,7 +88,7 @@
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "^7.10.3",
-    "astro": "^4.10.2",
+    "astro": "^4.10.3",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
@@ -95,10 +100,5 @@
     "vite": "^5.3.1",
     "webpack": "^5.92.0",
     "webpack-build-utils": "^0.0.7"
-  },
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
   }
 }

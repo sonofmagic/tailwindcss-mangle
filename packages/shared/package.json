@@ -2,32 +2,12 @@
   "name": "@tailwindcss-mangle/shared",
   "version": "2.2.2",
   "description": "The shared utils of tailwindcss-mangle",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "unbuild --sourcemap",
-    "build": "unbuild",
-    "test": "vitest run --coverage.enabled",
-    "test:dev": "vitest"
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
   },
   "keywords": [
     "tailwindcss",
@@ -37,17 +17,37 @@
     "shared",
     "utils"
   ],
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
-  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "unbuild --sourcemap",
+    "build": "unbuild",
+    "test": "vitest run --coverage.enabled",
+    "test:dev": "vitest"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {},
-  "devDependencies": {},
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
-  }
+  "devDependencies": {}
 }

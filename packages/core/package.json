@@ -2,6 +2,22 @@
   "name": "@tailwindcss-mangle/core",
   "version": "2.2.2",
   "description": "The core of tailwindcss-mangle",
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
+  },
+  "keywords": [
+    "tailwindcss",
+    "patch",
+    "core",
+    "mangle"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -9,6 +25,9 @@
       "require": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
@@ -17,9 +36,6 @@
       ]
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -30,49 +46,30 @@
     "test:dev": "vitest",
     "coverage": "vitest run --coverage"
   },
-  "keywords": [
-    "tailwindcss",
-    "patch",
-    "core",
-    "mangle"
-  ],
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
-  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "@ast-core/escape": "^1.0.1",
-    "@babel/core": "^7.24.7",
-    "@babel/helper-plugin-utils": "^7.24.7",
     "@babel/parser": "^7.24.7",
-    "@babel/preset-typescript": "^7.24.7",
+    "@babel/traverse": "^7.24.7",
     "@babel/types": "^7.24.7",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "@vue/compiler-sfc": "^3.4.29",
     "fast-sort": "^3.4.0",
+    "htmlparser2": "9.1.0",
     "magic-string": "^0.30.10",
     "micromatch": "^4.0.7",
-    "parse5": "^7.1.2",
     "postcss": "^8.4.38",
     "postcss-selector-parser": "^6.1.0"
   },
   "devDependencies": {
-    "@parse5/tools": "^0.5.0",
-    "@types/babel__core": "^7.20.5",
+    "@types/babel__traverse": "^7.20.6",
     "@types/micromatch": "^4.0.7",
     "@vue/compiler-core": "^3.4.29",
     "@vue/compiler-sfc": "^3.4.27"
-  },
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
   },
   "directories": {
     "test": "test"

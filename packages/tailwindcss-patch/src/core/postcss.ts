@@ -3,6 +3,7 @@ import process from 'node:process'
 import postcss from 'postcss'
 import { lilconfig } from 'lilconfig'
 import createJiti from 'jiti'
+import { requireResolve } from '@/utils'
 
 const jiti = createJiti(__filename)
 
@@ -36,10 +37,12 @@ export async function processTailwindcss(options: { cwd?: string, config?: strin
     }
     config = result.filepath
   }
-
+  const id = requireResolve('tailwindcss', {
+    basedir: options.cwd,
+  })
   return await postcss([
     // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
-    require('tailwindcss')({
+    require(id)({
       config,
     }),
   ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {

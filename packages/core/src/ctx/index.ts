@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import { isAbsolute, resolve } from 'node:path'
+import process from 'node:process'
 import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { getConfig } from '@tailwindcss-mangle/config'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
@@ -17,7 +18,7 @@ export class Context {
   options: MangleUserConfig
   private includeMatcher: (file: string) => boolean
   private excludeMatcher: (file: string) => boolean
-  private replaceMap: Map<string, string>
+  public replaceMap: Map<string, string>
   classSet: Set<string>
 
   classGenerator: ClassGenerator
@@ -46,9 +47,6 @@ export class Context {
   }
 
   isPreserveFunction(calleeName: string) {
-    // if (callee === undefined) {
-    //   return false
-    // }
     return this.preserveFunctionSet.has(calleeName)
   }
 
@@ -77,12 +75,6 @@ export class Context {
   }
 
   getReplaceMap() {
-    // const map = new Map<string, string>()
-    // for (const [key, value] of sort([...this.replaceMap.entries()]).desc((x) => x[0].length)) {
-    //   if (!this.isPreserveClass(key)) {
-    //     map.set(key, value)
-    //   }
-    // }
     return this.replaceMap // map
   }
 
