@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 3.0.1
+
+### Patch Changes
+
+- 3c2d2b9: fix(tailwindcss-patch): monorepo basedir option
+
 ## 3.0.0
 
 ### Major Changes
