@@ -16,7 +16,7 @@
     "dev": "pnpm -r run dev",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest --coverage.enabled",
-    "lint": "eslint packages/**/*ts --fix",
+    "lint": "eslint packages/**/*.ts --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.5",
-    "@icebreakers/eslint-config": "^0.3.7",
+    "@icebreakers/eslint-config": "^0.3.8",
     "@tailwindcss-mangle/core": "workspace:*",
     "@tailwindcss-mangle/shared": "workspace:*",
     "@tsconfig/recommended": "^1.0.6",
