@@ -237,6 +237,9 @@ importers:
       '@tailwindcss-mangle/shared':
         specifier: workspace:^
         version: link:../shared
+      is-css-request:
+        specifier: ^1.0.0
+        version: 1.0.0
       magic-string:
         specifier: ^0.30.10
         version: 0.30.10
@@ -3446,6 +3449,9 @@ packages:
 
   is-core-module@2.13.1:
     resolution: {integrity: sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==}
+
+  is-css-request@1.0.0:
+    resolution: {integrity: sha512-jLtkS9/5hYErK3K6hLIp7/SDqMAxgGvyMctkFrEIHcgscv8sojmKQsAqghgaLa7HWK/4WfoWnDJMFftCXrehrA==}
 
   is-date-object@1.0.5:
     resolution: {integrity: sha512-9YQaSxsAiSwcvS33MBk3wTCVnWK+HhF8VZR2jRxehM16QcVOdHqPn4VPHmRK4lSr38n9JriurInLcP90xsYNfQ==}
@@ -9296,6 +9302,8 @@ snapshots:
   is-core-module@2.13.1:
     dependencies:
       hasown: 2.0.0
+
+  is-css-request@1.0.0: {}
 
   is-date-object@1.0.5:
     dependencies:

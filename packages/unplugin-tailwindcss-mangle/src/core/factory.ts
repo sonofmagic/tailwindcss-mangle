@@ -1,12 +1,14 @@
 import type { UnpluginFactory } from 'unplugin'
-import { Context, cssHandler, preProcessJs, preProcessRawCode, vueHandler } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, preProcessJs, vueHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
+// import { createFilter } from '@rollup/pluginutils'
+import { isCSSRequest } from 'is-css-request'
 import { pluginName } from '@/constants'
 
 const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
   const ctx = new Context()
-
+  // const filter = createFilter(options?.include, options?.exclude)
   return [
     {
       name: `${pluginName}:pre`,
@@ -34,30 +36,28 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
             ctx,
           })
         }
-        else {
-          return preProcessRawCode({
-            code,
-            ctx,
-            id,
-          })
-        }
+        // else {
+        //   return preProcessRawCode({
+        //     code,
+        //     ctx,
+        //     id,
+        //   })
+        // }
       },
     },
     {
       name: `${pluginName}`,
       transformInclude(id) {
-        return !id.includes('node_modules') && id.endsWith('.css')
+        return !id.includes('node_modules') && isCSSRequest(id)
       },
       async transform(code, id) {
-        if (/\.css/.test(id)) {
-          const { css } = await cssHandler(code, { ctx, file: id })
-          return css
-        }
+        const { css } = await cssHandler(code, { ctx, file: id })
+        return css
       },
     },
-    {
-      name: `${pluginName}:post`,
-    },
+    // {
+    //   name: `${pluginName}:post`,
+    // },
   ]
 }
 
