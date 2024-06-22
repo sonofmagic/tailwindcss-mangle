@@ -12,8 +12,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "pnpm run -r build",
+    "dev": "pnpm -r run dev",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest --coverage.enabled",
     "lint": "eslint packages/**/*.ts --fix",

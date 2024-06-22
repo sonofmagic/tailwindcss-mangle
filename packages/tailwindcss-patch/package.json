@@ -18,7 +18,7 @@
     "extract",
     "class"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
@@ -30,11 +30,11 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --sourcemap",
-    "build": "tsup",
+    "dev": "unbuild --sourcemap",
+    "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "patch": "node bin/tw-patch.js install"
+    "patch": "node bin/tw-patch.cjs install"
   },
   "publishConfig": {
     "access": "public",

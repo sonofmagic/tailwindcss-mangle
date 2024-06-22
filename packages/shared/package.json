@@ -21,10 +21,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
@@ -39,8 +39,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --sourcemap",
-    "build": "tsup",
+    "dev": "unbuild --sourcemap",
+    "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },
