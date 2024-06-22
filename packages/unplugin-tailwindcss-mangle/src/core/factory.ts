@@ -34,10 +34,6 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
             ctx,
           })
         }
-        else if (/\.css/.test(id)) {
-          const { css } = await cssHandler(code, { ctx, file: id })
-          return css
-        }
         else {
           return preProcessRawCode({
             code,
@@ -49,6 +45,15 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
     },
     {
       name: `${pluginName}`,
+      transformInclude(id) {
+        return !id.includes('node_modules') && id.endsWith('.css')
+      },
+      async transform(code, id) {
+        if (/\.css/.test(id)) {
+          const { css } = await cssHandler(code, { ctx, file: id })
+          return css
+        }
+      },
     },
     {
       name: `${pluginName}:post`,

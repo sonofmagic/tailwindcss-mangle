@@ -21,41 +21,41 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     },
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.mjs",
-      "require": "./dist/vite.cjs"
+      "require": "./dist/vite.js"
     },
     "./webpack": {
       "types": "./dist/webpack.d.ts",
       "import": "./dist/webpack.mjs",
-      "require": "./dist/webpack.cjs"
+      "require": "./dist/webpack.js"
     },
     "./rollup": {
       "types": "./dist/rollup.d.ts",
       "import": "./dist/rollup.mjs",
-      "require": "./dist/rollup.cjs"
+      "require": "./dist/rollup.js"
     },
     "./esbuild": {
       "types": "./dist/esbuild.d.ts",
       "import": "./dist/esbuild.mjs",
-      "require": "./dist/esbuild.cjs"
+      "require": "./dist/esbuild.js"
     },
     "./nuxt": {
       "types": "./dist/nuxt.d.ts",
       "import": "./dist/nuxt.mjs",
-      "require": "./dist/nuxt.cjs"
+      "require": "./dist/nuxt.js"
     },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.mjs",
-      "require": "./dist/utils.cjs"
+      "require": "./dist/utils.js"
     },
     "./*": "./*"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
@@ -70,8 +70,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "unbuild --sourcemap",
-    "build": "unbuild",
+    "dev": "tsup --watch --sourcemap",
+    "build": "tsup",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },
