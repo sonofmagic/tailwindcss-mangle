@@ -11,16 +11,16 @@
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "vue": "^3.3.7"
+    "vue": "^3.4.30"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.4.0",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "sass": "^1.69.4",
-    "tailwindcss": "^3.3.4",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0",
-    "vue-tsc": "^1.8.21"
+    "@vitejs/plugin-vue": "^5.0.5",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "sass": "^1.77.6",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.22"
   }
 }
