@@ -55,6 +55,7 @@
     "turbo": "^2.0.4",
     "typescript": "^5.5.2",
     "unbuild": "^2.0.0",
+    "unplugin": "^1.10.1",
     "unplugin-tailwindcss-mangle": "workspace:*",
     "vitest": "^1.6.0"
   }

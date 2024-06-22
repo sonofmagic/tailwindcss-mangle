@@ -1,37 +1,35 @@
 import { Parser } from 'htmlparser2'
 import MagicString from 'magic-string'
-import type { IHtmlHandlerOptions } from '../types'
-import { makeRegex, splitCode } from '../shared'
+import { makeRegex, splitCode } from '@/shared'
+import type { IHandlerTransformResult, IHtmlHandlerOptions } from '@/types'
 
-export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOptions) {
-  const { ctx } = options
-  const { replaceMap } = ctx
+export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOptions): IHandlerTransformResult {
+  const { ctx, id } = options
+  const { replaceMap, classGenerator } = ctx
   const ms: MagicString = typeof raw === 'string' ? new MagicString(raw) : raw
   const parser = new Parser({
     onattribute(name, value) {
       if (name === 'class') {
+        let needUpdate = false
         const arr = splitCode(value, {
           splitQuote: false,
         })
         let rawValue = value
         for (const v of arr) {
           if (replaceMap.has(v)) {
-            rawValue = rawValue.replace(makeRegex(v), ctx.classGenerator.generateClassName(v).name)
+            const gen = classGenerator.generateClassName(v)
+            rawValue = rawValue.replace(makeRegex(v), gen.name)
+            ctx.addToUsedBy(gen.name, id)
+            needUpdate = true
           }
         }
-        ms.update(parser.startIndex + name.length + 2, parser.endIndex - 1, rawValue)
+        needUpdate && ms.update(parser.startIndex + name.length + 2, parser.endIndex - 1, rawValue)
       }
-      // if (isVue) {
-      //   if (name === ':class') {
-      //     const { code } = jsHandler(value, {
-      //       ctx,
-      //     })
-      //     ms.update(parser.startIndex + name.length + 2, parser.endIndex - 1, code)
-      //   }
-      // }
     },
   })
   parser.write(ms.original)
   parser.end()
-  return ms.toString()
+  return {
+    code: ms.toString(),
+  }
 }

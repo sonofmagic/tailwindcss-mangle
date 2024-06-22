@@ -24,28 +24,26 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
         return !id.includes('node_modules')
       },
       async transform(code, id) {
+        const opts = {
+          ctx,
+          id,
+        }
         if (/\.[jt]sx?(?:$|\?)/.test(id)) {
-          return jsHandler(code, {
-            ctx,
-          })
+          return jsHandler(code, opts)
         }
         else if (/\.(?:vue|svelte)(?:$|\?)/.test(id)) {
           if (isCSSRequest(id)) {
-            const { css } = await cssHandler(code, { ctx, file: id })
-            return css
+            return await cssHandler(code, opts)
           }
           else {
-            return jsHandler(code, {
-              ctx,
-            })
+            return jsHandler(code, opts)
           }
         }
         else if (isCSSRequest(id)) {
-          const { css } = await cssHandler(code, { ctx, file: id })
-          return css
+          return await cssHandler(code, opts)
         }
         else if (/\.html?/.test(id)) {
-          return htmlHandler(code, { ctx })
+          return htmlHandler(code, opts)
         }
       },
     },
@@ -53,8 +51,9 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
       name: `${pluginName}:post`,
       enforce: 'post',
       vite: {
-        transformIndexHtml(code) {
-          return htmlHandler(code, { ctx })
+        transformIndexHtml(html) {
+          const { code } = htmlHandler(html, { ctx })
+          return code
         },
       },
     },

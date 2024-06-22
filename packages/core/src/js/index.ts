@@ -1,8 +1,9 @@
 import type { StringLiteral, TemplateElement } from '@babel/types'
 import MagicString from 'magic-string'
 import { jsStringEscape } from '@ast-core/escape'
-import type { IJsHandlerOptions } from '../types'
-import { makeRegex, splitCode } from '../shared'
+import { sort } from 'fast-sort'
+import type { IHandlerTransformResult, IJsHandlerOptions } from '@/types'
+import { makeRegex, splitCode } from '@/shared'
 import { parse, traverse } from '@/babel'
 
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
@@ -40,7 +41,7 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
   return rawString
 }
 
-export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOptions) {
+export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOptions): IHandlerTransformResult {
   const ms: MagicString = typeof rawSource === 'string' ? new MagicString(rawSource) : rawSource
   let ast
   try {
@@ -53,6 +54,7 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
       code: ms.original,
     }
   }
+  const { ctx } = options
 
   traverse(ast, {
     StringLiteral: {
@@ -65,6 +67,41 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
       enter(p) {
         const n = p.node
         handleValue(n.value.raw, n, options, ms, 0, false)
+      },
+    },
+    CallExpression: {
+      enter(p) {
+        const callee = p.get('callee')
+        if (callee.isIdentifier() && ctx.isPreserveFunction(callee.node.name)) {
+          p.traverse({
+            StringLiteral: {
+              enter(path) {
+                const node = path.node
+                const value = node.value
+                const arr = sort(splitCode(value)).desc(x => x.length)
+
+                for (const str of arr) {
+                  if (ctx.replaceMap.has(str)) {
+                    ctx.addPreserveClass(str)
+                  }
+                }
+              },
+            },
+            TemplateElement: {
+              enter(path) {
+                const node = path.node
+                const value = node.value.raw
+                const arr = sort(splitCode(value)).desc(x => x.length)
+
+                for (const str of arr) {
+                  if (ctx.replaceMap.has(str)) {
+                    ctx.addPreserveClass(str)
+                  }
+                }
+              },
+            },
+          })
+        }
       },
     },
   })

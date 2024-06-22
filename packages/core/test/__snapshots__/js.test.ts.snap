@@ -667,6 +667,19 @@ cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 twMerge('tw-g tw-h tw-d and tw-b')"
 `;
 
+exports[`js handler > preserve-fn-case0.js case 1 2`] = `
+Map {
+  "bg-red-500/50" => "tw-a",
+  "bg-red-400/50" => "tw-b",
+  "bg-red-500" => "tw-c",
+  "bg-red-400" => "tw-d",
+  "w-2" => "tw-e",
+  "h-2" => "tw-f",
+  "w-1" => "tw-g",
+  "h-1" => "tw-h",
+}
+`;
+
 exports[`js handler > preserve-fn-case0.js case 2 1`] = `
 "import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -682,6 +695,19 @@ cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 twMerge('tw-g tw-h tw-d and tw-b')"
 `;
 
+exports[`js handler > preserve-fn-case0.js case 2 2`] = `
+Map {
+  "bg-red-500/50" => "tw-a",
+  "bg-red-400/50" => "tw-b",
+  "bg-red-500" => "tw-c",
+  "bg-red-400" => "tw-d",
+  "w-2" => "tw-e",
+  "h-2" => "tw-f",
+  "w-1" => "tw-g",
+  "h-1" => "tw-h",
+}
+`;
+
 exports[`js handler > preserve-fn-case0.js case 3 1`] = `
 "import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -695,6 +721,19 @@ cn('w-10 h-10 tw-c and tw-a')
 cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 
 twMerge('tw-g tw-h tw-d and tw-b')"
+`;
+
+exports[`js handler > preserve-fn-case0.js case 3 2`] = `
+Map {
+  "bg-red-500/50" => "tw-a",
+  "bg-red-400/50" => "tw-b",
+  "bg-red-500" => "tw-c",
+  "bg-red-400" => "tw-d",
+  "w-2" => "tw-e",
+  "h-2" => "tw-f",
+  "w-1" => "tw-g",
+  "h-1" => "tw-h",
+}
 `;
 
 exports[`js handler > trailing slash case 0 1`] = `

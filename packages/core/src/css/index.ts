@@ -1,12 +1,17 @@
 import postcss from 'postcss'
-import type { ICssHandlerOptions } from '../types'
 import { transformSelectorPostcssPlugin } from './plugins'
+import type { ICssHandlerOptions, IHandlerTransformResult } from '@/types'
 
-export function cssHandler(rawSource: string, options: ICssHandlerOptions) {
+export async function cssHandler(rawSource: string, options: ICssHandlerOptions): Promise<IHandlerTransformResult> {
   const acceptedPlugins = [transformSelectorPostcssPlugin(options)]
   const { id } = options
-  return postcss(acceptedPlugins).process(rawSource, {
+  const { css: code, map } = await postcss(acceptedPlugins).process(rawSource, {
     from: id,
     to: id,
   })
+  return {
+    code,
+    // @ts-ignore
+    map,
+  }
 }

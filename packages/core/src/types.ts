@@ -1,4 +1,4 @@
-import type MagicString from 'magic-string'
+import type { TransformResult } from 'unplugin'
 import type { Context } from './ctx'
 
 export interface IClassGeneratorContextItem {
@@ -15,6 +15,12 @@ export interface IClassGeneratorOptions {
   ignoreClass?: (string | RegExp)[]
   classPrefix?: string
 }
+
+export interface IHandler {
+  (code: string, options: IHandlerOptions): IHandlerTransformResult
+}
+
+export type IHandlerTransformResult = Exclude<TransformResult, null | undefined | string>
 
 export interface IHandlerOptions {
   ctx: Context

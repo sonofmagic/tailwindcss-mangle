@@ -21,9 +21,10 @@ export function isVueScoped(s: parser.ClassName): boolean {
 }
 
 export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> = function (options) {
-  const { ignoreVueScoped, ctx } = defu(options, {
+  const { ignoreVueScoped, ctx, id } = defu(options, {
     ignoreVueScoped: true,
   })
+
   const replaceMap = ctx.replaceMap
 
   return {
@@ -42,6 +43,7 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
                   rule.cloneBefore()
                 }
                 s.value = v
+                ctx.addToUsedBy(v, id)
               }
             }
           })
