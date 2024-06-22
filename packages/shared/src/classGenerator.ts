@@ -59,7 +59,9 @@ class ClassGenerator implements IClassGenerator {
   transformCssClass(className: string): string {
     const key = stripEscapeSequence(className)
     const cn = this.newClassMap[key]
-    if (cn) { return cn.name }
+    if (cn) {
+      return cn.name
+    }
     return className
   }
 
@@ -68,7 +70,9 @@ class ClassGenerator implements IClassGenerator {
 
     original = stripEscapeSequence(original)
     const cn = this.newClassMap[original]
-    if (cn) { return cn }
+    if (cn) {
+      return cn
+    }
 
     let newClassName
     if (opts.customGenerate && typeof opts.customGenerate === 'function') {

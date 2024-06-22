@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
 

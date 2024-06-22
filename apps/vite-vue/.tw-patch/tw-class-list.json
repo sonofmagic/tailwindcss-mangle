@@ -24,6 +24,8 @@
   "before:rounded-full",
   "before:to-transparent",
   "before:w-[480px]",
+  "bg-[#828282]",
+  "bg-[#929292]",
   "bg-[#B91C1C]",
   "bg-gradient-to-b",
   "bg-gradient-to-t",
