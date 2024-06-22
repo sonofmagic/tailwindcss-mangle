@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     utwm({
-      classMapOutput: true
-    })
-  ]
+      classMapOutput: true,
+    }),
+  ],
 })

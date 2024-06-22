@@ -1,4 +1,5 @@
 import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
+import type { FilterPattern } from '@rollup/pluginutils'
 
 export interface ClassMapOutputOptions {
   enable?: boolean
@@ -9,8 +10,8 @@ export interface ClassMapOutputOptions {
 export interface MangleUserConfig {
   mangleClassFilter?: (className: string) => boolean
   classGenerator?: IClassGeneratorOptions
-  exclude?: string[]
-  include?: string[]
+  exclude?: FilterPattern
+  include?: FilterPattern
   classListPath?: string
   classMapOutput?: ClassMapOutputOptions
   disabled?: boolean

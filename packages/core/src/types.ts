@@ -21,7 +21,7 @@ export interface IHandlerOptions {
 }
 
 export interface IHtmlHandlerOptions extends IHandlerOptions {
-  isVue?: boolean
+  // isVue?: boolean
 }
 
 export interface IJsHandlerOptions extends IHandlerOptions {

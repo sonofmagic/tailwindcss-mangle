@@ -27,6 +27,7 @@
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.5",
     "@icebreakers/eslint-config": "^0.3.9",
+    "@rollup/pluginutils": "^5.1.0",
     "@tailwindcss-mangle/core": "workspace:*",
     "@tailwindcss-mangle/shared": "workspace:*",
     "@tsconfig/recommended": "^1.0.6",

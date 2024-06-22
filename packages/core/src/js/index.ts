@@ -44,7 +44,7 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
   const ms: MagicString = typeof rawSource === 'string' ? new MagicString(rawSource) : rawSource
   const ast = parse(ms.original, {
     sourceType: 'unambiguous',
-    plugins: ['typescript', 'jsx'],
+    // plugins: ['typescript', 'jsx', 'decorators'],
   })
   traverse(ast, {
     StringLiteral: {
