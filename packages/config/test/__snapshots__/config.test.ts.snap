@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`config > init config 1`] = `
+"import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({})
+"
+`;

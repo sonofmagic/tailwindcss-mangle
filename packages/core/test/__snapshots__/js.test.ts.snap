@@ -3,10 +3,10 @@
 exports[`js handler > cn 1`] = `
 "const bbb = cn(
       {
-        'p-3': true
+        'tw-c': true
       },
-      'p-1',
-      ['p-2', true && 'p-4']
+      'tw-a',
+      ['tw-b', true && 'tw-d']
     )"
 `;
 
@@ -377,7 +377,7 @@ const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
 </script>
 
 <template>
-  <main class="flex tw-d tw-f tw-e tw-b tw-j " :class="['before:text-[#123456]']">
+  <main class="flex min-h-screen flex-col items-center justify-between p-24 " :class="['before:text-[#123456]']">
     <nav :class="aaa">aaa</nav>
   </main>
 </template>
@@ -434,98 +434,83 @@ export default defineComponent({
 "
 `;
 
-exports[`js handler > preProcessRawCode case 0 2`] = `
-Map {
-  "hover:bg-dark-red" => "tw-a",
-  "justify-between" => "tw-b",
-  "bg-[#B91C1C]" => "tw-c",
-  "min-h-screen" => "tw-d",
-  "items-center" => "tw-e",
-  "flex-col" => "tw-f",
-  "bg-red" => "tw-g",
-  "px-2" => "tw-h",
-  "py-1" => "tw-i",
-  "p-24" => "tw-j",
-  "p-3" => "tw-k",
-}
-`;
-
 exports[`js handler > preProcessRawCode case 1 1`] = `
-"<script setup lang="ts">
+{
+  "code": "<script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
-// 'hover:bg-dark-red tw-ed tw-fb'
+// 'hover:bg-dark-red p-3 bg-[#B91C1C]'
 const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 
 </script>
 
 <template>
-  <main class="flex tw-kb tw-hc tw-hb tw-sa tw-vc " :class="['before:text-[#123456]']">
+  <main class="flex min-h-screen flex-col items-center justify-between p-24 " :class="['before:text-[#123456]']">
     <nav :class="aaa">{{ aaa }}</nav>
-    <div class="tw-cd tw-pc tw-dc tw-hb tw-sa tw-xb tw-lc tw-jc">
+    <div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
       <p
-        class="fixed tw-mc tw-sc flex tw-pc tw-wa tw-fc tw-qa tw-ja tw-db tw-wc tw-xc tw-ca tw-l tw-v tw-ea tw-bc tw-cc  tw-eb tw-zb tw-xa tw-oc tw-m">
+        class="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
         Get started by editing&nbsp;
-        <code class="tw-xb tw-wb">pages/index.tsx</code>
+        <code class="font-mono font-bold">pages/index.tsx</code>
       </p>
       <div
-        class="fixed tw-gc tw-mc flex tw-tc tw-pc tw-yb tw-wa tw-ka tw-sb tw-ec tw-ra tw-va tw-bc tw-ac tw-cc tw-tb">
-        <a class="tw-w flex tw-ba tw-qc tw-fd tw-n tw-nc"
+        class="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
+        <a class="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
           target="_blank" rel="noopener noreferrer">
           By
-          <img src="/vite.svg" alt="Vercel Logo" class="tw-mb" priority />
+          <img src="/vite.svg" alt="Vercel Logo" class="dark:invert" priority />
         </a>
       </div>
     </div>
 
     <div
-      class="relative flex tw-ba tw-oa tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-pa tw-s tw-ta tw-lb tw-ma tw-na tw-o after:bg-gradient-conic tw-y tw-z tw-ua tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
-      <img class="relative tw-a tw-mb" src="./assets/vue.svg" alt="Next.js Logo"
+      class="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
+      <img class="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert" src="./assets/vue.svg" alt="Next.js Logo"
         priority />
     </div>
 
-    <div class="tw-rc grid tw-pb tw-kc tw-ya tw-ib ">
+    <div class="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left ">
       <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank" rel="noopener noreferrer">
-        <h2 class="tw-rb tw-uc tw-ic tw-cb">
+        <h2 class="bg-red-200 mb-3 text-2xl font-semibold">
           Docs <span
-            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
+            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
         </h2>
-        <p class="tw-dd tw-jb tw-lc tw-ub">Find in-depth information about Next.js
+        <p class="m-0 max-w-[30ch] text-sm opacity-50">Find in-depth information about Next.js
           features and API.</p>
       </a>
 
       <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank" rel="noopener noreferrer">
-        <h2 class="tw-za tw-uc tw-ic tw-cb">
+        <h2 class="bg-red-200/40 mb-3 text-2xl font-semibold">
           Learn <span
-            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
+            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
         </h2>
-        <p class="tw-dd tw-jb tw-lc tw-ub">Learn about Next.js in an interactive
+        <p class="m-0 max-w-[30ch] text-sm opacity-50">Learn about Next.js in an interactive
           course with&nbsp;quizzes!</p>
       </a>
 
       <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank" rel="noopener noreferrer">
-        <h2 class="tw-ab tw-uc tw-ic tw-cb">
+        <h2 class="bg-red-200/70 mb-3 text-2xl font-semibold">
           Templates <span
-            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
+            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
         </h2>
-        <p class="tw-dd tw-jb tw-lc tw-ub">Discover and deploy boilerplate example
+        <p class="m-0 max-w-[30ch] text-sm opacity-50">Discover and deploy boilerplate example
           Next.js&nbsp;projects.</p>
       </a>
 
       <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group tw-vb border tw-aa tw-zc tw-bd tw-ga tw-q tw-fa tw-c tw-e"
+        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank" rel="noopener noreferrer">
-        <h2 class="tw-bb tw-uc tw-ic tw-cb">
+        <h2 class="bg-red-200/90 mb-3 text-2xl font-semibold">
           Deploy <span
-            class="tw-gb tw-r tw-i tw-f">-&gt;</span>
+            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
         </h2>
-        <p class="tw-dd tw-jb tw-lc tw-ub">Instantly deploy your Next.js site to a
+        <p class="m-0 max-w-[30ch] text-sm opacity-50">Instantly deploy your Next.js site to a
           shareable URL with Vercel.</p>
       </a>
     </div>
@@ -574,128 +559,14 @@ export default defineComponent({
 }
 
 .logo:hover {
-  filter: tw-nb(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 
 .logo.vue:hover {
-  filter: tw-nb(0 0 2em #42b883aa);
+  filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
-"
-`;
-
-exports[`js handler > preProcessRawCode case 1 2`] = `
-Map {
-  "dark:drop-shadow-[0_0_0.3rem_#ffffff70]" => "tw-a",
-  "before:dark:bg-gradient-to-br" => "tw-b",
-  "hover:dark:border-neutral-700" => "tw-c",
-  "before:dark:from-transparent" => "tw-d",
-  "hover:dark:bg-neutral-800/30" => "tw-e",
-  "motion-reduce:transform-none" => "tw-f",
-  "after:dark:via-[#0141ff]/40" => "tw-g",
-  "before:dark:to-blue-700/10" => "tw-h",
-  "group-hover:translate-x-1" => "tw-i",
-  "after:dark:from-sky-900" => "tw-j",
-  "before:-translate-x-1/2" => "tw-k",
-  "dark:border-neutral-800" => "tw-l",
-  "lg:dark:bg-zinc-800/30" => "tw-m",
-  "lg:pointer-events-auto" => "tw-n",
-  "after:translate-x-1/3" => "tw-o",
-  "before:to-transparent" => "tw-p",
-  "hover:border-gray-300" => "tw-q",
-  "transition-transform" => "tw-r",
-  "before:content-['']" => "tw-s",
-  "before:lg:h-[360px]" => "tw-t",
-  "before:rounded-full" => "tw-u",
-  "dark:bg-zinc-800/30" => "tw-v",
-  "pointer-events-none" => "tw-w",
-  "after:content-['']" => "tw-x",
-  "after:from-sky-200" => "tw-y",
-  "after:via-blue-200" => "tw-z",
-  "border-transparent" => "tw-aa",
-  "place-items-center" => "tw-ba",
-  "backdrop-blur-2xl" => "tw-ca",
-  "before:from-white" => "tw-da",
-  "dark:from-inherit" => "tw-ea",
-  "hover:bg-gray-100" => "tw-fa",
-  "transition-colors" => "tw-ga",
-  "before:h-[300px]" => "tw-ha",
-  "before:w-[480px]" => "tw-ia",
-  "bg-gradient-to-b" => "tw-ja",
-  "bg-gradient-to-t" => "tw-ka",
-  "hover:bg-red-800" => "tw-la",
-  "after:h-[180px]" => "tw-ma",
-  "after:w-[240px]" => "tw-na",
-  "before:absolute" => "tw-oa",
-  "before:blur-2xl" => "tw-pa",
-  "border-gray-300" => "tw-qa",
-  "dark:from-black" => "tw-ra",
-  "justify-between" => "tw-sa",
-  "after:absolute" => "tw-ta",
-  "after:blur-2xl" => "tw-ua",
-  "dark:via-black" => "tw-va",
-  "justify-center" => "tw-wa",
-  "lg:bg-gray-200" => "tw-xa",
-  "lg:grid-cols-4" => "tw-ya",
-  "bg-red-200/40" => "tw-za",
-  "bg-red-200/70" => "tw-ab",
-  "bg-red-200/90" => "tw-bb",
-  "font-semibold" => "tw-cb",
-  "from-zinc-200" => "tw-db",
-  "lg:rounded-xl" => "tw-eb",
-  "bg-[#B91C1C]" => "tw-fb",
-  "inline-block" => "tw-gb",
-  "items-center" => "tw-hb",
-  "lg:text-left" => "tw-ib",
-  "max-w-[30ch]" => "tw-jb",
-  "min-h-screen" => "tw-kb",
-  "after:-z-20" => "tw-lb",
-  "dark:invert" => "tw-mb",
-  "drop-shadow" => "tw-nb",
-  "text-[16px]" => "tw-ob",
-  "text-center" => "tw-pb",
-  "bg-red-100" => "tw-qb",
-  "bg-red-200" => "tw-rb",
-  "from-white" => "tw-sb",
-  "lg:bg-none" => "tw-tb",
-  "opacity-50" => "tw-ub",
-  "rounded-lg" => "tw-vb",
-  "font-bold" => "tw-wb",
-  "font-mono" => "tw-xb",
-  "items-end" => "tw-yb",
-  "lg:border" => "tw-zb",
-  "lg:h-auto" => "tw-ac",
-  "lg:static" => "tw-bc",
-  "lg:w-auto" => "tw-cc",
-  "max-w-5xl" => "tw-dc",
-  "via-white" => "tw-ec",
-  "border-b" => "tw-fc",
-  "bottom-0" => "tw-gc",
-  "flex-col" => "tw-hc",
-  "text-2xl" => "tw-ic",
-  "lg:flex" => "tw-jc",
-  "lg:mb-0" => "tw-kc",
-  "text-sm" => "tw-lc",
-  "left-0" => "tw-mc",
-  "lg:p-0" => "tw-nc",
-  "lg:p-4" => "tw-oc",
-  "w-full" => "tw-pc",
-  "gap-2" => "tw-qc",
-  "mb-32" => "tw-rc",
-  "top-0" => "tw-sc",
-  "h-48" => "tw-tc",
-  "mb-3" => "tw-uc",
-  "p-24" => "tw-vc",
-  "pb-6" => "tw-wc",
-  "pt-8" => "tw-xc",
-  "px-2" => "tw-yc",
-  "px-5" => "tw-zc",
-  "py-1" => "tw-ad",
-  "py-4" => "tw-bd",
-  "z-10" => "tw-cd",
-  "m-0" => "tw-dd",
-  "p-3" => "tw-ed",
-  "p-8" => "tw-fd",
+",
 }
 `;
 
@@ -774,7 +645,7 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-cn('w-10 h-10 b and a')
+cn('w-10 h-10 tw-a and tw-b')
 
 cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
 
@@ -789,24 +660,11 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+cn('w-10 h-10 tw-c and tw-a')
 
-cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
+cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 
 twMerge('tw-g tw-h tw-d and tw-b')"
-`;
-
-exports[`js handler > preserve-fn-case0.js case 1 2`] = `
-Map {
-  "bg-red-500/50" => "tw-a",
-  "bg-red-400/50" => "tw-b",
-  "bg-red-500" => "tw-c",
-  "bg-red-400" => "tw-d",
-  "w-2" => "tw-e",
-  "h-2" => "tw-f",
-  "w-1" => "tw-g",
-  "h-1" => "tw-h",
-}
 `;
 
 exports[`js handler > preserve-fn-case0.js case 2 1`] = `
@@ -821,20 +679,7 @@ cn('w-10 h-10 tw-c and tw-a')
 
 cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 
-twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
-`;
-
-exports[`js handler > preserve-fn-case0.js case 2 2`] = `
-Map {
-  "bg-red-500/50" => "tw-a",
-  "bg-red-400/50" => "tw-b",
-  "bg-red-500" => "tw-c",
-  "bg-red-400" => "tw-d",
-  "w-2" => "tw-e",
-  "h-2" => "tw-f",
-  "w-1" => "tw-g",
-  "h-1" => "tw-h",
-}
+twMerge('tw-g tw-h tw-d and tw-b')"
 `;
 
 exports[`js handler > preserve-fn-case0.js case 3 1`] = `
@@ -845,24 +690,11 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-cn('w-10 h-10 bg-red-500 and bg-red-500/50')
+cn('w-10 h-10 tw-c and tw-a')
 
-cn(\`w-2 h-2 bg-red-600 and bg-red-600/50\`)
+cn(\`tw-e tw-f bg-red-600 and bg-red-600/50\`)
 
-twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')"
-`;
-
-exports[`js handler > preserve-fn-case0.js case 3 2`] = `
-Map {
-  "bg-red-500/50" => "tw-a",
-  "bg-red-400/50" => "tw-b",
-  "bg-red-500" => "tw-c",
-  "bg-red-400" => "tw-d",
-  "w-2" => "tw-e",
-  "h-2" => "tw-f",
-  "w-1" => "tw-g",
-  "h-1" => "tw-h",
-}
+twMerge('tw-g tw-h tw-d and tw-b')"
 `;
 
 exports[`js handler > trailing slash case 0 1`] = `

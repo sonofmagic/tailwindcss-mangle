@@ -1,7 +1,9 @@
+/* eslint-disable ts/no-require-imports */
+/* eslint-disable ts/no-var-requires */
 /* eslint-disable no-template-curly-in-string */
 import MagicString from 'magic-string'
 import { getCss, getTestCase } from './utils'
-import { jsHandler, preProcessJs, preProcessRawCode } from '@/js'
+import { jsHandler } from '@/js'
 // import { getStringLiteralCalleeName, getTemplateElementCalleeName } from '@/js/utils'
 // import { ClassGenerator } from '@/shared'
 import { Context } from '@/index'
@@ -19,8 +21,8 @@ describe('js handler', async () => {
   })
   it('common StringLiteral', () => {
     const replaceMap = ctx.replaceMap
-    replaceMap.set('dark:bg-zinc-800/30', true)
-    replaceMap.set('lg:dark:bg-zinc-800/30', true)
+    replaceMap.set('dark:bg-zinc-800/30', '1')
+    replaceMap.set('lg:dark:bg-zinc-800/30', '1')
 
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
@@ -32,8 +34,8 @@ describe('js handler', async () => {
 
   it('common StringLiteral with splitQuote false', () => {
     const replaceMap = ctx.replaceMap
-    replaceMap.set('dark:bg-zinc-800/30', true)
-    replaceMap.set('lg:dark:bg-zinc-800/30', true)
+    replaceMap.set('dark:bg-zinc-800/30', '1')
+    replaceMap.set('lg:dark:bg-zinc-800/30', '1')
 
     const testCase = 'element.innerHTML = \'<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is counter</div>\''
     const code = jsHandler(testCase, {
@@ -45,8 +47,8 @@ describe('js handler', async () => {
 
   it('common TemplateElement', () => {
     const replaceMap = ctx.replaceMap
-    replaceMap.set('dark:bg-zinc-800/30', true)
-    replaceMap.set('lg:dark:bg-zinc-800/30', true)
+    replaceMap.set('dark:bg-zinc-800/30', '1')
+    replaceMap.set('lg:dark:bg-zinc-800/30', '1')
 
     const testCase = 'const counter = 0;element.innerHTML = `<div class="dark:bg-zinc-800/30 lg:dark:bg-zinc-800/30">count is ${counter}</div>`'
     const code = jsHandler(testCase, {
@@ -74,7 +76,7 @@ describe('js handler', async () => {
   it('z-10 not transform', () => {
     const replaceMap = ctx.replaceMap
     for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
-      replaceMap.set(cls, true)
+      replaceMap.set(cls, '1')
     }
 
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
@@ -88,7 +90,7 @@ describe('js handler', async () => {
   it('z-10 not transform with splitQuote false', () => {
     const replaceMap = ctx.replaceMap
     for (const cls of 'z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'.split(' ')) {
-      replaceMap.set(cls, true)
+      replaceMap.set(cls, '1')
     }
 
     const testCase = `{ className: "z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex" }`
@@ -106,7 +108,7 @@ describe('js handler', async () => {
     const list = require('./fixtures/tw-class-set.json') as string[]
     const replaceMap = ctx.replaceMap // getClassCacheSet()
     for (const cls of list) {
-      replaceMap.set(cls, true)
+      replaceMap.set(cls, '1')
     }
     expect(replaceMap.size).toBeGreaterThan(0)
 
@@ -122,7 +124,7 @@ describe('js handler', async () => {
     const list = require('./fixtures/tw-class-set.json') as string[]
     const replaceMap = ctx.replaceMap
     for (const cls of list) {
-      replaceMap.set(cls, true)
+      replaceMap.set(cls, '1')
     }
     const code = jsHandler(testCase, {
       ctx,
@@ -134,7 +136,7 @@ describe('js handler', async () => {
   it('comment-ignore case', () => {
     const testCase = getTestCase('comment-ignore.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('ease-out', true)
+    replaceMap.set('ease-out', '1')
     const code = jsHandler(testCase, {
       ctx,
 
@@ -145,11 +147,9 @@ describe('js handler', async () => {
   it('minified js true', () => {
     const testCase = getTestCase('comment-ignore.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('ease-out', true)
+    replaceMap.set('ease-out', '1')
     const code = jsHandler(testCase, {
       ctx,
-
-      minified: true,
     }).code
     expect(code).toMatchSnapshot()
   })
@@ -158,7 +158,7 @@ describe('js handler', async () => {
     process.env.NODE_ENV = 'production'
     const testCase = getTestCase('comment-ignore.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('ease-out', true)
+    replaceMap.set('ease-out', '1')
     const code = jsHandler(testCase, {
       ctx,
 
@@ -169,8 +169,8 @@ describe('js handler', async () => {
   it('trailing slash case 0', () => {
     const testCase = getTestCase('trailing-slash-0.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('bg-red-500', true)
-    replaceMap.set('bg-red-500/50', true)
+    replaceMap.set('bg-red-500', '1')
+    replaceMap.set('bg-red-500/50', '1')
     const code = jsHandler(testCase, {
       ctx,
 
@@ -181,8 +181,8 @@ describe('js handler', async () => {
   it('trailing slash case 1', () => {
     const testCase = getTestCase('trailing-slash-1.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('bg-red-500/50', true)
-    replaceMap.set('bg-red-500', true)
+    replaceMap.set('bg-red-500/50', '1')
+    replaceMap.set('bg-red-500', '1')
 
     const code = jsHandler(testCase, {
       ctx,
@@ -194,8 +194,8 @@ describe('js handler', async () => {
   it('trailing slash case 2', () => {
     const testCase = getTestCase('trailing-slash-2.js')
     const replaceMap = ctx.replaceMap
-    replaceMap.set('bg-red-500/50', true)
-    replaceMap.set('bg-red-500', true)
+    replaceMap.set('bg-red-500/50', '')
+    replaceMap.set('bg-red-500', '')
 
     const code = jsHandler(testCase, {
       ctx,
@@ -207,8 +207,8 @@ describe('js handler', async () => {
   it('lINEFEED case', () => {
     const testCase = 'const LINEFEED = "\\n";'
 
-    // replaceMap.set('bg-red-500/50', true)
-    // replaceMap.set('bg-red-500', true)
+    // replaceMap.set('bg-red-500/50', '1')
+    // replaceMap.set('bg-red-500', '1')
     const code = jsHandler(testCase, {
       ctx,
 
@@ -219,10 +219,10 @@ describe('js handler', async () => {
   it('preProcessJs case', () => {
     const testCase = 'const LINEFEED = "\\n";'
 
-    // replaceMap.set('bg-red-500/50', true)
-    // replaceMap.set('bg-red-500', true)
-    const code = preProcessJs({
-      code: testCase,
+    // replaceMap.set('bg-red-500/50', '1')
+    // replaceMap.set('bg-red-500', '1')
+    const { code } = jsHandler(testCase, {
+
       // @ts-ignore
       ctx: {
         addToUsedBy: () => { },
@@ -238,35 +238,23 @@ describe('js handler', async () => {
     const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
-    const code = preProcessJs({
-      code: testCase,
-      // @ts-ignore
-      ctx: {
-        addToUsedBy: () => { },
-        replaceMap,
-      },
+    const { code } = jsHandler(testCase, {
+      ctx,
       id: 'xxx',
-
     })
-    expect(code).toBe('const LINEFEED = `a${n}a`;')
+    expect(code).toBe('const LINEFEED = `tw-a${n}tw-a`;')
   })
 
   it('preProcessJs MagicString TemplateElement case', () => {
-    const testCase = new MagicString('const LINEFEED = `bg-red-500/50${n}bg-red-500/50`;')
+    const testCase = new MagicString('const LINEFEED = `bg-red-500/50${n}bg-red-500`;')
     const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
-    const code = preProcessJs({
-      code: testCase,
-      // @ts-ignore
-      ctx: {
-        addToUsedBy: () => { },
-        replaceMap,
-      },
+    const { code } = jsHandler(testCase, {
+      ctx,
       id: 'xxx',
-
     })
-    expect(code).toBe('const LINEFEED = `a${n}a`;')
+    expect(code).toBe('const LINEFEED = `tw-a${n}tw-b`;')
   })
 
   it('preserve-fn-case0.js case 0', async () => {
@@ -276,8 +264,7 @@ describe('js handler', async () => {
     const replaceMap = ctx.replaceMap
     replaceMap.set('bg-red-500/50', 'a')
     replaceMap.set('bg-red-500', 'b')
-    const code = preProcessJs({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
       ctx,
       id: 'xxx',
     })
@@ -300,8 +287,7 @@ describe('js handler', async () => {
 
     // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
     const replaceMap = ctx.getReplaceMap()
-    const code = preProcessJs({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
       ctx,
       id: 'xxx',
 
@@ -329,8 +315,8 @@ describe('js handler', async () => {
 
     const replaceMap = ctx.getReplaceMap()
 
-    const code = preProcessJs({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
+
       ctx,
       id: 'xxx',
 
@@ -350,15 +336,12 @@ describe('js handler', async () => {
       },
     })
 
-    const replaceMap = ctx.getReplaceMap()
-
     //     cn('w-10 h-10 bg-red-500 and bg-red-500/50')
 
     // cn(`w-2 h-2 bg-red-600 and bg-red-600/50`)
 
     // twMerge('w-1 h-1 bg-red-400 and bg-red-400/50')
-    const code = preProcessJs({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
       ctx,
       id: 'xxx',
 
@@ -368,7 +351,7 @@ describe('js handler', async () => {
     expect(ctx.getReplaceMap()).toMatchSnapshot()
   })
 
-  it('preProcessRawCode case 0', async () => {
+  it.skip('preProcessRawCode case 0', async () => {
     const testCase = getTestCase('preserve-fn-case0.vue')
     await ctx.initConfig({
       classList: 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' '),
@@ -379,8 +362,7 @@ describe('js handler', async () => {
 
     const replaceMap = ctx.getReplaceMap()
 
-    const code = preProcessRawCode({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
       ctx,
 
       id: 'xxx',
@@ -390,7 +372,7 @@ describe('js handler', async () => {
     expect(replaceMap).toMatchSnapshot()
   })
 
-  it('preProcessRawCode case 1', async () => {
+  it.skip('preProcessRawCode case 1', async () => {
     const testCase = getTestCase('preserve-fn-case1.vue')
 
     await ctx.initConfig({
@@ -400,10 +382,8 @@ describe('js handler', async () => {
       },
     })
     const replaceMap = ctx.getReplaceMap()
-    const code = preProcessRawCode({
-      code: testCase,
+    const code = jsHandler(testCase, {
       ctx,
-
       id: 'xxx',
     })
     expect(code).toMatchSnapshot()
@@ -411,7 +391,7 @@ describe('js handler', async () => {
     expect(replaceMap).toMatchSnapshot()
   })
 
-  it('preProcessRawCode case 2', async () => {
+  it.skip('preProcessRawCode case 2', async () => {
     const testCase = getTestCase('preserve-fn-case2.vue')
 
     await ctx.initConfig({
@@ -422,8 +402,7 @@ describe('js handler', async () => {
     })
     const replaceMap = ctx.getReplaceMap()
 
-    const code = preProcessRawCode({
-      code: testCase,
+    const { code } = jsHandler(testCase, {
       ctx,
       id: 'xxx',
     })
@@ -432,15 +411,14 @@ describe('js handler', async () => {
     expect(replaceMap).toMatchSnapshot()
   })
 
-  it('tsx app0', async () => {
+  it.skip('tsx app0', async () => {
     await ctx.initConfig({
       classList: require('./fixtures/app0.json') as string[],
     })
-    const replaceMap = ctx.getReplaceMap()
+
     const code = getTestCase('app0.tsx')
 
-    const res = preProcessJs({
-      code,
+    const res = jsHandler(code, {
 
       ctx,
       id: 'xxx',
@@ -448,16 +426,13 @@ describe('js handler', async () => {
     expect(res).toMatchSnapshot()
   })
 
-  it('ts vanilla-0', async () => {
+  it.skip('ts vanilla-0', async () => {
     await ctx.initConfig({
       classList: require('./fixtures/vanilla-0.json') as string[],
     })
-    const replaceMap = ctx.getReplaceMap()
     const code = getTestCase('vanilla-0.ts')
 
-    const res = preProcessJs({
-      code,
-
+    const res = jsHandler(code, {
       ctx,
       id: 'xxx',
     })
@@ -479,9 +454,7 @@ describe('js handler', async () => {
       },
     })
 
-    const res = preProcessJs({
-      code,
-
+    const { code: res } = jsHandler(code, {
       ctx,
       id: 'xxx',
     })

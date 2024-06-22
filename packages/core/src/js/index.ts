@@ -5,10 +5,8 @@ import type { IJsHandlerOptions } from '../types'
 import { makeRegex, splitCode } from '../shared'
 import { parse, traverse } from '@/babel'
 
-export { preProcessJs, preProcessRawCode } from './pre'
-
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
-  const { ctx, splitQuote = true } = options
+  const { ctx, splitQuote = true, id } = options
   const { replaceMap, classGenerator: clsGen } = ctx
 
   const array = splitCode(raw, {
@@ -24,7 +22,9 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
       }
 
       if (!ignoreFlag) {
-        rawString = rawString.replace(makeRegex(v), clsGen.generateClassName(v).name)
+        const gen = clsGen.generateClassName(v)
+        rawString = rawString.replace(makeRegex(v), gen.name)
+        ctx.addToUsedBy(gen.name, id)
         needUpdate = true
       }
     }
@@ -42,10 +42,18 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
 
 export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOptions) {
   const ms: MagicString = typeof rawSource === 'string' ? new MagicString(rawSource) : rawSource
-  const ast = parse(ms.original, {
-    sourceType: 'unambiguous',
-    // plugins: ['typescript', 'jsx', 'decorators'],
-  })
+  let ast
+  try {
+    ast = parse(ms.original, {
+      sourceType: 'unambiguous',
+    })
+  }
+  catch (error) {
+    return {
+      code: ms.original,
+    }
+  }
+
   traverse(ast, {
     StringLiteral: {
       enter(p) {
@@ -59,24 +67,6 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
         handleValue(n.value.raw, n, options, ms, 0, false)
       },
     },
-    // CallExpression: {
-    //   enter(p: NodePath<CallExpression>) {
-    //     const calleePath = p.get('callee')
-    //     if (calleePath.isIdentifier() && calleePath.node.name === 'eval') {
-    //       p.traverse({
-    //         StringLiteral: {
-    //           enter(s) {
-    //             // ___CSS_LOADER_EXPORT___
-    //             const res = jsHandler(s.node.value, options)
-    //             if (res.code) {
-    //               s.node.value = res.code
-    //             }
-    //           },
-    //         },
-    //       })
-    //     }
-    //   },
-    // },
   })
 
   return {

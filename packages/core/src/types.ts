@@ -18,28 +18,17 @@ export interface IClassGeneratorOptions {
 
 export interface IHandlerOptions {
   ctx: Context
+  id?: string
 }
 
 export interface IHtmlHandlerOptions extends IHandlerOptions {
-  // isVue?: boolean
+
 }
 
 export interface IJsHandlerOptions extends IHandlerOptions {
   splitQuote?: boolean
-  minified?: boolean
-}
-
-export interface IVueHandlerOptions extends IHandlerOptions {
-
 }
 
 export interface ICssHandlerOptions extends IHandlerOptions {
-  // scene?: 'loader' | 'process'
   ignoreVueScoped?: boolean
-  file?: string
-}
-
-export interface IPreProcessJsOptions extends IHandlerOptions {
-  code: string | MagicString
-  id: string
 }

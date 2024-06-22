@@ -68,7 +68,10 @@ export class Context {
     return this.replaceMap // map
   }
 
-  addToUsedBy(key: string, file: string) {
+  addToUsedBy(key: string, file?: string) {
+    if (!file) {
+      return
+    }
     const hit = this.classGenerator.newClassMap[key]
     if (hit) {
       hit.usedBy.add(file)
