@@ -1,8 +1,7 @@
 import type { UnpluginFactory } from 'unplugin'
-import { Context, cssHandler, preProcessJs, vueHandler } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, preProcessJs, vueHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import MagicString from 'magic-string'
-// import { createFilter } from '@rollup/pluginutils'
 import { isCSSRequest } from 'is-css-request'
 import { pluginName } from '@/constants'
 
@@ -55,9 +54,15 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
         return css
       },
     },
-    // {
-    //   name: `${pluginName}:post`,
-    // },
+    {
+      name: `${pluginName}:post`,
+      enforce: 'post',
+      vite: {
+        transformIndexHtml(code) {
+          return htmlHandler(code, { ctx })
+        },
+      },
+    },
   ]
 }
 
