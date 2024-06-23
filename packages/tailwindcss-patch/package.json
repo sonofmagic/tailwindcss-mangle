@@ -34,7 +34,7 @@
     "build": "unbuild",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "patch": "node bin/tw-patch.cjs install"
+    "patch": "node bin/tw-patch.js install"
   },
   "publishConfig": {
     "access": "public",
