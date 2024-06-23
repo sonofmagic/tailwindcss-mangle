@@ -42,8 +42,8 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
                 if (ctx.isPreserveClass(s.value)) {
                   rule.cloneBefore()
                 }
+                // ctx.addToUsedBy(s.value, id)
                 s.value = v
-                ctx.addToUsedBy(v, id)
               }
             }
           })

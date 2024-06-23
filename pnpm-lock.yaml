@@ -119,6 +119,9 @@ importers:
       c12:
         specifier: ^1.11.1
         version: 1.11.1(magicast@0.3.4)
+      is-css-request:
+        specifier: ^1.0.1
+        version: 1.0.1
 
   packages/core:
     dependencies:
@@ -3430,6 +3433,9 @@ packages:
 
   is-css-request@1.0.0:
     resolution: {integrity: sha512-jLtkS9/5hYErK3K6hLIp7/SDqMAxgGvyMctkFrEIHcgscv8sojmKQsAqghgaLa7HWK/4WfoWnDJMFftCXrehrA==}
+
+  is-css-request@1.0.1:
+    resolution: {integrity: sha512-KOrHD2lt94cHcS50h0ULYWRJ2f8PhdVqgR+rs0Bk4HwgpxVN4dLM7Dl53da1XdsoOgT9gygNW3eMSMvhaiXMkg==}
 
   is-date-object@1.0.5:
     resolution: {integrity: sha512-9YQaSxsAiSwcvS33MBk3wTCVnWK+HhF8VZR2jRxehM16QcVOdHqPn4VPHmRK4lSr38n9JriurInLcP90xsYNfQ==}
@@ -9285,6 +9291,8 @@ snapshots:
       hasown: 2.0.0
 
   is-css-request@1.0.0: {}
+
+  is-css-request@1.0.1: {}
 
   is-date-object@1.0.5:
     dependencies:

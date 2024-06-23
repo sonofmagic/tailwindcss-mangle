@@ -2,12 +2,12 @@ import type { UnpluginFactory } from 'unplugin'
 import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import { isCSSRequest } from 'is-css-request'
+import { createFilter } from '@rollup/pluginutils'
 import { pluginName } from '@/constants'
-// import {createFilter} from '@rollup/pluginutils'
 
 const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
   const ctx = new Context()
-  // const filter = createFilter(options?.include, options?.exclude)
+  let filter = (_id: string) => true
   return [
     {
       name: `${pluginName}:pre`,
@@ -16,12 +16,13 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
         await ctx.initConfig({
           mangleOptions: options,
         })
+        filter = createFilter(ctx.options.include, ctx.options.exclude)
       },
     },
     {
       name: `${pluginName}`,
       transformInclude(id) {
-        return !id.includes('node_modules')
+        return filter(id)
       },
       async transform(code, id) {
         const opts = {
@@ -55,6 +56,9 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
           const { code } = htmlHandler(html, { ctx })
           return code
         },
+      },
+      writeBundle() {
+        ctx.dump()
       },
     },
   ]

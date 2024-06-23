@@ -7,13 +7,19 @@ export interface ClassMapOutputOptions {
   loose?: boolean
 }
 
+export interface ClassMapOutputItem {
+  before: string
+  after: string
+  usedBy: string[]
+}
+
 export interface MangleUserConfig {
   mangleClassFilter?: (className: string) => boolean
   classGenerator?: IClassGeneratorOptions
   exclude?: FilterPattern
   include?: FilterPattern
   classListPath?: string
-  classMapOutput?: ClassMapOutputOptions
+  classMapOutput?: boolean | ClassMapOutputOptions | ((json: ClassMapOutputItem[]) => void)
   disabled?: boolean
   preserveFunction?: string[]
 }

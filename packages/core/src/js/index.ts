@@ -25,7 +25,7 @@ export function handleValue(raw: string, node: StringLiteral | TemplateElement, 
       if (!ignoreFlag) {
         const gen = clsGen.generateClassName(v)
         rawString = rawString.replace(makeRegex(v), gen.name)
-        ctx.addToUsedBy(gen.name, id)
+        ctx.addToUsedBy(v, id)
         needUpdate = true
       }
     }

@@ -19,7 +19,7 @@ export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOpti
           if (replaceMap.has(v)) {
             const gen = classGenerator.generateClassName(v)
             rawValue = rawValue.replace(makeRegex(v), gen.name)
-            ctx.addToUsedBy(gen.name, id)
+            ctx.addToUsedBy(v, id)
             needUpdate = true
           }
         }
