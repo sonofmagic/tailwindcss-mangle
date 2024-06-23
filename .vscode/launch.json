@@ -62,6 +62,34 @@
     },
     {
       "command": "pnpm dev",
+      "name": "[vite-lit] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-lit"
+    },
+    {
+      "command": "pnpm build",
+      "name": "[vite-lit] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-lit"
+    },
+    {
+      "command": "pnpm dev",
+      "name": "[vite-svelte] dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-svelte"
+    },
+    {
+      "command": "pnpm build",
+      "name": "[vite-svelte] build",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-svelte"
+    },
+    {
+      "command": "pnpm dev",
       "name": "[webpack5-vue3] dev",
       "request": "launch",
       "type": "node-terminal",

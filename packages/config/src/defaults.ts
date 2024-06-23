@@ -1,5 +1,11 @@
+import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
+import { CSS_LANGS_RE } from 'is-css-request'
 import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
+
+const defaultPipelineInclude = ['**/*.{html,js,ts,jsx,tsx,vue,svelte,astro,elm,php,phtml,mdx,md}', CSS_LANGS_RE]
+
+const defaultPipelineExclude = [/[\\/](node_modules|dist|\.temp|\.cache|\.vscode)[\\/]/]
 
 export function getDefaultPatchConfig(): PatchUserConfig {
   return {
@@ -15,8 +21,8 @@ export function getDefaultPatchConfig(): PatchUserConfig {
 export function getDefaultMangleUserConfig(): MangleUserConfig {
   return {
     mangleClassFilter: defaultMangleClassFilter,
-    include: ['**/*.{js,jsx,ts,tsx,svelte,vue}'],
-    exclude: ['node_modules/**/*', '**/*.{css,scss,less,sass,postcss,html,htm}'],
+    include: defaultPipelineInclude,
+    exclude: defaultPipelineExclude,
     disabled: process.env.NODE_ENV === 'development',
     classListPath: '.tw-patch/tw-class-list.json',
     classMapOutput: {

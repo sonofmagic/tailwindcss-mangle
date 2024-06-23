@@ -15,10 +15,10 @@ describe('css', () => {
     ctx.classGenerator.generateClassName('gap-y-4')
     const testCase = `.gap-y-4 {color:red;}`
     ctx.addPreserveClass('gap-y-4')
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('preserveClassNamesSet case 1', async () => {
@@ -27,10 +27,10 @@ describe('css', () => {
     })
     const testCase = `.gap-y-4 {color:red;}`
     ctx.addPreserveClass('gap-y-4')
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('vue scoped .gap-y-4', async () => {
@@ -42,10 +42,10 @@ describe('css', () => {
       }
     }`
 
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('vue scoped .gap-y-4[data-v-0f84999b]', async () => {
@@ -57,10 +57,10 @@ describe('css', () => {
       }
     }`
 
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('vue scoped no ignore .gap-y-4[data-v-0f84999b]', async () => {
@@ -72,11 +72,11 @@ describe('css', () => {
       }
     }`
 
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
       ignoreVueScoped: false,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('common with scoped', async () => {
@@ -89,10 +89,10 @@ describe('css', () => {
       background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
     }`
 
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('vue.scoped.css', async () => {
@@ -102,9 +102,9 @@ describe('css', () => {
       replaceMap.set(cls, ctx.classGenerator.generateClassName(cls).name)
     }
     const testCase = getTestCase('vue.scoped.css')
-    const { css } = await cssHandler(testCase, {
+    const { code } = await cssHandler(testCase, {
       ctx,
     })
-    expect(css).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 })

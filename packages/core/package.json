@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/core",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "The core of tailwindcss-mangle",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
@@ -57,7 +57,6 @@
     "@babel/types": "^7.24.7",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "@vue/compiler-sfc": "^3.4.29",
     "fast-sort": "^3.4.0",
     "htmlparser2": "9.1.0",
     "magic-string": "^0.30.10",

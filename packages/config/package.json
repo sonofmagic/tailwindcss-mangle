@@ -1,6 +1,6 @@
 {
   "name": "@tailwindcss-mangle/config",
-  "version": "2.2.2",
+  "version": "3.0.0",
   "description": "The config and load function of tailwindcss-mangle",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
@@ -52,6 +52,6 @@
   "dependencies": {
     "@tailwindcss-mangle/shared": "workspace:^",
     "c12": "^1.11.1",
-    "dedent": "^1.5.3"
+    "is-css-request": "^1.0.1"
   }
 }

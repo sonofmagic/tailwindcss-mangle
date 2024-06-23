@@ -1,9 +1,9 @@
 import fs from 'node:fs'
-import { isAbsolute, resolve } from 'node:path'
+import { dirname, isAbsolute, resolve } from 'node:path'
 import process from 'node:process'
 import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { getConfig } from '@tailwindcss-mangle/config'
-import type { MangleUserConfig } from '@tailwindcss-mangle/config'
+import type { ClassMapOutputItem, MangleUserConfig } from '@tailwindcss-mangle/config'
 import { sort } from 'fast-sort'
 import { defu } from 'defu'
 import { defaultMangleClassFilter, escapeStringRegexp } from '@/utils'
@@ -68,7 +68,10 @@ export class Context {
     return this.replaceMap // map
   }
 
-  addToUsedBy(key: string, file: string) {
+  addToUsedBy(key: string, file?: string) {
+    if (!file) {
+      return
+    }
     const hit = this.classGenerator.newClassMap[key]
     if (hit) {
       hit.usedBy.add(file)
@@ -87,7 +90,12 @@ export class Context {
   async initConfig(opts: InitConfigOptions = {}) {
     const { cwd, classList: _classList, mangleOptions } = opts
     const { config, cwd: configCwd } = await getConfig(cwd)
-
+    if (mangleOptions?.classMapOutput === true) {
+      mangleOptions.classMapOutput = config.mangle?.classMapOutput
+      if (typeof mangleOptions.classMapOutput === 'object') {
+        mangleOptions.classMapOutput.enable = true
+      }
+    }
     this.mergeOptions(mangleOptions, config?.mangle)
     if (_classList) {
       this.loadClassSet(_classList)
@@ -118,5 +126,25 @@ export class Context {
     return config
   }
 
-  // ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  async dump() {
+    try {
+      const arr = Object.entries(this.classGenerator.newClassMap).map<ClassMapOutputItem>((x) => {
+        return {
+          before: x[0],
+          after: x[1].name,
+          usedBy: Array.from(x[1].usedBy),
+        }
+      })
+      if (typeof this.options.classMapOutput === 'function') {
+        await this.options.classMapOutput(arr)
+      }
+      else if (typeof this.options.classMapOutput === 'object' && this.options.classMapOutput.enable && this.options.classMapOutput.filename) {
+        fs.mkdirSync(dirname(this.options.classMapOutput.filename), { recursive: true })
+        fs.writeFileSync(this.options.classMapOutput.filename, JSON.stringify(arr, null, 2))
+      }
+    }
+    catch (error) {
+      console.error(`[tailwindcss-mangle]: ${error}`)
+    }
+  }
 }

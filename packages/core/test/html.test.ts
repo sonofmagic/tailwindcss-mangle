@@ -14,35 +14,35 @@ describe('html handler', () => {
     const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('text-3xl font-bold underline')) {
-      replaceMap.set(x, true)
+      replaceMap.set(x, '1')
     }
-    const res = htmlHandler(getTestCase('hello-world.html'), {
+    const { code } = htmlHandler(getTestCase('hello-world.html'), {
       ctx,
     })
-    expect(res).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('trailing slash case', () => {
     const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
-      replaceMap.set(x, true)
+      replaceMap.set(x, '1')
     }
-    const res = htmlHandler(getTestCase('trailing-slash.html'), {
+    const { code } = htmlHandler(getTestCase('trailing-slash.html'), {
       ctx,
     })
-    expect(res).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
   it('trailing slash case 0', () => {
     const replaceMap = ctx.replaceMap
 
     for (const x of splitCode('bg-red-500 bg-red-500/50')) {
-      replaceMap.set(x, true)
+      replaceMap.set(x, '1')
     }
-    const res = htmlHandler(getTestCase('trailing-slash-0.html'), {
+    const { code } = htmlHandler(getTestCase('trailing-slash-0.html'), {
       ctx,
     })
-    expect(res).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 })

@@ -1,57 +1,65 @@
 import type { UnpluginFactory } from 'unplugin'
-import { Context, cssHandler, preProcessJs, preProcessRawCode, vueHandler } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
-import MagicString from 'magic-string'
+import { isCSSRequest } from 'is-css-request'
+import { createFilter } from '@rollup/pluginutils'
 import { pluginName } from '@/constants'
 
 const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
   const ctx = new Context()
-
+  let filter = (_id: string) => true
   return [
     {
       name: `${pluginName}:pre`,
-      enforce: 'pre',
+      // enforce: 'pre',
       async buildStart() {
         await ctx.initConfig({
           mangleOptions: options,
         })
-      },
-      transformInclude(id) {
-        return !id.includes('node_modules')
-      },
-      async transform(code, id) {
-        const s = new MagicString(code)
-        // 直接忽略 css  文件，因为此时 tailwindcss 还没有展开
-        if (/\.[jt]sx?$/.test(id)) {
-          return preProcessJs({
-            code: s,
-            ctx,
-            id,
-          })
-        }
-        else if (/\.vue/.test(id)) {
-          return vueHandler(code, {
-            ctx,
-          })
-        }
-        else if (/\.css/.test(id)) {
-          const { css } = await cssHandler(code, { ctx, file: id })
-          return css
-        }
-        else {
-          return preProcessRawCode({
-            code,
-            ctx,
-            id,
-          })
-        }
+        filter = createFilter(ctx.options.include, ctx.options.exclude)
       },
     },
     {
       name: `${pluginName}`,
+      transformInclude(id) {
+        return filter(id)
+      },
+      async transform(code, id) {
+        const opts = {
+          ctx,
+          id,
+        }
+        if (/\.[jt]sx?(?:$|\?)/.test(id)) {
+          return jsHandler(code, opts)
+        }
+        else if (/\.(?:vue|svelte)(?:$|\?)/.test(id)) {
+          if (isCSSRequest(id)) {
+            return await cssHandler(code, opts)
+          }
+          else {
+            return jsHandler(code, opts)
+          }
+        }
+        else if (isCSSRequest(id)) {
+          return await cssHandler(code, opts)
+        }
+        else if (/\.html?/.test(id)) {
+          return htmlHandler(code, opts)
+        }
+      },
     },
     {
       name: `${pluginName}:post`,
+      enforce: 'post',
+      vite: {
+        transformIndexHtml(html) {
+          const { code } = htmlHandler(html, { ctx })
+          return code
+        },
+      },
+      writeBundle() {
+        ctx.dump()
+      },
     },
   ]
 }

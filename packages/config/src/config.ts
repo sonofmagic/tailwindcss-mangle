@@ -1,7 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import { createDefineConfig, loadConfig } from 'c12'
-import dedent from 'dedent'
 import type { UserConfig } from './types'
 import { getDefaultUserConfig } from './defaults'
 import { configName } from './constants'
@@ -21,11 +20,10 @@ export const defineConfig = createDefineConfig<UserConfig>()
 export function initConfig(cwd: string) {
   return fs.writeFile(
     path.resolve(cwd, `${configName}.config.ts`),
-    dedent`
-      import { defineConfig } from 'tailwindcss-patch'
+    `import { defineConfig } from 'tailwindcss-patch'
 
-      export default defineConfig({})
-    `,
+export default defineConfig({})
+`,
     'utf8',
   )
 }
