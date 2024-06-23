@@ -241,8 +241,8 @@ importers:
         specifier: workspace:^
         version: link:../shared
       is-css-request:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       magic-string:
         specifier: ^0.30.10
         version: 0.30.10
@@ -3430,9 +3430,6 @@ packages:
 
   is-core-module@2.13.1:
     resolution: {integrity: sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==}
-
-  is-css-request@1.0.0:
-    resolution: {integrity: sha512-jLtkS9/5hYErK3K6hLIp7/SDqMAxgGvyMctkFrEIHcgscv8sojmKQsAqghgaLa7HWK/4WfoWnDJMFftCXrehrA==}
 
   is-css-request@1.0.1:
     resolution: {integrity: sha512-KOrHD2lt94cHcS50h0ULYWRJ2f8PhdVqgR+rs0Bk4HwgpxVN4dLM7Dl53da1XdsoOgT9gygNW3eMSMvhaiXMkg==}
@@ -9289,8 +9286,6 @@ snapshots:
   is-core-module@2.13.1:
     dependencies:
       hasown: 2.0.0
-
-  is-css-request@1.0.0: {}
 
   is-css-request@1.0.1: {}
 

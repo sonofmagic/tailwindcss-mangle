@@ -80,7 +80,7 @@
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "is-css-request": "^1.0.0",
+    "is-css-request": "^1.0.1",
     "magic-string": "^0.30.10",
     "unplugin": "^1.10.1"
   },
