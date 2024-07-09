@@ -20,7 +20,7 @@ export interface IHandler {
   (code: string, options: IHandlerOptions): IHandlerTransformResult
 }
 
-export type IHandlerTransformResult = Exclude<TransformResult, null | undefined | string>
+export type IHandlerTransformResult = Exclude<TransformResult, null | undefined | string | void>
 
 export interface IHandlerOptions {
   ctx: Context
