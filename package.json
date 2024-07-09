@@ -14,8 +14,8 @@
   "scripts": {
     "build": "pnpm run -r build",
     "dev": "pnpm -r run dev",
-    "test": "vitest run --coverage.enabled",
-    "test:dev": "vitest --coverage.enabled",
+    "test": "vitest run",
+    "test:dev": "vitest",
     "lint": "eslint packages/**/*.ts --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
@@ -58,6 +58,7 @@
     "unbuild": "^2.0.0",
     "unplugin": "^1.11.0",
     "unplugin-tailwindcss-mangle": "workspace:*",
+    "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.1"
   }
 }

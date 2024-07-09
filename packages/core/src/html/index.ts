@@ -1,7 +1,7 @@
 import { Parser } from 'htmlparser2'
 import MagicString from 'magic-string'
-import { makeRegex, splitCode } from '@/shared'
-import type { IHandlerTransformResult, IHtmlHandlerOptions } from '@/types'
+import { makeRegex, splitCode } from '../shared'
+import type { IHandlerTransformResult, IHtmlHandlerOptions } from '../types'
 
 export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOptions): IHandlerTransformResult {
   const { ctx, id } = options

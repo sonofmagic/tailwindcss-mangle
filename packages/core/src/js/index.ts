@@ -2,9 +2,9 @@ import type { StringLiteral, TemplateElement } from '@babel/types'
 import MagicString from 'magic-string'
 import { jsStringEscape } from '@ast-core/escape'
 import { sort } from 'fast-sort'
-import type { IHandlerTransformResult, IJsHandlerOptions } from '@/types'
-import { makeRegex, splitCode } from '@/shared'
-import { parse, traverse } from '@/babel'
+import type { IHandlerTransformResult, IJsHandlerOptions } from '../types'
+import { makeRegex, splitCode } from '../shared'
+import { parse, traverse } from '../babel'
 
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
   const { ctx, splitQuote = true, id } = options
