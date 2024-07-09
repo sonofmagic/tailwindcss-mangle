@@ -82,7 +82,7 @@
     "@tailwindcss-mangle/shared": "workspace:^",
     "is-css-request": "^1.0.1",
     "magic-string": "^0.30.10",
-    "unplugin": "^1.10.1"
+    "unplugin": "^1.11.0"
   },
   "publishConfig": {
     "access": "public",
@@ -90,7 +90,7 @@
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "^7.10.3",
-    "astro": "^4.11.0",
+    "astro": "^4.11.5",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
@@ -99,7 +99,7 @@
     "postcss-loader": "^8.1.1",
     "tailwindcss": "^3.4.4",
     "tailwindcss-patch": "workspace:^",
-    "vite": "^5.3.1",
+    "vite": "^5.3.3",
     "webpack": "^5.92.1",
     "webpack-build-utils": "^0.0.7"
   }
