@@ -1,5 +1,11 @@
 # unplugin-tailwindcss-mangle
 
+## 3.0.1
+
+### Patch Changes
+
+- 36bd52c: support nextjs app
+
 ## 2.3.0
 
 ### Minor Changes
