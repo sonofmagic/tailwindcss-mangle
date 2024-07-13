@@ -1,4 +1,4 @@
 export * from './tw-patcher'
-export * from './inspector'
+export * from './patches'
 export * from './runtime-patcher'
 export * from './cache'

@@ -25,6 +25,10 @@ export interface PatchOptions {
   paths?: string[]
   basedir?: string
   custom?: (dir: string, ctx: Record<string, any>) => void
+  applyPatches?: {
+    exportContext?: boolean
+    extendLengthUnits?: boolean
+  }
 }
 
 export interface InternalPatchOptions {
