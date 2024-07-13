@@ -1,23 +1,24 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
+// import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
+
 export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {
       tailwindcss: {},
-      autoprefixer: {}
-    }
+      autoprefixer: {},
+    },
   },
   // https://github.com/nuxt/nuxt/issues/20428
   experimental: {
-    inlineSSRStyles: false
+    inlineSSRStyles: false,
   },
   modules: [
-    [
-      nuxtPlugin,
-      {
-        classMapOutput: true
-      }
-    ]
-  ]
+    // [
+    //   nuxtPlugin,
+    //   {
+    //     classMapOutput: true,
+    //   },
+    // ],
+  ],
 })
