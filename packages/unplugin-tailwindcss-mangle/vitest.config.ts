@@ -4,6 +4,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineProject({
   plugins: [tsconfigPaths()],
+  define: {
+    __DEV__: true,
+  },
   test: {
     alias: [
       {

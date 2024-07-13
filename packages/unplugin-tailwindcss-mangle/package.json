@@ -43,16 +43,6 @@
       "import": "./dist/esbuild.mjs",
       "require": "./dist/esbuild.cjs"
     },
-    "./nuxt": {
-      "types": "./dist/nuxt.d.ts",
-      "import": "./dist/nuxt.mjs",
-      "require": "./dist/nuxt.cjs"
-    },
-    "./utils": {
-      "types": "./dist/utils.d.ts",
-      "import": "./dist/utils.mjs",
-      "require": "./dist/utils.cjs"
-    },
     "./*": "./*"
   },
   "main": "./dist/index.cjs",

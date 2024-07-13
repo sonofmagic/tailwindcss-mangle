@@ -1,3 +1,4 @@
+import path from 'node:path'
 import type { UnpluginFactory } from 'unplugin'
 import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
@@ -6,6 +7,8 @@ import { createFilter } from '@rollup/pluginutils'
 import type { OutputAsset } from 'rollup'
 import { pluginName } from '@/constants'
 import { getGroupedEntries } from '@/utils'
+
+const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/core/loader.cjs' : 'core/loader.cjs')
 
 const factory: UnpluginFactory<MangleUserConfig | undefined> = (options, { framework }) => {
   const ctx = new Context()
@@ -48,6 +51,28 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options, { frame
         else if (/\.html?/.test(id)) {
           return htmlHandler(code, opts)
         }
+      },
+      webpack(compiler) {
+        const { NormalModule } = compiler.webpack
+        const isExisted = true
+        compiler.hooks.compilation.tap(pluginName, (compilation) => {
+          NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (_loaderContext, module) => {
+            if (isExisted) {
+              const idx = module.loaders.findIndex(x => x.loader.includes('postcss-loader'))
+
+              if (idx > -1) {
+                module.loaders.splice(idx, 0, {
+                  loader: WEBPACK_LOADER,
+                  ident: null,
+                  options: {
+                    ctx,
+                  },
+                  type: null,
+                })
+              }
+            }
+          })
+        })
       },
     },
     {

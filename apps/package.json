@@ -2,15 +2,15 @@
   "name": "apps",
   "version": "1.0.0",
   "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "build": "pnpm run -r build",
     "extract": "pnpm run -r tw-extract",
     "preview": "pnpm run -r preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@tailwindcss-mangle/config": "link:../packages/config",
     "@tailwindcss-mangle/core": "link:../packages/core",

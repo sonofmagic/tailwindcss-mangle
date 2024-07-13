@@ -9,6 +9,7 @@ export default defineConfig({
     'src/rollup.ts',
     'src/webpack.ts',
     'src/utils.ts',
+    'src/loader.ts',
   ], // , 'src/cli.ts'],
   shims: true,
   format: ['cjs', 'esm'],
