@@ -70,24 +70,7 @@ function number(value) {
 function percentage(value) {
     return value.endsWith("%") && number(value.slice(0, -1)) || isCSSFunction(value);
 }
-let lengthUnits = [
-    "cm",
-    "mm",
-    "Q",
-    "in",
-    "pc",
-    "pt",
-    "px",
-    "em",
-    "ex",
-    "ch",
-    "rem",
-    "lh",
-    "vw",
-    "vh",
-    "vmin",
-    "vmax"
-];
+let lengthUnits = ['cm', 'mm', 'Q', 'in', 'pc', 'pt', 'px', 'em', 'ex', 'ch', 'rem', 'lh', 'vw', 'vh', 'vmin', 'vmax', 'rpx'];
 let lengthUnitsPattern = `(?:${lengthUnits.join("|")})`;
 function length(value) {
     return value === "0" || new RegExp(`^[+-]?[0-9]*\.?[0-9]+(?:[eE][+-]?[0-9]+)?${lengthUnitsPattern}$`).test(value) || isCSSFunction(value);

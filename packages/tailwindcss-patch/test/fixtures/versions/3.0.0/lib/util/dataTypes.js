@@ -62,24 +62,7 @@ function percentage(value) {
     return /%$/g.test(value) || cssFunctions.some((fn)=>new RegExp(`^${fn}\\(.+?%`).test(value)
     );
 }
-let lengthUnits = [
-    'cm',
-    'mm',
-    'Q',
-    'in',
-    'pc',
-    'pt',
-    'px',
-    'em',
-    'ex',
-    'ch',
-    'rem',
-    'lh',
-    'vw',
-    'vh',
-    'vmin',
-    'vmax', 
-];
+let lengthUnits = ['cm', 'mm', 'Q', 'in', 'pc', 'pt', 'px', 'em', 'ex', 'ch', 'rem', 'lh', 'vw', 'vh', 'vmin', 'vmax', 'rpx'];
 let lengthUnitsPattern = `(?:${lengthUnits.join('|')})`;
 function length(value) {
     return value.split(UNDERSCORE).every((part)=>{
