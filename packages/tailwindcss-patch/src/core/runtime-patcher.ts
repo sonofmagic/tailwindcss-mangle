@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { gte } from 'semver'
 import type { PackageJson } from 'pkg-types'
-import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3 } from './patches'
+import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
 
 import type { InternalPatchOptions } from '@/types'
 
@@ -12,6 +12,14 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
     const twDir = path.dirname(pkgJsonPath)
     if (gte(pkgJson.version!, '3.0.0')) {
       options.version = pkgJson.version
+      monkeyPatchForSupportingCustomUnit(twDir, {
+        units: ['rpx'],
+        dangerousOptions: {
+          lengthUnitsFilePath: 'lib/util/dataTypes.js',
+          variableName: 'lengthUnits',
+          overwrite: true,
+        },
+      })
       const result = monkeyPatchForExposingContextV3(twDir, options)
       return result
     }
