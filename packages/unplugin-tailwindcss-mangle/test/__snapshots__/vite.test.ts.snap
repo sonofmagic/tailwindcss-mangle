@@ -342,6 +342,7 @@ exports[`vite build > common build  2`] = `
 }
 .tw-ca {
     --tw-backdrop-blur: blur(40px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
     backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
 }
 .tw-ga {
@@ -590,6 +591,7 @@ exports[`vite build > common build  3`] = `
   </head>
   <body>
     <div id="app"></div>
+
   </body>
 </html>
 "
@@ -937,6 +939,7 @@ exports[`vite build > common build change class prefix 2`] = `
 }
 .ice-ca {
     --tw-backdrop-blur: blur(40px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
     backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
 }
 .ice-ga {
@@ -1185,6 +1188,7 @@ exports[`vite build > common build change class prefix 3`] = `
   </head>
   <body>
     <div id="app"></div>
+
   </body>
 </html>
 "
