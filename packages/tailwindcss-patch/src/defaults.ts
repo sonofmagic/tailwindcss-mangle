@@ -4,6 +4,10 @@ import type { DeepRequired, InternalPatchOptions, PatchOptions } from './types'
 
 export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
   return {
+    applyPatches: {
+      exportContext: true,
+      extendLengthUnits: false,
+    },
     overwrite: true,
   }
 }

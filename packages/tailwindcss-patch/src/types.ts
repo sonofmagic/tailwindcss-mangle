@@ -31,11 +31,7 @@ export interface PatchOptions {
   }
 }
 
-export interface InternalPatchOptions {
-  overwrite: boolean
-  paths?: string[]
-  basedir?: string
-  custom?: (dir: string, ctx: Record<string, any>) => void
+export interface InternalPatchOptions extends PatchOptions {
   version?: string
 }
 

@@ -18,6 +18,7 @@ function getTailwindcssVersion(str: string) {
   }
 }
 
+// eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
 const pkg = require(versionsPkgDir)
 const versions = Object.keys(pkg.dependencies)
 
@@ -27,6 +28,9 @@ describe('versions-patch', () => {
 
     const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
       overwrite: false,
+      applyPatches: {
+        exportContext: true,
+      },
     })
     expect(res).toMatchSnapshot()
   })

@@ -2,11 +2,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import * as t from '@babel/types'
 import type { ArrayExpression, StringLiteral } from '@babel/types'
-import type { ILengthUnitsPatchDangerousOptions, ILengthUnitsPatchOptions } from './types'
+import { defu } from 'defu'
+import type { ILengthUnitsPatchOptions } from './types'
 import { generate, parse, traverse } from '@/babel'
 
 function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
-  const DOPTS = options.dangerousOptions as Required<ILengthUnitsPatchDangerousOptions>
+  const { variableName, units } = options
   const ast = parse(content)
 
   let arrayRef: ArrayExpression | undefined
@@ -14,14 +15,14 @@ function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
   traverse(ast, {
     Identifier(path) {
       if (
-        path.node.name === DOPTS.variableName
+        path.node.name === variableName
         && t.isVariableDeclarator(path.parent)
         && t.isArrayExpression(path.parent.init)
       ) {
         arrayRef = path.parent.init
         const set = new Set(path.parent.init.elements.map(x => (<StringLiteral>x).value))
-        for (let i = 0; i < options.units.length; i++) {
-          const unit = options.units[i]
+        for (let i = 0; i < units.length; i++) {
+          const unit = units[i]
           if (!set.has(unit)) {
             path.parent.init.elements = path.parent.init.elements.map((x) => {
               if (t.isStringLiteral(x)) {
@@ -48,14 +49,19 @@ function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
   }
 }
 
-export function monkeyPatchForSupportingCustomUnit(rootDir: string, options: ILengthUnitsPatchOptions) {
-  const { dangerousOptions } = options
-  const DOPTS = dangerousOptions as Required<ILengthUnitsPatchDangerousOptions>
-  const dataTypesFilePath = path.resolve(rootDir, DOPTS.lengthUnitsFilePath)
+export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: ILengthUnitsPatchOptions) {
+  const opts = defu<Required<ILengthUnitsPatchOptions>, ILengthUnitsPatchOptions[]>(options, {
+    units: ['rpx'],
+    lengthUnitsFilePath: 'lib/util/dataTypes.js',
+    variableName: 'lengthUnits',
+    overwrite: true,
+  })
+  const { lengthUnitsFilePath, overwrite, destPath } = opts
+  const dataTypesFilePath = path.resolve(rootDir, lengthUnitsFilePath)
   const dataTypesFileContent = fs.readFileSync(dataTypesFilePath, {
     encoding: 'utf8',
   })
-  const { arrayRef, changed } = findAstNode(dataTypesFileContent, options)
+  const { arrayRef, changed } = findAstNode(dataTypesFileContent, opts)
   if (arrayRef && changed) {
     const { code } = generate(arrayRef, {
       jsescOption: {
@@ -67,8 +73,8 @@ export function monkeyPatchForSupportingCustomUnit(rootDir: string, options: ILe
       const prev = dataTypesFileContent.slice(0, arrayRef.start)
       const next = dataTypesFileContent.slice(arrayRef.end as number)
       const newCode = prev + code + next
-      if (DOPTS.overwrite) {
-        fs.writeFileSync(DOPTS.destPath ?? dataTypesFilePath, newCode, {
+      if (overwrite) {
+        fs.writeFileSync(destPath ?? dataTypesFilePath, newCode, {
           encoding: 'utf8',
         })
         console.log('patch tailwindcss for custom length unit successfully!')

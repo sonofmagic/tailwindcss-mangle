@@ -32,7 +32,7 @@ export class TailwindcssPatcher {
         return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
       }
       catch (error) {
-        console.warn(`patch tailwindcss failed: ${(<Error>error).message}`)
+        console.error(`patch tailwindcss failed: ${(<Error>error).message}`)
       }
     }
   }

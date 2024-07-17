@@ -12,21 +12,25 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
     const twDir = path.dirname(pkgJsonPath)
     if (gte(pkgJson.version!, '3.0.0')) {
       options.version = pkgJson.version
-      monkeyPatchForSupportingCustomUnit(twDir, {
-        units: ['rpx'],
-        dangerousOptions: {
-          lengthUnitsFilePath: 'lib/util/dataTypes.js',
-          variableName: 'lengthUnits',
-          overwrite: true,
-        },
-      })
-      const result = monkeyPatchForExposingContextV3(twDir, options)
-      return result
+
+      if (options.applyPatches?.extendLengthUnits) {
+        try {
+          monkeyPatchForSupportingCustomUnit(twDir)
+        }
+        catch {
+
+        }
+      }
+
+      if (options.applyPatches?.exportContext) {
+        return monkeyPatchForExposingContextV3(twDir, options)
+      }
     }
     else if (gte(pkgJson.version!, '2.0.0')) {
       options.version = pkgJson.version
-      const result = monkeyPatchForExposingContextV2(twDir, options)
-      return result
+      if (options.applyPatches?.exportContext) {
+        return monkeyPatchForExposingContextV2(twDir, options)
+      }
     }
     // no sth
   }

@@ -2,6 +2,10 @@
 
 exports[`defaults > getDefaultPatchOptions 1`] = `
 {
+  "applyPatches": {
+    "exportContext": true,
+    "extendLengthUnits": false,
+  },
   "overwrite": true,
 }
 `;
