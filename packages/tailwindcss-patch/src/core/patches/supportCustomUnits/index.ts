@@ -49,7 +49,7 @@ function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
   }
 }
 
-export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: ILengthUnitsPatchOptions) {
+export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: Partial<ILengthUnitsPatchOptions>) {
   const opts = defu<Required<ILengthUnitsPatchOptions>, ILengthUnitsPatchOptions[]>(options, {
     units: ['rpx'],
     lengthUnitsFilePath: 'lib/util/dataTypes.js',

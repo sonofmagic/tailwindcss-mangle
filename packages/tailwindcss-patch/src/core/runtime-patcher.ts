@@ -15,7 +15,9 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
 
       if (options.applyPatches?.extendLengthUnits) {
         try {
-          monkeyPatchForSupportingCustomUnit(twDir)
+          monkeyPatchForSupportingCustomUnit(twDir, {
+            overwrite: options.overwrite,
+          })
         }
         catch {
 
