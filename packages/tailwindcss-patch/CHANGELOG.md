@@ -1,5 +1,19 @@
 # tailwindcss-patch
 
+## 3.1.0
+
+### Minor Changes
+
+- 66d3bd0: feat: add custom unit patch support
+
+  ## Feature
+
+  add custom unit patch support
+
+  ## Chore
+
+  use `consola` and `fs-extra`
+
 ## 3.0.1
 
 ### Patch Changes
