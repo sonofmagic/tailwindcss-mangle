@@ -4,4 +4,10 @@
 
 feat: add custom unit patch support
 
-chore: use `consola` and `fs-extra`
+## Feature
+
+add custom unit patch support
+
+## Chore
+
+use `consola` and `fs-extra`
