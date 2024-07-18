@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { build } from 'vite'
 import type { RollupOutput } from 'rollup'
+import prettier from 'prettier'
 import utwm from '@/vite'
 
 const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
@@ -76,7 +77,10 @@ describe('vite build', () => {
     }
     expect(output[2].type).toBe('asset')
     if (output[2].type === 'asset') {
-      expect(output[2].source).toMatchSnapshot()
+      const res = await prettier.format(output[2].source.toString(), {
+        parser: 'html',
+      })
+      expect(res).toMatchSnapshot()
     }
   })
 })

@@ -52,7 +52,7 @@
     "tailwindcss-patch": "workspace:*",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
-    "tsup": "^8.1.1",
+    "tsup": "^8.1.2",
     "turbo": "^2.0.7",
     "typescript": "^5.5.3",
     "unbuild": "^2.0.0",
