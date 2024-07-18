@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { build } from 'vite'
 import type { RollupOutput } from 'rollup'
-import prettier from 'prettier'
+import { minify } from 'html-minifier-terser'
 import utwm from '@/vite'
 
 const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
@@ -77,8 +77,7 @@ describe('vite build', () => {
     }
     expect(output[2].type).toBe('asset')
     if (output[2].type === 'asset') {
-      const res = await prettier.format(output[2].source.toString(), {
-        parser: 'html',
+      const res = await minify(output[2].source.toString(), {
       })
       expect(res).toMatchSnapshot()
     }
