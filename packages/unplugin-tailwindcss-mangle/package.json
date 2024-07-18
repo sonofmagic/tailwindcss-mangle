@@ -85,7 +85,7 @@
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
     "normalize-newline": "^4.1.0",
-    "postcss": "^8.4.38",
+    "postcss": "^8.4.39",
     "postcss-loader": "^8.1.1",
     "tailwindcss": "^3.4.6",
     "tailwindcss-patch": "workspace:^",
