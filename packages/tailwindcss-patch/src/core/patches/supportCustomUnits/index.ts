@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import * as t from '@babel/types'
 import type { ArrayExpression, StringLiteral } from '@babel/types'
 import { defu } from 'defu'
-import type { ILengthUnitsPatchOptions } from './types'
+import type { ILengthUnitsPatchOptions } from '@/types'
 import { generate, parse, traverse } from '@/babel'
 import logger from '@/logger'
 

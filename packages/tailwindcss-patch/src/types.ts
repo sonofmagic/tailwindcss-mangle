@@ -100,3 +100,11 @@ export interface TailwindcssRuntimeContext {
 export type DeepRequired<T> = {
   [K in keyof T]: Required<DeepRequired<T[K]>>
 }
+
+export interface ILengthUnitsPatchOptions {
+  units: string[]
+  lengthUnitsFilePath?: string
+  variableName?: string
+  overwrite?: boolean
+  destPath?: string
+}
