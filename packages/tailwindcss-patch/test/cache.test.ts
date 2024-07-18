@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'fs-extra'
 import { getCss } from './utils'
 import { pkgName } from '@/constants'
 import { CacheManager, TailwindcssPatcher } from '@/core'

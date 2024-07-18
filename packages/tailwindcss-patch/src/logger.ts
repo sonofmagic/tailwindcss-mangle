@@ -1,5 +1,5 @@
-import { pkgName } from './constants'
+import { createConsola } from 'consola'
 
-export function log(message?: any, ...optionalParams: any[]) {
-  return console.log(`[${pkgName}]:${message}`, ...optionalParams)
-}
+const logger = createConsola()
+
+export default logger

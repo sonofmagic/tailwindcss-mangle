@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { existsSync } from 'node:fs'
+import { existsSync } from 'fs-extra'
 import { deleteAsync } from 'del'
 import { fixturesRoot } from './utils'
 import { getConfig, getDefaultMangleUserConfig, getDefaultUserConfig, initConfig } from '@/config'

@@ -1,11 +1,11 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'fs-extra'
 import { CacheManager, getCacheOptions } from './cache'
 import { internalPatch } from './runtime-patcher'
 import { processTailwindcss } from './postcss'
 import type { UserConfig } from '@/config'
 import { getPatchOptions } from '@/defaults'
-import { ensureDir, getPackageInfoSync, isObject } from '@/utils'
+import { getPackageInfoSync, isObject } from '@/utils'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '@/types'
 
 export class TailwindcssPatcher {
@@ -128,7 +128,7 @@ export class TailwindcssPatcher {
         removeUniversalSelector,
       })
       if (filename) {
-        await ensureDir(path.dirname(filename))
+        await fs.ensureDir(path.dirname(filename))
         const classList = [...set]
         fs.writeFileSync(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
         return filename

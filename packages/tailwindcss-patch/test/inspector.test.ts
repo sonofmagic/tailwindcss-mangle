@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'fs-extra'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '@/core/patches/exportContext/postcss'
 
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')

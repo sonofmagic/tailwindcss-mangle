@@ -1,9 +1,10 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'fs-extra'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss'
 import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-compat'
 import type { InternalPatchOptions } from '@/types'
 import { ensureFileContent } from '@/utils'
+import logger from '@/logger'
 
 export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatchOptions) {
   const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/processTailwindFeatures.js')
@@ -16,7 +17,7 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
         encoding: 'utf8',
       })
-      console.log('patch tailwindcss processTailwindFeatures for return content successfully!')
+      logger.success('patch tailwindcss processTailwindFeatures for return content successfully!')
     }
     result.processTailwindFeatures = code
   }
@@ -30,7 +31,7 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
       fs.writeFileSync(pluginFilePath, code, {
         encoding: 'utf8',
       })
-      console.log('patch tailwindcss for expose runtime content successfully!')
+      logger.success('patch tailwindcss for expose runtime context successfully!')
     }
     result.plugin = code
   }
@@ -50,7 +51,7 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
         encoding: 'utf8',
       })
-      console.log('patch tailwindcss processTailwindFeatures for return content successfully!')
+      logger.success('patch tailwindcss processTailwindFeatures for return content successfully!')
     }
     result.processTailwindFeatures = code
   }
@@ -63,7 +64,7 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
       fs.writeFileSync(indexFilePath, code, {
         encoding: 'utf8',
       })
-      console.log('patch tailwindcss for expose runtime content successfully!')
+      logger.success('patch tailwindcss for expose runtime content successfully!')
     }
     result.plugin = code
   }

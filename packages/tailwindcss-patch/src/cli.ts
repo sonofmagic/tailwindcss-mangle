@@ -2,6 +2,7 @@ import process from 'node:process'
 import cac from 'cac'
 import { configName, getConfig, initConfig } from './config'
 import { TailwindcssPatcher } from './core'
+import logger from './logger'
 import { getPatchOptions } from '@/defaults'
 
 function init() {
@@ -20,7 +21,7 @@ cli.command('install', 'patch install').action(() => {
 
 cli.command('init').action(async () => {
   await init()
-  console.log(`✨ ${configName}.config.ts initialized!`)
+  logger.success(`✨ ${configName}.config.ts initialized!`)
 })
 
 cli.command('extract').action(async () => {
@@ -28,7 +29,7 @@ cli.command('extract').action(async () => {
   if (config) {
     const twPatcher = new TailwindcssPatcher()
     const p = await twPatcher.extract(config.patch)
-    console.log(`✨ tailwindcss-patch extract success! file path: ${p}`)
+    logger.success(`✨ tailwindcss-patch extract success! file path: ${p}`)
   }
 })
 

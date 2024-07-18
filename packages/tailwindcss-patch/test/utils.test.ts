@@ -1,8 +1,8 @@
 import { existsSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { deleteAsync } from 'del'
+import fs from 'fs-extra'
 import { fixturesRoot } from './utils'
-import { ensureDir } from '@/utils'
 
 describe('utils', () => {
   it('ensureDir', async () => {
@@ -11,7 +11,7 @@ describe('utils', () => {
       await deleteAsync(dir)
     }
     expect(existsSync(dir)).toBe(false)
-    await ensureDir(dir)
+    await fs.ensureDir(dir)
     const stat = statSync(dir)
     expect(stat.isDirectory()).toBe(true)
     expect(existsSync(dir)).toBe(true)

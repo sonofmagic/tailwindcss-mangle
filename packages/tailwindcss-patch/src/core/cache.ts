@@ -1,9 +1,9 @@
-import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import fs from 'fs-extra'
 import { pkgName } from '@/constants'
 import type { CacheOptions, InternalCacheOptions } from '@/types'
-import { log } from '@/logger'
+import logger from '@/logger'
 
 export function getCacheOptions(options?: CacheOptions | boolean) {
   let cache: InternalCacheOptions
@@ -67,7 +67,7 @@ export class CacheManager {
       return filename
     }
     catch {
-      log('write cache file fail!')
+      logger.error('write cache file fail!')
     }
   }
 
@@ -80,12 +80,12 @@ export class CacheManager {
       }
     }
     catch {
-      log(`parse cache content fail! path:${filename}`)
+      logger.error(`parse cache content fail! path:${filename}`)
       try {
         fs.unlinkSync(filename)
       }
       catch {
-        log(`delete cache file fail! path:${filename}`)
+        logger.error(`delete cache file fail! path:${filename}`)
       }
     }
   }

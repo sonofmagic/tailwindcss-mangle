@@ -1,10 +1,11 @@
-import fs from 'node:fs'
 import path from 'node:path'
+import fs from 'fs-extra'
 import * as t from '@babel/types'
 import type { ArrayExpression, StringLiteral } from '@babel/types'
 import { defu } from 'defu'
 import type { ILengthUnitsPatchOptions } from './types'
 import { generate, parse, traverse } from '@/babel'
+import logger from '@/logger'
 
 function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
   const { variableName, units } = options
@@ -77,7 +78,7 @@ export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: Pa
         fs.writeFileSync(destPath ?? dataTypesFilePath, newCode, {
           encoding: 'utf8',
         })
-        console.log('patch tailwindcss for custom length unit successfully!')
+        logger.success('patch tailwindcss for custom length unit successfully!')
       }
     }
     return code
