@@ -4,6 +4,7 @@ import type { SyncOpts } from 'resolve'
 import pkg from 'resolve'
 import type { PackageJson } from 'pkg-types'
 
+export { defu } from 'defu'
 const { sync } = pkg
 
 export function ensureFileContent(filepaths: string | string[]) {

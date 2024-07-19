@@ -591,7 +591,6 @@ exports[`vite build > common build  3`] = `
   </head>
   <body>
     <div id="app"></div>
-
   </body>
 </html>
 "

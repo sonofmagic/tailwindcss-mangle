@@ -37,7 +37,7 @@ describe('vite build', () => {
     }
     expect(output[2].type).toBe('asset')
     if (output[2].type === 'asset') {
-      expect(output[2].source).toMatchSnapshot()
+      expect(output[2].source.toString().replace(/(\r?\n)+/g, '\n')).toMatchSnapshot()
     }
   })
 

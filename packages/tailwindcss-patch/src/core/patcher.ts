@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'fs-extra'
 import { CacheManager, getCacheOptions } from './cache'
-import { internalPatch } from './runtime-patcher'
+import { internalPatch } from './runtime'
 import { processTailwindcss } from './postcss'
 import type { UserConfig } from '@/config'
 import { getPatchOptions } from '@/defaults'

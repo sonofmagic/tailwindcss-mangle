@@ -70,7 +70,7 @@
     "tailwindcss2": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
-    "tsup": "^8.1.2",
+    "tsup": "^8.2.0",
     "tsx": "^4.16.2",
     "turbo": "^2.0.7",
     "typescript": "^5.5.3",

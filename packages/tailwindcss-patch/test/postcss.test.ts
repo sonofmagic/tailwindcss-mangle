@@ -45,6 +45,7 @@ describe('postcss', () => {
       },
     }
     const { css } = await postcss([
+      // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
       require('tailwindcss')({
         config,
       }),
