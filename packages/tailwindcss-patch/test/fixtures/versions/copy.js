@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { copyFiles, ensureDir, getCurrentFilename } from './utils.js'
-function getTailwindcssVersion (str) {
+function getTailwindcssVersion(str) {
   // eslint-disable-next-line no-useless-escape
   const match = /^tailwindcss([\d\.]*)$/.exec(str)
   if (match === null) {
@@ -15,17 +15,20 @@ function getTailwindcssVersion (str) {
   }
 }
 
-const relativePaths = ['package.json', 'lib/index.js', 'lib/plugin.js', 'lib/processTailwindFeatures.js', 'lib/util/dataTypes.js']
+const relativePaths = [
+  'package.json', 'lib/index.js', 'lib/plugin.js', 'lib/processTailwindFeatures.js', 'lib/util/dataTypes.js',
+  'lib/jit/index.js', 'lib/jit/processTailwindFeatures.js'
+]
 // async function copyTargetFile() {
 
 // }
 
-async function main () {
+async function main() {
   const filename = getCurrentFilename(import.meta.url)
   const dirname = path.dirname(filename)
   const nodeModulesPath = path.resolve(dirname, 'node_modules')
   const filenames = await fs.readdir(nodeModulesPath)
-  const pkgJson = await fs.readFile(path.resolve(dirname, 'package.json'), 'utf-8').then(res => {
+  const pkgJson = await fs.readFile(path.resolve(dirname, 'package.json'), 'utf8').then(res => {
     return JSON.parse(res)
   })
   const dependencies = pkgJson.dependencies

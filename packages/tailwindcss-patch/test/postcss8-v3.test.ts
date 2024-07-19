@@ -3,7 +3,7 @@ import postcss from 'postcss'
 import type { Config } from 'tailwindcss'
 import { appRoot } from './utils'
 import { processTailwindcss } from '@/core/postcss'
-import { TailwindcssPatcher } from '@/core/tw-patcher'
+import { TailwindcssPatcher } from '@/core/patcher'
 
 describe('postcss', () => {
   it('getCss 0.common', async () => {
@@ -45,6 +45,7 @@ describe('postcss', () => {
       },
     }
     const { css } = await postcss([
+      // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
       require('tailwindcss')({
         config,
       }),

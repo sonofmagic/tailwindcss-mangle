@@ -1,16 +1,17 @@
 import path from 'node:path'
 import fs from 'fs-extra'
-import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss'
-import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-compat'
+import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss-v3'
+import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-v2'
 import type { InternalPatchOptions } from '@/types'
-import { ensureFileContent } from '@/utils'
 import logger from '@/logger'
 
 export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatchOptions) {
-  const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/processTailwindFeatures.js')
+  const k0 = 'lib/processTailwindFeatures.js'
+  const processTailwindFeaturesFilePath = path.resolve(twDir, k0)
 
-  const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
-  const result: { processTailwindFeatures?: string, plugin?: string } & Record<string, any> = {}
+  const processTailwindFeaturesContent = fs.readFileSync(processTailwindFeaturesFilePath, 'utf8')
+  const result: Record<string, any> = {}
+
   if (processTailwindFeaturesContent) {
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContext(processTailwindFeaturesContent)
     if (!hasPatched && opt.overwrite) {
@@ -19,32 +20,46 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
       })
       logger.success('patch tailwindcss processTailwindFeatures for return content successfully!')
     }
-    result.processTailwindFeatures = code
+    result[k0] = code
+  }
+  let injectFilepath
+  let k1
+  const try0 = 'lib/plugin.js'
+  const try1 = 'lib/index.js'
+  const pluginFilePath = path.resolve(twDir, try0)
+  const indexFilePath = path.resolve(twDir, try1)
+  if (fs.existsSync(pluginFilePath)) {
+    k1 = try0
+    injectFilepath = pluginFilePath
+  }
+  else if (fs.existsSync(indexFilePath)) {
+    k1 = try1
+    injectFilepath = indexFilePath
   }
 
-  const pluginFilePath = path.resolve(twDir, 'lib/plugin.js')
-  const indexFilePath = path.resolve(twDir, 'lib/index.js')
-  const pluginContent = ensureFileContent([pluginFilePath, indexFilePath])
-  if (pluginContent) {
-    const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
-    if (!hasPatched && opt.overwrite) {
-      fs.writeFileSync(pluginFilePath, code, {
-        encoding: 'utf8',
-      })
-      logger.success('patch tailwindcss for expose runtime context successfully!')
+  if (injectFilepath && k1) {
+    const pluginContent = fs.readFileSync(injectFilepath, 'utf8')
+    if (pluginContent) {
+      const { code, hasPatched } = inspectPostcssPlugin(pluginContent)
+      if (!hasPatched && opt.overwrite) {
+        fs.writeFileSync(injectFilepath, code, {
+          encoding: 'utf8',
+        })
+        logger.success('patch tailwindcss for expose runtime context successfully!')
+      }
+      result[k1] = code
     }
-    result.plugin = code
-  }
 
-  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
-  return result
+    return result
+  }
 }
 
 export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatchOptions) {
-  const processTailwindFeaturesFilePath = path.resolve(twDir, 'lib/jit/processTailwindFeatures.js')
+  const k0 = 'lib/jit/processTailwindFeatures.js'
+  const processTailwindFeaturesFilePath = path.resolve(twDir, k0)
 
-  const processTailwindFeaturesContent = ensureFileContent(processTailwindFeaturesFilePath)
-  const result: { processTailwindFeatures?: string, plugin?: string } & Record<string, any> = {}
+  const processTailwindFeaturesContent = fs.readFileSync(processTailwindFeaturesFilePath, 'utf8')
+  const result: Record<string, any> = {}
   if (processTailwindFeaturesContent) {
     const { code, hasPatched } = inspectProcessTailwindFeaturesReturnContextCompat(processTailwindFeaturesContent)
     if (!hasPatched && opt.overwrite) {
@@ -53,11 +68,11 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
       })
       logger.success('patch tailwindcss processTailwindFeatures for return content successfully!')
     }
-    result.processTailwindFeatures = code
+    result[k0] = code
   }
-
-  const indexFilePath = path.resolve(twDir, 'lib/jit/index.js')
-  const pluginContent = ensureFileContent([indexFilePath])
+  const k1 = 'lib/jit/index.js'
+  const indexFilePath = path.resolve(twDir, k1)
+  const pluginContent = fs.readFileSync(indexFilePath, 'utf8')
   if (pluginContent) {
     const { code, hasPatched } = inspectPostcssPluginCompat(pluginContent)
     if (!hasPatched && opt.overwrite) {
@@ -66,9 +81,8 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
       })
       logger.success('patch tailwindcss for expose runtime content successfully!')
     }
-    result.plugin = code
+    result[k1] = code
   }
 
-  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
   return result
 }

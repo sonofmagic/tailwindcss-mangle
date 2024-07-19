@@ -25,7 +25,9 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
 
 ```html
 <!-- before -->
-<div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"></div>
+<div
+  class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"
+></div>
 <!-- after -->
 <div class="tw-g tw-h tw-i tw-d tw-e tw-j tw-k tw-l"></div>
 ```
@@ -62,7 +64,7 @@ npx tw-patch extract
 
 > See more options in [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch)
 
-Then there will generate a json file:  `.tw-patch/tw-class-list.json`
+Then there will generate a json file: `.tw-patch/tw-class-list.json`
 
 ### 5. Register this plugin
 
@@ -117,7 +119,7 @@ module.exports = defineConfig({
 ```ts
 import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
 export default defineNuxtConfig({
-  //...
+  // ...
   // https://github.com/nuxt/nuxt/issues/20428
   // you must set this option to false to enable vite extract css
   experimental: {
@@ -132,7 +134,6 @@ export default defineNuxtConfig({
     ]
   ]
 })
-
 ```
 
 ## Options
@@ -150,7 +151,7 @@ because plugin will **traverse** all `html class attr` and `js StringLiteral` to
 it's dangerous to mangle some `js StringLiteral` like:
 
 ```js
-const innerHTML = "i'm flex and relative and grid"
+const innerHTML = 'i\'m flex and relative and grid'
 document.body.innerHTML = innerHTML
 ```
 

@@ -11,23 +11,23 @@ export interface PackageInfo {
 }
 
 export interface CacheOptions {
-  // enable?: boolean
   dir?: string
   cwd?: string
   file?: string
   strategy?: CacheStrategy
 }
 
-export type InternalCacheOptions = CacheOptions & { enable?: boolean }
+export interface InternalCacheOptions extends CacheOptions {
+  enable?: boolean
+}
 
 export interface PatchOptions {
   overwrite?: boolean
   paths?: string[]
   basedir?: string
-  custom?: (dir: string, ctx: Record<string, any>) => void
   applyPatches?: {
     exportContext?: boolean
-    extendLengthUnits?: boolean
+    extendLengthUnits?: boolean | ILengthUnitsPatchOptions
   }
 }
 
@@ -99,4 +99,12 @@ export interface TailwindcssRuntimeContext {
 // Custom utility type:
 export type DeepRequired<T> = {
   [K in keyof T]: Required<DeepRequired<T[K]>>
+}
+
+export interface ILengthUnitsPatchOptions {
+  units: string[]
+  lengthUnitsFilePath?: string
+  variableName?: string
+  overwrite?: boolean
+  destPath?: string
 }

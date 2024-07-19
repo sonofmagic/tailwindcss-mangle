@@ -23,7 +23,7 @@ describe('cache', () => {
 
   it('mkCacheDirectory', () => {
     const dir = path.resolve(__dirname, './fixtures', pkgName)
-    expect(cm.mkdir(dir)).toBe(dir)
+    fs.ensureDirSync(dir)
     expect(fs.existsSync(dir)).toBe(true)
 
     fs.rmdirSync(dir)
@@ -53,8 +53,8 @@ describe('cache', () => {
 
     const dir = path.resolve(__dirname, './fixtures', `${pkgName}-broken`)
     const filepath = path.resolve(dir, 'index.json')
-    cm.mkdir(dir)
-    fs.writeFileSync(
+
+    fs.outputFileSync(
       filepath,
       `{
       [ '2',"fuck you",{s:'12}

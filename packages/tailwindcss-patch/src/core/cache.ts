@@ -35,16 +35,6 @@ export class CacheManager {
     this.options = this.getOptions(options)
   }
 
-  mkdir(cacheDirectory: string) {
-    const exists = fs.existsSync(cacheDirectory)
-    if (!exists) {
-      fs.mkdirSync(cacheDirectory, {
-        recursive: true,
-      })
-    }
-    return cacheDirectory
-  }
-
   getOptions(options: CacheOptions = {}): Required<CacheOptions> & { filename: string } {
     const cwd = options.cwd ?? process.cwd()
     const dir = options.dir ?? path.resolve(cwd, 'node_modules/.cache', pkgName)
@@ -62,8 +52,8 @@ export class CacheManager {
   write(data: Set<string>) {
     try {
       const { dir, filename } = this.options
-      this.mkdir(dir)
-      fs.writeFileSync(filename, JSON.stringify([...data], undefined, 2), 'utf8')
+      fs.ensureDirSync(dir)
+      fs.outputFileSync(filename, JSON.stringify([...data], undefined, 2), 'utf8')
       return filename
     }
     catch {
