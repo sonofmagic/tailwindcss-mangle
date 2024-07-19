@@ -36,7 +36,6 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
     result.plugin = code
   }
 
-  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
   return result
 }
 
@@ -69,6 +68,5 @@ export function monkeyPatchForExposingContextV2(twDir: string, opt: InternalPatc
     result.plugin = code
   }
 
-  opt.custom && typeof opt.custom === 'function' && opt.custom(twDir, result)
   return result
 }

@@ -5,11 +5,12 @@ import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monke
 
 import type { InternalPatchOptions } from '@/types'
 
-export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions): any | undefined {
+export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions) {
   if (pkgJsonPath) {
     // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
     const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
+    options.version = pkgJson.version
     if (gte(pkgJson.version!, '3.0.0')) {
       options.version = pkgJson.version
 
@@ -29,7 +30,6 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
       }
     }
     else if (gte(pkgJson.version!, '2.0.0')) {
-      options.version = pkgJson.version
       if (options.applyPatches?.exportContext) {
         return monkeyPatchForExposingContextV2(twDir, options)
       }

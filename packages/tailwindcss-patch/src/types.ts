@@ -11,20 +11,20 @@ export interface PackageInfo {
 }
 
 export interface CacheOptions {
-  // enable?: boolean
   dir?: string
   cwd?: string
   file?: string
   strategy?: CacheStrategy
 }
 
-export type InternalCacheOptions = CacheOptions & { enable?: boolean }
+export interface InternalCacheOptions extends CacheOptions {
+  enable?: boolean
+}
 
 export interface PatchOptions {
   overwrite?: boolean
   paths?: string[]
   basedir?: string
-  custom?: (dir: string, ctx: Record<string, any>) => void
   applyPatches?: {
     exportContext?: boolean
     extendLengthUnits?: boolean
