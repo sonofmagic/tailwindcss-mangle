@@ -3,9 +3,17 @@ import fs from 'fs-extra'
 import type { SyncOpts } from 'resolve'
 import pkg from 'resolve'
 import type { PackageJson } from 'pkg-types'
+import { createDefu } from 'defu'
 
 export { defu } from 'defu'
 const { sync } = pkg
+
+export const defuOverrideArray = createDefu((obj, key, value) => {
+  if (Array.isArray(obj[key]) && Array.isArray(value)) {
+    obj[key] = value
+    return true
+  }
+})
 
 export function requireResolve(id: string, opts?: SyncOpts) {
   return sync(id, opts)

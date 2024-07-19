@@ -2,8 +2,8 @@ import path from 'node:path'
 import { gte } from 'semver'
 import type { PackageJson } from 'pkg-types'
 import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
-
-import type { InternalPatchOptions } from '@/types'
+import { defu } from '@/utils'
+import type { ILengthUnitsPatchOptions, InternalPatchOptions } from '@/types'
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions) {
   if (pkgJsonPath) {
@@ -12,22 +12,21 @@ export function internalPatch(pkgJsonPath: string | undefined, options: Internal
     const twDir = path.dirname(pkgJsonPath)
     options.version = pkgJson.version
     if (gte(pkgJson.version!, '3.0.0')) {
-      options.version = pkgJson.version
-
+      let result: Record<string, any> | undefined = {}
+      if (options.applyPatches?.exportContext) {
+        result = monkeyPatchForExposingContextV3(twDir, options)
+      }
       if (options.applyPatches?.extendLengthUnits) {
         try {
-          monkeyPatchForSupportingCustomUnit(twDir, {
+          Object.assign(result ?? {}, monkeyPatchForSupportingCustomUnit(twDir, defu<Partial<ILengthUnitsPatchOptions>, Partial<ILengthUnitsPatchOptions>[]>(options.applyPatches.extendLengthUnits === true ? undefined : options.applyPatches.extendLengthUnits, {
             overwrite: options.overwrite,
-          })
+          })))
         }
         catch {
 
         }
       }
-
-      if (options.applyPatches?.exportContext) {
-        return monkeyPatchForExposingContextV3(twDir, options)
-      }
+      return result
     }
     else if (gte(pkgJson.version!, '2.0.0')) {
       if (options.applyPatches?.exportContext) {

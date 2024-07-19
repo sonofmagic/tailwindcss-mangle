@@ -35,16 +35,31 @@ describe('versions-patch', () => {
     expect(res).toMatchSnapshot()
   })
 
-  // it.each(versions)('patch custom unit %s', (version) => {
-  //   const v = getTailwindcssVersion(version)
+  it.each(versions)('patch custom unit %s', (version) => {
+    const v = getTailwindcssVersion(version)
 
-  //   const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
-  //     overwrite: false,
-  //     applyPatches: {
-  //       exportContext: true,
-  //       extendLengthUnits: true,
-  //     },
-  //   })
-  //   expect(res).toMatchSnapshot()
-  // })
+    const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
+      overwrite: false,
+      applyPatches: {
+        exportContext: true,
+        extendLengthUnits: true,
+      },
+    })
+    expect(res).toMatchSnapshot()
+  })
+
+  it.each(versions)('patch custom unit options %s', (version) => {
+    const v = getTailwindcssVersion(version)
+
+    const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
+      overwrite: false,
+      applyPatches: {
+        exportContext: true,
+        extendLengthUnits: {
+          units: ['rpx', 'rrpx', 'rrrpx'],
+        },
+      },
+    })
+    expect(res).toMatchSnapshot()
+  })
 })

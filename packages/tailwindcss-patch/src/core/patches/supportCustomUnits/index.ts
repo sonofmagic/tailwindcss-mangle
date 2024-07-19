@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'fs-extra'
 import * as t from '@babel/types'
 import type { ArrayExpression, StringLiteral } from '@babel/types'
-import { defu } from '@/utils'
+import { defuOverrideArray } from '@/utils'
 import type { ILengthUnitsPatchOptions } from '@/types'
 import { generate, parse, traverse } from '@/babel'
 import logger from '@/logger'
@@ -51,7 +51,7 @@ function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
 }
 
 export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: Partial<ILengthUnitsPatchOptions>) {
-  const opts = defu<Required<ILengthUnitsPatchOptions>, ILengthUnitsPatchOptions[]>(options, {
+  const opts = defuOverrideArray<Required<ILengthUnitsPatchOptions>, ILengthUnitsPatchOptions[]>(options as Required<ILengthUnitsPatchOptions>, {
     units: ['rpx'],
     lengthUnitsFilePath: 'lib/util/dataTypes.js',
     variableName: 'lengthUnits',
@@ -81,6 +81,8 @@ export function monkeyPatchForSupportingCustomUnit(rootDir: string, options?: Pa
         logger.success('patch tailwindcss for custom length unit successfully!')
       }
     }
-    return code
+    return {
+      [opts.lengthUnitsFilePath]: code,
+    }
   }
 }
