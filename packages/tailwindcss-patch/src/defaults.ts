@@ -12,12 +12,12 @@ export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
   }
 }
 
-export function getPatchOptions(options: PatchOptions = {}) {
-  return defu(
+export function getPatchOptions(options?: PatchOptions) {
+  return defu<InternalPatchOptions, Partial<InternalPatchOptions>[]>(
     options,
     {
       basedir: process.cwd(),
     },
     getDefaultPatchOptions(),
-  ) as InternalPatchOptions
+  )
 }

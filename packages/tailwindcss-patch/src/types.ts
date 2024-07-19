@@ -27,7 +27,7 @@ export interface PatchOptions {
   basedir?: string
   applyPatches?: {
     exportContext?: boolean
-    extendLengthUnits?: boolean
+    extendLengthUnits?: boolean | ILengthUnitsPatchOptions
   }
 }
 
