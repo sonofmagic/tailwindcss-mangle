@@ -1,9 +1,8 @@
 import path from 'node:path'
 import { build } from 'vite'
 import type { RollupOutput } from 'rollup'
-import { minify } from 'html-minifier-terser'
 import utwm from '@/vite'
-
+// .replace(/(\r?\n){3,}/g, '\n\n')
 const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
 describe('vite build', () => {
   it('common build ', async () => {
@@ -77,8 +76,7 @@ describe('vite build', () => {
     }
     expect(output[2].type).toBe('asset')
     if (output[2].type === 'asset') {
-      const res = await minify(output[2].source.toString(), {
-      })
+      const res = output[2].source.toString().replace(/(\r?\n)+/g, '\n')
       expect(res).toMatchSnapshot()
     }
   })
