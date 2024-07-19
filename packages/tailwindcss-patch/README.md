@@ -12,9 +12,6 @@ get tailwindcss context at runtime ! extract all classes into file!
   - [Nodejs API](#nodejs-api)
   - [Config](#config)
     - [Init Config File](#init-config-file)
-  - [Migration form v1 to v2](#migration-form-v1-to-v2)
-    - [0. cli command change](#0-cli-command-change)
-    - [1. default remove `*` in json array result](#1-default-remove--in-json-array-result)
   - [What's next?](#whats-next)
 
 > Nodejs version should >= `16.6.0`
@@ -110,27 +107,6 @@ export default defineConfig({
     }
   }
 })
-```
-
-## Migration form v1 to v2
-
-### 0. cli command change
-
-```diff
-{
-- "tw-patch"
-+ "tw-patch install"
-}
-```
-
-### 1. default remove `*` in json array result
-
-```diff
-[
-- "*",
-  "text-[99px]",
-  "text-[100px]"
-]
 ```
 
 ## What's next?
