@@ -39,7 +39,8 @@
     "tailwindcss3.4.3": "npm:tailwindcss@3.4.3",
     "tailwindcss3.4.4": "npm:tailwindcss@3.4.4",
     "tailwindcss3.4.5": "npm:tailwindcss@3.4.5",
-    "tailwindcss3.4.6": "npm:tailwindcss@3.4.6"
+    "tailwindcss3.4.6": "npm:tailwindcss@3.4.6",
+    "tailwindcss2": "npm:@tailwindcss/postcss7-compat"
   },
   "devDependencies": {
     "execa": "^7.1.1"
