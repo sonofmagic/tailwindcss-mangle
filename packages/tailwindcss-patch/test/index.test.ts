@@ -34,4 +34,17 @@ describe('versions-patch', () => {
     })
     expect(res).toMatchSnapshot()
   })
+
+  // it.each(versions)('patch custom unit %s', (version) => {
+  //   const v = getTailwindcssVersion(version)
+
+  //   const res = internalPatch(path.resolve(tailwindcssCasePath, `versions/${v}/package.json`), {
+  //     overwrite: false,
+  //     applyPatches: {
+  //       exportContext: true,
+  //       extendLengthUnits: true,
+  //     },
+  //   })
+  //   expect(res).toMatchSnapshot()
+  // })
 })
