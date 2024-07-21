@@ -18,7 +18,7 @@ export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatc
       fs.writeFileSync(processTailwindFeaturesFilePath, code, {
         encoding: 'utf8',
       })
-      logger.success('patch tailwindcss processTailwindFeatures for return content successfully!')
+      logger.success('patch tailwindcss processTailwindFeatures for return context successfully!')
     }
     result[k0] = code
   }
