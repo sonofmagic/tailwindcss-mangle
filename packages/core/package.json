@@ -60,7 +60,7 @@
     "fast-sort": "^3.4.0",
     "htmlparser2": "9.1.0",
     "magic-string": "^0.30.10",
-    "postcss": "^8.4.39",
+    "postcss": "^8.4.40",
     "postcss-selector-parser": "^6.1.1"
   }
 }
