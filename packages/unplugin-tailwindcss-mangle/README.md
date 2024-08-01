@@ -138,7 +138,7 @@ export default defineNuxtConfig({
 
 ## Options
 
-[types.ts]('./src/types.ts')
+[types.ts](src/types.ts)
 
 ## Notice
 
