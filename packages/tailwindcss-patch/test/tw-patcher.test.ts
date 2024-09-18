@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { getCss, getTestCase } from './utils'
 import { TailwindcssPatcher } from '@/core'
+import { getCss, getTestCase } from './utils'
 
 describe('class', () => {
   it('default', async () => {
@@ -67,6 +67,22 @@ describe('class', () => {
     expect(set.has('text-[99px]')).toBe(true)
 
     twPatcher.setCache(new Set())
+  })
+
+  it('wxml process sources', async () => {
+    const twPatcher = new TailwindcssPatcher()
+    twPatcher.patch()
+    await getCss([`<view class="bg-[#7d7ac2] text-[100px] text-[#123456] {{true?'h-[30px]':'h-[45px]'}}">111</view>`])
+    const ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    const set = twPatcher.getClassSet({
+      removeUniversalSelector: false,
+    })
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(6)
+    expect(set.has('text-[100px]')).toBe(true)
+    expect(set.has('h-[30px]')).toBe(true)
+    expect(set.has('h-[45px]')).toBe(true)
   })
 
   it('extract', async () => {

@@ -1,9 +1,9 @@
 import path from 'node:path'
-import fs from 'fs-extra'
-import { getCss } from './utils'
 import { pkgName } from '@/constants'
 import { CacheManager, TailwindcssPatcher } from '@/core'
 import { getCacheOptions } from '@/core/cache'
+import fs from 'fs-extra'
+import { getCss } from './utils'
 
 describe('cache', () => {
   let cm: CacheManager

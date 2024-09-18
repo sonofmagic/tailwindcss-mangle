@@ -18,7 +18,7 @@ function getTailwindcssVersion(str: string) {
   }
 }
 
-// eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
+// eslint-disable-next-line ts/no-require-imports
 const pkg = require(versionsPkgDir)
 const versions = Object.keys(pkg.dependencies)
 

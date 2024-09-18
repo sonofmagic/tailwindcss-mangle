@@ -1,8 +1,8 @@
 import { resolve } from 'node:path'
-import { existsSync } from 'fs-extra'
-import { deleteAsync } from 'del'
-import { fixturesRoot } from './utils'
 import { getConfig, getDefaultMangleUserConfig, getDefaultUserConfig, initConfig } from '@/config'
+import { deleteAsync } from 'del'
+import { existsSync } from 'fs-extra'
+import { fixturesRoot } from './utils'
 
 describe('config', () => {
   it('0.default', async () => {

@@ -1,5 +1,5 @@
-import { getTestCase } from './utils'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '@/core/patches/exportContext/postcss-v2'
+import { getTestCase } from './utils'
 
 describe('postcss7-compat', () => {
   it('processTailwindFeatures patch', async () => {
