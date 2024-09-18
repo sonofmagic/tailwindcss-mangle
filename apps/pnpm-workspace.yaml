@@ -1,11 +1,11 @@
 packages:
-  - "next-app"
-  - "nuxt-app"
-  - "remix-app"
-  - "solid-app"
-  - "vite-lit"
-  - "vite-react"
-  - "vite-svelte"
-  - "vite-vanilla"
-  - "vite-vue"
-  - "webpack5-vue3"
+  - next-app
+  - nuxt-app
+  - remix-app
+  - solid-app
+  - vite-lit
+  - vite-react
+  - vite-svelte
+  - vite-vanilla
+  - vite-vue
+  - webpack5-vue3

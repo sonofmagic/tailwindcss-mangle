@@ -1,8 +1,11 @@
 {
   "name": "astro-app",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
@@ -10,9 +13,6 @@
     "build": "astro build",
     "preview": "astro preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "astro": "^2.10.12"
   }

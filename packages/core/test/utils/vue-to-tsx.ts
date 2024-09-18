@@ -1,6 +1,6 @@
+import type { BaseElementNode } from '@vue/compiler-core'
 import { parse } from '@vue/compiler-sfc'
 import MagicString from 'magic-string'
-import type { BaseElementNode } from '@vue/compiler-core'
 // https://github.com/chakra-ui/panda/blob/09ed20f919113d310c870b136c5a1c55ecc1b1e1/packages/parser/src/vue-to-tsx.ts
 /**
  * @see https://github.com/vuejs/core/blob/d2c3d8b70b2df6e16f053a7ac58e6b04e7b2078f/packages/compiler-core/src/ast.ts#L28-L60

@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { compile, getErrors, getMemfsCompiler5, getWarnings, readAssets } from 'webpack-build-utils'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import utwm from '@/webpack'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import { compile, getErrors, getMemfsCompiler5, getWarnings, readAssets } from 'webpack-build-utils'
 
 const context = path.resolve(__dirname, 'fixtures/webpack-repo')
 describe('webpack build', () => {

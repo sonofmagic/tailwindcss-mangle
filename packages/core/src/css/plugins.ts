@@ -1,7 +1,7 @@
+import type { ICssHandlerOptions } from '@/types'
 import type { PluginCreator } from 'postcss'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
-import type { ICssHandlerOptions } from '@/types'
 
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 

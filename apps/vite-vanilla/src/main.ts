@@ -1,7 +1,7 @@
-import './style.css'
+import { setupCounter } from './counter'
 import typescriptLogo from './typescript.svg'
 
-import { setupCounter } from './counter'
+import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <main class="flex min-h-screen flex-col items-center justify-between p-24">

@@ -1,9 +1,9 @@
-import path from 'node:path'
-import fs from 'fs-extra'
-import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss-v3'
-import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-v2'
 import type { InternalPatchOptions } from '@/types'
+import path from 'node:path'
 import logger from '@/logger'
+import fs from 'fs-extra'
+import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-v2'
+import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss-v3'
 
 export function monkeyPatchForExposingContextV3(twDir: string, opt: InternalPatchOptions) {
   const k0 = 'lib/processTailwindFeatures.js'

@@ -1,7 +1,7 @@
+import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
 import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 import { CSS_LANGS_RE } from 'is-css-request'
-import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
 
 const defaultPipelineInclude = ['**/*.{html,js,ts,jsx,tsx,vue,svelte,astro,elm,php,phtml,mdx,md}', CSS_LANGS_RE]
 

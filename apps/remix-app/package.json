@@ -2,6 +2,9 @@
   "name": "remix-app",
   "private": true,
   "sideEffects": false,
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
@@ -26,8 +29,5 @@
     "eslint": "^9.6.0",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3"
-  },
-  "engines": {
-    "node": ">=14"
   }
 }

@@ -1,6 +1,6 @@
-import { getTestCase } from './utils'
 import { cssHandler } from '@/css'
 import { Context } from '@/ctx'
+import { getTestCase } from './utils'
 
 describe('css', () => {
   let ctx: Context

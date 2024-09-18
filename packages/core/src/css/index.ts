@@ -1,6 +1,6 @@
+import type { ICssHandlerOptions, IHandlerTransformResult } from '@/types'
 import postcss from 'postcss'
 import { transformSelectorPostcssPlugin } from './plugins'
-import type { ICssHandlerOptions, IHandlerTransformResult } from '@/types'
 
 export async function cssHandler(rawSource: string, options: ICssHandlerOptions): Promise<IHandlerTransformResult> {
   const acceptedPlugins = [transformSelectorPostcssPlugin(options)]

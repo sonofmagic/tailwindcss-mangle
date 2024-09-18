@@ -1,9 +1,9 @@
-import path from 'node:path'
-import fs from 'fs-extra'
-import type { SyncOpts } from 'resolve'
-import pkg from 'resolve'
 import type { PackageJson } from 'pkg-types'
+import type { SyncOpts } from 'resolve'
+import path from 'node:path'
 import { createDefu } from 'defu'
+import fs from 'fs-extra'
+import pkg from 'resolve'
 
 export { defu } from 'defu'
 const { sync } = pkg

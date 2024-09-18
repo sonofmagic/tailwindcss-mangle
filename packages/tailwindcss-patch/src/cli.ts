@@ -1,9 +1,9 @@
 import process from 'node:process'
+import { getPatchOptions } from '@/defaults'
 import cac from 'cac'
 import { configName, getConfig, initConfig } from './config'
 import { TailwindcssPatcher } from './core'
 import logger from './logger'
-import { getPatchOptions } from '@/defaults'
 
 function init() {
   const cwd = process.cwd()

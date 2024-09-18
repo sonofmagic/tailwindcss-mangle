@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "",
+  "license": "MIT",
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -12,7 +13,9 @@
     "prepare": "tw-patch install",
     "tw-extract": "tw-patch extract"
   },
-  "license": "MIT",
+  "dependencies": {
+    "solid-js": "^1.8.18"
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
@@ -20,8 +23,5 @@
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-plugin-solid": "^2.10.2"
-  },
-  "dependencies": {
-    "solid-js": "^1.8.18"
   }
 }

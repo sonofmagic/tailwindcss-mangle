@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js'
 import logoUrl from './logo.svg'
+
 const App: Component = () => {
   return (
     <main class="flex min-h-screen flex-col items-center justify-between p-24">
@@ -15,7 +16,9 @@ const App: Component = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By <img src={logoUrl} alt="Vercel Logo" class="dark:invert" width={100} height={24} />
+            By
+            {' '}
+            <img src={logoUrl} alt="Vercel Logo" class="dark:invert" width={100} height={24} />
           </a>
         </div>
       </div>
@@ -32,7 +35,9 @@ const App: Component = () => {
           rel="noopener noreferrer"
         >
           <h2 class={` mb-3 text-2xl font-semibold`}>
-            Docs <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Docs
+            {' '}
+            <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p class={` m-0 max-w-[30ch] text-sm opacity-50`}>Find in-depth information about Next.js features and API.</p>
         </a>
@@ -44,7 +49,9 @@ const App: Component = () => {
           rel="noopener noreferrer"
         >
           <h2 class={` mb-3 text-2xl font-semibold`}>
-            Learn <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Learn
+            {' '}
+            <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p class={` m-0 max-w-[30ch] text-sm opacity-50`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
         </a>
@@ -56,7 +63,9 @@ const App: Component = () => {
           rel="noopener noreferrer"
         >
           <h2 class={` mb-3 text-2xl font-semibold`}>
-            Templates <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Templates
+            {' '}
+            <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p class={` m-0 max-w-[30ch] text-sm opacity-50`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
         </a>
@@ -68,7 +77,9 @@ const App: Component = () => {
           rel="noopener noreferrer"
         >
           <h2 class={` mb-3 text-2xl font-semibold`}>
-            Deploy <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Deploy
+            {' '}
+            <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p class={` m-0 max-w-[30ch] text-sm opacity-50`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
         </a>

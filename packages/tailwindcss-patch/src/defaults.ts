@@ -1,6 +1,6 @@
+import type { DeepRequired, InternalPatchOptions, PatchOptions } from './types'
 import process from 'node:process'
 import { defu } from 'defu'
-import type { DeepRequired, InternalPatchOptions, PatchOptions } from './types'
 
 export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
   return {

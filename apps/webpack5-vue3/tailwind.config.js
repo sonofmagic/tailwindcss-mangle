@@ -3,10 +3,10 @@ export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,vue}'],
   darkMode: 'class',
   theme: {
-    extend: {}
+    extend: {},
   },
   plugins: [],
   corePlugins: {
-    preflight: false
-  }
+    preflight: false,
+  },
 }

@@ -2,10 +2,10 @@
 id: 20230630
 title: 'How to get the context of tailwindcss at runtime?'
 date: 2023-06-30
-description: 'The core principle of `tailwindcss-patch`' 
-authors: 
+description: 'The core principle of `tailwindcss-patch`'
+authors:
   - icebreaker
-tags: 
+tags:
   - 'tailwindcss'
   - 'context'
   - 'runtime'
@@ -79,7 +79,7 @@ We install version `3.3.2` of `tailwindcss` (the latest version as of 20230630) 
   "description": "A utility-first CSS framework for rapidly building custom user interfaces",
   "license": "MIT",
   "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "types": "types/index.d.ts"
   // ...
 }
 ```
@@ -143,7 +143,7 @@ This file just adds a line at the end of the `processTailwindFeatures` method to
 
 ### `tailwindcss/lib/plugin.js`
 
-```diff
+````diff
 'use strict'
 
 Object.defineProperty(exports, '__esModule', {
@@ -172,7 +172,7 @@ module.exports = function tailwindcss (configOrPath) {
       console.time('JIT TOTAL')
       return root
     }, function (root, result) {
-+      // clear context each time        
++      // clear context each time
 +      contextRef.value.length = 0
       let _findAtConfigPath1
       // Use the path for the `@config` directive if it exists, otherwise use the
@@ -243,7 +243,7 @@ module.exports.postcss = true
 + // export contexts
 + module.exports.contextRef = contextRef
 
-```
+````
 
 In this file, we create a `contextRef` object, `push` the context of `tailwindcss` into `contextRef.value`, export `contextRef` in the file, and clean up `contextRef.value` to avoid memory leaks.
 

@@ -1,13 +1,13 @@
-import path from 'node:path'
-import { gte } from 'semver'
-import type { PackageJson } from 'pkg-types'
-import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
-import { defu } from '@/utils'
 import type { ILengthUnitsPatchOptions, InternalPatchOptions } from '@/types'
+import type { PackageJson } from 'pkg-types'
+import path from 'node:path'
+import { defu } from '@/utils'
+import { gte } from 'semver'
+import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
 
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions) {
   if (pkgJsonPath) {
-    // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
+    // eslint-disable-next-line ts/no-require-imports
     const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
     options.version = pkgJson.version

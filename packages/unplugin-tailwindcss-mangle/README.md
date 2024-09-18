@@ -25,9 +25,7 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
 
 ```html
 <!-- before -->
-<div
-  class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"
-></div>
+<div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"></div>
 <!-- after -->
 <div class="tw-g tw-h tw-i tw-d tw-e tw-j tw-k tw-l"></div>
 ```
@@ -71,10 +69,10 @@ Then there will generate a json file: `.tw-patch/tw-class-list.json`
 #### vite
 
 ```js
-// for example: vue vite project
-import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import utwm from 'unplugin-tailwindcss-mangle/vite'
+// for example: vue vite project
+import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), utwm()]

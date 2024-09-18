@@ -1,5 +1,5 @@
-import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
 import type { FilterPattern } from '@rollup/pluginutils'
+import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
 
 export interface ClassMapOutputOptions {
   enable?: boolean

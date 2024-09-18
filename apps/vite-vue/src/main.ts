@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
+import App from './App.vue'
 import './style.css'
 import './index.scss'
-import App from './App.vue'
 
 console.log('bg-[#929292]')
 

@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import reactLogo from './assets/react.svg'
-import './App.css'
 import { cn } from './utils'
+import './App.css'
 // 'hover:bg-dark-red p-3 bg-[#B91C1C]'
 const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
 const bbb = cn(
   {
-    'p-3': true
+    'p-3': true,
   },
   'p-1',
-  ['p-2', true && 'p-4']
+  ['p-2', true && 'p-4'],
 )
 function App() {
   const [count, setCount] = useState(0)
@@ -32,7 +32,9 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By <img src="/vite.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} />
+            By
+            {' '}
+            <img src="/vite.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} />
           </a>
         </div>
       </div>
@@ -49,7 +51,9 @@ function App() {
           rel="noopener noreferrer"
         >
           <h2 className={` mb-3 text-2xl font-semibold`}>
-            Docs <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Docs
+            {' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p className={` m-0 max-w-[30ch] text-sm opacity-50`}>Find in-depth information about Next.js features and API.</p>
         </a>
@@ -61,7 +65,9 @@ function App() {
           rel="noopener noreferrer"
         >
           <h2 className={` mb-3 text-2xl font-semibold`}>
-            Learn <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Learn
+            {' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p className={` m-0 max-w-[30ch] text-sm opacity-50`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
         </a>
@@ -73,7 +79,9 @@ function App() {
           rel="noopener noreferrer"
         >
           <h2 className={` mb-3 text-2xl font-semibold`}>
-            Templates <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Templates
+            {' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p className={` m-0 max-w-[30ch] text-sm opacity-50`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
         </a>
@@ -85,7 +93,9 @@ function App() {
           rel="noopener noreferrer"
         >
           <h2 className={` mb-3 text-2xl font-semibold`}>
-            Deploy <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
+            Deploy
+            {' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
           </h2>
           <p className={` m-0 max-w-[30ch] text-sm opacity-50`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
         </a>

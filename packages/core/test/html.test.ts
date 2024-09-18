@@ -1,7 +1,7 @@
+import { Context } from '@/ctx'
+import { htmlHandler } from '@/html'
 import { splitCode } from '@tailwindcss-mangle/shared'
 import { getTestCase } from './utils'
-import { htmlHandler } from '@/html'
-import { Context } from '@/ctx'
 
 describe('html handler', () => {
   // let classGenerator: ClassGenerator

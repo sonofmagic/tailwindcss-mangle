@@ -1,9 +1,9 @@
-import path from 'node:path'
-import fs from 'node:fs/promises'
-import { createDefineConfig, loadConfig } from 'c12'
 import type { UserConfig } from './types'
-import { getDefaultUserConfig } from './defaults'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { createDefineConfig, loadConfig } from 'c12'
 import { configName } from './constants'
+import { getDefaultUserConfig } from './defaults'
 
 export function getConfig(cwd?: string) {
   return loadConfig<UserConfig>({

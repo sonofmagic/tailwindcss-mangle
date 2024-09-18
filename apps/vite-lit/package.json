@@ -1,12 +1,12 @@
 {
   "name": "vite-lit",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "main": "dist/my-element.es.js",
+  "version": "0.0.0",
+  "private": true,
   "exports": {
     ".": "./dist/my-element.es.js"
   },
+  "main": "dist/my-element.es.js",
   "types": "types/my-element.d.ts",
   "files": [
     "dist",

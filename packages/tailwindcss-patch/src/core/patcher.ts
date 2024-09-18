@@ -1,12 +1,12 @@
-import path from 'node:path'
-import fs from 'fs-extra'
-import { CacheManager, getCacheOptions } from './cache'
-import { internalPatch } from './runtime'
-import { processTailwindcss } from './postcss'
 import type { UserConfig } from '@/config'
+import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '@/types'
+import path from 'node:path'
 import { getPatchOptions } from '@/defaults'
 import { getPackageInfoSync, isObject } from '@/utils'
-import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '@/types'
+import fs from 'fs-extra'
+import { CacheManager, getCacheOptions } from './cache'
+import { processTailwindcss } from './postcss'
+import { internalPatch } from './runtime'
 
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
@@ -61,7 +61,7 @@ export class TailwindcssPatcher {
         }
       }
       if (injectFilePath) {
-        // eslint-disable-next-line ts/no-require-imports, ts/no-var-requires
+        // eslint-disable-next-line ts/no-require-imports
         const mo = require(injectFilePath)
         if (mo.contextRef) {
           return mo.contextRef.value

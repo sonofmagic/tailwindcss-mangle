@@ -1,9 +1,9 @@
+import type { CacheOptions, InternalCacheOptions } from '@/types'
 import path from 'node:path'
 import process from 'node:process'
-import fs from 'fs-extra'
 import { pkgName } from '@/constants'
-import type { CacheOptions, InternalCacheOptions } from '@/types'
 import logger from '@/logger'
+import fs from 'fs-extra'
 
 export function getCacheOptions(options?: CacheOptions | boolean) {
   let cache: InternalCacheOptions

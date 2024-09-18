@@ -1,6 +1,6 @@
+import { initConfig } from '@/config'
 import fs from 'fs-extra'
 import path from 'pathe'
-import { initConfig } from '@/config'
 
 describe('config', () => {
   it('init config', async () => {

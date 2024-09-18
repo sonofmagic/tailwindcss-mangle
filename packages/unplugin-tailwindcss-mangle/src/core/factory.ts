@@ -1,12 +1,11 @@
-import path from 'node:path'
-import type { UnpluginFactory } from 'unplugin'
-import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
-import { isCSSRequest } from 'is-css-request'
-import { createFilter } from '@rollup/pluginutils'
-import type { OutputAsset } from 'rollup'
+import type { UnpluginFactory } from 'unplugin'
+import path from 'node:path'
 import { pluginName } from '@/constants'
 import { getGroupedEntries } from '@/utils'
+import { createFilter } from '@rollup/pluginutils'
+import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
+import { isCSSRequest } from 'is-css-request'
 
 const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/core/loader.cjs' : 'core/loader.cjs')
 
