@@ -52,15 +52,15 @@
   },
   "dependencies": {
     "@ast-core/escape": "^1.0.1",
-    "@babel/parser": "^7.24.8",
-    "@babel/traverse": "^7.24.8",
-    "@babel/types": "^7.24.9",
+    "@babel/parser": "^7.25.6",
+    "@babel/traverse": "^7.25.6",
+    "@babel/types": "^7.25.6",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "fast-sort": "^3.4.0",
+    "fast-sort": "^3.4.1",
     "htmlparser2": "9.1.0",
-    "magic-string": "^0.30.10",
-    "postcss": "^8.4.40",
-    "postcss-selector-parser": "^6.1.1"
+    "magic-string": "^0.30.11",
+    "postcss": "^8.4.47",
+    "postcss-selector-parser": "^6.1.2"
   }
 }
