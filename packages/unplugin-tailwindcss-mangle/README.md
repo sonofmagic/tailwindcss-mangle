@@ -54,7 +54,7 @@ npx tw-patch install
 
 ### 4. Run extract command
 
-cd to the same directory as `package.son` and `tailwind.config.js`, then run:
+cd to the same directory as `package.json` and `tailwind.config.js`, then run:
 
 ```sh
 npx tw-patch extract
