@@ -31,7 +31,7 @@ importers:
         version: 0.5.2(@typescript-eslint/utils@8.6.0(eslint@9.11.0(jiti@1.21.6))(typescript@5.6.2))(eslint@9.11.0(jiti@1.21.6))(tailwindcss@3.4.12)(typescript@5.6.2)(vitest@2.0.5(@types/node@22.5.5)(terser@5.33.0))
       '@icebreakers/monorepo':
         specifier: ^0.5.0
-        version: 0.5.0
+        version: 0.5.2
       '@icebreakers/stylelint-config':
         specifier: ^0.0.3
         version: 0.0.3(postcss@8.4.47)
@@ -1403,8 +1403,8 @@ packages:
   '@icebreakers/eslint-config@0.5.2':
     resolution: {integrity: sha512-1qKHLvKqSMWwmcfGaXi/ATwGpy2kWq0w0Hst4QJwgzTvjwISA2MxLBIbglLZyHtr6Rwl1dwDFPyrTDtcyinlDg==}
 
-  '@icebreakers/monorepo@0.5.0':
-    resolution: {integrity: sha512-IaYQUIA5Qy6yQKoutve7lIbSbeXfo/WtJk+Pp8O4q75VOcUC3s6xuUkLBciugmFMFgbWvMmpeuQvwyDOX1vryg==}
+  '@icebreakers/monorepo@0.5.2':
+    resolution: {integrity: sha512-qZtvMVPFEGE2wvSOUonK77K+Ihk1VbyaHjZ02f+yokW2RPrrPxynAEvMbDH7UBnarCFnTtF9ynVD+mYVVLT3kw==}
     hasBin: true
 
   '@icebreakers/stylelint-config@0.0.3':
@@ -1728,6 +1728,10 @@ packages:
 
   '@pnpm/lockfile.types@1.0.3':
     resolution: {integrity: sha512-A7vUWktnhDkrIs+WmXm7AdffJVyVYJpQUEouya/DYhB+Y+tQ3BXjZ6CV0KybqLgI/8AZErgCJqFxA0GJH6QDjA==}
+    engines: {node: '>=18.12'}
+
+  '@pnpm/logger@5.2.0':
+    resolution: {integrity: sha512-dCdSs2wPCweMkRLdISAKBOKSWeq/9iS9aanWgjoUkFs06KN2o5XGFg53oCXg/KbZhF9AXS3vMHPwTebzCeAEsA==}
     engines: {node: '>=18.12'}
 
   '@pnpm/manifest-utils@6.0.8':
@@ -2107,8 +2111,8 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@20.14.12':
-    resolution: {integrity: sha512-r7wNXakLeSsGT0H1AU863vS2wa5wBOK4bWMjZz2wj+8nBx+m5PeIn0k8AloSLpRuiwdRQZwarZqHE4FNArPuJQ==}
+  '@types/node@20.16.5':
+    resolution: {integrity: sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==}
 
   '@types/node@22.5.5':
     resolution: {integrity: sha512-Xjs4y5UPO/CLdzpgR6GirZJx36yScjh73+2NlLlkFRSoQN8B0DpfXPdZGnvVmLRLOsqDpOfTNv7D9trgGhmOIA==}
@@ -2568,6 +2572,9 @@ packages:
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
+
+  bole@5.0.14:
+    resolution: {integrity: sha512-IFDlSAH1GKiQEp4NUa2Eg8RplcV2oXOFCHD/nfNqVlRNf9RgNRdxtR2g3P+Cz57uP5jAGSrq2bGUqXLQeh/h4w==}
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -3685,6 +3692,9 @@ packages:
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
 
+  fast-safe-stringify@2.1.1:
+    resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+
   fast-sort@3.4.1:
     resolution: {integrity: sha512-76uvGPsF6So53sZAqenP9UVT3p5l7cyTHkLWVCMinh41Y8NDrK1IYXJgaBMfc1gk7nJiSRZp676kddFG2Aa5+A==}
 
@@ -4144,6 +4154,9 @@ packages:
     resolution: {integrity: sha512-m6FAo/spmsW2Ab2fU35JTYwtOKa2yAwXSwgjSv1TJzh4Mh7mC3lzAOVLBprb72XsTrgkEIsl7YrFNAiDiRhIGg==}
     engines: {node: '>=12'}
 
+  individual@3.0.0:
+    resolution: {integrity: sha512-rUY5vtT748NMRbEMrTNiFfy29BgGZwGXUi2NFUVMWQrogSLzlJvQV9eeMWi+g1aVaQ53tpyLAQtd5x/JH0Nh1g==}
+
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
@@ -4565,6 +4578,9 @@ packages:
 
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
+
+  json-stringify-safe@5.0.1:
+    resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
 
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
@@ -5111,6 +5127,11 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  ndjson@2.0.0:
+    resolution: {integrity: sha512-nGl7LRGrzugTtaFcJMhLbpzJM6XdivmbkdlaGcrk/LXg2KL/YBC6z1g70xh0/al+oFuVFP8N8kiWRucmeEH/qQ==}
+    engines: {node: '>=10'}
+    hasBin: true
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
@@ -6178,6 +6199,9 @@ packages:
   spdx-license-ids@3.0.18:
     resolution: {integrity: sha512-xxRs31BqRYHwiMzudOrpSiHtZ8i/GeionCBDSilhYRj+9gIcI8wCZTlXZKu9vZIVqViP3dcp9qE5G6AlIaD+TQ==}
 
+  split2@3.2.2:
+    resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
+
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
@@ -6447,6 +6471,9 @@ packages:
     peerDependencies:
       tslib: ^2
 
+  through2@4.0.2:
+    resolution: {integrity: sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==}
+
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
@@ -6681,9 +6708,6 @@ packages:
 
   unconfig@0.5.5:
     resolution: {integrity: sha512-VQZ5PT9HDX+qag0XdgQi8tJepPhXiR/yVOkn707gJDKo31lGjRilPREiQJ9Z6zd/Ugpv6ZvO5VxVIcatldYcNQ==}
-
-  undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
@@ -8209,12 +8233,13 @@ snapshots:
       - typescript
       - vitest
 
-  '@icebreakers/monorepo@0.5.0':
+  '@icebreakers/monorepo@0.5.2':
     dependencies:
       '@inquirer/checkbox': 3.0.1
       '@inquirer/confirm': 4.0.1
+      '@pnpm/logger': 5.2.0
       '@pnpm/types': 12.2.0
-      '@pnpm/workspace.find-packages': 4.0.10
+      '@pnpm/workspace.find-packages': 4.0.10(@pnpm/logger@5.2.0)
       commander: 12.1.0
       comment-json: 4.2.5
       consola: 3.2.3
@@ -8230,7 +8255,6 @@ snapshots:
       set-value: 4.1.0
       simple-git: 3.27.0
     transitivePeerDependencies:
-      - '@pnpm/logger'
       - supports-color
 
   '@icebreakers/stylelint-config@0.0.3(postcss@8.4.47)':
@@ -8499,14 +8523,15 @@ snapshots:
       '@pnpm/types': 12.2.0
       load-json-file: 6.2.0
 
-  '@pnpm/cli-utils@4.0.5':
+  '@pnpm/cli-utils@4.0.5(@pnpm/logger@5.2.0)':
     dependencies:
       '@pnpm/cli-meta': 6.2.2
-      '@pnpm/config': 21.8.3
-      '@pnpm/default-reporter': 14.0.2
+      '@pnpm/config': 21.8.3(@pnpm/logger@5.2.0)
+      '@pnpm/default-reporter': 14.0.2(@pnpm/logger@5.2.0)
       '@pnpm/error': 6.0.1
-      '@pnpm/manifest-utils': 6.0.8
-      '@pnpm/package-is-installable': 9.0.9
+      '@pnpm/logger': 5.2.0
+      '@pnpm/manifest-utils': 6.0.8(@pnpm/logger@5.2.0)
+      '@pnpm/package-is-installable': 9.0.9(@pnpm/logger@5.2.0)
       '@pnpm/read-project-manifest': 6.0.8
       '@pnpm/types': 12.2.0
       chalk: 4.1.2
@@ -8516,7 +8541,7 @@ snapshots:
 
   '@pnpm/config.env-replace@3.0.0': {}
 
-  '@pnpm/config@21.8.3':
+  '@pnpm/config@21.8.3(@pnpm/logger@5.2.0)':
     dependencies:
       '@pnpm/catalogs.config': 0.1.0
       '@pnpm/catalogs.types': 0.1.0
@@ -8526,7 +8551,7 @@ snapshots:
       '@pnpm/git-utils': 2.0.0
       '@pnpm/matcher': 6.0.0
       '@pnpm/npm-conf': 2.3.1
-      '@pnpm/pnpmfile': 6.0.11
+      '@pnpm/pnpmfile': 6.0.11(@pnpm/logger@5.2.0)
       '@pnpm/read-project-manifest': 6.0.8
       '@pnpm/types': 12.2.0
       '@pnpm/workspace.read-manifest': 2.2.0
@@ -8548,8 +8573,9 @@ snapshots:
 
   '@pnpm/constants@8.0.0': {}
 
-  '@pnpm/core-loggers@10.0.7':
+  '@pnpm/core-loggers@10.0.7(@pnpm/logger@5.2.0)':
     dependencies:
+      '@pnpm/logger': 5.2.0
       '@pnpm/types': 12.2.0
 
   '@pnpm/crypto.base32-hash@3.0.0':
@@ -8564,14 +8590,15 @@ snapshots:
 
   '@pnpm/dedupe.types@2.0.0': {}
 
-  '@pnpm/default-reporter@14.0.2':
+  '@pnpm/default-reporter@14.0.2(@pnpm/logger@5.2.0)':
     dependencies:
       '@pnpm/cli-meta': 6.2.2
-      '@pnpm/config': 21.8.3
-      '@pnpm/core-loggers': 10.0.7
+      '@pnpm/config': 21.8.3(@pnpm/logger@5.2.0)
+      '@pnpm/core-loggers': 10.0.7(@pnpm/logger@5.2.0)
       '@pnpm/dedupe.issues-renderer': 2.0.0
       '@pnpm/dedupe.types': 2.0.0
       '@pnpm/error': 6.0.1
+      '@pnpm/logger': 5.2.0
       '@pnpm/render-peer-issues': 5.0.8
       '@pnpm/types': 12.2.0
       ansi-diff: 1.2.0
@@ -8623,9 +8650,14 @@ snapshots:
       '@pnpm/patching.types': 1.0.0
       '@pnpm/types': 12.2.0
 
-  '@pnpm/manifest-utils@6.0.8':
+  '@pnpm/logger@5.2.0':
     dependencies:
-      '@pnpm/core-loggers': 10.0.7
+      bole: 5.0.14
+      ndjson: 2.0.0
+
+  '@pnpm/manifest-utils@6.0.8(@pnpm/logger@5.2.0)':
+    dependencies:
+      '@pnpm/core-loggers': 10.0.7(@pnpm/logger@5.2.0)
       '@pnpm/error': 6.0.1
       '@pnpm/types': 12.2.0
     transitivePeerDependencies:
@@ -8645,11 +8677,12 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@pnpm/package-is-installable@9.0.9':
+  '@pnpm/package-is-installable@9.0.9(@pnpm/logger@5.2.0)':
     dependencies:
       '@pnpm/cli-meta': 6.2.2
-      '@pnpm/core-loggers': 10.0.7
+      '@pnpm/core-loggers': 10.0.7(@pnpm/logger@5.2.0)
       '@pnpm/error': 6.0.1
+      '@pnpm/logger': 5.2.0
       '@pnpm/types': 12.2.0
       detect-libc: 2.0.3
       execa: safe-execa@0.1.2
@@ -8669,13 +8702,14 @@ snapshots:
 
   '@pnpm/patching.types@1.0.0': {}
 
-  '@pnpm/pnpmfile@6.0.11':
+  '@pnpm/pnpmfile@6.0.11(@pnpm/logger@5.2.0)':
     dependencies:
-      '@pnpm/core-loggers': 10.0.7
+      '@pnpm/core-loggers': 10.0.7(@pnpm/logger@5.2.0)
       '@pnpm/crypto.base32-hash': 3.0.0
       '@pnpm/error': 6.0.1
       '@pnpm/hooks.types': 2.0.9
       '@pnpm/lockfile.types': 1.0.3
+      '@pnpm/logger': 5.2.0
       '@pnpm/store-controller-types': 18.1.6
       '@pnpm/types': 12.2.0
       chalk: 4.1.2
@@ -8733,10 +8767,11 @@ snapshots:
     dependencies:
       isexe: 2.0.0
 
-  '@pnpm/workspace.find-packages@4.0.10':
+  '@pnpm/workspace.find-packages@4.0.10(@pnpm/logger@5.2.0)':
     dependencies:
-      '@pnpm/cli-utils': 4.0.5
+      '@pnpm/cli-utils': 4.0.5(@pnpm/logger@5.2.0)
       '@pnpm/fs.find-packages': 4.0.4
+      '@pnpm/logger': 5.2.0
       '@pnpm/types': 12.2.0
       '@pnpm/util.lex-comparator': 3.0.0
 
@@ -9067,9 +9102,9 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@20.14.12':
+  '@types/node@20.16.5':
     dependencies:
-      undici-types: 5.26.5
+      undici-types: 6.19.8
 
   '@types/node@22.5.5':
     dependencies:
@@ -9687,6 +9722,11 @@ snapshots:
       buffer: 5.7.1
       inherits: 2.0.4
       readable-stream: 3.6.2
+
+  bole@5.0.14:
+    dependencies:
+      fast-safe-stringify: 2.1.1
+      individual: 3.0.0
 
   boolbase@1.0.0: {}
 
@@ -11158,6 +11198,8 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
+  fast-safe-stringify@2.1.1: {}
+
   fast-sort@3.4.1: {}
 
   fast-uri@3.0.1: {}
@@ -11688,6 +11730,8 @@ snapshots:
 
   indent-string@5.0.0: {}
 
+  individual@3.0.0: {}
+
   inflight@1.0.6:
     dependencies:
       once: 1.4.0
@@ -12056,6 +12100,8 @@ snapshots:
   json-schema-traverse@1.0.0: {}
 
   json-stable-stringify-without-jsonify@1.0.1: {}
+
+  json-stringify-safe@5.0.1: {}
 
   json5@2.2.3: {}
 
@@ -12883,6 +12929,14 @@ snapshots:
   natural-compare-lite@1.4.0: {}
 
   natural-compare@1.4.0: {}
+
+  ndjson@2.0.0:
+    dependencies:
+      json-stringify-safe: 5.0.1
+      minimist: 1.2.8
+      readable-stream: 3.6.2
+      split2: 3.2.2
+      through2: 4.0.2
 
   neo-async@2.6.2: {}
 
@@ -14035,6 +14089,10 @@ snapshots:
 
   spdx-license-ids@3.0.18: {}
 
+  split2@3.2.2:
+    dependencies:
+      readable-stream: 3.6.2
+
   split2@4.2.0: {}
 
   sprintf-js@1.0.3: {}
@@ -14312,6 +14370,10 @@ snapshots:
     dependencies:
       tslib: 2.7.0
 
+  through2@4.0.2:
+    dependencies:
+      readable-stream: 3.6.2
+
   through@2.3.8: {}
 
   tinybench@2.8.0: {}
@@ -14546,8 +14608,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  undici-types@5.26.5: {}
-
   undici-types@6.19.8: {}
 
   unicorn-magic@0.1.0: {}
@@ -14559,7 +14619,7 @@ snapshots:
       '@types/concat-stream': 2.0.3
       '@types/debug': 4.1.12
       '@types/is-empty': 1.2.3
-      '@types/node': 20.14.12
+      '@types/node': 20.16.5
       '@types/unist': 3.0.3
       concat-stream: 2.0.0
       debug: 4.3.7
