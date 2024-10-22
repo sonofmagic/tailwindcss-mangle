@@ -21,7 +21,7 @@ export function isVueScoped(s: parser.ClassName): boolean {
 }
 
 export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> = function (options) {
-  const { ignoreVueScoped, ctx, id } = defu(options, {
+  const { ignoreVueScoped, ctx } = defu(options, {
     ignoreVueScoped: true,
   })
 

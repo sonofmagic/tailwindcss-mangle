@@ -17,4 +17,7 @@ export default defineConfig({
   dts: true,
   cjsInterop: true,
   splitting: true,
+  define: {
+    __DEV__: 'false',
+  },
 })

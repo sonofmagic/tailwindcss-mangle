@@ -1,7 +1,7 @@
 import type { UserConfig } from './types'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import { createDefineConfig, loadConfig } from 'c12'
+import fs from 'fs-extra'
+import path from 'pathe'
 import { configName } from './constants'
 import { getDefaultUserConfig } from './defaults'
 
@@ -18,7 +18,7 @@ export function getConfig(cwd?: string) {
 export const defineConfig = createDefineConfig<UserConfig>()
 
 export function initConfig(cwd: string) {
-  return fs.writeFile(
+  return fs.outputFile(
     path.resolve(cwd, `${configName}.config.ts`),
     `import { defineConfig } from 'tailwindcss-patch'
 

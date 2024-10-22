@@ -2,7 +2,7 @@ import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOption
 
 import { acceptChars, regExpTest, stripEscapeSequence } from './utils'
 
-class ClassGenerator implements IClassGenerator {
+export class ClassGenerator implements IClassGenerator {
   public newClassMap: Record<string, IClassGeneratorContextItem>
   public newClassSize: number
   public context: Record<string, any>
@@ -101,5 +101,3 @@ class ClassGenerator implements IClassGenerator {
     return newClass
   }
 }
-
-export default ClassGenerator

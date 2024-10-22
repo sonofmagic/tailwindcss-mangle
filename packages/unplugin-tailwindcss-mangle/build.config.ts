@@ -2,7 +2,15 @@ import path from 'node:path'
 import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
-  entries: ['src/index.ts', 'src/vite.ts', 'src/esbuild.ts', 'src/rollup.ts', 'src/webpack.ts', 'src/utils.ts', 'src/core/loader.ts'],
+  entries: [
+    'src/index.ts',
+    'src/vite.ts',
+    'src/esbuild.ts',
+    'src/rollup.ts',
+    'src/webpack.ts',
+    'src/utils.ts',
+    'src/core/loader.ts',
+  ],
   rollup: {
     replace: {
       values: {

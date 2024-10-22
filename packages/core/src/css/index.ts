@@ -16,7 +16,7 @@ export async function cssHandler(rawSource: string, options: ICssHandlerOptions)
       map,
     }
   }
-  catch (error) {
+  catch (_error) {
     return {
       code: rawSource,
     }
