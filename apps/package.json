@@ -15,7 +15,7 @@
     "@tailwindcss-mangle/config": "link:../packages/config",
     "@tailwindcss-mangle/core": "link:../packages/core",
     "@tailwindcss-mangle/shared": "link:../packages/shared",
-    "tailwind-merge": "^2.4.0",
+    "tailwind-merge": "^2.5.4",
     "tailwindcss-patch": "link:../packages/tailwindcss-patch",
     "unplugin-tailwindcss-mangle": "link:../packages/unplugin-tailwindcss-mangle"
   }
