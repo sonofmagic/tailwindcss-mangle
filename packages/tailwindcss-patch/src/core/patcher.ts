@@ -1,13 +1,16 @@
 import type { UserConfig } from '../config'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
+import { createRequire } from 'node:module'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { getPatchOptions } from '../defaults'
+import logger from '../logger'
 import { getPackageInfoSync, isObject } from '../utils'
 import { CacheManager, getCacheOptions } from './cache'
 import { processTailwindcss } from './postcss'
 import { internalPatch } from './runtime'
 
+const require = createRequire(import.meta.url)
 export class TailwindcssPatcher {
   public rawOptions: TailwindcssPatcherOptions
   public cacheOptions: InternalCacheOptions
@@ -32,7 +35,7 @@ export class TailwindcssPatcher {
         return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
       }
       catch (error) {
-        console.error(`patch tailwindcss failed: ${(<Error>error).message}`)
+        logger.error(`patch tailwindcss failed: ${(<Error>error).message}`)
       }
     }
   }
@@ -61,7 +64,6 @@ export class TailwindcssPatcher {
         }
       }
       if (injectFilePath) {
-        // eslint-disable-next-line ts/no-require-imports
         const mo = require(injectFilePath)
         if (mo.contextRef) {
           return mo.contextRef.value
@@ -130,7 +132,9 @@ export class TailwindcssPatcher {
       if (filename) {
         await fs.ensureDir(path.dirname(filename))
         const classList = [...set]
-        fs.writeFileSync(filename, JSON.stringify(classList, null, loose ? 2 : undefined), 'utf8')
+        await fs.outputJSON(filename, classList, {
+          spaces: loose ? 2 : undefined,
+        })
         return filename
       }
     }
