@@ -1,15 +1,15 @@
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import type { UnpluginFactory } from 'unplugin'
-import path from 'pathe'
-import { pluginName } from '@/constants'
 import { getGroupedEntries } from '@/utils'
 import { createFilter } from '@rollup/pluginutils'
 import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
 import { isCSSRequest } from 'is-css-request'
+import path from 'pathe'
+import { pluginName } from '../constants'
 
 const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/core/loader.cjs' : 'core/loader.cjs')
 
-const factory: UnpluginFactory<MangleUserConfig | undefined> = (options, { framework }) => {
+const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
   const ctx = new Context()
   let filter = (_id: string) => true
   return [

@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
-import path from 'pathe'
 import process from 'node:process'
 import { groupBy } from '@tailwindcss-mangle/shared'
+import path from 'pathe'
 import { pluginName } from './constants'
 
 export function escapeStringRegexp(str: string) {

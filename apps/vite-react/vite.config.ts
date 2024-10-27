@@ -1,7 +1,10 @@
 import react from '@vitejs/plugin-react'
-import utwm from 'unplugin-tailwindcss-mangle/vite'
+import { register } from 'tsx/esm/api'
 import { defineConfig } from 'vite'
-// https://vitejs.dev/config/
+
+register()
+const { default: utwm } = await import('unplugin-tailwindcss-mangle/vite')
+
 export default defineConfig({
   plugins: [
     react(),
@@ -9,4 +12,11 @@ export default defineConfig({
       classMapOutput: true,
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['legacy-js-api'],
+      },
+    },
+  },
 })

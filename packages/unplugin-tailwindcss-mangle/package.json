@@ -21,33 +21,33 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./vite": {
       "types": "./dist/vite.d.ts",
-      "import": "./dist/vite.mjs",
+      "import": "./dist/vite.js",
       "require": "./dist/vite.cjs"
     },
     "./webpack": {
       "types": "./dist/webpack.d.ts",
-      "import": "./dist/webpack.mjs",
+      "import": "./dist/webpack.js",
       "require": "./dist/webpack.cjs"
     },
     "./rollup": {
       "types": "./dist/rollup.d.ts",
-      "import": "./dist/rollup.mjs",
+      "import": "./dist/rollup.js",
       "require": "./dist/rollup.cjs"
     },
     "./esbuild": {
       "types": "./dist/esbuild.d.ts",
-      "import": "./dist/esbuild.mjs",
+      "import": "./dist/esbuild.js",
       "require": "./dist/esbuild.cjs"
     },
     "./*": "./*"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -61,8 +61,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "unbuild --sourcemap",
-    "build": "unbuild",
+    "dev": "tsup --watch --sourcemap",
+    "build": "tsup",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },

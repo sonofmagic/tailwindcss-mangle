@@ -30,8 +30,8 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(@typescript-eslint/utils@8.11.0(eslint@9.13.0(jiti@2.3.3))(typescript@5.6.3))(@vue/compiler-sfc@3.5.12)(eslint@9.13.0(jiti@2.3.3))(svelte@5.1.3)(tailwindcss@3.4.14)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.8.1)(sass@1.80.4)(terser@5.36.0))
       '@icebreakers/monorepo':
-        specifier: ^0.6.11
-        version: 0.6.11(@types/node@22.8.1)
+        specifier: ^0.6.12
+        version: 0.6.12(@types/node@22.8.1)
       '@icebreakers/stylelint-config':
         specifier: ^0.1.2
         version: 0.1.2(postcss@8.4.47)
@@ -126,8 +126,8 @@ importers:
         specifier: ^9.13.0
         version: 9.13.0(jiti@2.3.3)
       execa:
-        specifier: ^9.4.1
-        version: 9.4.1
+        specifier: ^9.5.0
+        version: 9.5.0
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
@@ -2855,8 +2855,8 @@ packages:
   '@icebreakers/eslint-config@0.6.1':
     resolution: {integrity: sha512-S2gHs7UWNjQ1hZZe+5I8olxJUqu7feUkGeAppMN5maOMt5L4mtB12Z37Tl/XwExxRezMThsAotC1GoZb7OCRtA==}
 
-  '@icebreakers/monorepo@0.6.11':
-    resolution: {integrity: sha512-ddClx+K0mjkky9JT5eTYZozj+E8C6DSFyFokgj+h6OOFHnlRx/vOVBWKrAX9GT5cqzyQJ7e4OiMEPaTICDSiQQ==}
+  '@icebreakers/monorepo@0.6.12':
+    resolution: {integrity: sha512-tlmXcuB/TG/R0tluAHpXNPoqGSZ8IkXAlvpFjKP/Cb4HkKwY1f5BX5eioKZbXDWxZsAPR1zrf9x+L2XyRQvhIg==}
     hasBin: true
 
   '@icebreakers/stylelint-config@0.1.2':
@@ -2980,16 +2980,20 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inquirer/checkbox@4.0.0':
-    resolution: {integrity: sha512-TNd+u1fAG8vf8YMgXzK2BI0u0xsphFv//T5rpF1eZ+8AAXby5Ll1qptr4/XVS45dvWDIzuBmmWIpVJRvnaNqzQ==}
+  '@inquirer/checkbox@4.0.1':
+    resolution: {integrity: sha512-ehJjmNPdguajc1hStvjN7DJNVjwG5LC1mgGMGFjCmdkn2fxB2GtULftMnlaqNmvMdPpqdaSoOFpl86VkLtG4pQ==}
     engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
 
-  '@inquirer/confirm@5.0.0':
-    resolution: {integrity: sha512-6QEzj6bZg8atviRIL+pR0tODC854cYSjvZxkyCarr8DVaOJPEyuGys7GmEG3W0Rb8kKSQec7P6okt0sJvNneFw==}
+  '@inquirer/confirm@5.0.1':
+    resolution: {integrity: sha512-6ycMm7k7NUApiMGfVc32yIPp28iPKxhGRMqoNDiUjq2RyTAkbs5Fx0TdzBqhabcKvniDdAAvHCmsRjnNfTsogw==}
     engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
 
-  '@inquirer/core@10.0.0':
-    resolution: {integrity: sha512-7dwoKCGvgZGHWTZfOj2KLmbIAIdiXP9NTrwGaTO/XDfKMEmyBahZpnombiG6JDHmiOrmK3GLEJRXrWExXCDLmQ==}
+  '@inquirer/core@10.0.1':
+    resolution: {integrity: sha512-KKTgjViBQUi3AAssqjUFMnMO3CM3qwCHvePV9EW+zTKGKafFGFF01sc1yOIYjLJ7QU52G/FbzKc+c01WLzXmVQ==}
     engines: {node: '>=18'}
 
   '@inquirer/figures@1.0.6':
@@ -6188,8 +6192,8 @@ packages:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
-  bole@5.0.15:
-    resolution: {integrity: sha512-Fl3VU10+7uLIOSV6QKdVND/4uaiAo6oW5kAjwkwhuX6bMGeqiIvalaPNGsisknpWNpT8/RXSWkiytlaNNuBnhA==}
+  bole@5.0.17:
+    resolution: {integrity: sha512-q6F82qEcUQTP178ZEY4WI1zdVzxy+fOnSF1dOMyC16u1fc0c24YrDPbgxA6N5wGHayCUdSBWsF8Oy7r2AKtQdA==}
 
   bonjour-service@1.2.1:
     resolution: {integrity: sha512-oSzCS2zV14bh2kji6vNe7vrpJYCHGvcZnlffFQ1MEoX/WOeQ/teD8SYWKR942OI3INjq8OMNJlbPK5LLLUxFDw==}
@@ -8165,8 +8169,8 @@ packages:
     resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
     engines: {node: '>=16.17'}
 
-  execa@9.4.1:
-    resolution: {integrity: sha512-5eo/BRqZm3GYce+1jqX/tJ7duA2AnE39i88fuedNFUV8XxGxUpF3aWkBRfbUcjV49gCkvS/pzc0YrCPhaIewdg==}
+  execa@9.5.0:
+    resolution: {integrity: sha512-t7vvYt+oKnMbF3O+S5+HkylsPrsUatwJSe4Cv+4017R0MCySjECxnVJ2eyDXVD/Xpj5H29YzyYn6eEpugG7GJA==}
     engines: {node: ^18.19.0 || >=20.5.0}
 
   exit-hook@2.2.1:
@@ -16196,17 +16200,17 @@ snapshots:
       - typescript
       - vitest
 
-  '@icebreakers/monorepo@0.6.11(@types/node@22.8.1)':
+  '@icebreakers/monorepo@0.6.12(@types/node@22.8.1)':
     dependencies:
-      '@inquirer/checkbox': 4.0.0(@types/node@22.8.1)
-      '@inquirer/confirm': 5.0.0(@types/node@22.8.1)
+      '@inquirer/checkbox': 4.0.1(@types/node@22.8.1)
+      '@inquirer/confirm': 5.0.1(@types/node@22.8.1)
       '@pnpm/logger': 5.2.0
       '@pnpm/types': 12.2.0
       '@pnpm/workspace.find-packages': 4.0.11(@pnpm/logger@5.2.0)
       commander: 12.1.0
       comment-json: 4.2.5
       consola: 3.2.3
-      execa: 9.4.1
+      execa: 9.5.0
       fs-extra: 11.2.0
       git-url-parse: 15.0.0
       klaw: 4.1.0
@@ -16305,24 +16309,22 @@ snapshots:
   '@img/sharp-win32-x64@0.33.5':
     optional: true
 
-  '@inquirer/checkbox@4.0.0(@types/node@22.8.1)':
+  '@inquirer/checkbox@4.0.1(@types/node@22.8.1)':
     dependencies:
-      '@inquirer/core': 10.0.0(@types/node@22.8.1)
+      '@inquirer/core': 10.0.1(@types/node@22.8.1)
       '@inquirer/figures': 1.0.7
       '@inquirer/type': 3.0.0(@types/node@22.8.1)
+      '@types/node': 22.8.1
       ansi-escapes: 4.3.2
       yoctocolors-cjs: 2.1.2
-    transitivePeerDependencies:
-      - '@types/node'
 
-  '@inquirer/confirm@5.0.0(@types/node@22.8.1)':
+  '@inquirer/confirm@5.0.1(@types/node@22.8.1)':
     dependencies:
-      '@inquirer/core': 10.0.0(@types/node@22.8.1)
+      '@inquirer/core': 10.0.1(@types/node@22.8.1)
       '@inquirer/type': 3.0.0(@types/node@22.8.1)
-    transitivePeerDependencies:
-      - '@types/node'
+      '@types/node': 22.8.1
 
-  '@inquirer/core@10.0.0(@types/node@22.8.1)':
+  '@inquirer/core@10.0.1(@types/node@22.8.1)':
     dependencies:
       '@inquirer/figures': 1.0.7
       '@inquirer/type': 3.0.0(@types/node@22.8.1)
@@ -18000,7 +18002,7 @@ snapshots:
 
   '@pnpm/logger@5.2.0':
     dependencies:
-      bole: 5.0.15
+      bole: 5.0.17
       ndjson: 2.0.0
 
   '@pnpm/manifest-utils@6.0.9(@pnpm/logger@5.2.0)':
@@ -21477,7 +21479,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  bole@5.0.15:
+  bole@5.0.17:
     dependencies:
       fast-safe-stringify: 2.1.1
       individual: 3.0.0
@@ -23925,7 +23927,7 @@ snapshots:
       signal-exit: 4.1.0
       strip-final-newline: 3.0.0
 
-  execa@9.4.1:
+  execa@9.5.0:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       cross-spawn: 7.0.3
