@@ -1,6 +1,7 @@
 {
   "name": "postcss7-compat",
-  "version": "1.0.1-alpha.0",
+  "version": "0.0.0",
+  "private": true,
   "description": "",
   "author": "",
   "license": "ISC",

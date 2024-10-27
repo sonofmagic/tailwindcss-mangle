@@ -40,9 +40,9 @@
   "scripts": {
     "dev": "tsup --watch --sourcemap",
     "build": "tsup",
-    "test": "vitest run --coverage.enabled",
+    "test": "pnpm run patch && vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "patch": "node bin/tw-patch.js install"
+    "patch": "tsx dev/bin.js install"
   },
   "publishConfig": {
     "access": "public",

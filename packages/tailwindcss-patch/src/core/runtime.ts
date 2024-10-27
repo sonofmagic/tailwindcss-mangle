@@ -1,13 +1,14 @@
 import type { PackageJson } from 'pkg-types'
 import type { ILengthUnitsPatchOptions, InternalPatchOptions } from '../types'
+import { createRequire } from 'node:module'
 import { defu } from '@tailwindcss-mangle/shared'
 import path from 'pathe'
 import { gte } from 'semver'
 import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
 
+const require = createRequire(import.meta.url)
 export function internalPatch(pkgJsonPath: string | undefined, options: InternalPatchOptions) {
   if (pkgJsonPath) {
-    // eslint-disable-next-line ts/no-require-imports
     const pkgJson = require(pkgJsonPath) as PackageJson
     const twDir = path.dirname(pkgJsonPath)
     options.version = pkgJson.version

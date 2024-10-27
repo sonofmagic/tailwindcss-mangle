@@ -1,10 +1,12 @@
 import type { Config } from 'tailwindcss'
-import path from 'pathe'
+import { createRequire } from 'node:module'
 import { TailwindcssPatcher } from '@/core/patcher'
 import { processTailwindcss } from '@/core/postcss'
+import path from 'pathe'
 import postcss from 'postcss'
 import { appRoot } from './utils'
 
+const require = createRequire(import.meta.url)
 describe('postcss', () => {
   it('getCss 0.common', async () => {
     const p = path.resolve(appRoot, '0.common')
@@ -45,7 +47,6 @@ describe('postcss', () => {
       },
     }
     const { css } = await postcss([
-      // eslint-disable-next-line ts/no-require-imports
       require('tailwindcss')({
         config,
       }),

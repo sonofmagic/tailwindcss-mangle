@@ -1,9 +1,10 @@
-import path from 'pathe'
+import { createRequire } from 'node:module'
 import { internalPatch } from '@/core'
+import path from 'pathe'
 
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const versionsPkgDir = path.resolve(tailwindcssCasePath, 'versions/package.json')
-
+const require = createRequire(import.meta.url)
 function getTailwindcssVersion(str: string) {
   const match = /^tailwindcss([\d.]*)$/.exec(str)
   if (match === null) {
@@ -18,7 +19,6 @@ function getTailwindcssVersion(str: string) {
   }
 }
 
-// eslint-disable-next-line ts/no-require-imports
 const pkg = require(versionsPkgDir)
 const versions = Object.keys(pkg.dependencies)
 
