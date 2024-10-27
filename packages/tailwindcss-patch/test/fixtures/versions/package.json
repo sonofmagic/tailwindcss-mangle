@@ -17,7 +17,7 @@
   "packageManager": "yarn@1.22.22",
   "license": "ISC",
   "dependencies": {
-    "tailwindcss": "^3.4.7",
+    "tailwindcss": "^3.4.14",
     "tailwindcss2": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss3.0.0": "npm:tailwindcss@3.0.0",
     "tailwindcss3.2.1": "npm:tailwindcss@3.2.1",
@@ -37,6 +37,7 @@
     "tailwindcss3.4.0": "npm:tailwindcss@3.4.0",
     "tailwindcss3.4.1": "npm:tailwindcss@3.4.1",
     "tailwindcss3.4.12": "npm:tailwindcss@3.4.12",
+    "tailwindcss3.4.14": "npm:tailwindcss@3.4.14",
     "tailwindcss3.4.2": "npm:tailwindcss@3.4.2",
     "tailwindcss3.4.3": "npm:tailwindcss@3.4.3",
     "tailwindcss3.4.4": "npm:tailwindcss@3.4.4",
