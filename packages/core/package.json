@@ -3,12 +3,13 @@
   "type": "module",
   "version": "4.0.0-alpha.0",
   "description": "The core of tailwindcss-mangle",
-  "author": "SonOfMagic <qq1324318532@gmail.com>",
+  "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
-  "homepage": "https://github.com/sonofmagic/tailwindcss-mangle",
+  "homepage": "https://mangle.icebreaker.top/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git"
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git",
+    "directory": "packages/core"
   },
   "bugs": {
     "url": "https://github.com/sonofmagic/tailwindcss-mangle/issues"
