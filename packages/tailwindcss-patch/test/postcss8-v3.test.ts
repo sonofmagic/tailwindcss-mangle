@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-import path from 'node:path'
+import path from 'pathe'
 import { TailwindcssPatcher } from '@/core/patcher'
 import { processTailwindcss } from '@/core/postcss'
 import postcss from 'postcss'

@@ -1,11 +1,11 @@
-import type { ILengthUnitsPatchOptions } from '@/types'
 import type { ArrayExpression, StringLiteral } from '@babel/types'
-import path from 'node:path'
-import { generate, parse, traverse } from '@/babel'
-import logger from '@/logger'
-import { defuOverrideArray } from '@/utils'
+import type { ILengthUnitsPatchOptions } from '../../../types'
 import * as t from '@babel/types'
+import { defuOverrideArray } from '@tailwindcss-mangle/shared'
 import fs from 'fs-extra'
+import path from 'pathe'
+import { generate, parse, traverse } from '../../../babel'
+import logger from '../../../logger'
 
 function findAstNode(content: string, options: ILengthUnitsPatchOptions) {
   const { variableName, units } = options

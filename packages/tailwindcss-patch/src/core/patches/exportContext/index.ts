@@ -1,7 +1,7 @@
-import type { InternalPatchOptions } from '@/types'
-import path from 'node:path'
-import logger from '@/logger'
+import type { InternalPatchOptions } from '../../../types'
 import fs from 'fs-extra'
+import path from 'pathe'
+import logger from '../../../logger'
 import { inspectPostcssPlugin as inspectPostcssPluginCompat, inspectProcessTailwindFeaturesReturnContext as inspectProcessTailwindFeaturesReturnContextCompat } from './postcss-v2'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from './postcss-v3'
 

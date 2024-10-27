@@ -1,4 +1,4 @@
-import { resolve } from 'node:path'
+import { resolve } from 'pathe'
 import { configName } from '@/constants'
 import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
 import { getConfig, initConfig } from '@/index'

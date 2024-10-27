@@ -1,6 +1,6 @@
 import type { MangleUserConfig } from '@tailwindcss-mangle/config'
 import type { UnpluginFactory } from 'unplugin'
-import path from 'node:path'
+import path from 'pathe'
 import { pluginName } from '@/constants'
 import { getGroupedEntries } from '@/utils'
 import { createFilter } from '@rollup/pluginutils'

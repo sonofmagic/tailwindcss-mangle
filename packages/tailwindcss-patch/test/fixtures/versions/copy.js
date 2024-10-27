@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import path from 'pathe'
 
 import { copyFiles, ensureDir, getCurrentFilename } from './utils.js'
 function getTailwindcssVersion(str) {

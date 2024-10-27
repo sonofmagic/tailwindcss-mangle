@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import path from 'node:path'
+import path from 'pathe'
 import postcss from 'postcss'
 import tailwindcss from 'tailwindcss'
 

@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import path from 'pathe'
 import { fileURLToPath } from 'node:url'
 
 export function getCurrentFilename (importMetaUrl) {

@@ -1,7 +1,7 @@
-import type { ILengthUnitsPatchOptions, InternalPatchOptions } from '@/types'
 import type { PackageJson } from 'pkg-types'
-import path from 'node:path'
-import { defu } from '@/utils'
+import type { ILengthUnitsPatchOptions, InternalPatchOptions } from '../types'
+import { defu } from '@tailwindcss-mangle/shared'
+import path from 'pathe'
 import { gte } from 'semver'
 import { monkeyPatchForExposingContextV2, monkeyPatchForExposingContextV3, monkeyPatchForSupportingCustomUnit } from './patches'
 

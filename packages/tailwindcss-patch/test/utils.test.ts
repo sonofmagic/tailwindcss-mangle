@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'node:fs'
-import path from 'node:path'
 import { deleteAsync } from 'del'
 import fs from 'fs-extra'
+import path from 'pathe'
 import { fixturesRoot } from './utils'
 
 describe('utils', () => {

@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import path from 'pathe'
 import process from 'node:process'
 import { groupBy } from '@tailwindcss-mangle/shared'
 import { pluginName } from './constants'

@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'pathe'
 import { pkgName } from '@/constants'
 import { CacheManager, TailwindcssPatcher } from '@/core'
 import { getCacheOptions } from '@/core/cache'

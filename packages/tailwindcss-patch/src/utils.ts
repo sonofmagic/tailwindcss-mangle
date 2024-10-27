@@ -1,19 +1,10 @@
 import type { PackageJson } from 'pkg-types'
 import type { SyncOpts } from 'resolve'
-import path from 'node:path'
-import { createDefu } from 'defu'
 import fs from 'fs-extra'
+import path from 'pathe'
 import pkg from 'resolve'
 
-export { defu } from 'defu'
 const { sync } = pkg
-
-export const defuOverrideArray = createDefu((obj, key, value) => {
-  if (Array.isArray(obj[key]) && Array.isArray(value)) {
-    obj[key] = value
-    return true
-  }
-})
 
 export function requireResolve(id: string, opts?: SyncOpts) {
   return sync(id, opts)
@@ -70,5 +61,5 @@ export function getPackageInfoSync(name: string, options: SyncOpts = {}) {
 }
 
 export function isObject(val: any) {
-  return val != null && typeof val === 'object' && Array.isArray(val) === false
+  return val !== null && typeof val === 'object' && Array.isArray(val) === false
 };

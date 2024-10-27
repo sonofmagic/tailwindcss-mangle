@@ -1,5 +1,5 @@
 const fs = require('node:fs')
-const path = require('node:path')
+const path = require('pathe')
 const postcss = require('postcss')
 const tailwindcss = require('tailwindcss')
 const { TailwindcssPatcher } = require('tailwindcss-patch')

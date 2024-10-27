@@ -1,3 +1,14 @@
+import { createDefu } from 'defu'
+
+export { defu } from 'defu'
+
+export const defuOverrideArray = createDefu((obj, key, value) => {
+  if (Array.isArray(obj[key]) && Array.isArray(value)) {
+    obj[key] = value
+    return true
+  }
+})
+
 export const preserveClassNames = [
   // https://tailwindcss.com/docs/transition-timing-function start
   // https://github.com/sonofmagic/tailwindcss-mangle/issues/21

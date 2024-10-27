@@ -1,5 +1,6 @@
 {
   "name": "tailwindcss-patch",
+  "type": "module",
   "version": "4.0.0",
   "description": "patch tailwindcss for exposing context and extract classes",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
@@ -18,30 +19,51 @@
     "extract",
     "class"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "bin": {
-    "tw-patch": "bin/tw-patch.js",
-    "tailwindcss-patch": "bin/tw-patch.js"
+    "tw-patch": "dev/bin.js",
+    "tailwindcss-patch": "dev/bin.js"
   },
   "files": [
     "bin",
     "dist"
   ],
   "scripts": {
-    "dev": "unbuild --sourcemap",
-    "build": "unbuild",
+    "dev": "tsup --watch --sourcemap",
+    "build": "tsup",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
     "patch": "node bin/tw-patch.js install"
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "bin": {
+      "tw-patch": "bin/tw-patch.js",
+      "tailwindcss-patch": "bin/tw-patch.js"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs"
+      }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts"
   },
   "peerDependencies": {
-    "tailwindcss": ">=3.0.0"
+    "tailwindcss": ">=2.0.0"
   },
   "peerDependenciesMeta": {
     "tailwindcss": {
@@ -59,6 +81,7 @@
     "fs-extra": "^11.2.0",
     "jiti": "^2.3.3",
     "lilconfig": "^3.1.2",
+    "pathe": "^1.1.2",
     "postcss": "^8.4.47",
     "resolve": "^1.22.8",
     "semver": "^7.6.3"

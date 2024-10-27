@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'pathe'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '@/core/patches/exportContext/postcss-v3'
 import fs from 'fs-extra'
 

@@ -1,5 +1,5 @@
 import type { RollupOutput } from 'rollup'
-import path from 'node:path'
+import path from 'pathe'
 import utwm from '@/vite'
 import { build } from 'vite'
 // .replace(/(\r?\n){3,}/g, '\n\n')

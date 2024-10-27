@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'pathe'
 import utwm from '@/webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { compile, getErrors, getMemfsCompiler5, getWarnings, readAssets } from 'webpack-build-utils'

@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-unsafe-function-type */
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
 

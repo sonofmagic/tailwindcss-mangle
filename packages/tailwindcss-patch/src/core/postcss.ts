@@ -1,9 +1,10 @@
-import path from 'node:path'
 import process from 'node:process'
-import { jiti } from '@/jiti'
-import { defu, requireResolve } from '@/utils'
+import { defu } from '@tailwindcss-mangle/shared'
 import { lilconfig } from 'lilconfig'
+import path from 'pathe'
 import postcss from 'postcss'
+import { jiti } from '../jiti'
+import { requireResolve } from '../utils'
 
 export interface ProcessTailwindcssOptions {
   cwd?: string

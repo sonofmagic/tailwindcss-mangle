@@ -1,4 +1,4 @@
-import { resolve } from 'node:path'
+import { resolve } from 'pathe'
 import { getConfig, getDefaultMangleUserConfig, getDefaultUserConfig, initConfig } from '@/config'
 import { deleteAsync } from 'del'
 import { existsSync } from 'fs-extra'
