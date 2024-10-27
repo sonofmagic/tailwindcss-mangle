@@ -1,7 +1,7 @@
 {
   "name": "tailwindcss-patch",
   "type": "module",
-  "version": "4.0.0",
+  "version": "5.0.0-alpha.0",
   "description": "patch tailwindcss for exposing context and extract classes",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",

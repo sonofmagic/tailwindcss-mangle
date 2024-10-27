@@ -7,7 +7,25 @@
     "@tailwindcss-mangle/shared": "3.0.0",
     "tailwindcss-patch": "4.0.0",
     "unplugin-tailwindcss-mangle": "3.0.1",
-    "postcss7-compat": "1.0.0"
+    "postcss7-compat": "1.0.0",
+    "astro-app": "1.0.0",
+    "next-app": "0.1.0",
+    "next-app-router": "0.1.0",
+    "nuxt-app": "1.0.0",
+    "remix-app": "1.0.0",
+    "vite-template-solid": "0.0.0",
+    "vite-lit": "0.0.0",
+    "vite-react": "0.0.0",
+    "vite-svelte": "0.0.0",
+    "vite-vanilla": "0.0.0",
+    "vite-vue": "0.0.0",
+    "webpack5-vue3": "0.1.0"
   },
-  "changesets": []
+  "changesets": [
+    "clever-peaches-beg",
+    "fuzzy-shoes-tie",
+    "purple-pumas-listen",
+    "selfish-foxes-learn",
+    "selfish-hornets-swim"
+  ]
 }

@@ -1,5 +1,18 @@
 # unplugin-tailwindcss-mangle
 
+## 4.0.0-alpha.0
+
+### Major Changes
+
+- [`23badf9`](https://github.com/sonofmagic/tailwindcss-mangle/commit/23badf9e58f8e13f422ad406435eff1e8d8ae823) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: prefer esm
+
+### Patch Changes
+
+- Updated dependencies [[`6879782`](https://github.com/sonofmagic/tailwindcss-mangle/commit/68797825a08d4b4d15073024a257a3ec336187d2), [`6879782`](https://github.com/sonofmagic/tailwindcss-mangle/commit/68797825a08d4b4d15073024a257a3ec336187d2), [`2575863`](https://github.com/sonofmagic/tailwindcss-mangle/commit/2575863f532731c3a38bd2e8463f41031bc6efd3)]:
+  - @tailwindcss-mangle/config@4.0.0-alpha.0
+  - @tailwindcss-mangle/shared@4.0.0-alpha.0
+  - @tailwindcss-mangle/core@4.0.0-alpha.0
+
 ## 3.0.1
 
 ### Patch Changes
