@@ -186,8 +186,8 @@ importers:
         specifier: ^8.1.1
         version: 8.1.1(postcss@8.4.47)(typescript@5.6.3)(webpack@5.95.0)
       postcss7:
-        specifier: npm:postcss@7
-        version: postcss@7.0.39
+        specifier: npm:postcss@8
+        version: postcss@8.4.47
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
