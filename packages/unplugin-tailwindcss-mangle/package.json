@@ -1,5 +1,6 @@
 {
   "name": "unplugin-tailwindcss-mangle",
+  "type": "module",
   "version": "3.0.1",
   "description": "mangle tailwindcss utilities class plugin. support vite and webpack!",
   "author": "SonOfMagic <qq1324318532@gmail.com>",
