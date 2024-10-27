@@ -21,9 +21,7 @@ exports[`defaults > getDefaultUserConfig 1`] = `
       "loose": true,
     },
     "disabled": false,
-    "exclude": [
-      /\\[\\\\\\\\/\\]\\(node_modules\\|dist\\|\\\\\\.temp\\|\\\\\\.cache\\|\\\\\\.vscode\\)\\[\\\\\\\\/\\]/,
-    ],
+    "exclude": [],
     "include": [
       "**/*.{html,js,ts,jsx,tsx,vue,svelte,astro,elm,php,phtml,mdx,md}",
       /\\\\\\.\\(css\\|less\\|sass\\|scss\\|styl\\|stylus\\|pcss\\|postcss\\|sss\\)\\(\\?:\\$\\|\\\\\\?\\)/,

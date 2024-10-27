@@ -1,4 +1,4 @@
-import type { ICssHandlerOptions, IHandlerTransformResult } from '@/types'
+import type { ICssHandlerOptions, IHandlerTransformResult } from '../types'
 import postcss from 'postcss'
 import { transformSelectorPostcssPlugin } from './plugins'
 

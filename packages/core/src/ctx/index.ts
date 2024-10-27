@@ -1,12 +1,11 @@
 import type { ClassMapOutputItem, MangleUserConfig } from '@tailwindcss-mangle/config'
 import process from 'node:process'
-import { defaultMangleClassFilter, escapeStringRegexp } from '@/utils'
 import { getConfig } from '@tailwindcss-mangle/config'
-import { ClassGenerator } from '@tailwindcss-mangle/shared'
 import { defu } from 'defu'
 import { sort } from 'fast-sort'
 import fs from 'fs-extra'
 import { dirname, isAbsolute, resolve } from 'pathe'
+import { ClassGenerator, defaultMangleClassFilter, escapeStringRegexp } from '../shared'
 
 interface InitConfigOptions {
   cwd?: string

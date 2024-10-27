@@ -49,7 +49,7 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
       sourceType: 'unambiguous',
     })
   }
-  catch (error) {
+  catch {
     return {
       code: ms.original,
     }

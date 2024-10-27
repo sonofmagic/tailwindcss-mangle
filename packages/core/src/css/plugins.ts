@@ -1,5 +1,5 @@
-import type { ICssHandlerOptions } from '@/types'
 import type { PluginCreator } from 'postcss'
+import type { ICssHandlerOptions } from '../types'
 import defu from 'defu'
 import parser from 'postcss-selector-parser'
 
@@ -42,7 +42,6 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
                 if (ctx.isPreserveClass(s.value)) {
                   rule.cloneBefore()
                 }
-                // ctx.addToUsedBy(s.value, id)
                 s.value = v
               }
             }

@@ -49,10 +49,10 @@
     }
   },
   "dependencies": {
-    "@babel/generator": "^7.25.9",
-    "@babel/parser": "^7.25.9",
+    "@babel/generator": "^7.26.0",
+    "@babel/parser": "^7.26.1",
     "@babel/traverse": "^7.25.9",
-    "@babel/types": "^7.25.9",
+    "@babel/types": "^7.26.0",
     "@tailwindcss-mangle/config": "workspace:^",
     "cac": "^6.7.14",
     "consola": "^3.2.3",

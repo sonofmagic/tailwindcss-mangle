@@ -5,7 +5,7 @@ import { CSS_LANGS_RE } from 'is-css-request'
 
 const defaultPipelineInclude = ['**/*.{html,js,ts,jsx,tsx,vue,svelte,astro,elm,php,phtml,mdx,md}', CSS_LANGS_RE]
 
-const defaultPipelineExclude = [/[\\/](node_modules|dist|\.temp|\.cache|\.vscode)[\\/]/]
+const defaultPipelineExclude: string[] = []
 
 export function getDefaultPatchConfig(): PatchUserConfig {
   return {
