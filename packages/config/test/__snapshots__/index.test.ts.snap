@@ -15,7 +15,7 @@ exports[`config > 2.mangle-options 1`] = `
     "disabled": false,
     "exclude": [],
     "include": [
-      "**/*.{html,js,ts,jsx,tsx,vue,svelte,astro,elm,php,phtml,mdx,md}",
+      /\\\\\\.\\(html\\|js\\|ts\\|jsx\\|tsx\\|vue\\|svelte\\|astro\\|elm\\|php\\|phtml\\|mdx\\|md\\)\\(\\?:\\$\\|\\\\\\?\\)/,
       /\\\\\\.\\(css\\|less\\|sass\\|scss\\|styl\\|stylus\\|pcss\\|postcss\\|sss\\)\\(\\?:\\$\\|\\\\\\?\\)/,
     ],
     "mangleClassFilter": [Function],
