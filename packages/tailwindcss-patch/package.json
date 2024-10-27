@@ -31,8 +31,8 @@
   "module": "./src/index.ts",
   "types": "./src/index.ts",
   "bin": {
-    "tw-patch": "dev/bin.js",
-    "tailwindcss-patch": "dev/bin.js"
+    "tw-patch": "dev/bin.ts",
+    "tailwindcss-patch": "dev/bin.ts"
   },
   "files": [
     "bin",

@@ -12,6 +12,14 @@
       "cwd": "${workspaceFolder}/apps/vite-vue"
     },
     {
+      "command": "pnpm tw-extract",
+      "name": "[vite-react] tw-extract",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/apps/vite-react",
+      "smartStep": false
+    },
+    {
       "command": "pnpm start",
       "name": "[scripts] postcss7-compat run",
       "request": "launch",
