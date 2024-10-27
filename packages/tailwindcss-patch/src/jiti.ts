@@ -1,3 +1,3 @@
 import { createJiti } from 'jiti'
 
-export const jiti = createJiti(__filename)
+export const jiti = createJiti(import.meta.url)
