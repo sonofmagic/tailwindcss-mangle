@@ -1,5 +1,15 @@
 # @tailwindcss-mangle/core
 
+## 4.0.1-alpha.0
+
+### Patch Changes
+
+- [`a529a71`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a529a71a74faed4c699d164ae66ce68e87096e83) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: build dist empty issue
+
+- Updated dependencies [[`a529a71`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a529a71a74faed4c699d164ae66ce68e87096e83)]:
+  - @tailwindcss-mangle/config@4.0.1-alpha.0
+  - @tailwindcss-mangle/shared@4.0.1-alpha.0
+
 ## 4.0.0
 
 ### Major Changes

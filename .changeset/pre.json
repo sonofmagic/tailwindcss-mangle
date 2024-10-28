@@ -10,5 +10,7 @@
     "postcss7-compat": "0.0.1",
     "@tailwindcss-mangle/website": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "good-birds-pay"
+  ]
 }
