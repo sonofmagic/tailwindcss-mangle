@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo run build --filter=./packages/*",
     "dev": "pnpm -r run dev",
-    "test": "vitest run",
+    "test": "turbo run test --filter=./packages/*",
     "test:dev": "vitest",
     "lint": "eslint packages/**/*.ts --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
