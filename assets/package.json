@@ -1,0 +1,18 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "main": "index.js",
+  "scripts": {
+    "prepare": "tw-patch install",
+    "extract": "tw-patch extract"
+  },
+  "dependencies": {
+    "tailwindcss-patch": "^5.0.1",
+    "unplugin-tailwindcss-mangle": "^4.0.1"
+  }
+}
