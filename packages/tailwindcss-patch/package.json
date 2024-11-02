@@ -72,19 +72,19 @@
     }
   },
   "dependencies": {
-    "@babel/generator": "^7.26.0",
-    "@babel/parser": "^7.26.1",
+    "@babel/generator": "^7.26.2",
+    "@babel/parser": "^7.26.2",
     "@babel/traverse": "^7.25.9",
     "@babel/types": "^7.26.0",
     "@tailwindcss-mangle/config": "workspace:^",
     "cac": "^6.7.14",
     "consola": "^3.2.3",
     "fs-extra": "^11.2.0",
+    "jiti": "^2.4.0",
     "lilconfig": "^3.1.2",
     "pathe": "^1.1.2",
     "postcss": "^8.4.47",
     "resolve": "^1.22.8",
-    "semver": "^7.6.3",
-    "tsx": "^4.19.2"
+    "semver": "^7.6.3"
   }
 }

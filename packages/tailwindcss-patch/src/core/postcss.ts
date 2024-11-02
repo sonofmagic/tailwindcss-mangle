@@ -1,11 +1,13 @@
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { defu } from '@tailwindcss-mangle/shared'
+import { createJiti } from 'jiti'
 import { lilconfig } from 'lilconfig'
 import path from 'pathe'
 import postcss from 'postcss'
 import { requireResolve } from '../utils'
 
+const jiti = createJiti(import.meta.url)
 const require = createRequire(import.meta.url)
 export interface ProcessTailwindcssOptions {
   cwd?: string
@@ -20,7 +22,7 @@ export async function processTailwindcss(options: ProcessTailwindcssOptions) {
   // 没有具体指定的话，就走下面的分支
   if (!(typeof config === 'string' && path.isAbsolute(config))) {
     const moduleName = 'tailwind'
-    const tsx = (await import('tsx/cjs/api')).require
+
     const result = await lilconfig('tailwindcss', {
       searchPlaces: [
         `${moduleName}.config.js`,
@@ -32,12 +34,12 @@ export async function processTailwindcss(options: ProcessTailwindcssOptions) {
       ],
       loaders: {
         // 默认支持 js 和 cjs 2种格式
-        '.js': tsx,
-        '.cjs': tsx,
-        '.mjs': tsx,
-        '.ts': tsx,
-        '.cts': tsx,
-        '.mts': tsx,
+        '.js': jiti,
+        '.cjs': jiti,
+        '.mjs': jiti,
+        '.ts': jiti,
+        '.cts': jiti,
+        '.mts': jiti,
       },
     }).search(cwd)
     if (!result) {
