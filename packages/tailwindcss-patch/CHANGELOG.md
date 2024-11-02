@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 5.0.2
+
+### Patch Changes
+
+- [`4005a83`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4005a831a3875b8069bb804a90f19f72e6cee952) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: use jiti instead of tsx
+
 ## 5.0.1
 
 ### Patch Changes
