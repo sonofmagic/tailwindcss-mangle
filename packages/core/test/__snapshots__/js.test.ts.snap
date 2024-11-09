@@ -43,6 +43,24 @@ exports[`js handler > common StringLiteral with splitQuote false 1`] = `"element
 
 exports[`js handler > common TemplateElement 1`] = `"const counter = 0;element.innerHTML = \`<div class="tw-a tw-b">count is \${counter}</div>\`"`;
 
+exports[`js handler > common ignore StringLiteral 1`] = `
+"
+    const twIgnore = String.raw
+    element.innerHTML = \`<div class="\${twIgnore\`dark:bg-zinc-800/30\`} tw-a">count is counter</div>\`"
+`;
+
+exports[`js handler > common ignore StringLiteral case 0 1`] = `
+"
+    const twIgnore = String.raw
+    const className = \`\${twIgnore\`gap-y-4\`} tw-a\`"
+`;
+
+exports[`js handler > common ignore StringLiteral case 1 1`] = `
+"
+    const twIgnore = String.raw
+    const className = \`\${twIgnore\`gap-y-4\`} \${twIgnore\`bg-zinc-800/30\`}\`"
+`;
+
 exports[`js handler > eval script case 1`] = `
 "(function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
   "use strict";

@@ -1,5 +1,6 @@
 import { cssHandler } from '@/css'
 import { Context } from '@/ctx'
+import { jsHandler } from '@/js'
 import { getTestCase } from './utils'
 
 describe('css', () => {
@@ -27,6 +28,24 @@ describe('css', () => {
     })
     const testCase = `.gap-y-4 {color:red;}`
     ctx.addPreserveClass('gap-y-4')
+    const { code } = await cssHandler(testCase, {
+      ctx,
+    })
+    expect(code).toMatchSnapshot()
+  })
+
+  it('preserveClassNamesSet case 2', async () => {
+    await ctx.initConfig({
+      classList: ['gap-y-4'],
+    })
+    const jsTestCase = `
+    const twIgnore = String.raw
+    element.innerHTML = \`<div class="\${twIgnore\`gap-y-4\`} lg:dark:bg-zinc-800/30">count is counter</div>\``
+    jsHandler(jsTestCase, {
+      ctx,
+    })
+    const testCase = `.gap-y-4 {color:red;}`
+
     const { code } = await cssHandler(testCase, {
       ctx,
     })

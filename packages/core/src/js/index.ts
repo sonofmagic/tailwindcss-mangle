@@ -4,6 +4,7 @@ import { jsStringEscape } from '@ast-core/escape'
 import { sort } from 'fast-sort'
 import MagicString from 'magic-string'
 import { parse, traverse } from '../babel'
+import { ignoreIdentifier } from '../constants'
 import { makeRegex, splitCode } from '../shared'
 
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
@@ -66,6 +67,26 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
     TemplateElement: {
       enter(p) {
         const n = p.node
+        if (p.parentPath.isTemplateLiteral()) {
+          if (
+            (p.parentPath.parentPath.isTaggedTemplateExpression()
+              && p.parentPath.parentPath.get('tag').isIdentifier({
+                name: ignoreIdentifier,
+              })
+            )
+          ) {
+            const { splitQuote = true } = options
+            const array = splitCode(n.value.raw, {
+              splitQuote,
+            })
+            for (const item of array) {
+              ctx.addPreserveClass(item)
+            }
+
+            return
+          }
+        }
+
         handleValue(n.value.raw, n, options, ms, 0, false)
       },
     },

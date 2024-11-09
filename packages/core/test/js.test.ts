@@ -32,6 +32,51 @@ describe('js handler', async () => {
     expect(code).toMatchSnapshot()
   })
 
+  it('common ignore StringLiteral', () => {
+    const replaceMap = ctx.replaceMap
+    replaceMap.set('dark:bg-zinc-800/30', '1')
+    replaceMap.set('lg:dark:bg-zinc-800/30', '1')
+
+    const testCase = `
+    const twIgnore = String.raw
+    element.innerHTML = \`<div class="\${twIgnore\`dark:bg-zinc-800/30\`} lg:dark:bg-zinc-800/30">count is counter</div>\``
+    const code = jsHandler(testCase, {
+      ctx,
+
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('common ignore StringLiteral case 0', () => {
+    const replaceMap = ctx.replaceMap
+    replaceMap.set('gap-y-4', '1')
+    replaceMap.set('bg-zinc-800/30', '1')
+
+    const testCase = `
+    const twIgnore = String.raw
+    const className = \`\${twIgnore\`gap-y-4\`} bg-zinc-800/30\``
+    const code = jsHandler(testCase, {
+      ctx,
+
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
+  it('common ignore StringLiteral case 1', () => {
+    const replaceMap = ctx.replaceMap
+    replaceMap.set('gap-y-4', '1')
+    replaceMap.set('bg-zinc-800/30', '1')
+
+    const testCase = `
+    const twIgnore = String.raw
+    const className = \`\${twIgnore\`gap-y-4\`} \${twIgnore\`bg-zinc-800/30\`}\``
+    const code = jsHandler(testCase, {
+      ctx,
+
+    }).code
+    expect(code).toMatchSnapshot()
+  })
+
   it('common StringLiteral with splitQuote false', () => {
     const replaceMap = ctx.replaceMap
     replaceMap.set('dark:bg-zinc-800/30', '1')
