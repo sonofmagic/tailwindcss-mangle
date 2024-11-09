@@ -1,5 +1,27 @@
 # @tailwindcss-mangle/core
 
+## 4.0.2
+
+### Patch Changes
+
+- [`ba35630`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ba3563015630cddd38eb188493878852ceb026a4) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: add `twIgnore` for ignore mangle
+
+  ## Example
+
+  ### Input
+
+  ```js
+  const twIgnore = String.raw;
+  const className = `${twIgnore`gap-y-4`} bg-zinc-800/30`;
+  ```
+
+  ### Output
+
+  ```js
+  const twIgnore = String.raw;
+  const className = `${twIgnore`gap-y-4`} tw-a`;
+  ```
+
 ## 4.0.1
 
 ### Patch Changes
