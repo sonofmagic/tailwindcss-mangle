@@ -1,0 +1,37 @@
+# 需要在 Tailwindcss 提取的时候，获取更多的元数据
+
+## 需要知道更多信息
+
+https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108
+
+```ts
+interface Candidate {
+  value: string
+  file: string
+  start: number
+  end: number
+}
+```
+
+{/* https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/packages/%40tailwindcss-postcss/src/index.ts#L157 */}
+
+## Tailwindcss v3
+
+
+
+## Tailwindcss v4
+
+```rs
+    pub fn scan(&mut self) -> Vec<String> {
+        init_tracing();
+        self.prepare();
+        self.check_for_new_files();
+        self.compute_candidates();
+
+        let mut candidates: Vec<String> = self.candidates.clone().into_iter().collect();
+
+        candidates.sort();
+
+        candidates
+    }
+```
