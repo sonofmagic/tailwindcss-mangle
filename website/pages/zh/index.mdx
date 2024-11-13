@@ -1,3 +1,5 @@
+import { Callout } from 'nextra/components'
+
 # 欢迎来到 Tailwindcss-mangle
  
 ## 什么是 tailwindcss-mangle ?
@@ -23,7 +25,36 @@
 
 ## Mangle
 
-读取 `Patch` 导出的 `Json` ,将里面的 `Token` 对应的字符串字面量和模板字符串全部转义。
+读取 `Patch` 导出的 `Json` , 将里面的 `Token` 对应的字符串字面量和模板字符串全部转义。
+
+<Callout type="warning" emoji="⚠️">
+注意 `Mangle` 这一步骤可能会对你的应用程序造成一定的破坏
+
+因为在这个步骤会去遍历你所有代码中，符合 `Patch` Json 文件里面的进行修改
+
+所以很有可能会造成一定的误伤，这时候可以通过修改部分的配置项，来跳过 `Mangle`
+
+比如 
+
+### Input
+
+```js
+const twIgnore = String.raw;
+const className = `${twIgnore`gap-y-4`} bg-zinc-800/30`;
+```
+
+### Output
+
+```js
+const twIgnore = String.raw;
+const className = `${twIgnore`gap-y-4`} tw-a`;
+```
+
+当然还提供了各种的配置，用来防止误伤
+
+</Callout>
+
+
 
 
 {/* 1. [Patch](./patch)
