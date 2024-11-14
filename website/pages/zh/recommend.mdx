@@ -2,7 +2,7 @@
 
 ## 需要知道更多信息
 
-https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108
+
 
 现在的情况， `tailwindcss` 在从文件/内容中提取出 `Candidate` 的时候，是仅仅提取出一些字符串的信息。
 
@@ -21,15 +21,15 @@ interface Candidate {
 
 这样我们就能进行精确的修改，比如:
 
-```jsx title="before"
-const className = `gap-y-4 bg-zinc-800/30`;
+```diff filename="diff"
+// before
+- const className = `gap-y-4 bg-zinc-800/30`;
+// after
++ const className = `a b`;
 ```
 
-```js title="after"
-const className = `a b`;
-```
 
-不然现在去进行修改的话，只能所有的文件都去应用 整个 `Candidates` (`Set<string>`) 进行替换来修改，这往往会导致很多的误伤。
+不然现在去进行修改的话，只能所有的文件都去应用 整个 `Candidates` \(`Set<string>`\) 进行替换来修改，这往往会导致很多的误伤。
 
 而有了这个，我们只需要找到对应的文件，修改它的 `start` 和 `end` 对应的节点就能达到目的了
 
@@ -42,6 +42,8 @@ const className = `a b`;
 
 
 ## Tailwindcss v4
+
+https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108
 
 ```rs
     pub fn scan(&mut self) -> Vec<String> {
