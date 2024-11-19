@@ -2,11 +2,21 @@
 
 ## 需要知道更多信息
 
+现在的情况，`tailwindcss` 在从文件/内容中提取出 `Candidate` 的时候，是仅仅提取出一些字符串的信息，并不会记录所在的位置。
 
+```html
+<div class="flex bg-slate-500/25" />
+            ↑  ↑  ↑               ↑
+          token1      token2
+```
 
-现在的情况， `tailwindcss` 在从文件/内容中提取出 `Candidate` 的时候，是仅仅提取出一些字符串的信息。
+但是这对我们进行项目级别整体的分析就造成了困难。
 
-但是，假如后续有对原先源代码最终生成产物修改的需求，我们就需要知道，它原先提取的位置，比如下方这样一个对象
+我们无法知道一个文件里面到底有多少 token 被提取了，也不知道已经提取的 token 各自都在什么文件里存在 （文件和 token 的关系通常是多对多的）
+
+而且，假如后续有对原先源代码生成产物，进行修改的需求。我们就需要知道，它原先提取 token 的位置，
+
+比如把旦旦提取的 token 字符串，转化为下方这样一个对象
 
 ```ts
 interface Candidate {
@@ -33,7 +43,7 @@ interface Candidate {
 
 而有了这个，我们只需要找到对应的文件，修改它的 `start` 和 `end` 对应的节点就能达到目的了
 
-其实这个功能最终就有些类似于 `unocss` 的这个功能 https://unocss.dev/transformers/compile-class
+其实这个功能最终就有些类似于 `unocss` 的 [compile-class](https://unocss.dev/transformers/compile-class) 功能 
 
 {/* https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/packages/%40tailwindcss-postcss/src/index.ts#L157 */}
 
