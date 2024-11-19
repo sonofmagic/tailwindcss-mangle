@@ -1,10 +1,9 @@
 # tailwindcss-patch
 
-\[[中文(zh-cn)](./README-cn.md)\]
-
 get tailwindcss context at runtime ! extract all classes into file!
 
 - [tailwindcss-patch](#tailwindcss-patch)
+  - [Docs](#docs)
   - [Setup](#setup)
   - [Usage](#usage)
   - [Cli](#cli)
@@ -15,6 +14,10 @@ get tailwindcss context at runtime ! extract all classes into file!
   - [What's next?](#whats-next)
 
 > Nodejs version should >= `16.6.0`
+
+## Docs
+
+[mangle.icebreaker.top](https://mangle.icebreaker.top)
 
 ## Setup
 

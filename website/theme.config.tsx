@@ -10,4 +10,20 @@ export default {
     { locale: 'en', name: 'English' },
     { locale: 'zh', name: '中文' },
   ],
+  footer: {
+    content: (
+      <span>
+        MIT
+        {' '}
+        {new Date().getFullYear()}
+        {' '}
+        ©
+        {' '}
+        <a href="https://github.com/sonofmagic" className="underline" target="_blank">
+          sonofmagic
+        </a>
+        .
+      </span>
+    ),
+  },
 } as DocsThemeConfig

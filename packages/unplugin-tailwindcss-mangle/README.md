@@ -7,6 +7,7 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
 > Now Support `vite` and `webpack`
 
 - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
+  - [Docs](#docs)
   - [Features](#features)
   - [Usage](#usage)
     - [1. Install Package](#1-install-package)
@@ -20,6 +21,10 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
   - [Options](#options)
   - [Notice](#notice)
   - [Migration form v1 to v2](#migration-form-v1-to-v2)
+
+## Docs
+
+[mangle.icebreaker.top](https://mangle.icebreaker.top)
 
 ## Features
 

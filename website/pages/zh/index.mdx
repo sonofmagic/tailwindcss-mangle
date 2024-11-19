@@ -8,7 +8,7 @@ import { Callout } from 'nextra/components'
 
 制作这个库的目的在于，我们使用 `tailwindcss` 开发的页面，实在是太容易被拷贝抄袭了。
 
-所以使用 `tailwindcss-mangle` 来给抄袭者一点点的抄袭成本。
+而使用 `tailwindcss-mangle` 就能来给抄袭者带去一点点的抄袭成本。
 
 ## 如何使用？
 
@@ -27,35 +27,4 @@ import { Callout } from 'nextra/components'
 
 读取 `Patch` 导出的 `Json` , 将里面的 `Token` 对应的字符串字面量和模板字符串全部转义。
 
-<Callout type="warning" emoji="⚠️">
-注意 `Mangle` 这一步骤可能会对你的应用程序造成一定的破坏
 
-因为在这个步骤会去遍历你所有代码中，符合 `Patch` Json 文件里面的进行修改
-
-所以很有可能会造成一定的误伤，这时候可以通过修改部分的配置项，来跳过 `Mangle`
-
-比如 
-
-### Input
-
-```js
-const twIgnore = String.raw;
-const className = `${twIgnore`gap-y-4`} bg-zinc-800/30`;
-```
-
-### Output
-
-```js
-const twIgnore = String.raw;
-const className = `${twIgnore`gap-y-4`} tw-a`;
-```
-
-当然还提供了各种的配置，用来防止误伤
-
-</Callout>
-
-
-
-
-{/* 1. [Patch](./patch)
-2. [Mangle](./mangle) */}
