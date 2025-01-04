@@ -272,7 +272,7 @@ exports[`vite build > common build  2`] = `
 }
 .tw-pa {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .tw-aa {
     border-color: transparent
@@ -441,11 +441,11 @@ exports[`vite build > common build  2`] = `
 }
 .tw-q:hover {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .tw-fa:hover {
     --tw-bg-opacity: 1;
-    background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))
 }
 .group:hover .tw-i {
     --tw-translate-x: 0.25rem;
@@ -486,7 +486,7 @@ exports[`vite build > common build  2`] = `
     }
     .tw-wa {
         --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
     }
     .tw-kb {
         background-image: none
@@ -508,7 +508,7 @@ exports[`vite build > common build  2`] = `
 @media (prefers-color-scheme: dark) {
     .tw-l {
         --tw-border-opacity: 1;
-        border-color: rgb(38 38 38 / var(--tw-border-opacity))
+        border-color: rgb(38 38 38 / var(--tw-border-opacity, 1))
     }
     .tw-v {
         background-color: rgb(39 39 42 / 0.3)
@@ -562,7 +562,7 @@ exports[`vite build > common build  2`] = `
     }
     .tw-c:hover {
         --tw-border-opacity: 1;
-        border-color: rgb(64 64 64 / var(--tw-border-opacity))
+        border-color: rgb(64 64 64 / var(--tw-border-opacity, 1))
     }
     .tw-e:hover {
         background-color: rgb(38 38 38 / 0.3)
@@ -868,7 +868,7 @@ exports[`vite build > common build change class prefix 2`] = `
 }
 .ice-pa {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .ice-aa {
     border-color: transparent
@@ -1037,11 +1037,11 @@ exports[`vite build > common build change class prefix 2`] = `
 }
 .ice-q:hover {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .ice-fa:hover {
     --tw-bg-opacity: 1;
-    background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))
 }
 .group:hover .ice-i {
     --tw-translate-x: 0.25rem;
@@ -1082,7 +1082,7 @@ exports[`vite build > common build change class prefix 2`] = `
     }
     .ice-wa {
         --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
     }
     .ice-kb {
         background-image: none
@@ -1104,7 +1104,7 @@ exports[`vite build > common build change class prefix 2`] = `
 @media (prefers-color-scheme: dark) {
     .ice-l {
         --tw-border-opacity: 1;
-        border-color: rgb(38 38 38 / var(--tw-border-opacity))
+        border-color: rgb(38 38 38 / var(--tw-border-opacity, 1))
     }
     .ice-v {
         background-color: rgb(39 39 42 / 0.3)
@@ -1158,7 +1158,7 @@ exports[`vite build > common build change class prefix 2`] = `
     }
     .ice-c:hover {
         --tw-border-opacity: 1;
-        border-color: rgb(64 64 64 / var(--tw-border-opacity))
+        border-color: rgb(64 64 64 / var(--tw-border-opacity, 1))
     }
     .ice-e:hover {
         background-color: rgb(38 38 38 / 0.3)

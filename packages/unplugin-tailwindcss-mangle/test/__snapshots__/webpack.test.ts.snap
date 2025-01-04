@@ -195,14 +195,14 @@ exports[`webpack build > common > assets 1`] = `
 }
 .border-gray-300 {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .border-transparent {
     border-color: transparent
 }
 .bg-\\[\\#123456\\] {
     --tw-bg-opacity: 1;
-    background-color: rgb(18 52 86 / var(--tw-bg-opacity))
+    background-color: rgb(18 52 86 / var(--tw-bg-opacity, 1))
 }
 .bg-gradient-to-b {
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops))
@@ -365,11 +365,11 @@ exports[`webpack build > common > assets 1`] = `
 }
 .hover\\:border-gray-300:hover {
     --tw-border-opacity: 1;
-    border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))
 }
 .hover\\:bg-gray-100:hover {
     --tw-bg-opacity: 1;
-    background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))
 }
 .group:hover .group-hover\\:translate-x-1 {
     --tw-translate-x: 0.25rem;
@@ -410,7 +410,7 @@ exports[`webpack build > common > assets 1`] = `
     }
     .lg\\:bg-gray-200 {
         --tw-bg-opacity: 1;
-        background-color: rgb(229 231 235 / var(--tw-bg-opacity))
+        background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
     }
     .lg\\:bg-none {
         background-image: none
@@ -432,7 +432,7 @@ exports[`webpack build > common > assets 1`] = `
 @media (prefers-color-scheme: dark) {
     .dark\\:border-neutral-800 {
         --tw-border-opacity: 1;
-        border-color: rgb(38 38 38 / var(--tw-border-opacity))
+        border-color: rgb(38 38 38 / var(--tw-border-opacity, 1))
     }
     .dark\\:bg-zinc-800\\/30 {
         background-color: rgb(39 39 42 / 0.3)
@@ -486,7 +486,7 @@ exports[`webpack build > common > assets 1`] = `
     }
     .hover\\:dark\\:border-neutral-700:hover {
         --tw-border-opacity: 1;
-        border-color: rgb(64 64 64 / var(--tw-border-opacity))
+        border-color: rgb(64 64 64 / var(--tw-border-opacity, 1))
     }
     .hover\\:dark\\:bg-neutral-800\\/30:hover {
         background-color: rgb(38 38 38 / 0.3)
