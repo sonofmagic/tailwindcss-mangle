@@ -78,6 +78,67 @@ it('extracts candidates with positions from a template', async () => {
   `)
 })
 
+// let sources = (() => {
+//   // Disable auto source detection
+//   if (compiler.root === 'none') {
+//     return []
+//   }
+
+//   // No root specified, use the base directory
+//   if (compiler.root === null) {
+//     return [{ base, pattern: '**/*' }]
+//   }
+
+//   // Use the specified root
+//   return [compiler.root]
+// })().concat(compiler.globs)
+
+it('extracts candidates with positions from a template case 0', async () => {
+  const content = html`
+    <div class="bg-blue-500 hover:focus:text-white [color:red]">
+      <button class="bg-blue-500 text-white">My button</button>
+    </div>
+  `
+  const designSystem = await __unstable__loadDesignSystem('@import "tailwindcss" source("../src");', {
+    base: __dirname,
+  })
+
+  const candidates = await extractRawCandidates(content, 'html')
+  const validCandidates = candidates.filter(
+    ({ rawCandidate }) => designSystem.parseCandidate(rawCandidate).length > 0,
+  )
+
+  expect(validCandidates).toMatchInlineSnapshot(`
+    [
+      {
+        "end": 28,
+        "rawCandidate": "bg-blue-500",
+        "start": 17,
+      },
+      {
+        "end": 51,
+        "rawCandidate": "hover:focus:text-white",
+        "start": 29,
+      },
+      {
+        "end": 63,
+        "rawCandidate": "[color:red]",
+        "start": 52,
+      },
+      {
+        "end": 98,
+        "rawCandidate": "bg-blue-500",
+        "start": 87,
+      },
+      {
+        "end": 109,
+        "rawCandidate": "text-white",
+        "start": 99,
+      },
+    ]
+  `)
+})
+
 it('replaces the right positions for a candidate', async () => {
   const content = html`
     <h1>🤠👋</h1>

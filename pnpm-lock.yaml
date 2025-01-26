@@ -331,6 +331,12 @@ importers:
       '@tailwindcss-mangle/config':
         specifier: workspace:^
         version: link:../config
+      '@tailwindcss/node':
+        specifier: ^4.0.0
+        version: 4.0.0
+      '@tailwindcss/oxide':
+        specifier: ^4.0.0
+        version: 4.0.0
       cac:
         specifier: ^6.7.14
         version: 6.7.14
@@ -356,12 +362,6 @@ importers:
         specifier: ^7.6.3
         version: 7.6.3
     devDependencies:
-      '@tailwindcss/node':
-        specifier: ^4.0.0
-        version: 4.0.0
-      '@tailwindcss/oxide':
-        specifier: ^4.0.0
-        version: 4.0.0
       '@tailwindcss/postcss':
         specifier: ^4.0.0
         version: 4.0.0
