@@ -12,10 +12,11 @@ export interface ProcessTailwindcssOptions {
   cwd?: string
   config?: string
   majorVersion?: number
+  postcssPlugin?: string
 }
 
 export async function processTailwindcss(options: ProcessTailwindcssOptions) {
-  const { config: userConfig, cwd, majorVersion } = defu<ProcessTailwindcssOptions, ProcessTailwindcssOptions[]>(options, {
+  const { config: userConfig, cwd, majorVersion, postcssPlugin } = defu<ProcessTailwindcssOptions, ProcessTailwindcssOptions[]>(options, {
     cwd: process.cwd(),
     majorVersion: 3,
   })
@@ -48,10 +49,10 @@ export async function processTailwindcss(options: ProcessTailwindcssOptions) {
     }
     config = result.filepath
   }
-
+  const targetPostcssPlugin = postcssPlugin ?? (majorVersion === 4 ? '@tailwindcss/postcss' : 'tailwindcss')
   if (majorVersion === 4) {
     return await postcss([
-      require('@tailwindcss/postcss')({
+      require(targetPostcssPlugin)({
         config,
       }),
     ]).process('@import \'tailwindcss\';', {
@@ -60,7 +61,7 @@ export async function processTailwindcss(options: ProcessTailwindcssOptions) {
   }
 
   return await postcss([
-    require('tailwindcss')({
+    require(targetPostcssPlugin)({
       config,
     }),
   ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {

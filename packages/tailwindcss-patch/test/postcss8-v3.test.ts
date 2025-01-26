@@ -13,6 +13,7 @@ describe('postcss', () => {
     const twPatcher = new TailwindcssPatcher()
     const res = await processTailwindcss({
       cwd: p,
+      postcssPlugin: 'tailwindcss-3',
     })
     expect(res.css).toMatchSnapshot()
     const res0 = twPatcher.getContexts()
