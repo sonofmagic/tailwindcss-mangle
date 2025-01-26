@@ -13,7 +13,6 @@
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "dev": "next --turbopack",
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "predev": "pnpm prebuild",
     "start": "next start",
     "types:check": "tsc --noEmit"
   },
@@ -22,12 +21,12 @@
     "next": "^15.0.2",
     "nextra": "^4.1.0",
     "nextra-theme-docs": "^4.1.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-intersection-observer": "^8.26.2"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-intersection-observer": "^9.15.1"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^14.2.13",
+    "@next/bundle-analyzer": "^15.1.6",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.0",
     "pagefind": "^1.3.0",

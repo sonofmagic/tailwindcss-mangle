@@ -14,25 +14,9 @@ import { getDictionary, getDirection } from '../_dictionaries/get-dictionary'
 import './styles.css'
 
 export const metadata: Metadata = {
-  description:
-    'SWR is a React Hooks library for data fetching. SWR first returns the data from cache (stale), then sends the fetch request (revalidate), and finally comes with the up-to-date data again.',
   title: {
     absolute: '',
-    template: '%s | SWR',
-  },
-  metadataBase: new URL('https://swr.vercel.app'),
-  openGraph: {
-    images:
-      'https://assets.vercel.com/image/upload/v1572282926/swr/twitter-card.jpg',
-  },
-  twitter: {
-    site: '@vercel',
-  },
-  appleWebApp: {
-    title: 'SWR',
-  },
-  other: {
-    'msapplication-TileColor': '#fff',
+    template: '%s | Tailwindcss-mangle',
   },
 }
 
@@ -47,21 +31,20 @@ export default async function RootLayout({ children, params }) {
         <>
           <span
             className="ms-2 font-extrabold select-none max-md:hidden"
-            title={`SWR: ${dictionary.logo.title}`}
+            title="tailwindcss-mangle"
           >
-            SWR
+            Tailwindcss-mangle
           </span>
         </>
       )}
-      projectLink="https://github.com/vercel/swr"
-      chatLink="https://discord.com"
+      projectLink="https://github.com/sonofmagic/tailwindcss-mangle"
     >
       <LocaleSwitch />
     </Navbar>
   )
   const footer = (
     <Footer>
-      <span className="flex">
+      <span className="flex justify-center">
         MIT
         {' '}
         {new Date().getFullYear()}
@@ -96,7 +79,7 @@ export default async function RootLayout({ children, params }) {
 
           navbar={navbar}
           footer={footer}
-          docsRepositoryBase="https://github.com/shuding/nextra/blob/main/examples/swr-site"
+          docsRepositoryBase="https://github.com/sonofmagic/tailwindcss-mangle/tree/main/website"
           i18n={[
             { locale: 'en', name: 'English' },
             { locale: 'zh', name: '中文' },
