@@ -1,4 +1,4 @@
-import type { DocsThemeConfig } from 'nextra-theme-docs'
+// import type {  } from 'nextra-theme-docs'
 
 export default {
   logo: <span>Tailwindcss-mangle Documentation</span>,
@@ -26,4 +26,4 @@ export default {
       </span>
     ),
   },
-} as DocsThemeConfig
+} // as DocsThemeConfig

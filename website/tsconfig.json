@@ -8,20 +8,32 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": ".",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
     "resolveJsonModule": true,
     "allowJs": true,
     "strict": false,
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
