@@ -2,7 +2,7 @@ import type EnglishLocale from './en'
 
 export const i18n = {
   defaultLocale: 'en',
-  locales: ['en', 'es', 'ru'],
+  locales: ['en', 'zh'],
 } as const
 
 export type Locale = (typeof i18n)['locales'][number]

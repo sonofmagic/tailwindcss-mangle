@@ -1,12 +1,12 @@
-import { useMDXComponents as getThemeComponents } from 'nextra-theme-docs' // nextra-theme-blog or your custom theme
+import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
+import { Pre, withIcons } from 'nextra/components'
+import { GitHubIcon } from 'nextra/icons'
 
-// Get the default MDX components
-const themeComponents = getThemeComponents()
+const docsComponents = getDocsMDXComponents({
+  pre: withIcons(Pre, { js: GitHubIcon })
+})
 
-// Merge components
-export function useMDXComponents(components) {
-  return {
-    ...themeComponents,
-    ...components,
-  }
-}
+export const useMDXComponents: typeof getDocsMDXComponents = components => ({
+  ...docsComponents,
+  ...components
+})

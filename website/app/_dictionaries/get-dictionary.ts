@@ -8,7 +8,7 @@ const dictionaries: Dictionaries = {
   zh: () => import('./zh'),
 }
 
-export async function getDictionary(locale: Locale): Promise<Dictionary> {
+export async function getDictionary(locale: string): Promise<Dictionary> {
   const { default: dictionary } = await (
     dictionaries[locale] || dictionaries.en
   )()
@@ -17,10 +17,5 @@ export async function getDictionary(locale: Locale): Promise<Dictionary> {
 }
 
 export function getDirection(locale: Locale): 'ltr' | 'rtl' {
-  switch (locale) {
-    case 'en':
-    case 'zh':
-    default:
-      return 'ltr'
-  }
+  return 'ltr'
 }
