@@ -55,15 +55,15 @@ export function inspectPostcssPlugin(content: string) {
         const lastStatement = n.body[n.body.length - 1]
         const hasPatchedCondition0
           = prevStatement
-          && t.isVariableDeclaration(prevStatement)
-          && prevStatement.declarations.length === 1
-          && t.isIdentifier(prevStatement.declarations[0].id)
-          && prevStatement.declarations[0].id.name === variableName
+            && t.isVariableDeclaration(prevStatement)
+            && prevStatement.declarations.length === 1
+            && t.isIdentifier(prevStatement.declarations[0].id)
+            && prevStatement.declarations[0].id.name === variableName
         const hasPatchedCondition1
           = t.isExpressionStatement(lastStatement)
-          && t.isAssignmentExpression(lastStatement.expression)
-          && t.isIdentifier(lastStatement.expression.right)
-          && lastStatement.expression.right.name === variableName
+            && t.isAssignmentExpression(lastStatement.expression)
+            && t.isIdentifier(lastStatement.expression.right)
+            && lastStatement.expression.right.name === variableName
 
         hasPatched = hasPatchedCondition0 || hasPatchedCondition1
         if (!hasPatched) {

@@ -2,10 +2,11 @@ import type { UserConfig } from '../config'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import { createRequire } from 'node:module'
 import fs from 'fs-extra'
+import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
 import { getPatchOptions } from '../defaults'
 import logger from '../logger'
-import { getPackageInfoSync, isObject } from '../utils'
+import { isObject } from '../utils'
 import { CacheManager, getCacheOptions } from './cache'
 import { processTailwindcss } from './postcss'
 import { internalPatch } from './runtime'
@@ -17,7 +18,7 @@ export class TailwindcssPatcher {
   public patchOptions: InternalPatchOptions
   public patch: () => void
   public cacheManager: CacheManager
-  public packageInfo?: PackageInfo
+  public packageInfo: PackageInfo
   public majorVersion?: number
 
   constructor(options: TailwindcssPatcherOptions = {}) {
@@ -26,10 +27,17 @@ export class TailwindcssPatcher {
     this.patchOptions = getPatchOptions(options.patch)
 
     this.cacheManager = new CacheManager(this.cacheOptions)
-    this.packageInfo = getPackageInfoSync('tailwindcss', { basedir: this.patchOptions.basedir })
-    if (this.packageInfo && this.packageInfo.version) {
-      this.majorVersion = Number.parseInt(this.packageInfo.version[0])
+
+    const packageInfo = getPackageInfoSync('tailwindcss')
+
+    if (!packageInfo) {
+      throw new Error('tailwindcss not found')
     }
+
+    if (packageInfo.version) {
+      this.majorVersion = Number.parseInt(packageInfo.version[0])
+    }
+    this.packageInfo = packageInfo
     this.patch = () => {
       try {
         return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
@@ -57,7 +65,7 @@ export class TailwindcssPatcher {
       if (this.majorVersion === 2) {
         injectFilePath = path.join(distPath, 'jit/index.js')
       }
-      else {
+      else if (this.majorVersion === 3) {
         injectFilePath = path.join(distPath, 'plugin.js')
         if (!fs.existsSync(injectFilePath)) {
           injectFilePath = path.join(distPath, 'index.js')
@@ -124,7 +132,10 @@ export class TailwindcssPatcher {
     if (output && tailwindcss) {
       const { removeUniversalSelector, filename, loose } = output
 
-      await processTailwindcss(tailwindcss)
+      await processTailwindcss({
+        ...tailwindcss,
+        majorVersion: this.majorVersion,
+      })
 
       const set = this.getClassSet({
         removeUniversalSelector,

@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import path from 'pathe'
 import postcss from 'postcss'
-import tailwindcss from 'tailwindcss'
+import tailwindcss from 'tailwindcss-3'
 
 export const fixturesRoot = path.resolve(__dirname, './fixtures')
 

@@ -5,18 +5,19 @@ import { createJiti } from 'jiti'
 import { lilconfig } from 'lilconfig'
 import path from 'pathe'
 import postcss from 'postcss'
-import { requireResolve } from '../utils'
 
 const jiti = createJiti(import.meta.url)
 const require = createRequire(import.meta.url)
 export interface ProcessTailwindcssOptions {
   cwd?: string
   config?: string
+  majorVersion?: number
 }
 
 export async function processTailwindcss(options: ProcessTailwindcssOptions) {
-  const { config: userConfig, cwd } = defu<ProcessTailwindcssOptions, ProcessTailwindcssOptions[]>(options, {
+  const { config: userConfig, cwd, majorVersion } = defu<ProcessTailwindcssOptions, ProcessTailwindcssOptions[]>(options, {
     cwd: process.cwd(),
+    majorVersion: 3,
   })
   let config = userConfig
   // 没有具体指定的话，就走下面的分支
@@ -47,11 +48,19 @@ export async function processTailwindcss(options: ProcessTailwindcssOptions) {
     }
     config = result.filepath
   }
-  const id = requireResolve('tailwindcss', {
-    basedir: cwd,
-  })
+
+  if (majorVersion === 4) {
+    return await postcss([
+      require('@tailwindcss/postcss')({
+        config,
+      }),
+    ]).process('@import \'tailwindcss\';', {
+      from: undefined,
+    })
+  }
+
   return await postcss([
-    require(id)({
+    require('tailwindcss')({
       config,
     }),
   ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {

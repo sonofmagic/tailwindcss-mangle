@@ -47,7 +47,7 @@ describe('postcss', () => {
       },
     }
     const { css } = await postcss([
-      require('tailwindcss')({
+      require('tailwindcss-3')({
         config,
       }),
     ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {
