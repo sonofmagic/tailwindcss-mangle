@@ -356,6 +356,12 @@ importers:
         specifier: ^7.6.3
         version: 7.6.3
     devDependencies:
+      '@tailwindcss/node':
+        specifier: ^4.0.0
+        version: 4.0.0
+      '@tailwindcss/oxide':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@tailwindcss/postcss':
         specifier: ^4.0.0
         version: 4.0.0
