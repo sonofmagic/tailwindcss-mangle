@@ -16,9 +16,9 @@ A util for mangle tailwindcss
 
 ## tailwindcss-patch
 
-`tailwindcss-patch` is a util to patch tailwindcss code and get it's context at runtime.
+`tailwindcss-patch` is a util to patch tailwindcss code and get its context at runtime.
 
-click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
+Click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
 
 ## unplugin-tailwindcss-mangle
 
@@ -26,4 +26,8 @@ click [tailwindcss-patch](./packages/tailwindcss-patch) for more details.
 
 `unplugin-tailwindcss-mangle` is a plugin for `webpack` and `vite` to **obfuscate** tailwindcss class.
 
-you can enter [unplugin-tailwindcss-mangle](./packages/unplugin-tailwindcss-mangle) for usage and more details.
+You can enter [unplugin-tailwindcss-mangle](./packages/unplugin-tailwindcss-mangle) for usage and more details.
+
+### NextJs
+
+For users trying version `2.3.0` of `unplugin-tailwindcss-mangle`, it has been tested and confirmed to work in versions `14~15`. However, be aware that this package is no longer maintained, as the project is  focused on `vitejs`.
