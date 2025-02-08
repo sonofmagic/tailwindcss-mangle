@@ -1,12 +1,7 @@
 import process from 'node:process'
 import { defu } from '@tailwindcss-mangle/shared'
-import { __unstable__loadDesignSystem, compile } from '@tailwindcss/node'
+import { __unstable__loadDesignSystem } from '@tailwindcss/node'
 import { Scanner } from '@tailwindcss/oxide'
-
-// export async function xxx(css: string, opts: CompileOptions = {}) {
-//   const result = await parseCss(CSS.parse(css), opts)
-//   return result.designSystem
-// }
 
 export async function extractRawCandidates(
   content: string,
