@@ -92,7 +92,7 @@
     "postcss": "^8.5.1",
     "postcss-loader": "^8.1.1",
     "postcss7": "npm:postcss@7",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.34.6",
     "set-value": "^4.1.0",
