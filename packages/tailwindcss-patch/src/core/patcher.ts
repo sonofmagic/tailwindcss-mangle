@@ -8,6 +8,7 @@ import { getPatchOptions } from '../defaults'
 import logger from '../logger'
 import { isObject } from '../utils'
 import { CacheManager, getCacheOptions } from './cache'
+import { extractValidCandidates } from './candidates'
 import { processTailwindcss } from './postcss'
 import { internalPatch } from './runtime'
 
@@ -141,7 +142,6 @@ export class TailwindcssPatcher {
         removeUniversalSelector,
       })
       if (filename) {
-        await fs.ensureDir(path.dirname(filename))
         const classList = [...set]
         await fs.outputJSON(filename, classList, {
           spaces: loose ? 2 : undefined,
@@ -150,4 +150,6 @@ export class TailwindcssPatcher {
       }
     }
   }
+
+  extractValidCandidates = extractValidCandidates
 }
