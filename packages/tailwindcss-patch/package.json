@@ -76,18 +76,19 @@
     "@babel/traverse": "^7.26.8",
     "@babel/types": "^7.26.8",
     "@tailwindcss-mangle/config": "workspace:^",
-    "@tailwindcss/node": "^4.0.6",
-    "@tailwindcss/oxide": "^4.0.6",
     "cac": "^6.7.14",
     "consola": "^3.4.0",
     "fs-extra": "^11.3.0",
     "jiti": "^2.4.2",
     "lilconfig": "^3.1.3",
-    "pathe": "^2.0.2",
+    "pathe": "^2.0.3",
     "postcss": "^8.5.2",
-    "semver": "^7.7.1"
+    "semver": "^7.7.1",
+    "tailwindcss-config": "^0.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.0.6",
+    "@tailwindcss/oxide": "^4.0.6",
     "@tailwindcss/postcss": "^4.0.6",
     "@tailwindcss/vite": "^4.0.6",
     "tailwindcss": "^4",
