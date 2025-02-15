@@ -1,3 +1,4 @@
+import type { GlobEntry } from '@tailwindcss/oxide'
 import process from 'node:process'
 import { defu } from '@tailwindcss-mangle/shared'
 
@@ -9,7 +10,11 @@ function importOxide() {
   return import('@tailwindcss/oxide')
 }
 
-export async function extractRawCandidates(
+// function importTailwindcss() {
+//   return import('tailwindcss')
+// }
+
+export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
 ): Promise<{ rawCandidate: string, start: number, end: number }[]> {
@@ -25,8 +30,21 @@ export async function extractRawCandidates(
   return candidates
 }
 
+export async function extractRawCandidates(
+  sources?: GlobEntry[],
+): Promise<string[]> {
+  const { Scanner } = await importOxide()
+  const scanner = new Scanner({
+    sources,
+  })
+
+  const candidates = scanner.scan()
+
+  return candidates
+}
+
 export interface ExtractValidCandidatesOption {
-  content: string
+  content?: string
   base?: string
   css?: string
 }
@@ -38,13 +56,21 @@ export async function extractValidCandidates(options: ExtractValidCandidatesOpti
   >(options, {
     css: '@import "tailwindcss";',
     base: process.cwd(),
+    content: '**/*',
   })
+
+  // const { __unstable__loadDesignSystem } = await importTailwindcss()
   const { __unstable__loadDesignSystem } = await importNode()
   const designSystem = await __unstable__loadDesignSystem(css, { base })
 
-  const candidates = await extractRawCandidates(content)
+  const candidates = await extractRawCandidates([
+    {
+      base,
+      pattern: content,
+    },
+  ])
   const validCandidates = candidates.filter(
-    ({ rawCandidate }) => designSystem.parseCandidate(rawCandidate).length > 0,
+    rawCandidate => designSystem.parseCandidate(rawCandidate).length > 0,
   )
   return validCandidates
 }
