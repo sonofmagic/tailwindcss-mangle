@@ -82,7 +82,7 @@ describe('cache', () => {
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = twPatcher.getClassSet({
+    let set = await twPatcher.getClassSet({
       removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
@@ -94,7 +94,7 @@ describe('cache', () => {
     await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    set = twPatcher.getClassSet()
+    set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(3)
     expect(set.has('text-[99px]')).toBe(true)

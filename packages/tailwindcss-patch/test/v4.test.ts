@@ -11,7 +11,12 @@ describe('v4', () => {
     const candidates = await patcher.extractValidCandidates({
       base: import.meta.dirname,
       css: await fs.readFile(path.resolve(import.meta.dirname, './fixtures/v4/index.css'), 'utf8'),
-      content: path.resolve(import.meta.dirname, './fixtures/v4/index.html'),
+      sources: [
+        {
+          base: import.meta.dirname,
+          pattern: path.resolve(import.meta.dirname, './fixtures/v4/index.html'),
+        },
+      ],
     })
     expect(candidates).toMatchSnapshot()
   })
@@ -22,7 +27,12 @@ describe('v4', () => {
     const candidates = await patcher.extractValidCandidates({
       base: import.meta.dirname,
       css: await fs.readFile(path.resolve(import.meta.dirname, './fixtures/v4/index.css'), 'utf8'),
-
+      sources: [
+        {
+          base: import.meta.dirname,
+          pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
+        },
+      ],
     })
     expect(candidates).toMatchSnapshot()
   })

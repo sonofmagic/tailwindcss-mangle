@@ -1,5 +1,6 @@
 import type { UserConfig } from '../config'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
+import type { ExtractValidCandidatesOption } from './candidates'
 import { createRequire } from 'node:module'
 import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
@@ -88,28 +89,42 @@ export class TailwindcssPatcher {
     return contexts.filter(x => isObject(x)).map(x => x.classCache)
   }
 
-  getClassCacheSet(options?: { removeUniversalSelector?: boolean }): Set<string> {
-    const classCaches = this.getClassCaches()
+  async getClassCacheSet(options?: { removeUniversalSelector?: boolean } & Partial<ExtractValidCandidatesOption>): Promise<Set<string>> {
     const classSet = new Set<string>()
-    for (const classCacheMap of classCaches) {
-      const keys = classCacheMap.keys()
-      for (const key of keys) {
-        const v = key.toString()
-        if (options?.removeUniversalSelector && v === '*') {
-          continue
-        }
-        classSet.add(v)
+    if (this.majorVersion === 4) {
+      const candidates = await extractValidCandidates({
+        base: options?.base,
+        css: options?.css,
+        sources: options?.sources,
+      })
+      for (const candidate of candidates) {
+        classSet.add(candidate)
       }
     }
+    else {
+      const classCaches = this.getClassCaches()
+
+      for (const classCacheMap of classCaches) {
+        const keys = classCacheMap.keys()
+        for (const key of keys) {
+          const v = key.toString()
+          if (options?.removeUniversalSelector && v === '*') {
+            continue
+          }
+          classSet.add(v)
+        }
+      }
+    }
+
     return classSet
   }
 
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
-  getClassSet(options?: { cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
+  async getClassSet(options?: { cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
     const { cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
-    const set = this.getClassCacheSet({
+    const set = await this.getClassCacheSet({
       removeUniversalSelector,
     })
     if (cacheStrategy === 'overwrite') {
@@ -133,12 +148,14 @@ export class TailwindcssPatcher {
     if (output && tailwindcss) {
       const { removeUniversalSelector, filename, loose } = output
 
-      await processTailwindcss({
-        ...tailwindcss,
-        majorVersion: this.majorVersion,
-      })
+      if (this.majorVersion === 3) {
+        await processTailwindcss({
+          ...tailwindcss,
+          majorVersion: this.majorVersion,
+        })
+      }
 
-      const set = this.getClassSet({
+      const set = await this.getClassSet({
         removeUniversalSelector,
       })
       if (filename) {

@@ -11,7 +11,7 @@ describe('class', () => {
     await getCss([getTestCase('hello-world.html')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = twPatcher.getClassSet({
+    const set = await twPatcher.getClassSet({
       removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
@@ -34,7 +34,7 @@ describe('class', () => {
     await getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = twPatcher.getClassSet({
+    const set = await twPatcher.getClassSet({
       cacheStrategy: 'overwrite',
       removeUniversalSelector: false,
     })
@@ -47,7 +47,7 @@ describe('class', () => {
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = twPatcher.getClassSet({
+    let set = await twPatcher.getClassSet({
       removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
@@ -59,7 +59,7 @@ describe('class', () => {
     await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    set = twPatcher.getClassSet({
+    set = await twPatcher.getClassSet({
       removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
@@ -75,7 +75,7 @@ describe('class', () => {
     await getCss([`<view class="bg-[#7d7ac2] text-[100px] text-[#123456] {{true?'h-[30px]':'h-[45px]'}}">111</view>`])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = twPatcher.getClassSet({
+    const set = await twPatcher.getClassSet({
       removeUniversalSelector: false,
     })
     expect(set.size).toBeGreaterThan(0)
