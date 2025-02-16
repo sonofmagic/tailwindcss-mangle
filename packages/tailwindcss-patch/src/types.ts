@@ -56,7 +56,7 @@ export type TailwindcssClassCache = Map<
 export interface TailwindcssRuntimeContext {
   applyClassCache: Map<any, any>
   candidateRuleCache: Map<
-    string | string,
+    string,
     Set<
       [
         {

@@ -44,12 +44,12 @@ export async function extractRawCandidates(
 }
 
 export interface ExtractValidCandidatesOption {
-  sources: GlobEntry[]
-  base: string
-  css: string
+  sources?: GlobEntry[]
+  base?: string
+  css?: string
 }
 
-export async function extractValidCandidates(options?: Partial<ExtractValidCandidatesOption>) {
+export async function extractValidCandidates(options?: ExtractValidCandidatesOption) {
   const cwd = process.cwd()
   const { sources, base, css } = defuOverrideArray<
     Required<ExtractValidCandidatesOption>,
