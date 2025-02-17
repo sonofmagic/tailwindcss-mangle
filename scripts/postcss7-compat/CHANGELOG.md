@@ -1,5 +1,12 @@
 # postcss7-compat
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`a3214e0`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a3214e058cd1c6e691899abf4e90e62958efc268), [`362bd49`](https://github.com/sonofmagic/tailwindcss-mangle/commit/362bd496d40810b8f69c4789900117f83c9c4692), [`4318d88`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4318d8808a18186d7a0676a7aad941efa25a2ff5)]:
+  - tailwindcss-patch@6.0.0
+
 ## 0.0.3
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @tailwindcss-mangle/config
 
+## 5.0.0
+
+### Major Changes
+
+- [`362bd49`](https://github.com/sonofmagic/tailwindcss-mangle/commit/362bd496d40810b8f69c4789900117f83c9c4692) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat!: add tailwindcss v4 support and change getClassSet return type
+
+  need to install `@tailwindcss/node` and `@tailwindcss/oxide`
+
+  This is a breaking change because it changes the return type of `getClassSet`.
+
 ## 4.0.1
 
 ### Patch Changes
