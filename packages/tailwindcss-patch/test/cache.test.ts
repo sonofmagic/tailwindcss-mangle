@@ -30,7 +30,7 @@ describe('cache', () => {
     expect(fs.existsSync(dir)).toBe(false)
   })
 
-  it('write and read cache default option', () => {
+  it('write and read cache default option', async () => {
     // const opt = getCacheOptions()
     const opt = {
       dir: path.resolve(__dirname, 'fixtures/cache'),
@@ -38,17 +38,17 @@ describe('cache', () => {
     }
     cm = new CacheManager(opt)
     let cache: Set<string> | undefined
-    cache = cm.read()
+    cache = await cm.read()
     // expect(cache).toBe(undefined)
-    cm.write(new Set(['a', 'b', 'c']))
-    cache = cm.read()
+    await cm.write(new Set(['a', 'b', 'c']))
+    cache = await cm.read()
     expect(cache).toBeDefined()
     if (cache) {
       expect(cache.size).toBe(3)
     }
   })
 
-  it('read broken cache', () => {
+  it('read broken cache', async () => {
     // const opt = getCacheOptions()
 
     const dir = path.resolve(__dirname, './fixtures', `${pkgName}-broken`)
@@ -65,7 +65,7 @@ describe('cache', () => {
       dir,
     })
     expect(fs.existsSync(filepath)).toBe(true)
-    const cache = cm.read()
+    const cache = await cm.read()
     expect(cache).toBe(undefined)
     expect(fs.existsSync(filepath)).toBe(false)
   })
@@ -78,12 +78,14 @@ describe('cache', () => {
         file: 'merge-multiple-context.json',
       },
     })
-    twPatcher.setCache(new Set())
+    await twPatcher.setCache(new Set())
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     let set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
+      output: {
+        removeUniversalSelector: false,
+      },
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)

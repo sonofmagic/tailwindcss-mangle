@@ -89,9 +89,9 @@ export class TailwindcssPatcher {
     return contexts.filter(x => isObject(x)).map(x => x.classCache)
   }
 
-  async getClassCacheSet(options?: PatchUserConfig): Promise<Set<string>> {
+  async getClassCacheSet(): Promise<Set<string>> {
     const classSet = new Set<string>()
-    const { output, tailwindcss } = options ?? {}
+    const { output, tailwindcss } = this.patchOptions
     if (this.majorVersion === 4) {
       const { v4 } = tailwindcss ?? {}
       if (Array.isArray(v4?.cssEntries)) {
@@ -161,18 +161,14 @@ export class TailwindcssPatcher {
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
-  async getClassSet(options?: PatchUserConfig) {
-    const { output, tailwindcss } = options ?? {}
+  async getClassSet() {
     const cacheStrategy = this.cacheOptions.strategy ?? 'merge'
-    const set = await this.getClassCacheSet({
-      output,
-      tailwindcss,
-    })
+    const set = await this.getClassCacheSet()
     if (cacheStrategy === 'overwrite') {
       set.size > 0 && this.setCache(set)
     }
     else if (cacheStrategy === 'merge') {
-      const cacheSet = this.getCache()
+      const cacheSet = await this.getCache()
       if (cacheSet) {
         for (const x of cacheSet) {
           set.add(x)
@@ -196,10 +192,7 @@ export class TailwindcssPatcher {
         })
       }
 
-      const set = await this.getClassSet({
-        output,
-        tailwindcss,
-      })
+      const set = await this.getClassSet()
       if (filename) {
         const classList = [...set]
         await fs.outputJSON(filename, classList, {

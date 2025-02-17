@@ -12,7 +12,9 @@ describe('class', () => {
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
     const set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
+      output: {
+        removeUniversalSelector: false,
+      },
     })
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(4)
@@ -23,21 +25,24 @@ describe('class', () => {
     const twPatcher = new TailwindcssPatcher({
       cache: {
         dir,
+        strategy: 'overwrite',
+      },
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
       },
     })
-    const res = twPatcher.getCache()
+    const res = await twPatcher.getCache()
     expect(res instanceof Set).toBe(true)
     expect(res?.size).toBe(5)
-    const p = twPatcher.setCache(new Set(['*', 'bg-[#123456]', 'font-bold', 'text-3xl', 'underline']))
+    const p = await twPatcher.setCache(new Set(['*', 'bg-[#123456]', 'font-bold', 'text-3xl', 'underline']))
     expect(p).toBe(path.resolve(dir, 'index.json'))
     twPatcher.patch()
     await getCss([getTestCase('hello-world.html'), getTestCase('hello-world.js')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = await twPatcher.getClassSet({
-      cacheStrategy: 'overwrite',
-      removeUniversalSelector: false,
-    })
+    const set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(5)
   })

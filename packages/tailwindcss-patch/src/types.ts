@@ -1,4 +1,6 @@
 /* eslint-disable ts/no-unsafe-function-type */
+import type { PatchUserConfig } from '@tailwindcss-mangle/config'
+import type { PackageJson } from 'pkg-types'
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
 
@@ -9,6 +11,7 @@ export interface PackageInfo {
   version: string | undefined
   rootPath: string
   packageJsonPath: string
+  packageJson: PackageJson
 }
 
 export interface CacheOptions {
@@ -22,7 +25,7 @@ export interface InternalCacheOptions extends CacheOptions {
   enable?: boolean
 }
 
-export interface PatchOptions {
+export interface PatchOptions extends PatchUserConfig {
   overwrite?: boolean
   paths?: string[]
   basedir?: string

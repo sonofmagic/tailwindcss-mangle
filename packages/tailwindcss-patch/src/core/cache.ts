@@ -49,11 +49,10 @@ export class CacheManager {
     }
   }
 
-  write(data: Set<string>) {
+  async write(data: Set<string>) {
     try {
-      const { dir, filename } = this.options
-      fs.ensureDirSync(dir)
-      fs.outputFileSync(filename, JSON.stringify([...data], undefined, 2), 'utf8')
+      const { filename } = this.options
+      await fs.outputJSON(filename, [...data])
       return filename
     }
     catch {
@@ -61,12 +60,12 @@ export class CacheManager {
     }
   }
 
-  read() {
+  async read() {
     const { filename } = this.options
     try {
-      if (fs.existsSync(filename)) {
-        const data = fs.readFileSync(filename, 'utf8')
-        return new Set<string>(JSON.parse(data))
+      if (await fs.exists(filename)) {
+        const data = await fs.readJSON(filename)
+        return new Set<string>(data)
       }
     }
     catch {

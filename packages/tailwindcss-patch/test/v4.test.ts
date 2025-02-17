@@ -38,23 +38,24 @@ describe('v4', () => {
   })
 
   it('tailwindcssPatcher getClassSet case 2', async () => {
-    const patcher = new TailwindcssPatcher()
-    patcher.majorVersion = 4
-    const candidates = await patcher.getClassSet({
-      tailwindcss: {
-        v4: {
-          base: import.meta.dirname,
-          css: await fs.readFile(path.resolve(import.meta.dirname, './fixtures/v4/index.css'), 'utf8'),
-          sources: [
-            {
-              base: import.meta.dirname,
-              pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
-            },
-          ],
+    const patcher = new TailwindcssPatcher({
+      patch: {
+        tailwindcss: {
+          v4: {
+            base: import.meta.dirname,
+            css: await fs.readFile(path.resolve(import.meta.dirname, './fixtures/v4/index.css'), 'utf8'),
+            sources: [
+              {
+                base: import.meta.dirname,
+                pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
+              },
+            ],
+          },
         },
       },
-
     })
+    patcher.majorVersion = 4
+    const candidates = await patcher.getClassSet()
     expect(candidates).toMatchSnapshot()
   })
 
