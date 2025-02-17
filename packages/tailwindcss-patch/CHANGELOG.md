@@ -1,5 +1,14 @@
 # tailwindcss-patch
 
+## 6.0.2
+
+### Patch Changes
+
+- [`a8ba17e`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a8ba17e8e676602f8d724ee3b08cc83ad6654192) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore: export type and add tailwindcss version config
+
+- Updated dependencies [[`a8ba17e`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a8ba17e8e676602f8d724ee3b08cc83ad6654192)]:
+  - @tailwindcss-mangle/config@5.0.1
+
 ## 6.0.1
 
 ### Patch Changes
