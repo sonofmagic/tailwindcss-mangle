@@ -1,15 +1,15 @@
-import { resolve } from 'pathe'
-import { configName } from '@/constants'
+import { CONFIG_NAME } from '@/constants'
 import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
 import { getConfig, initConfig } from '@/index'
 import { deleteAsync } from 'del'
 import { existsSync } from 'fs-extra'
+import { resolve } from 'pathe'
 import { fixturesRoot } from './utils'
 
 describe('config', () => {
   it('0.default', async () => {
     const cwd = resolve(fixturesRoot, './config/0.default')
-    const configPath = resolve(cwd, `${configName}.config.ts`)
+    const configPath = resolve(cwd, `${CONFIG_NAME}.config.ts`)
     if (existsSync(configPath)) {
       await deleteAsync(configPath)
     }

@@ -1,6 +1,6 @@
 import process from 'node:process'
+import { CONFIG_NAME, getConfig, initConfig } from '@tailwindcss-mangle/config'
 import cac from 'cac'
-import { configName, getConfig, initConfig } from './config'
 import { TailwindcssPatcher } from './core'
 import { getPatchOptions } from './defaults'
 import logger from './logger'
@@ -21,7 +21,7 @@ cli.command('install', 'patch install').action(() => {
 
 cli.command('init').action(async () => {
   await init()
-  logger.success(`✨ ${configName}.config.ts initialized!`)
+  logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
 })
 
 cli.command('extract').action(async () => {

@@ -1,7 +1,8 @@
-import type { UserConfig } from '../config'
+import type { UserConfig } from '@tailwindcss-mangle/config'
 import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import type { ExtractValidCandidatesOption } from './candidates'
 import { createRequire } from 'node:module'
+import process from 'node:process'
 import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
@@ -89,16 +90,55 @@ export class TailwindcssPatcher {
     return contexts.filter(x => isObject(x)).map(x => x.classCache)
   }
 
-  async getClassCacheSet(options?: { removeUniversalSelector?: boolean } & Partial<ExtractValidCandidatesOption>): Promise<Set<string>> {
+  async getClassCacheSet(options?: UserConfig['patch']): Promise<Set<string>> {
     const classSet = new Set<string>()
+    const { output, tailwindcss } = options ?? {}
     if (this.majorVersion === 4) {
-      const candidates = await extractValidCandidates({
-        base: options?.base,
-        css: options?.css,
-        sources: options?.sources,
-      })
-      for (const candidate of candidates) {
-        classSet.add(candidate)
+      const { v4 } = tailwindcss ?? {}
+      if (Array.isArray(v4?.cssEntries)) {
+        const results = (
+          await Promise.all(
+            v4
+              .cssEntries
+              .map(async (x) => {
+                if (await fs.exists(x)) {
+                  const css = await fs.readFile(x, 'utf8')
+                  return css
+                }
+                return false
+              }),
+          )
+        ).filter(x => x) as string[]
+        for (const css of results) {
+          const candidates = await extractValidCandidates({
+            base: v4?.base,
+            css,
+            sources: v4?.sources?.map((x) => {
+              return {
+                base: x.base ?? v4?.base ?? process.cwd(),
+                pattern: x.pattern,
+              }
+            }),
+          })
+          for (const candidate of candidates) {
+            classSet.add(candidate)
+          }
+        }
+      }
+      else {
+        const candidates = await extractValidCandidates({
+          base: v4?.base,
+          css: v4?.css,
+          sources: v4?.sources?.map((x) => {
+            return {
+              base: x.base ?? v4?.base ?? process.cwd(),
+              pattern: x.pattern,
+            }
+          }),
+        })
+        for (const candidate of candidates) {
+          classSet.add(candidate)
+        }
       }
     }
     else {
@@ -108,7 +148,7 @@ export class TailwindcssPatcher {
         const keys = classCacheMap.keys()
         for (const key of keys) {
           const v = key.toString()
-          if (options?.removeUniversalSelector && v === '*') {
+          if (output?.removeUniversalSelector && v === '*') {
             continue
           }
           classSet.add(v)
@@ -122,10 +162,12 @@ export class TailwindcssPatcher {
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
-  async getClassSet(options?: { cacheStrategy?: CacheStrategy, removeUniversalSelector?: boolean }) {
-    const { cacheStrategy = this.cacheOptions.strategy ?? 'merge', removeUniversalSelector = true } = options ?? {}
+  async getClassSet(options?: UserConfig['patch']) {
+    const { output, tailwindcss } = options ?? {}
+    const cacheStrategy = this.cacheOptions.strategy ?? 'merge'
     const set = await this.getClassCacheSet({
-      removeUniversalSelector,
+      output,
+      tailwindcss,
     })
     if (cacheStrategy === 'overwrite') {
       set.size > 0 && this.setCache(set)
@@ -146,7 +188,7 @@ export class TailwindcssPatcher {
   async extract(options?: UserConfig['patch']) {
     const { output, tailwindcss } = options ?? {}
     if (output && tailwindcss) {
-      const { removeUniversalSelector, filename, loose } = output
+      const { filename, loose } = output
 
       if (this.majorVersion === 3) {
         await processTailwindcss({
@@ -156,7 +198,8 @@ export class TailwindcssPatcher {
       }
 
       const set = await this.getClassSet({
-        removeUniversalSelector,
+        output,
+        tailwindcss,
       })
       if (filename) {
         const classList = [...set]

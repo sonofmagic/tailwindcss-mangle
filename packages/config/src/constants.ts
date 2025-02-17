@@ -1,1 +1,1 @@
-export const configName = 'tailwindcss-mangle'
+export const CONFIG_NAME = 'tailwindcss-mangle'

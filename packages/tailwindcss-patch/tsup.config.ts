@@ -8,4 +8,5 @@ export default defineConfig({
   dts: true,
   cjsInterop: true,
   splitting: true,
+  external: ['tailwindcss', '@tailwindcss/node', '@tailwindcss/oxide'],
 })

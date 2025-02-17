@@ -24,6 +24,28 @@ export interface MangleUserConfig {
   preserveFunction?: string[]
 }
 
+export interface TailwindcssV2PatchConfig {
+  cwd?: string
+  config?: string
+}
+export interface TailwindcssV3PatchConfig {
+  cwd?: string
+  config?: string
+}
+
+export interface GlobEntry {
+  /** Base path of the glob */
+  base?: string
+  /** Glob pattern */
+  pattern: string
+}
+export interface TailwindcssV4PatchConfig {
+  sources?: GlobEntry[]
+  base?: string
+  css?: string
+  cssEntries?: string[]
+}
+
 export interface PatchUserConfig {
   output?: {
     filename?: string
@@ -35,8 +57,10 @@ export interface PatchUserConfig {
     removeUniversalSelector?: boolean
   }
   tailwindcss?: {
-    cwd?: string
-    config?: string
+    // only support jit mode
+    v2?: TailwindcssV2PatchConfig
+    v3?: TailwindcssV3PatchConfig
+    v4?: TailwindcssV4PatchConfig
   }
 }
 
