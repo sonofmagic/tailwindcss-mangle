@@ -46,6 +46,14 @@ export interface TailwindcssV4PatchConfig {
   cssEntries?: string[]
 }
 
+export interface TailwindcssUserConfig {
+  version?: 2 | 3 | 4
+  // only support jit mode
+  v2?: TailwindcssV2PatchConfig
+  v3?: TailwindcssV3PatchConfig
+  v4?: TailwindcssV4PatchConfig
+}
+
 export interface PatchUserConfig {
   output?: {
     filename?: string
@@ -56,12 +64,7 @@ export interface PatchUserConfig {
      */
     removeUniversalSelector?: boolean
   }
-  tailwindcss?: {
-    // only support jit mode
-    v2?: TailwindcssV2PatchConfig
-    v3?: TailwindcssV3PatchConfig
-    v4?: TailwindcssV4PatchConfig
-  }
+  tailwindcss?: TailwindcssUserConfig
 }
 
 export interface UserConfig {

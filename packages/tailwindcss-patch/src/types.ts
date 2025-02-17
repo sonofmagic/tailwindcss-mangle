@@ -1,10 +1,14 @@
 /* eslint-disable ts/no-unsafe-function-type */
-import type { PatchUserConfig } from '@tailwindcss-mangle/config'
+import type { PatchUserConfig, TailwindcssUserConfig } from '@tailwindcss-mangle/config'
 import type { PackageJson } from 'pkg-types'
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
 
 export type CacheStrategy = 'merge' | 'overwrite'
+
+export type {
+  TailwindcssUserConfig,
+}
 
 export interface PackageInfo {
   name: string

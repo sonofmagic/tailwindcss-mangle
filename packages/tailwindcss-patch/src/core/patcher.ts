@@ -39,6 +39,9 @@ export class TailwindcssPatcher {
     if (packageInfo.version) {
       this.majorVersion = Number.parseInt(packageInfo.version[0])
     }
+    if (this.patchOptions.tailwindcss?.version) {
+      this.majorVersion = this.patchOptions.tailwindcss.version
+    }
     this.packageInfo = packageInfo
     this.patch = () => {
       try {
