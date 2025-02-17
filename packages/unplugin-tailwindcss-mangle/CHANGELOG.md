@@ -1,5 +1,13 @@
 # unplugin-tailwindcss-mangle
 
+## 4.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`362bd49`](https://github.com/sonofmagic/tailwindcss-mangle/commit/362bd496d40810b8f69c4789900117f83c9c4692)]:
+  - @tailwindcss-mangle/config@5.0.0
+  - @tailwindcss-mangle/core@4.0.3
+
 ## 4.0.2
 
 ### Patch Changes

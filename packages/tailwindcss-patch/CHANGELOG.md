@@ -1,5 +1,24 @@
 # tailwindcss-patch
 
+## 6.0.0
+
+### Major Changes
+
+- [`a3214e0`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a3214e058cd1c6e691899abf4e90e62958efc268) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore: prepare for tailwindcss v4
+
+- [`362bd49`](https://github.com/sonofmagic/tailwindcss-mangle/commit/362bd496d40810b8f69c4789900117f83c9c4692) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat!: add tailwindcss v4 support and change getClassSet return type
+
+  need to install `@tailwindcss/node` and `@tailwindcss/oxide`
+
+  This is a breaking change because it changes the return type of `getClassSet`.
+
+- [`4318d88`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4318d8808a18186d7a0676a7aad941efa25a2ff5) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore: upgrade tailwindcss-config@1 and remove jiti and lilconfig dep
+
+### Patch Changes
+
+- Updated dependencies [[`362bd49`](https://github.com/sonofmagic/tailwindcss-mangle/commit/362bd496d40810b8f69c4789900117f83c9c4692)]:
+  - @tailwindcss-mangle/config@5.0.0
+
 ## 5.0.2
 
 ### Patch Changes

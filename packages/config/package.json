@@ -1,7 +1,7 @@
 {
   "name": "@tailwindcss-mangle/config",
   "type": "module",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "The config and load function of tailwindcss-mangle",
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
