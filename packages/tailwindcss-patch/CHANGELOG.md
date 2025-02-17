@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 6.0.1
+
+### Patch Changes
+
+- [`8e364e4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8e364e47a76b3e4cecfadef2f5f9602e61708a03) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat!: remove getClassSet params and set default patch options
+
 ## 6.0.0
 
 ### Major Changes
