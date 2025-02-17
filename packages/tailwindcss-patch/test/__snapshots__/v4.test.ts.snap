@@ -25,7 +25,16 @@ exports[`v4 > extractRawCandidates case 0 1`] = `
 ]
 `;
 
-exports[`v4 > tailwindcssPatcher casae 1 1`] = `
+exports[`v4 > tailwindcssPatcher case 0 1`] = `
+[
+  "bg-[#123456]",
+  "content",
+  "text-(--x)",
+  "text-xs",
+]
+`;
+
+exports[`v4 > tailwindcssPatcher case 1 1`] = `
 [
   "bg-[#123456]",
   "bg-gradient-to-b",
@@ -39,11 +48,16 @@ exports[`v4 > tailwindcssPatcher casae 1 1`] = `
 ]
 `;
 
-exports[`v4 > tailwindcssPatcher case 0 1`] = `
-[
+exports[`v4 > tailwindcssPatcher getClassSet case 2 1`] = `
+Set {
   "bg-[#123456]",
+  "bg-gradient-to-b",
   "content",
+  "from-[#2f73f1]",
+  "h-[30px]",
   "text-(--x)",
   "text-xs",
-]
+  "to-[#4bcefd]",
+  "w-[323px]",
+}
 `;

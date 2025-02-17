@@ -1,7 +1,7 @@
-import { resolve } from 'pathe'
-import { getConfig, getDefaultMangleUserConfig, getDefaultUserConfig, initConfig } from '@/config'
+import { getConfig, getDefaultMangleUserConfig, getDefaultUserConfig, initConfig } from '@tailwindcss-mangle/config'
 import { deleteAsync } from 'del'
 import { existsSync } from 'fs-extra'
+import { resolve } from 'pathe'
 import { fixturesRoot } from './utils'
 
 describe('config', () => {

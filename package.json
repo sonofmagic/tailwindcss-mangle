@@ -32,8 +32,8 @@
     "script:mirror": "monorepo mirror"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.12",
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.28.0",
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
     "@commitlint/prompt-cli": "^19.7.1",

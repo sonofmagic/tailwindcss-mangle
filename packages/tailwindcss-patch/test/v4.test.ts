@@ -21,7 +21,7 @@ describe('v4', () => {
     expect(candidates).toMatchSnapshot()
   })
 
-  it('tailwindcssPatcher casae 1', async () => {
+  it('tailwindcssPatcher case 1', async () => {
     const patcher = new TailwindcssPatcher()
 
     const candidates = await patcher.extractValidCandidates({
@@ -33,6 +33,27 @@ describe('v4', () => {
           pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
         },
       ],
+    })
+    expect(candidates).toMatchSnapshot()
+  })
+
+  it('tailwindcssPatcher getClassSet case 2', async () => {
+    const patcher = new TailwindcssPatcher()
+    patcher.majorVersion = 4
+    const candidates = await patcher.getClassSet({
+      tailwindcss: {
+        v4: {
+          base: import.meta.dirname,
+          css: await fs.readFile(path.resolve(import.meta.dirname, './fixtures/v4/index.css'), 'utf8'),
+          sources: [
+            {
+              base: import.meta.dirname,
+              pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
+            },
+          ],
+        },
+      },
+
     })
     expect(candidates).toMatchSnapshot()
   })

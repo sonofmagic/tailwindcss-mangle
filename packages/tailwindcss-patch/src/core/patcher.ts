@@ -1,6 +1,5 @@
-import type { UserConfig } from '@tailwindcss-mangle/config'
-import type { CacheStrategy, InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
-import type { ExtractValidCandidatesOption } from './candidates'
+import type { PatchUserConfig } from '@tailwindcss-mangle/config'
+import type { InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import fs from 'fs-extra'
@@ -90,7 +89,7 @@ export class TailwindcssPatcher {
     return contexts.filter(x => isObject(x)).map(x => x.classCache)
   }
 
-  async getClassCacheSet(options?: UserConfig['patch']): Promise<Set<string>> {
+  async getClassCacheSet(options?: PatchUserConfig): Promise<Set<string>> {
     const classSet = new Set<string>()
     const { output, tailwindcss } = options ?? {}
     if (this.majorVersion === 4) {
@@ -162,7 +161,7 @@ export class TailwindcssPatcher {
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
-  async getClassSet(options?: UserConfig['patch']) {
+  async getClassSet(options?: PatchUserConfig) {
     const { output, tailwindcss } = options ?? {}
     const cacheStrategy = this.cacheOptions.strategy ?? 'merge'
     const set = await this.getClassCacheSet({
@@ -185,7 +184,7 @@ export class TailwindcssPatcher {
     return set
   }
 
-  async extract(options?: UserConfig['patch']) {
+  async extract(options?: PatchUserConfig) {
     const { output, tailwindcss } = options ?? {}
     if (output && tailwindcss) {
       const { filename, loose } = output
