@@ -1,6 +1,7 @@
 import type { FilterPattern } from '@rollup/pluginutils'
 import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
 import type { PackageResolvingOptions } from 'local-pkg'
+
 export interface ClassMapOutputOptions {
   enable?: boolean
   filename?: string

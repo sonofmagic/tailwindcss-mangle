@@ -1,4 +1,3 @@
-import type { PatchUserConfig } from '@tailwindcss-mangle/config'
 import type { InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import { createRequire } from 'node:module'
 import process from 'node:process'
@@ -193,8 +192,8 @@ export class TailwindcssPatcher {
     return set
   }
 
-  async extract(options?: PatchUserConfig) {
-    const { output, tailwindcss } = options ?? {}
+  async extract() {
+    const { output, tailwindcss } = this.patchOptions
     if (output && tailwindcss) {
       const { filename, loose } = output
 
@@ -211,7 +210,10 @@ export class TailwindcssPatcher {
         await fs.outputJSON(filename, classList, {
           spaces: loose ? 2 : undefined,
         })
-        return filename
+        return {
+          filename,
+          classList,
+        }
       }
     }
   }
