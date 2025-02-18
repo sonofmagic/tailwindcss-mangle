@@ -1,6 +1,6 @@
 import type { FilterPattern } from '@rollup/pluginutils'
 import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
-
+import type { PackageResolvingOptions } from 'local-pkg'
 export interface ClassMapOutputOptions {
   enable?: boolean
   filename?: string
@@ -54,17 +54,21 @@ export interface TailwindcssUserConfig {
   v4?: TailwindcssV4PatchConfig
 }
 
-export interface PatchUserConfig {
-  output?: {
-    filename?: string
+export interface OutputUserConfig {
+  filename?: string
 
-    loose?: boolean
-    /**
-     * @description remove * in output json
-     */
-    removeUniversalSelector?: boolean
-  }
+  loose?: boolean
+  /**
+   * @description remove * in output json
+   */
+  removeUniversalSelector?: boolean
+}
+
+export interface PatchUserConfig {
+  packageName?: string
+  output?: OutputUserConfig
   tailwindcss?: TailwindcssUserConfig
+  resolve?: PackageResolvingOptions
 }
 
 export interface UserConfig {

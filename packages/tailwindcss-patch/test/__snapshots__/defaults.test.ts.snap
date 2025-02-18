@@ -7,5 +7,6 @@ exports[`defaults > getDefaultPatchOptions 1`] = `
     "extendLengthUnits": false,
   },
   "overwrite": true,
+  "packageName": "tailwindcss",
 }
 `;

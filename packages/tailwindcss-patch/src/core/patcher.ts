@@ -30,7 +30,10 @@ export class TailwindcssPatcher {
 
     this.cacheManager = new CacheManager(this.cacheOptions)
 
-    const packageInfo = getPackageInfoSync('tailwindcss')
+    const packageInfo = getPackageInfoSync(
+      this.patchOptions.packageName ?? 'tailwindcss',
+      this.patchOptions.resolve,
+    )
 
     if (!packageInfo) {
       throw new Error('tailwindcss not found')

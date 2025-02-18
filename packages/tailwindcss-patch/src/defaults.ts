@@ -4,6 +4,7 @@ import { defu } from '@tailwindcss-mangle/shared'
 
 export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
   return {
+    packageName: 'tailwindcss',
     applyPatches: {
       exportContext: true,
       extendLengthUnits: false,
