@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 6.0.5
+
+### Patch Changes
+
+- [`229b1a6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/229b1a61d78065e4e24d0c59f22ad9243bd094e2) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: add filter option for PatchOptions
+
 ## 6.0.4
 
 ### Patch Changes
