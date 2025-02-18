@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss-3'
 import { createRequire } from 'node:module'
 import { TailwindcssPatcher } from '@/core/patcher'
 import { processTailwindcss } from '@/core/postcss'
@@ -10,7 +10,13 @@ const require = createRequire(import.meta.url)
 describe('postcss', () => {
   it('getCss 0.common', async () => {
     const p = path.resolve(appRoot, '0.common')
-    const twPatcher = new TailwindcssPatcher()
+    const twPatcher = new TailwindcssPatcher({
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+      },
+    })
     const res = await processTailwindcss({
       cwd: p,
       postcssPlugin: 'tailwindcss-3',
@@ -18,9 +24,7 @@ describe('postcss', () => {
     expect(res.css).toMatchSnapshot()
     const res0 = twPatcher.getContexts()
     expect(res0.length).toBe(1)
-    const set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
-    })
+    const set = await twPatcher.getClassSet()
     expect(set.size).toBe(4)
   })
 

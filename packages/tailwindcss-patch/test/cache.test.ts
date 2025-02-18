@@ -77,16 +77,17 @@ describe('cache', () => {
         dir,
         file: 'merge-multiple-context.json',
       },
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+      },
     })
     await twPatcher.setCache(new Set())
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = await twPatcher.getClassSet({
-      output: {
-        removeUniversalSelector: false,
-      },
-    })
+    let set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[100px]')).toBe(true)

@@ -1,6 +1,6 @@
-import path from 'pathe'
 import { inspectPostcssPlugin, inspectProcessTailwindFeaturesReturnContext } from '@/core/patches/exportContext/postcss-v3'
 import fs from 'fs-extra'
+import path from 'pathe'
 
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const twltsLibPath = path.resolve(tailwindcssCasePath, 'versions/3.3.1/lib')

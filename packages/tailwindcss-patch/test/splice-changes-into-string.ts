@@ -10,7 +10,9 @@ export interface StringChange {
  */
 export function spliceChangesIntoString(str: string, changes: StringChange[]) {
   // If there are no changes, return the original string
-  if (!changes[0]) { return str }
+  if (!changes[0]) {
+    return str
+  }
 
   // Sort all changes in order to make it easier to apply them
   changes.sort((a, b) => {

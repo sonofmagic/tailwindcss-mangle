@@ -10,10 +10,6 @@ function importOxide() {
   return import('@tailwindcss/oxide')
 }
 
-// function importTailwindcss() {
-//   return import('tailwindcss')
-// }
-
 export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',

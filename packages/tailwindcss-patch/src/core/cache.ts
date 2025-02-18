@@ -55,27 +55,24 @@ export class CacheManager {
       await fs.outputJSON(filename, [...data])
       return filename
     }
-    catch {
-      logger.error('write cache file fail!')
+    catch (error) {
+      logger.error(error)
     }
   }
 
   async read() {
     const { filename } = this.options
+    const isExisted = await fs.exists(filename)
     try {
-      if (await fs.exists(filename)) {
+      if (isExisted) {
         const data = await fs.readJSON(filename)
         return new Set<string>(data)
       }
     }
-    catch {
-      logger.error(`parse cache content fail! path:${filename}`)
-      try {
-        fs.unlinkSync(filename)
-      }
-      catch {
-        logger.error(`delete cache file fail! path:${filename}`)
-      }
+    catch (error) {
+      logger.error(`path:${filename}`)
+      logger.error(error)
+      isExisted && await fs.remove(filename)
     }
   }
 }

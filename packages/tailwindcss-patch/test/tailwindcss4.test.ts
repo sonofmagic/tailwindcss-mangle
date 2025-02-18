@@ -1,8 +1,7 @@
+import { extractRawCandidatesWithPositions } from '@/core/candidates'
 import { __unstable__loadDesignSystem } from '@tailwindcss/node'
-// import { compile } from '@tailwindcss/node'
-import { type ChangedContent, Scanner } from '@tailwindcss/oxide'
+import { Scanner } from '@tailwindcss/oxide'
 import path from 'pathe'
-import { extractRawCandidates, printCandidate } from './candidates'
 import { spliceChangesIntoString } from './splice-changes-into-string'
 
 const html = String.raw
@@ -42,7 +41,7 @@ it('extracts candidates with positions from a template', async () => {
     base: __dirname,
   })
 
-  const candidates = await extractRawCandidates(content, 'html')
+  const candidates = await extractRawCandidatesWithPositions(content, 'html')
   const validCandidates = candidates.filter(
     ({ rawCandidate }) => designSystem.parseCandidate(rawCandidate).length > 0,
   )
@@ -103,7 +102,7 @@ it('extracts candidates with positions from a template case 0', async () => {
     base: __dirname,
   })
 
-  const candidates = await extractRawCandidates(content, 'html')
+  const candidates = await extractRawCandidatesWithPositions(content, 'html')
   const validCandidates = candidates.filter(
     ({ rawCandidate }) => designSystem.parseCandidate(rawCandidate).length > 0,
   )
@@ -149,7 +148,7 @@ it('replaces the right positions for a candidate', async () => {
     base: __dirname,
   })
 
-  const candidates = await extractRawCandidates(content, 'html')
+  const candidates = await extractRawCandidatesWithPositions(content, 'html')
 
   const candidate = candidates.find(
     ({ rawCandidate }) => designSystem.parseCandidate(rawCandidate).length > 0,
@@ -259,19 +258,3 @@ for (const [inputVariant, outputVariant] of variants) {
     combinations.push([`${inputVariant}${inputCandidate}`, `${outputVariant}${outputCandidate}`])
   }
 }
-
-describe('printCandidate()', () => {
-  it.each(combinations)('%s -> %s', async (candidate: string, result: string) => {
-    const designSystem = await __unstable__loadDesignSystem('@import "tailwindcss";', {
-      base: __dirname,
-    })
-
-    const candidates = designSystem.parseCandidate(candidate)
-
-    // Sometimes we will have a functional and a static candidate for the same
-    // raw input string (e.g. `-inset-full`). Dedupe in this case.
-    const cleaned = new Set([...candidates].map(c => printCandidate(designSystem, c)))
-
-    expect([...cleaned]).toEqual([result])
-  })
-})
