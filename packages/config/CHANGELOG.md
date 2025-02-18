@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 5.0.2
+
+### Patch Changes
+
+- [`78c0297`](https://github.com/sonofmagic/tailwindcss-mangle/commit/78c02972f17865d489e66274086bcf11860689eb) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: add getPackageInfo options
+
 ## 5.0.1
 
 ### Patch Changes
