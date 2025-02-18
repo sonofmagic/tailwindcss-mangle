@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 6.0.3
+
+### Patch Changes
+
+- [`96075ec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/96075ec887acdb3ac27ead12b00c6b3dac8447e9) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: CacheManager error
+
 ## 6.0.2
 
 ### Patch Changes
