@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 5.0.3
+
+### Patch Changes
+
+- [`e87d048`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e87d048324ca80ccef69902ab45e4d0c993f06fa) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: tw-patch extract error
+
 ## 5.0.2
 
 ### Patch Changes

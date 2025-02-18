@@ -1,5 +1,14 @@
 # tailwindcss-patch
 
+## 6.0.6
+
+### Patch Changes
+
+- [`e87d048`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e87d048324ca80ccef69902ab45e4d0c993f06fa) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: tw-patch extract error
+
+- Updated dependencies [[`e87d048`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e87d048324ca80ccef69902ab45e4d0c993f06fa)]:
+  - @tailwindcss-mangle/config@5.0.3
+
 ## 6.0.5
 
 ### Patch Changes

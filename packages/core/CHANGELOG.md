@@ -1,5 +1,12 @@
 # @tailwindcss-mangle/core
 
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`e87d048`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e87d048324ca80ccef69902ab45e4d0c993f06fa)]:
+  - @tailwindcss-mangle/config@5.0.3
+
 ## 4.0.5
 
 ### Patch Changes
