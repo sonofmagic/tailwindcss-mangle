@@ -375,8 +375,8 @@ importers:
         specifier: npm:tailwindcss@^3
         version: tailwindcss@3.4.17
       tailwindcss-4:
-        specifier: npm:tailwindcss@^4
-        version: tailwindcss@4.0.0
+        specifier: npm:tailwindcss@^4.0.6
+        version: tailwindcss@4.0.6
 
   packages/unplugin-tailwindcss-mangle:
     dependencies:

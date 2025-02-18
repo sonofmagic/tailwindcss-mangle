@@ -33,6 +33,12 @@ export class TailwindcssPatcher {
     const packageInfo = getPackageInfoSync(
       this.patchOptions.packageName ?? 'tailwindcss',
       this.patchOptions.resolve,
+      // defuOverrideArray<PackageResolvingOptions, Partial<PackageResolvingOptions>[]>(
+      //   this.patchOptions.resolve!,
+      //   {
+      //     paths: [import.meta.dirname],
+      //   },
+      // ),
     )
 
     if (!packageInfo) {
