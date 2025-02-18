@@ -6,6 +6,7 @@ exports[`defaults > getDefaultPatchOptions 1`] = `
     "exportContext": true,
     "extendLengthUnits": false,
   },
+  "filter": [Function],
   "overwrite": true,
   "packageName": "tailwindcss",
 }

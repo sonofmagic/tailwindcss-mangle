@@ -22,6 +22,7 @@ export class TailwindcssPatcher {
   public cacheManager: CacheManager
   public packageInfo: PackageInfo
   public majorVersion?: number
+  public filter?: (className: string) => boolean
 
   constructor(options: TailwindcssPatcherOptions = {}) {
     this.rawOptions = options
@@ -29,7 +30,7 @@ export class TailwindcssPatcher {
     this.patchOptions = getPatchOptions(options.patch)
 
     this.cacheManager = new CacheManager(this.cacheOptions)
-
+    this.filter = this.patchOptions.filter
     const packageInfo = getPackageInfoSync(
       this.patchOptions.packageName ?? 'tailwindcss',
       this.patchOptions.resolve,
@@ -132,7 +133,7 @@ export class TailwindcssPatcher {
             }),
           })
           for (const candidate of candidates) {
-            classSet.add(candidate)
+            this.filter?.(candidate) && classSet.add(candidate)
           }
         }
       }
@@ -148,7 +149,7 @@ export class TailwindcssPatcher {
           }),
         })
         for (const candidate of candidates) {
-          classSet.add(candidate)
+          this.filter?.(candidate) && classSet.add(candidate)
         }
       }
     }
@@ -162,7 +163,7 @@ export class TailwindcssPatcher {
           if (output?.removeUniversalSelector && v === '*') {
             continue
           }
-          classSet.add(v)
+          this.filter?.(v) && classSet.add(v)
         }
       }
     }

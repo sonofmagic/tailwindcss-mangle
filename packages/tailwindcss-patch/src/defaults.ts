@@ -1,8 +1,8 @@
-import type { DeepRequired, InternalPatchOptions, PatchOptions } from './types'
+import type { InternalPatchOptions, PatchOptions } from './types'
 import process from 'node:process'
 import { defu } from '@tailwindcss-mangle/shared'
 
-export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
+export function getDefaultPatchOptions() {
   return {
     packageName: 'tailwindcss',
     applyPatches: {
@@ -10,6 +10,7 @@ export function getDefaultPatchOptions(): DeepRequired<PatchOptions> {
       extendLengthUnits: false,
     },
     overwrite: true,
+    filter: () => true,
   }
 }
 

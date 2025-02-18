@@ -37,6 +37,7 @@ export interface PatchOptions extends PatchUserConfig {
     exportContext?: boolean
     extendLengthUnits?: boolean | ILengthUnitsPatchOptions
   }
+  filter?: (className: string) => boolean
 }
 
 export interface InternalPatchOptions extends PatchOptions {

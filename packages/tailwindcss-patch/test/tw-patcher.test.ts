@@ -5,17 +5,19 @@ import { getCss, getTestCase } from './utils'
 describe('class', () => {
   it('default', async () => {
     // const dir = path.resolve(__dirname, './fixtures/cache')
-    const twPatcher = new TailwindcssPatcher()
+    const twPatcher = new TailwindcssPatcher({
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+      },
+    })
     expect(twPatcher.cacheOptions.enable).toBe(false)
     twPatcher.patch()
     await getCss([getTestCase('hello-world.html')])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = await twPatcher.getClassSet({
-      output: {
-        removeUniversalSelector: false,
-      },
-    })
+    const set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(4)
   })
@@ -48,13 +50,17 @@ describe('class', () => {
   })
 
   it('multiple time process sources', async () => {
-    const twPatcher = new TailwindcssPatcher()
+    const twPatcher = new TailwindcssPatcher({
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+      },
+    })
     await getCss(['text-[100px]'])
     let ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    let set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
-    })
+    let set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[100px]')).toBe(true)
@@ -64,9 +70,7 @@ describe('class', () => {
     await getCss(['text-[99px]'])
     ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
-    })
+    set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(2)
     expect(set.has('text-[99px]')).toBe(true)
@@ -75,19 +79,47 @@ describe('class', () => {
   })
 
   it('wxml process sources', async () => {
-    const twPatcher = new TailwindcssPatcher()
+    const twPatcher = new TailwindcssPatcher({
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+      },
+    })
     twPatcher.patch()
     await getCss([`<view class="bg-[#7d7ac2] text-[100px] text-[#123456] {{true?'h-[30px]':'h-[45px]'}}">111</view>`])
     const ctxs = twPatcher.getContexts()
     expect(ctxs.length).toBe(1)
-    const set = await twPatcher.getClassSet({
-      removeUniversalSelector: false,
-    })
+    const set = await twPatcher.getClassSet()
     expect(set.size).toBeGreaterThan(0)
     expect(set.size).toBe(6)
     expect(set.has('text-[100px]')).toBe(true)
     expect(set.has('h-[30px]')).toBe(true)
     expect(set.has('h-[45px]')).toBe(true)
+  })
+
+  it('wxml process sources filter', async () => {
+    const twPatcher = new TailwindcssPatcher({
+      patch: {
+        output: {
+          removeUniversalSelector: false,
+        },
+        filter(className) {
+          return className.includes('text-[100px]') || className.includes('h-[')
+        },
+      },
+    })
+    twPatcher.patch()
+    await getCss([`<view class="bg-[#7d7ac2] text-[100px] text-[#123456] {{true?'h-[30px]':'h-[45px]'}}">111</view>`])
+    const ctxs = twPatcher.getContexts()
+    expect(ctxs.length).toBe(1)
+    const set = await twPatcher.getClassSet()
+    expect(set.size).toBeGreaterThan(0)
+    expect(set.size).toBe(3)
+    expect(set.has('text-[100px]')).toBe(true)
+    expect(set.has('h-[30px]')).toBe(true)
+    expect(set.has('h-[45px]')).toBe(true)
+    expect(set.has('bg-[#7d7ac2]')).toBe(false)
   })
 
   it('extract', async () => {
