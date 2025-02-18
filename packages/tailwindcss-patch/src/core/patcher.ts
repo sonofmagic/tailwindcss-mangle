@@ -188,7 +188,7 @@ export class TailwindcssPatcher {
     if (output && tailwindcss) {
       const { filename, loose } = output
 
-      if (this.majorVersion === 3) {
+      if (this.majorVersion === 3 || this.majorVersion === 2) {
         await processTailwindcss({
           ...tailwindcss,
           majorVersion: this.majorVersion,
