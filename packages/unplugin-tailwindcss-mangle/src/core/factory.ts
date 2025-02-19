@@ -7,7 +7,7 @@ import { isCSSRequest } from 'is-css-request'
 import path from 'pathe'
 import { pluginName } from '../constants'
 
-const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/core/loader.cjs' : 'core/loader.cjs')
+const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.cjs' : './loader.cjs')
 
 const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
   const ctx = new Context()

@@ -1,5 +1,6 @@
+import type { Context } from '@tailwindcss-mangle/core'
 import type { LoaderContext } from 'webpack'
-import { type Context, cssHandler } from '@tailwindcss-mangle/core'
+import { cssHandler } from '@tailwindcss-mangle/core'
 
 const TailwindcssMangleWebpackLoader = async function (this: LoaderContext<{ ctx: Context }>, source: string) {
   const callback = this.async()
