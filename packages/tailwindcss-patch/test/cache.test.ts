@@ -67,7 +67,7 @@ describe('cache', () => {
     })
     expect(fs.existsSync(filepath)).toBe(true)
     const cache = await cm.read()
-    expect(cache).toBe(undefined)
+    expect(cache).toBeInstanceOf(Set)
     expect(fs.existsSync(filepath)).toBe(false)
   })
 

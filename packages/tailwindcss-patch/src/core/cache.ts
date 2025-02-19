@@ -66,13 +66,18 @@ export class CacheManager {
     try {
       if (isExisted) {
         const data = await fs.readJSON(filename)
-        return new Set<string>(data)
+        return new Set<string>(data ?? [])
       }
     }
     catch (error) {
-      logger.error(`path:${filename}`)
       logger.error(error)
-      isExisted && await fs.remove(filename)
+      try {
+        isExisted && await fs.remove(filename)
+      }
+      catch (error) {
+        logger.error(error)
+      }
     }
+    return new Set<string>()
   }
 }
