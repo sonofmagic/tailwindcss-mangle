@@ -1,5 +1,11 @@
 # unplugin-tailwindcss-mangle
 
+## 4.0.7
+
+### Patch Changes
+
+- [`310d135`](https://github.com/sonofmagic/tailwindcss-mangle/commit/310d1350fbc6b69c184906ff9e8027908c1ea1f1) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: https://github.com/sonofmagic/tailwindcss-mangle/issues/141
+
 ## 4.0.6
 
 ### Patch Changes
