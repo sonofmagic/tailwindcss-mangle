@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 6.0.8
+
+### Patch Changes
+
+- [`daabb93`](https://github.com/sonofmagic/tailwindcss-mangle/commit/daabb9389717beaf285a107c40c0d9999ac87f5c) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore: bump version
+
 ## 6.0.7
 
 ### Patch Changes
