@@ -18,6 +18,9 @@ export function getPatchOptions(options?: PatchOptions) {
   return defu<InternalPatchOptions, Partial<InternalPatchOptions>[]>(
     options,
     {
+      output: {
+        removeUniversalSelector: true,
+      },
       basedir: process.cwd(),
     },
     getDefaultPatchOptions(),

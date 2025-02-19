@@ -29,16 +29,15 @@ export class TailwindcssPatcher {
     this.patchOptions = getPatchOptions(options.patch)
 
     this.cacheManager = new CacheManager(this.cacheOptions)
-    this.filter = this.patchOptions.filter
+    this.filter = function filter(className: string) {
+      if (this.patchOptions.output?.removeUniversalSelector && className === '*') {
+        return false
+      }
+      return Boolean(this.patchOptions.filter?.(className))
+    }
     const packageInfo = getPackageInfoSync(
       this.patchOptions.packageName ?? 'tailwindcss',
       this.patchOptions.resolve,
-      // defuOverrideArray<PackageResolvingOptions, Partial<PackageResolvingOptions>[]>(
-      //   this.patchOptions.resolve!,
-      //   {
-      //     paths: [import.meta.dirname],
-      //   },
-      // ),
     )
 
     if (!packageInfo) {
@@ -159,9 +158,6 @@ export class TailwindcssPatcher {
         const keys = classCacheMap.keys()
         for (const key of keys) {
           const v = key.toString()
-          if (output?.removeUniversalSelector && v === '*') {
-            continue
-          }
           this.filter?.(v) && classSet.add(v)
         }
       }

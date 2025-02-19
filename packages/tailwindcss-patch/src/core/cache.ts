@@ -69,8 +69,7 @@ export class CacheManager {
         return new Set<string>(data ?? [])
       }
     }
-    catch (error) {
-      logger.error(error)
+    catch {
       try {
         isExisted && await fs.remove(filename)
       }
