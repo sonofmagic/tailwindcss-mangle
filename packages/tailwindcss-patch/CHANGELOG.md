@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 6.0.7
+
+### Patch Changes
+
+- [`f603c5b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f603c5b49f1a61e7a0b10781799f22bef7489eac) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: CacheManager read write func
+
 ## 6.0.6
 
 ### Patch Changes
