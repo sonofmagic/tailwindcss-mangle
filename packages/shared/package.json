@@ -1,7 +1,7 @@
 {
   "name": "@tailwindcss-mangle/shared",
   "type": "module",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "The shared utils of tailwindcss-mangle",
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
