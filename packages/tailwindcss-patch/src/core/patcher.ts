@@ -52,11 +52,13 @@ export class TailwindcssPatcher {
     }
     this.packageInfo = packageInfo
     this.patch = () => {
-      try {
-        return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
-      }
-      catch (error) {
-        logger.error(`patch tailwindcss failed: ${(<Error>error).message}`)
+      if (this.majorVersion === 3 || this.majorVersion === 2) {
+        try {
+          return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
+        }
+        catch (error) {
+          logger.error(`patch tailwindcss failed: ${(<Error>error).message}`)
+        }
       }
     }
   }
@@ -102,7 +104,7 @@ export class TailwindcssPatcher {
 
   async getClassCacheSet(): Promise<Set<string>> {
     const classSet = new Set<string>()
-    const { output, tailwindcss } = this.patchOptions
+    const { tailwindcss } = this.patchOptions
     if (this.majorVersion === 4) {
       const { v4 } = tailwindcss ?? {}
       if (Array.isArray(v4?.cssEntries)) {
