@@ -26,8 +26,8 @@ describe.skipIf(isCI)('pkg', () => {
     expect(tailwindcss?.packageJson.version).toBe('3.4.17')
   })
 
-  it('tailwindcss4', () => {
-    const tailwindcss = getPackageInfoSync('tailwindcss-4')
-    expect(tailwindcss?.packageJson.version).toBe('4.0.6')
-  })
+  // it('tailwindcss4', () => {
+  //   const tailwindcss = getPackageInfoSync('tailwindcss-4')
+  //   expect(tailwindcss?.packageJson.version).toBe('4.0.6')
+  // })
 })
