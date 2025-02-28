@@ -1,5 +1,14 @@
 # tailwindcss-patch
 
+## 6.0.10
+
+### Patch Changes
+
+- [`41dc914`](https://github.com/sonofmagic/tailwindcss-mangle/commit/41dc91418b0d36f85fddf5bfcd078fa1a90986a8) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(deps): upgrade
+
+- Updated dependencies [[`41dc914`](https://github.com/sonofmagic/tailwindcss-mangle/commit/41dc91418b0d36f85fddf5bfcd078fa1a90986a8)]:
+  - @tailwindcss-mangle/config@5.0.5
+
 ## 6.0.9
 
 ### Patch Changes
