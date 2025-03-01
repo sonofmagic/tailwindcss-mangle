@@ -1,4 +1,5 @@
-import type { InternalCacheOptions, InternalPatchOptions, PackageInfo, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
+import type { PackageInfo } from 'local-pkg'
+import type { InternalCacheOptions, InternalPatchOptions, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import fs from 'fs-extra'
@@ -50,15 +51,13 @@ export class TailwindcssPatcher {
     if (this.patchOptions.tailwindcss?.version) {
       this.majorVersion = this.patchOptions.tailwindcss.version
     }
-    this.packageInfo = packageInfo
+    this.packageInfo = packageInfo as PackageInfo
     this.patch = () => {
-      if (this.majorVersion === 3 || this.majorVersion === 2) {
-        try {
-          return internalPatch(this.packageInfo?.packageJsonPath, this.patchOptions)
-        }
-        catch (error) {
-          logger.error(`patch tailwindcss failed: ${(<Error>error).message}`)
-        }
+      try {
+        return internalPatch(this.packageInfo, this.patchOptions)
+      }
+      catch (error) {
+        logger.error(`Patch Tailwind CSS Failed: ${(<Error>error).message}`)
       }
     }
   }

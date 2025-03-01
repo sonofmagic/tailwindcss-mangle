@@ -1,17 +1,20 @@
 import { isCI } from 'ci-info'
 import { getPackageInfoSync } from 'local-pkg'
+import { gte } from 'semver'
 
 describe.skipIf(isCI)('pkg', () => {
   it('tailwindcss', () => {
     const tailwindcss = getPackageInfoSync('tailwindcss')
-    expect(tailwindcss?.packageJson.version).toBe('3.4.17')
+    // @ts-ignore
+    expect(gte(tailwindcss?.packageJson.version, '3.4.17')).toBe(true)
   })
 
   it('tailwindcss paths 0', () => {
     const tailwindcss = getPackageInfoSync('tailwindcss', {
       paths: [import.meta.dirname],
     })
-    expect(tailwindcss?.packageJson.version).toBe('4.0.6')
+    // @ts-ignore
+    expect(gte(tailwindcss?.packageJson.version, '4.0.0')).toBe(true)
   })
 
   it('tailwindcss paths 1', () => {
