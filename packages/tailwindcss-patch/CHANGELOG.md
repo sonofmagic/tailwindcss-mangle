@@ -1,5 +1,18 @@
 # tailwindcss-patch
 
+## 7.0.0
+
+### Major Changes
+
+- [`6716921`](https://github.com/sonofmagic/tailwindcss-mangle/commit/67169214662fd2736c56a57e1cfc5905c4f658f5) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: add v4 SupportingCustomUnit patch
+
+### Patch Changes
+
+- [`41dc914`](https://github.com/sonofmagic/tailwindcss-mangle/commit/41dc91418b0d36f85fddf5bfcd078fa1a90986a8) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(deps): upgrade
+
+- Updated dependencies [[`41dc914`](https://github.com/sonofmagic/tailwindcss-mangle/commit/41dc91418b0d36f85fddf5bfcd078fa1a90986a8)]:
+  - @tailwindcss-mangle/config@5.0.5
+
 ## 6.0.9
 
 ### Patch Changes
