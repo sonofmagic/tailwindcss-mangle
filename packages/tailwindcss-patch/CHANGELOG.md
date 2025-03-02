@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 7.0.1
+
+### Patch Changes
+
+- [`e7f9c6f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e7f9c6f04e34b9ebff87ab36dc7dca8813dba888) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: cjs import from user project
+
 ## 7.0.0
 
 ### Major Changes
