@@ -5,10 +5,15 @@ import { fixturesRoot } from './utils'
 describe('patch', () => {
   describe('monkeyPatchForSupportingCustomUnitV4', () => {
     it('should patch v4', () => {
-      const { code } = monkeyPatchForSupportingCustomUnitV4(path.resolve(fixturesRoot, 'v4/patch'), {
+      const { files } = monkeyPatchForSupportingCustomUnitV4(path.resolve(fixturesRoot, 'v4/patch'), {
 
       })
-      expect(code).toMatchSnapshot()
+      expect(files.map((x) => {
+        return {
+          code: x.code,
+          hasPatched: x.hasPatched,
+        }
+      })).toMatchSnapshot()
     })
   })
 })

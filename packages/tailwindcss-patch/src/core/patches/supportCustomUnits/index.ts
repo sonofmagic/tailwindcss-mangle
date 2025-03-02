@@ -89,6 +89,13 @@ export function monkeyPatchForSupportingCustomUnitV3(rootDir: string, options?: 
 
 // "cm","mm","Q","in","pc","pt","px","em","ex","ch","rem","lh","rlh","vw","vh","vmin","vmax","vb","vi","svw","svh","lvw","lvh","dvw","dvh","cqw","cqh","cqi","cqb","cqmin","cqmax"
 
+interface V4GuessFile {
+  code: string
+  hasPatched: boolean
+  file: string
+  matches: RegExpMatchArray
+}
+
 export function monkeyPatchForSupportingCustomUnitV4(rootDir: string, options?: Partial<ILengthUnitsPatchOptions>) {
   const opts = defuOverrideArray<Required<ILengthUnitsPatchOptions>, ILengthUnitsPatchOptions[]>(options as Required<ILengthUnitsPatchOptions>, {
     units: ['rpx'],
@@ -96,22 +103,26 @@ export function monkeyPatchForSupportingCustomUnitV4(rootDir: string, options?: 
   })
   const distPath = path.resolve(rootDir, 'dist')
   const list = fs.readdirSync(distPath)
-  const chunks = list.filter(x => x.startsWith('chunk-'))
+  // .mjs + .js
+  const chunks = list.filter(x => x.endsWith('js'))
   const guessUnitStart = /\[\s*["']cm["'],\s*["']mm["'],[\w,"]+\]/
-  let code
-  let matches: RegExpMatchArray | null = null
-  let guessFile: string | undefined
-  for (const chunkName of chunks) {
-    guessFile = path.join(distPath, chunkName)
-    code = fs.readFileSync(guessFile, 'utf8')
-    const res = guessUnitStart.exec(code)
-    if (res) {
-      matches = res
-      break
+  const guessFiles: V4GuessFile[] = chunks.reduce<V4GuessFile[]>((acc, chunkName) => {
+    const guessFile = path.join(distPath, chunkName)
+    const code = fs.readFileSync(guessFile, 'utf8')
+    const matches = guessUnitStart.exec(code)
+    if (matches && code) {
+      acc.push({
+        code,
+        hasPatched: false,
+        file: guessFile,
+        matches,
+      })
     }
-  }
-  let hasPatched = false
-  if (matches && code) {
+    return acc
+  }, [])
+
+  for (const item of guessFiles) {
+    const { matches, code, file } = item
     const match = matches[0]
     const ast = parse(match, {
       sourceType: 'unambiguous',
@@ -121,40 +132,40 @@ export function monkeyPatchForSupportingCustomUnitV4(rootDir: string, options?: 
       ArrayExpression(path) {
         for (const unit of opts.units) {
           if (path.node.elements.some(x => t.isStringLiteral(x) && x.value === unit)) {
-            hasPatched = true
+            item.hasPatched = true
             break
           }
           path.node.elements.push(t.stringLiteral(unit))
         }
       },
     })
-    if (hasPatched) {
-      return {
-        code,
-        hasPatched,
-      }
+    if (item.hasPatched) {
+      continue
     }
     const { code: replacement } = generate(ast, {
       minified: true,
     })
-    code = spliceChangesIntoString(code, [
+    // new code
+    item.code = spliceChangesIntoString(code, [
       {
         start: matches.index as number,
         end: matches.index as number + match.length,
         replacement: replacement.endsWith(';') ? replacement.slice(0, -1) : replacement,
       },
     ])
-    if (opts.overwrite && guessFile) {
-      fs.writeFileSync(guessFile, code, {
+
+    if (opts.overwrite && file) {
+      fs.writeFileSync(file, item.code, {
         encoding: 'utf8',
       })
-      logger.success('patch tailwindcss for custom length unit successfully!')
     }
+  }
+  if (guessFiles.some(x => !x.hasPatched)) {
+    logger.success('patch tailwindcss for custom length unit successfully!')
   }
 
   return {
-    code,
-    hasPatched,
+    files: guessFiles,
   }
   //  /\["cm","mm"/
 }
