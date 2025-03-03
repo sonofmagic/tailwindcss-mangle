@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 5.0.6
+
+### Patch Changes
+
+- [`0651cae`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0651cae4e5d3544b5265278a1dfb44d8a4e3f2f8) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore: downgrade c12 for cjs format
+
 ## 5.0.5
 
 ### Patch Changes

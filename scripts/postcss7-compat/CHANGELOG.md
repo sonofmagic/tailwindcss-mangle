@@ -1,5 +1,12 @@
 # postcss7-compat
 
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies []:
+  - tailwindcss-patch@7.0.2
+
 ## 0.0.15
 
 ### Patch Changes
