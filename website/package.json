@@ -14,7 +14,8 @@
     "dev": "next --turbopack",
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc --noEmit",
+    "translate": "tsx scripts/translate.ts"
   },
   "dependencies": {
     "markdown-to-jsx": "^7.7.4",

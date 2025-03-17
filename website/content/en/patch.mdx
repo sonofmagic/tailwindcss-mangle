@@ -1,26 +1,26 @@
 # 1. Patch
 
-This step is to export the context extracted from your `tailwindcss` as a `Json` file.
+This step is to export the context extracted from your `tailwindcss` into a `Json` file.
 
 ## Installation
 
-Install using your preferred package manager:
+Choose your preferred package manager for installation.
 
-```sh
+```sh npm2yarn
 npm i -D tailwindcss-patch
 ```
 
-### Apply the Patch
+### Patching
 
-1. Apply the patch to `tailwindcss`
+1. Patch `tailwindcss`
 
-```sh
+```sh npm2yarn
 npx tw-patch install
 ```
 
 ### Register npm hook
 
-1. Add the following command to the `prepare` hook in your `npm` configuration.
+1. Add the command to the `prepare` hook in `npm`
 
 `package.json`
 
@@ -35,25 +35,25 @@ npx tw-patch install
 
 ## Usage
 
-### Command-line Cli
+### Command Line Interface (CLI)
 
-#### Start Extraction
+#### Start Extracting
 
-```sh
+```sh npm2yarn
 npx tw-patch extract
 ```
 
-By default, after a successful execution, a `json` file `.tw-patch/tw-class-list.json` will be generated in your project.
+By default, a `json` file `.tw-patch/tw-class-list.json` will appear in your project upon successful execution.
 
-> Of course, you can customize this behavior using the configuration file `tailwindcss-mangle.config.ts`.
+> Of course, you can customize this behavior through the configuration file `tailwindcss-mangle.config.ts`.
 
-### Nodejs API 
+### Node.js API
 
 ```js
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 
 const twPatcher = new TailwindcssPatcher(/* options */)
-// Perform the patch action
+// Perform patch action
 twPatcher.patch()
 // Get all contexts at runtime
 twPatcher.getContexts()
@@ -63,17 +63,17 @@ twPatcher.getClassSet()
 
 The core of this phase is to obtain the `.tw-patch/tw-class-list.json` file.
 
-Once it is generated, you can start the `Mangle` process.
+Once it is generated, we can proceed with our `Mangle` process.
 
 ## Configuration
 
 ### Initialization
 
-```sh
+```sh npm2yarn
 npx tw-patch init
 ```
 
-This will create a `tailwindcss-mangle.config.ts` file in your current `cwd`:
+This will create a `tailwindcss-mangle.config.ts` file in your current working directory (`cwd`):
 
 ```ts
 import { defineConfig } from 'tailwindcss-patch'
@@ -81,7 +81,7 @@ import { defineConfig } from 'tailwindcss-patch'
 export default defineConfig({})
 ```
 
-You can customize its behavior using the `patch` field:
+You can customize its behavior through the `patch` field:
 
 ```ts
 import { defineConfig } from 'tailwindcss-patch'

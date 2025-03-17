@@ -1,0 +1,64 @@
+# Need to Extract More Metadata When Using Tailwindcss
+
+## Need More Information
+
+Currently, when `tailwindcss` extracts `Candidate` from files/content, it only extracts some string information and does not record the location.
+
+```html
+<div class="flex bg-slate-500/25" />
+            ↑  ↑  ↑               ↑
+          token1      token2
+```
+
+However, this makes it difficult for us to perform a project-level overall analysis.
+
+We cannot know how many tokens are extracted from a file, nor do we know in which files the extracted tokens exist (the relationship between files and tokens is usually many-to-many).
+
+Moreover, if there is a need to modify the generated product from the original source code later, we need to know the original position where the token was extracted.
+
+For example, transforming the extracted token string into an object like the one below:
+
+```ts
+interface Candidate {
+  value: string
+  file: string
+  start: number
+  end: number
+}
+```
+
+Here, `value` is the original string value, `file` is the file from which it was extracted, and `start` and `end` represent the position of this `token` in the file.
+
+This way, we can make precise modifications, such as:
+
+```diff filename="diff"
+// before
+- const className = `gap-y-4 bg-zinc-800/30`;
+// after
++ const className = `a b`;
+```
+
+Otherwise, currently, to make modifications, we have to apply the entire `Candidates` (`Set<string>`) to all files for replacement, which often leads to many unintended changes.
+
+With this, we only need to find the corresponding file and modify the nodes corresponding to its `start` and `end` to achieve the goal.
+
+In fact, this functionality ultimately resembles the `compile-class` feature of `unocss` [compile-class](https://unocss.dev/transformers/compile-class).
+
+## Tailwindcss v4
+
+https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108
+
+```rs
+    pub fn scan(&mut self) -> Vec<String> {
+        init_tracing();
+        self.prepare();
+        self.check_for_new_files();
+        self.compute_candidates();
+
+        let mut candidates: Vec<String> = self.candidates.clone().into_iter().collect();
+
+        candidates.sort();
+
+        candidates
+    }
+```
