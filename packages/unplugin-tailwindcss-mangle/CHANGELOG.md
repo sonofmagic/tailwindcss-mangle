@@ -1,5 +1,18 @@
 # unplugin-tailwindcss-mangle
 
+## 4.1.0
+
+### Minor Changes
+
+- [`0404f90`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0404f90cc10716a84f3137f4c76a58c4c7edf019) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: support tailwindcss@4.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`0404f90`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0404f90cc10716a84f3137f4c76a58c4c7edf019)]:
+  - @tailwindcss-mangle/config@5.1.0
+  - @tailwindcss-mangle/core@4.1.0
+  - @tailwindcss-mangle/shared@4.1.0
+
 ## 4.0.10
 
 ### Patch Changes
