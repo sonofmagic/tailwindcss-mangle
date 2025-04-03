@@ -13,6 +13,7 @@ describe('tailwindcss4', () => {
         {
           base: __dirname,
           pattern: 'fixtures/hello-world.wxml', // path.resolve(__dirname, 'fixtures/hello-world.wxml'),
+          negated: false,
         },
 
       ],

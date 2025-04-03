@@ -128,6 +128,7 @@ export class TailwindcssPatcher {
               return {
                 base: x.base ?? v4?.base ?? process.cwd(),
                 pattern: x.pattern,
+                negated: x.negated,
               }
             }),
           })
@@ -144,6 +145,7 @@ export class TailwindcssPatcher {
             return {
               base: x.base ?? v4?.base ?? process.cwd(),
               pattern: x.pattern,
+              negated: x.negated,
             }
           }),
         })

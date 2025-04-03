@@ -1,5 +1,6 @@
 import type { FilterPattern } from '@rollup/pluginutils'
 import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
+import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageResolvingOptions } from 'local-pkg'
 
 export interface ClassMapOutputOptions {
@@ -34,14 +35,8 @@ export interface TailwindcssV3PatchConfig {
   config?: string
 }
 
-export interface GlobEntry {
-  /** Base path of the glob */
-  base?: string
-  /** Glob pattern */
-  pattern: string
-}
 export interface TailwindcssV4PatchConfig {
-  sources?: GlobEntry[]
+  sources?: SourceEntry[]
   base?: string
   css?: string
   cssEntries?: string[]

@@ -15,6 +15,7 @@ describe('v4', () => {
         {
           base: import.meta.dirname,
           pattern: path.resolve(import.meta.dirname, './fixtures/v4/index.html'),
+          negated: false,
         },
       ],
     })
@@ -31,6 +32,7 @@ describe('v4', () => {
         {
           base: import.meta.dirname,
           pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
+          negated: false,
         },
       ],
     })
@@ -48,6 +50,7 @@ describe('v4', () => {
               {
                 base: import.meta.dirname,
                 pattern: path.resolve(import.meta.dirname, './fixtures/v4/**/*.html'),
+                negated: false,
               },
             ],
           },
@@ -65,6 +68,7 @@ describe('v4', () => {
         {
           base: import.meta.dirname,
           pattern: path.resolve(import.meta.dirname, './fixtures/v4/index.html'),
+          negated: false,
         },
       ],
     )

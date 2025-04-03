@@ -1,4 +1,4 @@
-import type { GlobEntry } from '@tailwindcss/oxide'
+import type { SourceEntry } from '@tailwindcss/oxide'
 import process from 'node:process'
 import { defuOverrideArray } from '@tailwindcss-mangle/shared'
 
@@ -27,7 +27,7 @@ export async function extractRawCandidatesWithPositions(
 }
 
 export async function extractRawCandidates(
-  sources?: GlobEntry[],
+  sources?: SourceEntry[],
 ): Promise<string[]> {
   const { Scanner } = await importOxide()
   const scanner = new Scanner({
@@ -40,7 +40,7 @@ export async function extractRawCandidates(
 }
 
 export interface ExtractValidCandidatesOption {
-  sources?: GlobEntry[]
+  sources?: SourceEntry[]
   base?: string
   css?: string
 }
@@ -60,6 +60,7 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
         {
           base: cwd,
           pattern: '**/*',
+          negated: false,
         },
       ],
     },
