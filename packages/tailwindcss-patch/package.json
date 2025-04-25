@@ -88,10 +88,10 @@
     "tailwindcss-config": "^1.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/node": "^4.1.1",
-    "@tailwindcss/oxide": "^4.1.1",
-    "@tailwindcss/postcss": "^4.1.1",
-    "@tailwindcss/vite": "^4.1.1",
+    "@tailwindcss/node": "^4.1.4",
+    "@tailwindcss/oxide": "^4.1.4",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/vite": "^4.1.4",
     "tailwindcss": "^4.1.1",
     "tailwindcss-3": "npm:tailwindcss@^3",
     "tailwindcss-4": "npm:tailwindcss@^4.1.1"

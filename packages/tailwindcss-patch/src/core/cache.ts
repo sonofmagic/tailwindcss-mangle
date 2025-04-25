@@ -49,10 +49,10 @@ export class CacheManager {
     }
   }
 
-  async write(data: Set<string>) {
+  write(data: Set<string>) {
     try {
       const { filename } = this.options
-      await fs.outputJSON(filename, [...data])
+      fs.outputJSONSync(filename, [...data])
       return filename
     }
     catch (error) {
@@ -60,18 +60,18 @@ export class CacheManager {
     }
   }
 
-  async read() {
+  read() {
     const { filename } = this.options
-    const isExisted = await fs.exists(filename)
+    const isExisted = fs.existsSync(filename)
     try {
       if (isExisted) {
-        const data = await fs.readJSON(filename)
+        const data = fs.readJSONSync(filename)
         return new Set<string>(data ?? [])
       }
     }
     catch {
       try {
-        isExisted && await fs.remove(filename)
+        isExisted && fs.removeSync(filename)
       }
       catch (error) {
         logger.error(error)

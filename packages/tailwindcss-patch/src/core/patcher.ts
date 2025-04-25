@@ -169,6 +169,22 @@ export class TailwindcssPatcher {
     return classSet
   }
 
+  getClassCacheSetV3(): Set<string> {
+    const classSet = new Set<string>()
+
+    const classCaches = this.getClassCaches()
+
+    for (const classCacheMap of classCaches) {
+      const keys = classCacheMap.keys()
+      for (const key of keys) {
+        const v = key.toString()
+        this.filter?.(v) && classSet.add(v)
+      }
+    }
+
+    return classSet
+  }
+
   /**
    * @description 在多个 tailwindcss 上下文时，这个方法将被执行多次，所以策略上应该使用 append
    */
@@ -179,7 +195,26 @@ export class TailwindcssPatcher {
       set.size > 0 && this.setCache(set)
     }
     else if (cacheStrategy === 'merge') {
-      const cacheSet = await this.getCache()
+      const cacheSet = this.getCache()
+      if (cacheSet) {
+        for (const x of cacheSet) {
+          set.add(x)
+        }
+      }
+      this.setCache(set)
+    }
+
+    return set
+  }
+
+  getClassSetV3() {
+    const cacheStrategy = this.cacheOptions.strategy ?? 'merge'
+    const set = this.getClassCacheSetV3()
+    if (cacheStrategy === 'overwrite') {
+      set.size > 0 && this.setCache(set)
+    }
+    else if (cacheStrategy === 'merge') {
+      const cacheSet = this.getCache()
       if (cacheSet) {
         for (const x of cacheSet) {
           set.add(x)
