@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 7.1.1
+
+### Patch Changes
+
+- [`2b91de7`](https://github.com/sonofmagic/tailwindcss-mangle/commit/2b91de7cf94956abad7d128e5a03184305d21294) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: make cache sync and add getClassCacheSetV3 method
+
 ## 7.1.0
 
 ### Minor Changes
