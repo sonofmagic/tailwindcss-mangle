@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 7.1.3
+
+### Patch Changes
+
+- [`f74a624`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f74a624f29a061542e69a72c5211a8dcb7fd2d99) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix: extract always return classSet
+
 ## 7.1.2
 
 ### Patch Changes
