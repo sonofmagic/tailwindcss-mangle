@@ -1,5 +1,17 @@
 # @tailwindcss-mangle/core
 
+## 4.1.1
+
+### Patch Changes
+
+- [`b6b84f4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b6b84f43c083f937e2888a7d680e01ae64f8aace) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(patch): add TailwindcssPatcher extract option
+
+  chore(deps): upgrade
+
+- Updated dependencies [[`b6b84f4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b6b84f43c083f937e2888a7d680e01ae64f8aace)]:
+  - @tailwindcss-mangle/config@5.1.1
+  - @tailwindcss-mangle/shared@4.1.1
+
 ## 4.1.0
 
 ### Minor Changes
