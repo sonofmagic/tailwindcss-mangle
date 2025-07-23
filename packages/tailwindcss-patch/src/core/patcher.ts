@@ -234,8 +234,7 @@ export class TailwindcssPatcher {
   async extract(options?: PatchExtractOptions) {
     const { write } = defu<PatchExtractOptions, PatchExtractOptions[]>(options, { write: true })
     const { output, tailwindcss } = this.patchOptions
-    if (output && tailwindcss) {
-      const { filename, loose } = output
+    if (tailwindcss) {
       // tailwindcss v2 + v3
       if (this.majorVersion === 3 || this.majorVersion === 2) {
         await processTailwindcss({
@@ -245,19 +244,24 @@ export class TailwindcssPatcher {
       }
 
       const classSet = await this.getClassSet()
-      if (filename) {
-        const classList = [...classSet]
-        if (write) {
-          await fs.outputJSON(filename, classList, {
-            spaces: loose ? 2 : undefined,
-          })
-        }
-        return {
-          filename,
-          classList,
-          classSet,
+      const classList = [...classSet]
+      const result: { classList: string[], classSet: Set<string>, filename?: string } = {
+        classList,
+        classSet,
+      }
+      if (output) {
+        const { filename, loose } = output
+        if (filename) {
+          if (write) {
+            await fs.outputJSON(filename, classList, {
+              spaces: loose ? 2 : undefined,
+            })
+          }
+          result.filename = filename
         }
       }
+
+      return result
     }
   }
 
