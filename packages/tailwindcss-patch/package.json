@@ -92,8 +92,8 @@
     "@tailwindcss/oxide": "^4.1.11",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
-    "tailwindcss": "^4.1.1",
-    "tailwindcss-3": "npm:tailwindcss@^3",
-    "tailwindcss-4": "npm:tailwindcss@^4.1.1"
+    "tailwindcss": "catalog:tailwindcss4",
+    "tailwindcss-3": "catalog:tailwindcss3",
+    "tailwindcss-4": "catalog:tailwindcss4"
   }
 }

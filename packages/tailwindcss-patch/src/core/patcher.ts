@@ -2,6 +2,7 @@ import type { PackageInfo } from 'local-pkg'
 import type { InternalCacheOptions, InternalPatchOptions, TailwindcssClassCache, TailwindcssPatcherOptions, TailwindcssRuntimeContext } from '../types'
 import { createRequire } from 'node:module'
 import process from 'node:process'
+import { defu } from '@tailwindcss-mangle/shared'
 import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
@@ -12,6 +13,10 @@ import { CacheManager, getCacheOptions } from './cache'
 import { extractValidCandidates } from './candidates'
 import { processTailwindcss } from './postcss'
 import { internalPatch } from './runtime'
+
+export interface PatchExtractOptions {
+  write?: boolean
+}
 
 const require = createRequire(import.meta.url)
 export class TailwindcssPatcher {
@@ -226,11 +231,12 @@ export class TailwindcssPatcher {
     return set
   }
 
-  async extract() {
+  async extract(options?: PatchExtractOptions) {
+    const { write } = defu<PatchExtractOptions, PatchExtractOptions[]>(options, { write: true })
     const { output, tailwindcss } = this.patchOptions
     if (output && tailwindcss) {
       const { filename, loose } = output
-
+      // tailwindcss v2 + v3
       if (this.majorVersion === 3 || this.majorVersion === 2) {
         await processTailwindcss({
           ...tailwindcss,
@@ -238,15 +244,18 @@ export class TailwindcssPatcher {
         })
       }
 
-      const set = await this.getClassSet()
+      const classSet = await this.getClassSet()
       if (filename) {
-        const classList = [...set]
-        await fs.outputJSON(filename, classList, {
-          spaces: loose ? 2 : undefined,
-        })
+        const classList = [...classSet]
+        if (write) {
+          await fs.outputJSON(filename, classList, {
+            spaces: loose ? 2 : undefined,
+          })
+        }
         return {
           filename,
           classList,
+          classSet,
         }
       }
     }
