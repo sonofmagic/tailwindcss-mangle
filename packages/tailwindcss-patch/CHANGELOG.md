@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 7.1.4
+
+### Patch Changes
+
+- [`2221792`](https://github.com/sonofmagic/tailwindcss-mangle/commit/22217922be9b2cb0f1cef669162fae11e9e251b7) Thanks [@sonofmagic](https://github.com/sonofmagic)! - feat: add `patchOptions#cwd` option
+
 ## 7.1.3
 
 ### Patch Changes
