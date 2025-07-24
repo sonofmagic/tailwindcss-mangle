@@ -29,6 +29,7 @@ export interface PatchOptions extends PatchUserConfig {
     extendLengthUnits?: boolean | ILengthUnitsPatchOptions
   }
   filter?: (className: string) => boolean
+  cwd?: string
 }
 
 export interface InternalPatchOptions extends PatchOptions {

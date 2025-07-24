@@ -108,7 +108,7 @@ export class TailwindcssPatcher {
 
   async getClassCacheSet(): Promise<Set<string>> {
     const classSet = new Set<string>()
-    const { tailwindcss } = this.patchOptions
+    const { tailwindcss, cwd } = this.patchOptions
     if (this.majorVersion === 4) {
       const { v4 } = tailwindcss ?? {}
       if (Array.isArray(v4?.cssEntries)) {
@@ -127,6 +127,7 @@ export class TailwindcssPatcher {
         ).filter(x => x) as string[]
         for (const css of results) {
           const candidates = await extractValidCandidates({
+            cwd,
             base: v4?.base,
             css,
             sources: v4?.sources?.map((x) => {
@@ -144,6 +145,7 @@ export class TailwindcssPatcher {
       }
       else {
         const candidates = await extractValidCandidates({
+          cwd,
           base: v4?.base,
           css: v4?.css,
           sources: v4?.sources?.map((x) => {

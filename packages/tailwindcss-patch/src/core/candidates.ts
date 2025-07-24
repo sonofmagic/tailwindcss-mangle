@@ -43,10 +43,11 @@ export interface ExtractValidCandidatesOption {
   sources?: SourceEntry[]
   base?: string
   css?: string
+  cwd?: string
 }
 
 export async function extractValidCandidates(options?: ExtractValidCandidatesOption) {
-  const cwd = process.cwd()
+  const defaultCwd = options?.cwd ?? process.cwd()
   const { sources, base, css } = defuOverrideArray<
     Required<ExtractValidCandidatesOption>,
     Partial<ExtractValidCandidatesOption>[]
@@ -55,10 +56,10 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     options,
     {
       css: '@import "tailwindcss";',
-      base: cwd,
+      base: defaultCwd,
       sources: [
         {
-          base: cwd,
+          base: defaultCwd,
           pattern: '**/*',
           negated: false,
         },
