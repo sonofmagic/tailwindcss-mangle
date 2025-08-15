@@ -67,7 +67,7 @@
   "dependencies": {
     "@tailwindcss-mangle/shared": "workspace:^",
     "c12": "^2.0.4",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "is-css-request": "^1.0.1",
     "pathe": "^2.0.3"
   }

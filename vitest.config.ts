@@ -1,11 +1,22 @@
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig(
-  {
-    test: {
-      projects: [
-        'packages/*',
-      ],
-    },
+  () => {
+    return {
+      test: {
+        projects: [
+          'packages/*',
+          // 'apps/*',
+        ],
+        coverage: {
+          enabled: true,
+          all: false,
+          skipFull: true,
+        },
+        forceRerunTriggers: [
+          '**/{vitest,vite}.config.*/**',
+        ],
+      },
+    }
   },
 )

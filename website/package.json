@@ -18,19 +18,19 @@
     "translate": "tsx scripts/translate.ts"
   },
   "dependencies": {
-    "markdown-to-jsx": "^7.7.12",
-    "next": "^15.4.3",
-    "nextra": "^4.2.17",
-    "nextra-theme-docs": "^4.2.17",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "markdown-to-jsx": "^7.7.13",
+    "next": "^15.4.6",
+    "nextra": "^4.3.0",
+    "nextra-theme-docs": "^4.3.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "react-intersection-observer": "^9.16.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.4.3",
+    "@next/bundle-analyzer": "^15.4.6",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/react": "19.1.8",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/react": "19.1.10",
     "pagefind": "^1.3.0",
     "tailwindcss": "catalog:tailwindcss4"
   },
