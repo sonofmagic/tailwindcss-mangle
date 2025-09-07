@@ -74,9 +74,9 @@
   },
   "dependencies": {
     "@babel/generator": "^7.28.3",
-    "@babel/parser": "^7.28.3",
-    "@babel/traverse": "^7.28.3",
-    "@babel/types": "^7.28.2",
+    "@babel/parser": "^7.28.4",
+    "@babel/traverse": "^7.28.4",
+    "@babel/types": "^7.28.4",
     "@tailwindcss-mangle/config": "workspace:^",
     "cac": "^6.7.14",
     "consola": "^3.4.2",
