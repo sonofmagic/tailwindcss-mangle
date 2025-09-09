@@ -1,12 +1,12 @@
-import { jsHandler } from '@/js'
+import MagicString from 'magic-string'
 /* eslint-disable ts/no-require-imports */
 
 /* eslint-disable no-template-curly-in-string */
-import MagicString from 'magic-string'
-import { getCss, getTestCase } from './utils'
 // import { getStringLiteralCalleeName, getTemplateElementCalleeName } from '@/js/utils'
 // import { ClassGenerator } from '@/shared'
 import { Context } from '@/index'
+import { jsHandler } from '@/js'
+import { getCss, getTestCase } from './utils'
 
 // function jsHandler(str: string, options: any) {
 //   return _jsHandler(str, options)

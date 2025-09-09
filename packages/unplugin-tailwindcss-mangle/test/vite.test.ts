@@ -1,7 +1,7 @@
 import type { RollupOutput } from 'rollup'
 import path from 'pathe'
-import utwm from '@/vite'
 import { build } from 'vite'
+import utwm from '@/vite'
 // .replace(/(\r?\n){3,}/g, '\n\n')
 const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
 describe('vite build', () => {

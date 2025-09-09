@@ -1,9 +1,9 @@
-import { CONFIG_NAME } from '@/constants'
-import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
-import { getConfig, initConfig } from '@/index'
 import { deleteAsync } from 'del'
 import { existsSync } from 'fs-extra'
 import { resolve } from 'pathe'
+import { CONFIG_NAME } from '@/constants'
+import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
+import { getConfig, initConfig } from '@/index'
 import { fixturesRoot } from './utils'
 
 describe('config', () => {

@@ -1,7 +1,7 @@
-import { extractRawCandidates } from '@/core/candidates'
-import { TailwindcssPatcher } from '@/index'
 import fs from 'fs-extra'
 import path from 'pathe'
+import { extractRawCandidates } from '@/core/candidates'
+import { TailwindcssPatcher } from '@/index'
 // import { __unstable__loadDesignSystem } from 'tailwindcss'
 
 describe('v4', () => {

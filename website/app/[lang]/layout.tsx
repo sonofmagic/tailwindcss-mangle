@@ -4,11 +4,10 @@ import {
   Footer,
   LastUpdated,
   Layout,
-  Link,
   LocaleSwitch,
   Navbar,
 } from 'nextra-theme-docs'
-import { Banner, Head } from 'nextra/components'
+import { Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import { getDictionary, getDirection } from '../_dictionaries/get-dictionary'
 import './styles.css'

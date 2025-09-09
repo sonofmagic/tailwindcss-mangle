@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
-import { internalPatch } from '@/core'
 import path from 'pathe'
+import { internalPatch } from '@/core'
 
 const tailwindcssCasePath = path.resolve(__dirname, 'fixtures')
 const versionsPkgDir = path.resolve(tailwindcssCasePath, 'versions/package.json')

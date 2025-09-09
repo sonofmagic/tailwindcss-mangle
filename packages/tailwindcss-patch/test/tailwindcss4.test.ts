@@ -1,7 +1,7 @@
-import { extractRawCandidatesWithPositions } from '@/core/candidates'
 import { __unstable__loadDesignSystem } from '@tailwindcss/node'
 import { Scanner } from '@tailwindcss/oxide'
 import path from 'pathe'
+import { extractRawCandidatesWithPositions } from '@/core/candidates'
 import { spliceChangesIntoString } from './splice-changes-into-string'
 
 const html = String.raw

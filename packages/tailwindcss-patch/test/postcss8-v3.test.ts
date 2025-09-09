@@ -1,9 +1,9 @@
 import type { Config } from 'tailwindcss-3'
 import { createRequire } from 'node:module'
-import { TailwindcssPatcher } from '@/core/patcher'
-import { processTailwindcss } from '@/core/postcss'
 import path from 'pathe'
 import postcss from 'postcss'
+import { TailwindcssPatcher } from '@/core/patcher'
+import { processTailwindcss } from '@/core/postcss'
 import { appRoot } from './utils'
 
 const require = createRequire(import.meta.url)

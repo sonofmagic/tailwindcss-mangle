@@ -30,4 +30,4 @@ You can enter [unplugin-tailwindcss-mangle](./packages/unplugin-tailwindcss-mang
 
 ### NextJs
 
-For users trying version `2.3.0` of `unplugin-tailwindcss-mangle`, it has been tested and confirmed to work in versions `14~15`. However, be aware that this package is no longer maintained, as the project is  focused on `vitejs`.
+For users trying version `2.3.0` of `unplugin-tailwindcss-mangle`, it has been tested and confirmed to work in versions `14~15`. However, be aware that this package is no longer maintained, as the project is focused on `vitejs`.

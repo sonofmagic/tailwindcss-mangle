@@ -1,6 +1,6 @@
-import { getDefaultPatchConfig, getDefaultUserConfig } from '@/defaults'
 import { createFilter } from '@rollup/pluginutils'
 import { omit } from 'lodash-es'
+import { getDefaultPatchConfig, getDefaultUserConfig } from '@/defaults'
 
 function omitCwdPath(o: any) {
   return omit(o, ['tailwindcss.cwd', 'patch.tailwindcss.cwd'])

@@ -1,9 +1,9 @@
-import { pkgName } from '@/constants'
-import { CacheManager, TailwindcssPatcher } from '@/core'
-import { getCacheOptions } from '@/core/cache'
 import { isCI } from 'ci-info'
 import fs from 'fs-extra'
 import path from 'pathe'
+import { pkgName } from '@/constants'
+import { CacheManager, TailwindcssPatcher } from '@/core'
+import { getCacheOptions } from '@/core/cache'
 import { getCss } from './utils'
 
 describe('cache', () => {

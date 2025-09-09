@@ -1,6 +1,6 @@
+import { splitCode } from '@tailwindcss-mangle/shared'
 import { Context } from '@/ctx'
 import { htmlHandler } from '@/html'
-import { splitCode } from '@tailwindcss-mangle/shared'
 import { getTestCase } from './utils'
 
 describe('html handler', () => {

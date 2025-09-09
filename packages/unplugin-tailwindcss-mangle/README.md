@@ -52,9 +52,11 @@ npx tw-patch install
 ### 3. add `prepare` script in your `package.json`
 
 ```json
+{
   "scripts": {
     "prepare": "tw-patch install"
-  },
+  }
+}
 ```
 
 ### 4. Run extract command
@@ -101,9 +103,10 @@ You will see all class was renamed to `tw-*`
 // esm
 import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
 // or cjs
-const utwm = require('unplugin-tailwindcss-mangle/webpack')
+// const utwm = require('unplugin-tailwindcss-mangle/webpack')
 // use this webpack plugin
 // for example next.config.js
+// eslint-disable-next-line perfectionist/sort-imports
 const { defineConfig } = require('@vue/cli-service')
 // vue.config.js
 module.exports = defineConfig({
@@ -114,13 +117,13 @@ module.exports = defineConfig({
     }
   }
 })
-
 ```
 
 #### Nuxt 3
 
 ```ts
 import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
+
 export default defineNuxtConfig({
   // ...
   // https://github.com/nuxt/nuxt/issues/20428

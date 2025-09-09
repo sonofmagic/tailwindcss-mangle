@@ -1,5 +1,3 @@
-// import process from 'node:process'
-const process = require('node:process')
 const utwm = require('unplugin-tailwindcss-mangle/webpack')
 // import utwm from 'unplugin-tailwindcss-mangle'
 
