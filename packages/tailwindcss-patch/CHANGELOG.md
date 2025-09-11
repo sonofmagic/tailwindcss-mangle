@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 7.1.5
+
+### Patch Changes
+
+- [`4e2841b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4e2841b0f8b7808e66829a4f7578e2ae9cd37195) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(deps): upgrade
+
 ## 7.1.4
 
 ### Patch Changes
