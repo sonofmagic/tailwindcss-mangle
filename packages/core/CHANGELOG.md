@@ -1,5 +1,14 @@
 # @tailwindcss-mangle/core
 
+## 4.1.3
+
+### Patch Changes
+
+- [`6596fae`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6596fae09395e1d92f2dc9244586fe05366aa42b) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(tailwindcss-patch): make @tailwindcss/node as dependencies
+
+- Updated dependencies [[`6596fae`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6596fae09395e1d92f2dc9244586fe05366aa42b)]:
+  - @tailwindcss-mangle/config@5.1.2
+
 ## 4.1.2
 
 ### Patch Changes
