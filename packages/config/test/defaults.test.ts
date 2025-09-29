@@ -1,6 +1,6 @@
 import { createFilter } from '@rollup/pluginutils'
 import { omit } from 'lodash-es'
-import { getDefaultPatchConfig, getDefaultUserConfig } from '@/defaults'
+import { getDefaultMangleUserConfig, getDefaultPatchConfig, getDefaultUserConfig } from '@/defaults'
 
 function omitCwdPath(o: any) {
   return omit(o, ['tailwindcss.cwd', 'patch.tailwindcss.cwd'])
@@ -13,6 +13,25 @@ describe('defaults', () => {
 
   it('getDefaultUserConfig', () => {
     expect(omitCwdPath(getDefaultUserConfig())).toMatchSnapshot()
+  })
+
+  it('getDefaultMangleUserConfig reflects NODE_ENV', () => {
+    const originalEnv = process.env.NODE_ENV
+
+    vi.stubEnv('NODE_ENV', 'development')
+    expect(getDefaultMangleUserConfig().disabled).toBe(true)
+    vi.unstubAllEnvs()
+
+    vi.stubEnv('NODE_ENV', 'production')
+    expect(getDefaultMangleUserConfig().disabled).toBe(false)
+    vi.unstubAllEnvs()
+
+    if (originalEnv !== undefined) {
+      process.env.NODE_ENV = originalEnv
+    }
+    else {
+      delete process.env.NODE_ENV
+    }
   })
 })
 

@@ -1,3 +1,5 @@
+/* c8 ignore start */
+
 export interface IClassGeneratorContextItem {
   name: string
   usedBy: Set<string>
@@ -18,3 +20,5 @@ export interface IClassGenerator {
   newClassSize: number
   context: Record<string, any>
 }
+
+/* c8 ignore end */

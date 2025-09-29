@@ -1,3 +1,5 @@
+/* c8 ignore start */
+
 import type { FilterPattern } from '@rollup/pluginutils'
 import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
 import type { SourceEntry } from '@tailwindcss/oxide'
@@ -71,3 +73,5 @@ export interface UserConfig {
   patch?: PatchUserConfig
   mangle?: MangleUserConfig
 }
+
+/* c8 ignore end */

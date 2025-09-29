@@ -11,5 +11,13 @@ export default defineProject({
     ],
     globals: true,
     testTimeout: 60_000,
+    coverage: {
+      exclude: [
+        'src/types.ts',
+        'dist/**',
+        'tsup.config.ts',
+        'vitest.config.ts',
+      ],
+    },
   },
 })
