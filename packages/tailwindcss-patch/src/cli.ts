@@ -1,59 +1,75 @@
-import type { PatchUserConfig } from '@tailwindcss-mangle/config'
+import type { TailwindcssPatchOptions } from './types'
 import process from 'node:process'
 import { CONFIG_NAME, getConfig, initConfig } from '@tailwindcss-mangle/config'
-import { defuOverrideArray } from '@tailwindcss-mangle/shared'
+import { defu } from '@tailwindcss-mangle/shared'
 import cac from 'cac'
-import { TailwindcssPatcher } from './core'
-import { getPatchOptions } from './defaults'
 import logger from './logger'
+import { TailwindcssPatcher } from './api/tailwindcss-patcher'
+import { fromLegacyOptions } from './options/legacy'
 
-function init() {
-  const cwd = process.cwd()
-  return initConfig(cwd)
+const cli = cac('tw-patch')
+
+async function loadPatchOptions(cwd: string, overrides?: TailwindcssPatchOptions) {
+  const { config } = await getConfig(cwd)
+  const base = config?.patch ? fromLegacyOptions({ patch: config.patch }) : {}
+  const merged = defu<TailwindcssPatchOptions, TailwindcssPatchOptions[]>(overrides ?? {}, base)
+  return merged
 }
 
-const cli = cac()
-
-cli.command('install', 'patch install').action(() => {
-  const twPatcher = new TailwindcssPatcher({
-    patch: getPatchOptions(),
+cli
+  .command('install', 'Apply Tailwind CSS runtime patches')
+  .option('--cwd <dir>', 'Working directory', { default: process.cwd() })
+  .action(async (args: { cwd: string }) => {
+    const options = await loadPatchOptions(args.cwd)
+    const patcher = new TailwindcssPatcher(options)
+    await patcher.patch()
+    logger.success('Tailwind CSS runtime patched successfully.')
   })
-  twPatcher.patch()
-})
 
-cli.command('init').action(async () => {
-  await init()
-  logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
-})
+cli
+  .command('extract', 'Collect generated class names into a cache file')
+  .option('--cwd <dir>', 'Working directory', { default: process.cwd() })
+  .option('--output <file>', 'Override output file path')
+  .option('--format <format>', 'Output format (json|lines)')
+  .option('--css <file>', 'Tailwind CSS entry CSS when using v4')
+  .option('--no-write', 'Skip writing to disk')
+  .action(async (args: { cwd: string, output?: string, format?: 'json' | 'lines', css?: string, write?: boolean }) => {
+    const overrides: TailwindcssPatchOptions = {}
 
-cli.command('extract')
-  .option('--css [file]', 'css file entries')
-  .action(async (options) => {
-    const { config } = await getConfig()
-    const file = options.css as string
-    if (config) {
-      const twPatcher = new TailwindcssPatcher(
-        {
-          patch: defuOverrideArray(
-            config.patch!,
-            {
-              resolve: {
-                paths: [import.meta.url],
-              },
-              tailwindcss: {
-                v4: {
-                  cssEntries: file ? [file] : undefined,
-                },
-              },
-            } as Partial<PatchUserConfig>,
-          ),
+    if (args.output || args.format) {
+      overrides.output = {
+        file: args.output,
+        format: args.format,
+      }
+    }
+
+    if (args.css) {
+      overrides.tailwind = {
+        v4: {
+          cssEntries: [args.css],
         },
-      )
-      const p = await twPatcher.extract()
-      p && logger.success(`✨ tailwindcss-patch extract success! file path: ${p.filename}, classList length: ${p.classList.length}`)
+      }
+    }
+
+    const options = await loadPatchOptions(args.cwd, overrides)
+    const patcher = new TailwindcssPatcher(options)
+    const result = await patcher.extract({ write: args.write })
+
+    if (result.filename) {
+      logger.success(`Collected ${result.classList.length} classes → ${result.filename}`)
+    }
+    else {
+      logger.success(`Collected ${result.classList.length} classes.`)
     }
   })
 
-cli.help()
+cli
+  .command('init', 'Generate a tailwindcss-patch config file')
+  .option('--cwd <dir>', 'Working directory', { default: process.cwd() })
+  .action(async (args: { cwd: string }) => {
+    await initConfig(args.cwd)
+    logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
+  })
 
+cli.help()
 cli.parse()

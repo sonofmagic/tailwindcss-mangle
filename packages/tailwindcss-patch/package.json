@@ -40,11 +40,11 @@
   "scripts": {
     "dev": "tsup --watch --sourcemap",
     "build": "tsup",
-    "test": "pnpm run patch && vitest run --coverage.enabled",
+    "test": "vitest run",
     "test:dev": "vitest",
-    "patch": "tsx dev/bin.js install",
-    "r0": "tsx dev/bin.js extract",
-    "r1": "tsx dev/bin.js extract --css index.css"
+    "patch": "tsx dev/bin.ts install",
+    "r0": "tsx dev/bin.ts extract",
+    "r1": "tsx dev/bin.ts extract --css index.css"
   },
   "publishConfig": {
     "access": "public",

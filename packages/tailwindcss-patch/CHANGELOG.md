@@ -1,5 +1,12 @@
 # tailwindcss-patch
 
+## Unreleased
+
+- refactor: rebuild around the new `TailwindcssPatcher` API, explicit module boundaries (`api/`, `patching/`, `runtime/`, `options/`, `extraction/`).
+- feat: add Tailwind CSS v4 class discovery plus configurable output formats (`json` or newline delimited).
+- feat: expose helpers such as `CacheStore`, `normalizeOptions`, and v4 candidate scanners as public exports.
+- docs: add `MIGRATION.md` and refresh both README variants to describe the new workflow and CLI flags.
+
 ## 7.1.6
 
 ### Patch Changes

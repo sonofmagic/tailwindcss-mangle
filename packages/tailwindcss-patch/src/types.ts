@@ -1,54 +1,19 @@
-/* eslint-disable ts/no-unsafe-function-type */
-import type { PatchUserConfig, TailwindcssUserConfig } from '@tailwindcss-mangle/config'
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
-
-export type CacheStrategy = 'merge' | 'overwrite'
-
-export type {
-  TailwindcssUserConfig,
-}
-
-export interface CacheOptions {
-  dir?: string
-  cwd?: string
-  file?: string
-  strategy?: CacheStrategy
-}
-
-export interface InternalCacheOptions extends CacheOptions {
-  enable?: boolean
-}
-
-export interface PatchOptions extends PatchUserConfig {
-  overwrite?: boolean
-  paths?: string[]
-  basedir?: string
-  applyPatches?: {
-    exportContext?: boolean
-    extendLengthUnits?: boolean | ILengthUnitsPatchOptions
-  }
-  filter?: (className: string) => boolean
-  cwd?: string
-}
-
-export interface InternalPatchOptions extends PatchOptions {
-  version?: string
-}
-
-export interface TailwindcssPatcherOptions {
-  cache?: CacheOptions | boolean
-  patch?: PatchOptions
-}
+import type {
+  CacheStrategy,
+  NormalizedTailwindcssPatchOptions,
+  TailwindcssPatchOptions,
+} from './options/types'
 
 export type TailwindcssClassCache = Map<
   string,
   (
     | {
-      layer: string
-      options: Record<string, any>
-      sort: Record<string, any>
-    }
+        layer: string
+        options: Record<string, any>
+        sort: Record<string, any>
+      }
     | Rule
   )[]
 >
@@ -76,11 +41,11 @@ export interface TailwindcssRuntimeContext {
   changedContent: any[]
   classCache: TailwindcssClassCache
   disposables: any[]
-  getClassList: Function
-  getClassOrder: Function
-  getVariants: Function
-  markInvalidUtilityCandidate: Function
-  markInvalidUtilityNode: Function
+  getClassList: (...args: any[]) => any
+  getClassOrder: (...args: any[]) => any
+  getVariants: (...args: any[]) => any
+  markInvalidUtilityCandidate: (...args: any[]) => any
+  markInvalidUtilityNode: (...args: any[]) => any
   notClassCache: Set<string>
   offsets: {
     layerPositions: object
@@ -97,10 +62,18 @@ export interface TailwindcssRuntimeContext {
   variantOptions: Map<string, object>
 }
 
-// Custom utility type:
-export type DeepRequired<T> = {
-  [K in keyof T]: Required<DeepRequired<T[K]>>
+export interface ExtractResult {
+  classList: string[]
+  classSet: Set<string>
+  filename?: string
 }
+
+export interface TailwindPatchRuntime {
+  options: NormalizedTailwindcssPatchOptions
+  majorVersion: 2 | 3 | 4
+}
+
+export type { CacheStrategy, TailwindcssPatchOptions, NormalizedTailwindcssPatchOptions }
 
 export interface ILengthUnitsPatchOptions {
   units: string[]
