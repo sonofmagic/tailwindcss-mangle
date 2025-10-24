@@ -1,0 +1,160 @@
+import { Callout } from 'nextra/components'
+
+# 迁移指南 · v7 → v8
+
+`tailwindcss-patch@8.0.0` 彻底重构了提取引擎，引入统一的类型化配置对象，并让 CLI 与插件共享同一套默认值。本文将帮助你从 v7 升级：涵盖命令行、配置文件以及各类构建插件。
+
+<Callout type="info">
+旧版配置仍然有效。你可以在保留 `patch`/`cache` 结构的同时，逐步补充新的字段。
+</Callout>
+
+## 1. 升级依赖
+
+```sh npm2yarn
+npm i -D tailwindcss-patch@^8 unplugin-tailwindcss-mangle@latest @tailwindcss-mangle/config@latest @tailwindcss-mangle/core@latest
+```
+
+- `tailwindcss-patch` 提供新的 API 与提取能力。
+- `unplugin-tailwindcss-mangle` 会读取刷新后的类名清单，并继承共享配置。
+- `@tailwindcss-mangle/config` 负责在 CLI 与插件之间归一化旧/新配置。
+
+## 2. 检查导入路径
+
+现在的包结构按职责拆分：
+
+| v7 路径 | v8 替代 |
+| --- | --- |
+| `tailwindcss-patch/core/**` | `tailwindcss-patch/api/**`、`tailwindcss-patch/cache/**`、`tailwindcss-patch/runtime/**` 等 |
+| `CacheManager` | `CacheStore` |
+| `processTailwindcss` | `runTailwindBuild` |
+
+相应地更新手写导入：
+
+```ts
+import { TailwindcssPatcher } from 'tailwindcss-patch'
+import { CacheStore } from 'tailwindcss-patch/cache/store'
+import { applyTailwindPatches } from 'tailwindcss-patch/patching/patch-runner'
+```
+
+## 3. 采用统一配置对象
+
+构造函数现在接受一个 `TailwindcssPatchOptions` 对象。若传入包含 `patch` / `cache` 的旧结构，运行时会自动调用 `fromLegacyOptions()`。
+
+```ts
+// 旧结构（仍然受支持）
+new TailwindcssPatcher({
+  patch: {
+    output: { filename: '.tw-patch/tw-class-list.json', loose: true },
+    tailwindcss: { version: 3, v3: { cwd, config } },
+    applyPatches: { extendLengthUnits: true },
+  },
+})
+
+// 推荐的 v8 结构
+new TailwindcssPatcher({
+  overwrite: true,
+  cache: {
+    enabled: true,
+    dir: '.tw-patch/cache',
+    strategy: 'merge',
+  },
+  output: {
+    file: '.tw-patch/tw-class-list.json',
+    format: 'json',
+    removeUniversalSelector: true,
+  },
+  features: {
+    exposeContext: { refProperty: 'runtimeContexts' },
+    extendLengthUnits: { units: ['rpx'] },
+  },
+  tailwind: {
+    version: 4,
+    v4: {
+      base: './src',
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+在迁移配置文件时，可以逐步补充以下新字段：
+
+- `output.format`（`json` 或 `lines`）
+- `output.pretty`（缩进空格或 `false`）
+- `tailwind.v4.cssEntries` / `tailwind.v4.sources`
+- `features.extendLengthUnits` —— 针对 v3/v4 共用的长度单位补丁
+
+## 4. 更新 CLI 用法
+
+`tw-patch install` 与 `tw-patch extract` 依旧可用，但新增了一些实用参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `--output <file>` | 指定生成类名清单的文件位置。 |
+| `--format <json|lines>` | 切换 JSON（默认）或按行文本。 |
+| `--css <file>` | 为 Tailwind v4 提供 CSS 入口，可重复设置多个文件。 |
+| `--no-write` | 跳过写入磁盘，仅返回集合。 |
+
+命令会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。若仍使用旧的 `tailwindcss-mangle.config.ts`，同样会被识别。
+
+## 5. 缓存策略调整
+
+`CacheStore` 取代 `CacheManager`，并统一了异步行为：
+
+```ts
+const cache = new CacheStore(options.cache)
+await cache.write(new Set(['text-lg']))
+const values = await cache.read()
+```
+
+- `cache.strategy` 支持 `merge`（默认）与 `overwrite`。
+- 可以在配置或命令覆盖中开启/关闭 `cache.enabled`。
+- 如果缓存 JSON 损坏，会自动清理以避免静默失败。
+
+## 6. 插件与运行时对齐
+
+`@tailwindcss-mangle/config` 同时服务于 CLI 与 `unplugin-tailwindcss-mangle`。请确认配置中包括：
+
+- `patch.output.filename`（或新版的 `output.file`）
+- `patch.applyPatches.extendLengthUnits` —— 若之前使用布尔值，需要改为对象配置
+- `mangle.classListPath` 指向 `.tw-patch/tw-class-list.json`
+- `mangle.classMapOutput` —— 若需要输出类名映射以便审计
+
+在构建工具中最小化的配置示例如下：
+
+```ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/vite'
+
+export default defineConfig({
+  plugins: [
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
+})
+```
+
+若使用 Nuxt 3，记得设置 `experimental.inlineSSRStyles = false`，以便 Vite 输出 CSS 供扫描。
+
+## 7. 面向 Tailwind v4
+
+8.0 版本原生支持 Tailwind v4：
+
+- 通过 `tailwind.v4.cssEntries` 声明 CSS 入口文件。
+- 可使用 `tailwind.v4.sources` 自定义内容扫描路径（默认在 `base` 下匹配 `**/*`）。
+- 当存在多套 CSS 产物时，可在 CLI 中使用 `--css` 指定要扫描的输出。
+
+## 8. 升级检查清单
+
+1. 升级依赖（`tailwindcss-patch`、`unplugin-tailwindcss-mangle` 以及共享包）。
+2. 调整或重建 `tailwindcss-patch.config.ts`，按需补充新的 `output` 与 `tailwind.v4` 字段。
+3. 更新自定义导入路径，指向新的模块目录。
+4. 校准 CLI 与 CI 脚本，验证新增参数是否需要覆盖。
+5. 必要时清理缓存（`pnpm script:clean`），重新执行 `tw-patch extract`。
+6. 运行构建流程，确认类名按预期被重写。
+7. （可选）启用 `classMapOutput`，在首次迁移时审查映射结果。
+
+## 需要帮助？
+
+- 可对照仓库旧文档，确认差异。
+- 如遇兼容性问题，请携带复现步骤提交 Issue，我们会优先跟进迁移反馈。

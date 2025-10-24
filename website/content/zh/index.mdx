@@ -14,7 +14,7 @@ import { Callout } from 'nextra/components'
 - `unplugin-tailwindcss-mangle` 读取最新的类名清单，并支持 Vite、Webpack、Rollup、Esbuild 与 Nuxt 3。
 
 <Callout type="info">
-从 v7.x 升级？请参考 <a href="https://github.com/icebreaker/tailwindcss-mangle/blob/main/packages/tailwindcss-patch/MIGRATION.md" target="_blank" rel="noreferrer">迁移指南</a>，按步骤平滑过渡。
+从 v7.x 升级？请参考 <a href="./migration">迁移指南</a>，按步骤平滑过渡。
 </Callout>
 
 ## 两步工作流
@@ -46,4 +46,3 @@ npx tw-patch extract
 - `unplugin-tailwindcss-mangle` —— 读取类名清单，在打包阶段重写匹配的类名。
 - `@tailwindcss-mangle/config` —— 统一加载并标准化旧版与新版配置。
 - `@tailwindcss-mangle/shared` —— 内置类名生成、过滤及通用正则等辅助方法。
-

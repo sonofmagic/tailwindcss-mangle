@@ -1,0 +1,160 @@
+import { Callout } from 'nextra/components'
+
+# Migration · v7 → v8
+
+`tailwindcss-patch@8.0.0` refactors the extraction engine, introduces typed option objects, and streamlines configuration sharing across the toolchain. This guide walks you through upgrading an existing v7 setup—CLI, configs, and bundler plugins—without losing backwards compatibility.
+
+<Callout type="info">
+Legacy configs still work. You can migrate incrementally by adding new fields while keeping the historical `patch`/`cache` structure.
+</Callout>
+
+## 1. Update dependencies
+
+```sh npm2yarn
+npm i -D tailwindcss-patch@^8 unplugin-tailwindcss-mangle@latest @tailwindcss-mangle/config@latest @tailwindcss-mangle/core@latest
+```
+
+- The patch package ships the new API surface.
+- `unplugin-tailwindcss-mangle` consumes the refreshed class inventory and honours the shared config defaults.
+- `@tailwindcss-mangle/config` normalises both legacy and modern shapes for CLI and plugin consumers.
+
+## 2. Review imports
+
+The package layout now exposes purpose-specific entry points:
+
+| v7 path | v8 replacement |
+| --- | --- |
+| `tailwindcss-patch/core/**` | `tailwindcss-patch/api/**`, `tailwindcss-patch/cache/**`, `tailwindcss-patch/runtime/**`, etc. |
+| `CacheManager` | `CacheStore` |
+| `processTailwindcss` | `runTailwindBuild` |
+
+Update manual imports accordingly:
+
+```ts
+import { TailwindcssPatcher } from 'tailwindcss-patch'
+import { CacheStore } from 'tailwindcss-patch/cache/store'
+import { applyTailwindPatches } from 'tailwindcss-patch/patching/patch-runner'
+```
+
+## 3. Embrace the unified options object
+
+The constructor now accepts a single `TailwindcssPatchOptions` object. Passing a legacy object with `patch`/`cache` still works—the runtime calls `fromLegacyOptions()` internally.
+
+```ts
+// Legacy shape (still accepted)
+new TailwindcssPatcher({
+  patch: {
+    output: { filename: '.tw-patch/tw-class-list.json', loose: true },
+    tailwindcss: { version: 3, v3: { cwd, config } },
+    applyPatches: { extendLengthUnits: true },
+  },
+})
+
+// Recommended v8 shape
+new TailwindcssPatcher({
+  overwrite: true,
+  cache: {
+    enabled: true,
+    dir: '.tw-patch/cache',
+    strategy: 'merge',
+  },
+  output: {
+    file: '.tw-patch/tw-class-list.json',
+    format: 'json',
+    removeUniversalSelector: true,
+  },
+  features: {
+    exposeContext: { refProperty: 'runtimeContexts' },
+    extendLengthUnits: { units: ['rpx'] },
+  },
+  tailwind: {
+    version: 4,
+    v4: {
+      base: './src',
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+When migrating configs, add the new fields gradually:
+
+- `output.format` (`json` or `lines`)
+- `output.pretty` (indentation or `false`)
+- `tailwind.v4.cssEntries` / `tailwind.v4.sources`
+- `features.extendLengthUnits` with shared options for Tailwind v3 and v4
+
+## 4. Refresh CLI usage
+
+`tw-patch install` and `tw-patch extract` keep their names but gained quality-of-life flags:
+
+| Flag | Description |
+| --- | --- |
+| `--output <file>` | Override the generated class list target. |
+| `--format <json|lines>` | Emit JSON (default) or newline-delimited text. |
+| `--css <file>` | Provide Tailwind v4 CSS entry files. Repeat for multiple entries. |
+| `--no-write` | Skip writing to disk, returning the class list to the caller. |
+
+Configuration is resolved from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing `tailwindcss-mangle.config.ts` files are still picked up.
+
+## 5. Cache strategy changes
+
+`CacheStore` replaces `CacheManager` and unifies async behaviour:
+
+```ts
+const cache = new CacheStore(options.cache)
+await cache.write(new Set(['text-lg']))
+const values = await cache.read()
+```
+
+- `cache.strategy` now accepts `merge` (default) or `overwrite`.
+- `cache.enabled` can be toggled globally or per command via overrides.
+- Invalid JSON files are purged automatically to avoid silent failures.
+
+## 6. Plugin & runtime alignment
+
+`@tailwindcss-mangle/config` feeds both the CLI and `unplugin-tailwindcss-mangle`. Ensure your config exposes:
+
+- `patch.output.filename` (or the new `output.file`)
+- `patch.applyPatches.extendLengthUnits` if you previously relied on the boolean flag
+- `mangle.classListPath` pointing at the generated `.tw-patch/tw-class-list.json`
+- `mangle.classMapOutput` if you need before/after maps for auditing
+
+In bundlers, the minimal setup looks like:
+
+```ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/vite'
+
+export default defineConfig({
+  plugins: [
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
+})
+```
+
+Nuxt 3 users should also set `experimental.inlineSSRStyles = false` so Vite emits CSS for scanning.
+
+## 7. Tailwind v4 projects
+
+Version 8.0 introduces native Tailwind v4 support:
+
+- Provide CSS entry files via `tailwind.v4.cssEntries`.
+- Define content sources through `tailwind.v4.sources` (defaults to `**/*` under `base`).
+- Use the new `--css` CLI flag when extracting from monorepos that emit multiple CSS bundles.
+
+## 8. Upgrade checklist
+
+1. Update dependencies (`tailwindcss-patch`, `unplugin-tailwindcss-mangle`, shared packages).
+2. Regenerate or tweak `tailwindcss-patch.config.ts`, adding new `output` and `tailwind.v4` fields as needed.
+3. Adjust custom imports to the new module folders.
+4. Verify CLI scripts and CI pipelines with the refreshed flags.
+5. Clear stale caches if necessary (`pnpm script:clean`) and rerun `tw-patch extract`.
+6. Run your bundler build and confirm class names are rewritten as expected.
+7. (Optional) Enable `classMapOutput` to audit mappings during the first migration run.
+
+## Need help?
+
+- Compare against the legacy docs in your repository history.
+- Open an issue with reproduction steps if you hit a regression—we track migration feedback closely.
