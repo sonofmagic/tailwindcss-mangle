@@ -147,6 +147,19 @@ describe('js handler', async () => {
     expect(code).toMatchSnapshot()
   })
 
+  it('preserves use directives in server actions', () => {
+    const replaceMap = ctx.replaceMap
+    replaceMap.set('server', 'a')
+
+    const testCase = `export async function action(){'use server';return "server"}`
+    const code = jsHandler(testCase, {
+      ctx,
+    }).code
+
+    expect(code).toContain(`'use server'`)
+    expect(code).not.toContain('return "server"')
+  })
+
   it('nextjs server side mangle', () => {
     const testCase = getTestCase('next-server-page.js')
     getCss(testCase)

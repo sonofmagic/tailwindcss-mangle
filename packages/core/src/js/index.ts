@@ -61,6 +61,13 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
     StringLiteral: {
       enter(p) {
         const n = p.node
+        if (
+          typeof n.value === 'string'
+          && p.isDirectiveLiteral?.()
+          && n.value.startsWith('use ')
+        ) {
+          return
+        }
         handleValue(n.value, n, options, ms, 1, true)
       },
     },
