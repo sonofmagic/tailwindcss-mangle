@@ -8,7 +8,9 @@ export default defineConfig({
       removeUniversalSelector: false,
     },
     tailwindcss: {
-      cwd: 'aaa/bbb/cc',
+      v3: {
+        cwd: 'aaa/bbb/cc',
+      },
     },
   },
 })

@@ -1,7 +1,6 @@
 import type { ArrayExpression, StringLiteral } from '@babel/types'
 import type { NormalizedExtendLengthUnitsOptions } from '../../options/types'
 import * as t from '@babel/types'
-import { defuOverrideArray } from '@tailwindcss-mangle/shared'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { generate, parse, traverse } from '../../babel'
@@ -55,13 +54,15 @@ function updateLengthUnitsArray(content: string, options: NormalizedExtendLength
 }
 
 export function applyExtendLengthUnitsPatchV3(rootDir: string, options: NormalizedExtendLengthUnitsOptions) {
-  const opts = defuOverrideArray<Required<NormalisedV3Options>, NormalisedV3Options[]>(
-    options as Required<NormalisedV3Options>,
-    {
-      lengthUnitsFilePath: 'lib/util/dataTypes.js',
-      variableName: 'lengthUnits',
-    },
-  )
+  if (!options.enabled) {
+    return { changed: false, code: undefined }
+  }
+
+  const opts: NormalisedV3Options = {
+    ...options,
+    lengthUnitsFilePath: options.lengthUnitsFilePath ?? 'lib/util/dataTypes.js',
+    variableName: options.variableName ?? 'lengthUnits',
+  }
 
   const dataTypesFilePath = path.resolve(rootDir, opts.lengthUnitsFilePath)
   const exists = fs.existsSync(dataTypesFilePath)
@@ -113,14 +114,15 @@ interface V4FilePatch {
 }
 
 interface V4Candidate extends V4FilePatch {
-  match: RegExpMatchArray
+  match: RegExpExecArray
 }
 
 export function applyExtendLengthUnitsPatchV4(rootDir: string, options: NormalizedExtendLengthUnitsOptions) {
-  const opts = defuOverrideArray<NormalisedV4Options, NormalisedV4Options[]>(
-    options as NormalisedV4Options,
-    {},
-  )
+  if (!options.enabled) {
+    return { files: [], changed: false }
+  }
+
+  const opts: NormalisedV4Options = { ...options }
 
   const distDir = path.resolve(rootDir, 'dist')
   if (!fs.existsSync(distDir)) {
@@ -131,17 +133,20 @@ export function applyExtendLengthUnitsPatchV4(rootDir: string, options: Normaliz
   const chunkNames = entries.filter(entry => entry.endsWith('.js') || entry.endsWith('.mjs'))
   const pattern = /\[\s*["']cm["'],\s*["']mm["'],[\w,"']+\]/
 
-  const candidates: V4Candidate[] = chunkNames.map((chunkName) => {
+  const candidates = chunkNames.map((chunkName) => {
     const file = path.join(distDir, chunkName)
     const code = fs.readFileSync(file, 'utf8')
-    const matches = pattern.exec(code)
+    const match = pattern.exec(code)
+    if (!match) {
+      return null
+    }
     return {
       file,
       code,
-      match: matches!,
+      match,
       hasPatched: false,
     }
-  }).filter((candidate): candidate is V4Candidate => Boolean(candidate.match))
+  }).filter((candidate): candidate is V4Candidate => candidate !== null)
 
   for (const item of candidates) {
     const { code, file, match } = item

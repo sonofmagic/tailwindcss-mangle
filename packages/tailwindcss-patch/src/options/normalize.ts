@@ -97,7 +97,11 @@ function normalizeExposeContextOptions(features: FeatureUserOptions | undefined)
 
 function normalizeExtendLengthUnitsOptions(features: FeatureUserOptions | undefined): NormalizedFeatureOptions['extendLengthUnits'] {
   const extend = features?.extendLengthUnits
-  if (!extend || extend === false) {
+  if (extend === false || extend === undefined) {
+    return null
+  }
+
+  if (extend.enabled === false) {
     return null
   }
 
@@ -106,14 +110,12 @@ function normalizeExtendLengthUnitsOptions(features: FeatureUserOptions | undefi
     overwrite: true,
   }
 
-  const options: ExtendLengthUnitsUserOptions = typeof extend === 'boolean' ? { enabled: true } : extend
-
   return {
     ...base,
-    ...options,
-    enabled: options.enabled ?? true,
-    units: options.units ?? base.units,
-    overwrite: options.overwrite ?? base.overwrite!,
+    ...extend,
+    enabled: extend.enabled ?? true,
+    units: extend.units ?? base.units,
+    overwrite: extend.overwrite ?? base.overwrite!,
   }
 }
 

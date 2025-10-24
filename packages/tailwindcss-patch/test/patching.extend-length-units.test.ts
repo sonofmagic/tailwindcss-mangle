@@ -18,6 +18,7 @@ describe('extend length units patch', () => {
   it('updates Tailwind v3 length units array', () => {
     const libDir = path.join(fixturesDir, '3.3.1')
     const result = applyExtendLengthUnitsPatchV3(libDir, {
+      enabled: true,
       units: ['rpx'],
       overwrite: false,
       lengthUnitsFilePath: 'lib/util/dataTypes.js',
@@ -34,6 +35,7 @@ describe('extend length units patch', () => {
     await fs.copy(pkgDir, tempDir)
 
     const result = applyExtendLengthUnitsPatchV4(tempDir, {
+      enabled: true,
       units: ['rpx'],
       overwrite: false,
     })

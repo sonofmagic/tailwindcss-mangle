@@ -1,6 +1,5 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import process from 'node:process'
-import { defuOverrideArray } from '@tailwindcss-mangle/shared'
 
 async function importNode() {
   return import('@tailwindcss/node')
@@ -44,24 +43,22 @@ export async function extractRawCandidates(
 }
 
 export async function extractValidCandidates(options?: ExtractValidCandidatesOption) {
-  const defaultCwd = options?.cwd ?? process.cwd()
-  const { sources, base, css } = defuOverrideArray<
-    Required<ExtractValidCandidatesOption>,
-    Partial<ExtractValidCandidatesOption>[]
-  >(
-    options,
+  const providedOptions = options ?? {}
+  const defaultCwd = providedOptions.cwd ?? process.cwd()
+
+  const base = providedOptions.base ?? defaultCwd
+  const css = providedOptions.css ?? '@import "tailwindcss";'
+  const sources = (providedOptions.sources ?? [
     {
-      css: '@import "tailwindcss";',
       base: defaultCwd,
-      sources: [
-        {
-          base: defaultCwd,
-          pattern: '**/*',
-          negated: false,
-        },
-      ],
+      pattern: '**/*',
+      negated: false,
     },
-  )
+  ]).map(source => ({
+    base: source.base ?? defaultCwd,
+    pattern: source.pattern,
+    negated: source.negated,
+  }))
 
   const { __unstable__loadDesignSystem } = await importNode()
   const designSystem = await __unstable__loadDesignSystem(css, { base })
