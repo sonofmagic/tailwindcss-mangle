@@ -2,7 +2,6 @@ import { Callout } from 'nextra/components'
 
 # 2.Mangle
 
-
 ## 功能简介
 
 ```html
@@ -12,119 +11,162 @@ import { Callout } from 'nextra/components'
 <div class="tw-g tw-h tw-i tw-d tw-e tw-j tw-k tw-l"></div>
 ```
 
-## 使用
+`unplugin-tailwindcss-mangle` 会读取 `tailwindcss-patch` 生成的类名清单，在模板、JSX、MDX 与内联字符串中重写匹配的类名，从而让最终产物更紧凑、也更难被猜测。
 
-### 1. 安装包
+## 快速上手
 
-```sh npm2yarn
-npm i -D unplugin-tailwindcss-mangle tailwindcss-patch
-```
+1. 安装依赖。
 
-### 2. 运行安装脚本
+   ```sh npm2yarn
+   npm i -D tailwindcss-patch unplugin-tailwindcss-mangle
+   ```
 
-```sh
-npx tw-patch install
-```
+2. 为 Tailwind 打补丁并提取类名。
 
-### 3. 在 `package.json` 中添加 `prepare` 脚本
+   ```sh
+   npx tw-patch install
+   npx tw-patch extract
+   ```
 
-```json
-  "scripts": {
-    "prepare": "tw-patch install"
-  },
-```
+3. 在 `package.json` 中添加 `prepare`，确保安装后自动打补丁。
 
-### 4. 运行提取命令
+   ```json
+   {
+     "scripts": {
+       "prepare": "tw-patch install"
+     }
+   }
+   ```
 
-进入与 `package.json` 和 `tailwind.config.js` 相同的目录，然后运行：
+4. 在构建工具中注册插件，并将 `classListPath` 指向 `.tw-patch/tw-class-list.json`。
 
-```sh
-npx tw-patch extract
-```
+<Callout type="info">
+配置文件会在 CLI 与插件之间自动共享，只需在 <a href="../config">Config</a> 中维护一次路径或过滤器即可。
+</Callout>
 
-> 查看 [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch) 中的更多选项
+## 支持的构建工具
 
-这将生成一个 JSON 文件：`.tw-patch/tw-class-list.json`
+### Vite
 
-### 5. 注册此插件
-
-#### vite
-
-```js
+```ts
+// vite.config.ts
 import vue from '@vitejs/plugin-vue'
-import utwm from 'unplugin-tailwindcss-mangle/vite'
-// 例如：vue vite 项目
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/vite'
 import { defineConfig } from 'vite'
-// https://vitejs.dev/config/
+
 export default defineConfig({
-  plugins: [vue(), utwm()]
+  plugins: [
+    vue(),
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
 })
 ```
 
-然后运行脚本：
-
-```sh
-# 生成构建包
-yarn build
-# 预览
-yarn preview
-```
-
-你将看到所有的类名都被重命名为 `tw-*`
-
-#### webpack
+### Webpack
 
 ```js
-// esm
-import { webpackPlugin as utwm } from 'unplugin-tailwindcss-mangle'
-// 或 cjs
-const utwm = require('unplugin-tailwindcss-mangle/webpack')
-// 使用这个 webpack 插件
-// 例如 next.config.js
-const { defineConfig } = require('@vue/cli-service')
-// vue.config.js
-module.exports = defineConfig({
-  transpileDependencies: true,
-  configureWebpack: (config) => {
-    if (process.env.NODE_ENV === 'production') {
-      config.plugins.push(utwm())
-    }
-  }
-})
+// webpack.config.js
+const { webpackPlugin: tailwindcssMangle } = require('unplugin-tailwindcss-mangle')
 
+module.exports = {
+  // ...
+  plugins: [
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
+}
 ```
+
+### Rollup
+
+```ts
+// rollup.config.ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/rollup'
+
+export default {
+  plugins: [
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
+}
+```
+
+### Nuxt 3
+
+```ts
+// nuxt.config.ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/nuxt'
+
+export default defineNuxtConfig({
+  experimental: {
+    inlineSSRStyles: false,
+  },
+  modules: [
+    [
+      tailwindcssMangle,
+      {
+        classListPath: '.tw-patch/tw-class-list.json',
+      },
+    ],
+  ],
+})
+```
+
+### Esbuild
+
+```ts
+// build.mjs
+import { build } from 'esbuild'
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/esbuild'
+
+await build({
+  entryPoints: ['src/main.ts'],
+  bundle: true,
+  outfile: 'dist/index.js',
+  plugins: [
+    tailwindcssMangle({
+      classListPath: '.tw-patch/tw-class-list.json',
+    }),
+  ],
+})
+```
+
+## 插件选项
+
+可以直接在插件中配置，也可以通过共享配置文件统一管理。
+
+- `classListPath` —— 指向 `tw-patch extract` 生成的类名清单。
+- `include` / `exclude` —— 调整插件扫描的文件范围，默认覆盖 HTML、主流框架、CSS 与 MDX。
+- `mangleClassFilter` —— 在生成前自定义类名过滤逻辑。
+- `classGenerator` —— 自定义压缩后的类名，例如 `classPrefix`、`reserveClassName`、`customGenerate`。
+- `classMapOutput` —— 设为 `true` 重用配置默认值；传对象（`enable`、`filename`、`loose`）写出 JSON；或提供函数直接处理映射。
+- `preserveFunction` —— 声明包装函数（如 `twIgnore`），用于标记需要保留的模板字面量。
+- `disabled` —— 设为 `true` 时跳过混淆（默认在开发环境关闭）。
+
+## 忽略与保留
+
+使用 `preserveFunction` 可以保留某些字符串，默认内置的 `twIgnore` 可用于模板字面量：
+
+```js
+const twIgnore = String.raw
+const className = `${twIgnore`gap-y-4`} bg-zinc-800/30`
+```
+
+混淆后的结果：
+
+```js
+const twIgnore = String.raw
+const className = `${twIgnore`gap-y-4`} tw-a`
+```
+
+启用 `classMapOutput` 可以在 `.tw-patch/tw-map-list.json` 中查看前后类名以及引用位置，便于排查问题。
 
 ## 注意事项
 
-此插件仅会转换类名中包含 `-` 或 `:` 的工具类，例如 `w-32`、`before:h-[300px]`、`after:dark:via-[#0141ff]/40`。一些像 `flex`、`relative` 这样的类名将不会被转换。
-
-因为插件会**遍历**所有的 `html class` 属性和 `js` 字面量中的类名，寻找由 `tailwindcss` 生成的工具类。
-
-像以下这种 `js` 字面量的转换是危险的：
-
-```js
-const innerHTML = 'i\'m flex and relative and grid'
-document.body.innerHTML = innerHTML
-```
-
-因此，只有包含 `-` 或 `:` 的字符串才会被转换。
-
-另外，插件也给了选项 `twIgnore`，来给一些字符串跳过 `Mangle`
-
-比如：
-
-### 输入
-
-```js
-const twIgnore = String.raw;
-const className = `${twIgnore`gap-y-4`} bg-zinc-800/30`;
-```
-
-### 输出
-
-```js
-const twIgnore = String.raw;
-const className = `${twIgnore`gap-y-4`} tw-a`;
-```
-
-
+- 插件仅会转换包含 `-` 或 `:` 的工具类，例如 `w-32`、`before:h-[300px]`、`after:dark:via-[#0141ff]/40`。像 `flex` 这类基础类名会被保留，以避免误伤。
+- 默认只在生产构建阶段启用混淆；如果需要在开发环境尝试，可设置 `disabled: false`。
+- 插件会遍历 HTML `class` 属性与常见的字符串字面量，请避免在运行时对任意字符串进行难以预测的动态修改。

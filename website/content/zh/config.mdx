@@ -1,1 +1,128 @@
-# TODO
+import { Callout } from 'nextra/components'
+
+# 3.Config
+
+工具链通过 `@tailwindcss-mangle/config` 读取配置文件。无论是推荐的 `tailwindcss-patch.config.ts`，还是历史沿用的 `tailwindcss-mangle.config.ts`，都会被自动识别，方便在升级过程中平滑过渡。
+
+## 生成基础文件
+
+```sh npm2yarn
+npx tw-patch init
+```
+
+命令会在项目根目录生成一个最小化配置：
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({})
+```
+
+<Callout type="info">
+`defineConfig` 提供类型提示，但运行时会接受更多字段，并自动转换为现代的 `TailwindcssPatcher` 配置结构。新增字段会在归一化阶段被安全透传。
+</Callout>
+
+## 配置示例
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({
+  patch: {
+    output: {
+      filename: '.tw-patch/tw-class-list.json',
+      format: 'json',
+      pretty: 2,
+      removeUniversalSelector: true,
+    },
+    tailwindcss: {
+      version: 4,
+      v4: {
+        cssEntries: ['dist/tailwind.css'],
+        sources: [
+          { base: 'src', pattern: '**/*.{astro,tsx,mdx}', negated: false },
+        ],
+      },
+    },
+    applyPatches: {
+      exportContext: true,
+      extendLengthUnits: {
+        units: ['rpx'],
+      },
+    },
+  },
+  cache: {
+    enabled: true,
+    dir: '.tw-patch/cache',
+    strategy: 'merge',
+  },
+  mangle: {
+    classListPath: '.tw-patch/tw-class-list.json',
+    include: [
+      /\.(html|vue|tsx|jsx|mdx)$/,
+    ],
+    classGenerator: {
+      classPrefix: 'tw-',
+      reserveClassName: [/^theme-/],
+    },
+    classMapOutput: {
+      enable: false,
+      filename: '.tw-patch/tw-map-list.json',
+      loose: true,
+    },
+    preserveFunction: ['twIgnore'],
+  },
+})
+```
+
+## Patch 配置
+
+`patch` 块仍然保持旧式结构，但内部会被转换为新的 `TailwindcssPatchOptions`。
+
+### `output`
+
+- `filename` —— 提取结果写入位置（默认 `.tw-patch/tw-class-list.json`）。
+- `format` —— 支持 `json` 或 `lines`，CLI 默认生成 JSON。
+- `pretty` —— `false`、布尔值或数字，控制 JSON 的缩进空格数。
+- `removeUniversalSelector` —— 当为 `true` 时跳过 `*` 选择器。
+
+### `tailwindcss`
+
+- `version` —— 可选提示（`2`、`3` 或 `4`），用于多版本并存时确定策略。
+- `v2` / `v3` —— 为工作区内的 Tailwind 实例提供 `cwd` 与 `config`。
+- `v4.cssEntries` —— Oxide 扫描的 CSS 入口文件；多产物时可填写多个。
+- `v4.sources` —— 自定义 v4 的内容源，默认会在 `base` 下匹配 `**/*`。
+
+### `applyPatches`
+
+- `exportContext` —— 暴露运行时上下文，方便后续 API 读取。
+- `extendLengthUnits` —— 配置长度单位补丁，可传布尔值或对象（`units`、`overwrite` 等）。
+
+### `cache` 与 `overwrite`
+
+- `cache.enabled` —— 是否在 `node_modules/.cache/tailwindcss-patch` 下持久化类名集合（默认启用）。
+- `cache.dir` / `cache.file` —— 控制缓存文件存储路径。
+- `cache.strategy` —— `merge` 追加合并，`overwrite` 每次生成覆盖。
+- `overwrite`（顶层）—— 即使已打过补丁，也强制重新应用 Tailwind patch。
+
+### `filter`
+
+可提供函数用于跳过特定类名。返回 `false` 会丢弃，其他返回值则保留。
+
+## Mangle 配置
+
+`mangle` 块同时被核心运行时与 `unplugin-tailwindcss-mangle` 使用。
+
+- `classListPath` —— 提取类名清单所在路径，可为相对或绝对路径。
+- `include` / `exclude` —— 控制插件扫描的文件，默认覆盖 HTML、各类前端框架、CSS 与 MDX。
+- `mangleClassFilter` —— 在生成前重写类名过滤逻辑。
+- `classGenerator` —— 自定义压缩后的类名，例如 `classPrefix`、`reserveClassName`、`exclude`、`customGenerate`。
+- `classMapOutput` —— 设为 `true` 复用配置默认值；传入对象（`enable`、`filename`、`loose`）写出 JSON；也可以提供函数获取完全的控制权。
+- `preserveFunction` —— 列出标记模板字面量免于混淆的函数名，例如 `twIgnore`。
+- `disabled` —— 为 `true` 时跳过改写（默认根据 `process.env.NODE_ENV === 'development'` 判定）。
+
+## 使用方式
+
+- `tw-patch install` / `tw-patch extract` 会自动加载该配置文件。
+- `unplugin-tailwindcss-mangle` 与 CLI 复用同一套配置，确保插件行为与提取逻辑保持一致。
+- 需要编程式控制时，可以手动实例化 `TailwindcssPatcher` 并传入现代化配置对象；旧式配置会在运行时自动转换。

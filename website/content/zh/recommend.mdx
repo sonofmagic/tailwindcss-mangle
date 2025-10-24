@@ -1,22 +1,16 @@
-# 需要在 Tailwindcss 提取的时候，获取更多的元数据
+# 建议与愿望清单
 
-## 需要知道更多信息
+`tailwindcss-patch` 8.0 已经可以稳定地为 Tailwind v2→v4 生成类名清单，但我们仍希望获取更多上下文信息。本页记录正在探索的方向，以及未来版本想要补充的元数据。
 
-现在的情况，`tailwindcss` 在从文件/内容中提取出 `Candidate` 的时候，是仅仅提取出一些字符串的信息，并不会记录所在的位置。
+## 为什么需要更丰富的元数据
 
-```html
-<div class="flex bg-slate-500/25" />
-            ↑  ↑  ↑               ↑
-          token1      token2
-```
+- **更安全的改写** —— 如果知道每个候选类名所在的文件与位置，就能精准地修改源代码，而不是做全局字符串替换。
+- **更好地审计** —— 团队可以快速回答“这个类名源自哪里？”、“某个功能新增了多少类名？” 等问题，而无需重新扫描整个项目。
+- **生态工具挂钩** —— 编辑器扩展或 CI 机器人可以利用这些数据提示未使用的工具类或冲突模式。
 
-但是这对我们进行项目级别整体的分析就造成了困难。
+## 希望获得的候选级元数据
 
-我们无法知道一个文件里面到底有多少 token 被提取了，也不知道已经提取的 token 各自都在什么文件里存在 （文件和 token 的关系通常是多对多的）
-
-而且，假如后续有对原先源代码生成产物，进行修改的需求。我们就需要知道，它原先提取 token 的位置，
-
-比如把旦旦提取的 token 字符串，转化为下方这样一个对象
+我们希望每个被提取的类名都能附带如下结构：
 
 ```ts
 interface Candidate {
@@ -27,39 +21,21 @@ interface Candidate {
 }
 ```
 
-其中 `value` 就是原先字符串的值，`file` 就是从什么文件中提取的，然后 `start` 和 `end` 代表这个 `token` 在文件中的一个位置
-
-这样我们就能进行精确的修改，比如:
+这与 UnoCSS 的 [compile-class](https://unocss.dev/transformers/compile-class) 类似，能够支撑如下的精准改写：
 
 ```diff filename="diff"
-// before
-- const className = `gap-y-4 bg-zinc-800/30`;
-// after
-+ const className = `a b`;
+- const className = `gap-y-4 bg-zinc-800/30`
++ const className = `a b`
 ```
 
+目前我们只能拿到一个 `Set<string>`，替换时必须在所有文件中尝试匹配，容易造成误伤。
 
-不然现在去进行修改的话，只能所有的文件都去应用 整个 `Candidates` \(`Set<string>`\) 进行替换来修改，这往往会导致很多的误伤。
+## Tailwind v4 的契机
 
-而有了这个，我们只需要找到对应的文件，修改它的 `start` 和 `end` 对应的节点就能达到目的了
+全新的 Oxide 扫描器已经在 Rust 中遍历源文件，如果它能返回文件偏移量而不是纯字符串，我们就能直接复用这些数据。相关代码位置：<https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108>。
 
-其实这个功能最终就有些类似于 `unocss` 的 [compile-class](https://unocss.dev/transformers/compile-class) 功能 
+## 欢迎一起推动
 
-## Tailwindcss v4
-
-https://github.com/tailwindlabs/tailwindcss/blob/437579d3f010a98ae4b824a7d5694486119fbdcd/crates/oxide/src/lib.rs#L108
-
-```rs
-    pub fn scan(&mut self) -> Vec<String> {
-        init_tracing();
-        self.prepare();
-        self.check_for_new_files();
-        self.compute_candidates();
-
-        let mut candidates: Vec<String> = self.candidates.clone().into_iter().collect();
-
-        candidates.sort();
-
-        candidates
-    }
-```
+- 分享那些需要精确定位类名的真实场景。
+- 试验自定义扫描或后处理脚本，并反馈你需要的接口。
+- 如果在 Tailwind v4 中发现可用的挂钩，欢迎提 Issue 或 PR，帮助我们加速落地。

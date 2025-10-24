@@ -2,29 +2,48 @@ import { Callout } from 'nextra/components'
 
 # 欢迎来到 Tailwindcss-mangle
  
-## 什么是 tailwindcss-mangle ?
+## 为什么需要 tailwindcss-mangle？
 
-这是一个给 `tailwindcss` 生成的类名进行压缩混淆的一个项目。
+虽然 Tailwind CSS 能够高效构建界面，但它生成的工具类也很容易被复制。tailwindcss-mangle 工具链会为 Tailwind 打补丁、提取所有生成的类名，并在构建阶段将它们改写为紧凑的标识符，让最终产物更难被逆向。
 
-制作这个库的目的在于，我们使用 `tailwindcss` 开发的页面，实在是太容易被拷贝抄袭了。
+## 8.0 有哪些更新？
 
-而使用 `tailwindcss-mangle` 就能来给抄袭者带去一点点的抄袭成本。
+- `tailwindcss-patch@8.0.0` 全面重构，提供类型化入口、缓存控制，并正式支持 Tailwind v4。
+- CLI 新增 `--output`、`--format`、`--css`、`--no-write` 等参数，方便在自动化流程中调用。
+- `@tailwindcss-mangle/config` 兼容旧配置，同时启用全新的统一配置对象。
+- `unplugin-tailwindcss-mangle` 读取最新的类名清单，并支持 Vite、Webpack、Rollup、Esbuild 与 Nuxt 3。
 
-## 如何使用？
+<Callout type="info">
+从 v7.x 升级？请参考 <a href="https://github.com/icebreaker/tailwindcss-mangle/blob/main/packages/tailwindcss-patch/MIGRATION.md" target="_blank" rel="noreferrer">迁移指南</a>，按步骤平滑过渡。
+</Callout>
 
-目前使用方式上，主要分为 `2` 步:
+## 两步工作流
 
 1. `Patch`
 2. `Mangle`
 
 ## Patch
 
-此步骤用于给 `tailwindcss` 打上暴露上下文的补丁，从而从它的内部提取出它提取的 `Token`
-
-最终把它导出成一个 `Json` 文件。
+为本地 Tailwind 安装打补丁，收集构建上下文，并生成 `.tw-patch/tw-class-list.json`（或按行文本）列出所有工具类。详细 CLI 与 API 说明见 [Patch](./patch)。
 
 ## Mangle
 
-读取 `Patch` 导出的 `Json` , 将里面的 `Token` 对应的字符串字面量和模板字符串全部转义。
+将提取出的类名清单提供给 `unplugin-tailwindcss-mangle`，在打包阶段统一改写模板、JSX、MDX 与内联字符串中的匹配类名。请查看 [Mangle](./mangle) 获取集成方式与配置技巧。
 
+## 快速开始
+
+```sh npm2yarn
+npm i -D tailwindcss-patch unplugin-tailwindcss-mangle
+npx tw-patch install
+npx tw-patch extract
+```
+
+随后在对应的构建工具中注册插件（如 `unplugin-tailwindcss-mangle/vite`），并指向生成的 `.tw-patch/tw-class-list.json`。
+
+## 工具链组成
+
+- `tailwindcss-patch` —— 为 Tailwind 运行时打补丁，提取类名，并暴露上下文供工具使用。
+- `unplugin-tailwindcss-mangle` —— 读取类名清单，在打包阶段重写匹配的类名。
+- `@tailwindcss-mangle/config` —— 统一加载并标准化旧版与新版配置。
+- `@tailwindcss-mangle/shared` —— 内置类名生成、过滤及通用正则等辅助方法。
 
