@@ -152,6 +152,16 @@ await build({
 - `preserve.functions` —— 声明包装函数（如 `twIgnore`），用于标记需要保留的模板字面量。
 - `disabled` —— 设为 `true` 时跳过混淆（默认在开发环境关闭）。
 
+## 框架快速映射
+
+| 框架 | 使用方式 | 备注 |
+| --- | --- | --- |
+| React (Vite) | `unplugin-tailwindcss-mangle/vite` + `@vitejs/plugin-react` | 展开 `config.transformer`，Fast Refresh 仍然可用。 |
+| Vue 3 (Vite) | `unplugin-tailwindcss-mangle/vite` + `@vitejs/plugin-vue` | 支持 `<script setup>` 与 scoped 样式。 |
+| Svelte (Vite) | `unplugin-tailwindcss-mangle/vite` + `@sveltejs/vite-plugin-svelte` | 默认规则覆盖 `.svelte` 与共存 CSS 文件。 |
+| Next.js (Webpack) | `unplugin-tailwindcss-mangle/webpack` 在 `next.config.{js,mjs}` 中调用 | 仅在生产构建执行，请在 `registry` 中维护 Tailwind 提取配置。 |
+| Nuxt 3 | `unplugin-tailwindcss-mangle/nuxt` 加入 `modules` | 关闭 `inlineSSRStyles`，让 Vite 输出 CSS 供扫描。 |
+
 ## 忽略与保留
 
 使用 `preserveFunction` 可以保留某些字符串，默认内置的 `twIgnore` 可用于模板字面量：

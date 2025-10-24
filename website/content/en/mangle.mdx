@@ -140,6 +140,16 @@ await build({
 })
 ```
 
+## Framework quick start
+
+| Framework | Bundler entry | Notes |
+| --- | --- | --- |
+| React (Vite) | `unplugin-tailwindcss-mangle/vite` with `@vitejs/plugin-react` | Spread `config.transformer`; Fast Refresh stays intact. |
+| Vue 3 (Vite) | `unplugin-tailwindcss-mangle/vite` with `@vitejs/plugin-vue` | Supports `<script setup>` and scoped styles. |
+| Svelte (Vite) | `unplugin-tailwindcss-mangle/vite` with `@sveltejs/vite-plugin-svelte` | Default include patterns cover `.svelte` files and co-located CSS. |
+| Next.js (Webpack) | `unplugin-tailwindcss-mangle/webpack` inside `next.config.{js,mjs}` | Runs during production builds; keep Tailwind extraction under `registry`. |
+| Nuxt 3 | `unplugin-tailwindcss-mangle/nuxt` in the `modules` array | Disable `inlineSSRStyles` so Vite emits CSS for scanning. |
+
 ## Plugin options
 
 Configure the plugin inline or through the shared config file.
