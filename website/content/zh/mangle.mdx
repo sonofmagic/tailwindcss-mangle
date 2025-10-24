@@ -38,7 +38,7 @@ import { Callout } from 'nextra/components'
    }
    ```
 
-4. 在构建工具中注册插件，并将 `classListPath` 指向 `.tw-patch/tw-class-list.json`。
+4. 在构建工具中注册插件。通常推荐复用 `config.transformer`，CLI 与插件即可共享一份配置。
 
 <Callout type="info">
 配置文件会在 CLI 与插件之间自动共享，只需在 <a href="../config">Config</a> 中维护一次路径或过滤器即可。
@@ -52,13 +52,14 @@ import { Callout } from 'nextra/components'
 // vite.config.ts
 import vue from '@vitejs/plugin-vue'
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/vite'
+import appConfig from './tailwindcss-patch.config'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     vue(),
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 })
@@ -69,12 +70,13 @@ export default defineConfig({
 ```js
 // webpack.config.js
 const { webpackPlugin: tailwindcssMangle } = require('unplugin-tailwindcss-mangle')
+const appConfig = require('./tailwindcss-patch.config')
 
 module.exports = {
   // ...
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 }
@@ -85,11 +87,12 @@ module.exports = {
 ```ts
 // rollup.config.ts
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/rollup'
+import appConfig from './tailwindcss-patch.config'
 
 export default {
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 }
@@ -100,6 +103,7 @@ export default {
 ```ts
 // nuxt.config.ts
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/nuxt'
+import appConfig from './tailwindcss-patch.config'
 
 export default defineNuxtConfig({
   experimental: {
@@ -109,7 +113,7 @@ export default defineNuxtConfig({
     [
       tailwindcssMangle,
       {
-        classListPath: '.tw-patch/tw-class-list.json',
+        ...appConfig.transformer,
       },
     ],
   ],
@@ -122,6 +126,7 @@ export default defineNuxtConfig({
 // build.mjs
 import { build } from 'esbuild'
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/esbuild'
+import appConfig from './tailwindcss-patch.config'
 
 await build({
   entryPoints: ['src/main.ts'],
@@ -129,7 +134,7 @@ await build({
   outfile: 'dist/index.js',
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 })
@@ -139,12 +144,12 @@ await build({
 
 可以直接在插件中配置，也可以通过共享配置文件统一管理。
 
-- `classListPath` —— 指向 `tw-patch extract` 生成的类名清单。
-- `include` / `exclude` —— 调整插件扫描的文件范围，默认覆盖 HTML、主流框架、CSS 与 MDX。
-- `mangleClassFilter` —— 在生成前自定义类名过滤逻辑。
-- `classGenerator` —— 自定义压缩后的类名，例如 `classPrefix`、`reserveClassName`、`customGenerate`。
-- `classMapOutput` —— 设为 `true` 重用配置默认值；传对象（`enable`、`filename`、`loose`）写出 JSON；或提供函数直接处理映射。
-- `preserveFunction` —— 声明包装函数（如 `twIgnore`），用于标记需要保留的模板字面量。
+- `registry.file` —— 指向 `tw-patch extract` 生成的类名清单。
+- `sources.include` / `sources.exclude` —— 调整插件扫描的文件范围，默认覆盖 HTML、主流框架、CSS 与 MDX。
+- `filter` —— 在生成前自定义类名过滤逻辑。
+- `generator` —— 自定义压缩后的类名，例如 `classPrefix`、`reserveClassName`、`customGenerate`。
+- `registry.mapping` —— 设为 `true` 重用默认写盘；提供 `{ enabled, file, loose }` 或回调自定义输出。
+- `preserve.functions` —— 声明包装函数（如 `twIgnore`），用于标记需要保留的模板字面量。
 - `disabled` —— 设为 `true` 时跳过混淆（默认在开发环境关闭）。
 
 ## 忽略与保留

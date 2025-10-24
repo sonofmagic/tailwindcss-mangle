@@ -1,4 +1,4 @@
-import type { MangleUserConfig } from '@tailwindcss-mangle/config'
+import type { TransformerOptions } from '@tailwindcss-mangle/config'
 import type { UnpluginFactory } from 'unplugin'
 import { createFilter } from '@rollup/pluginutils'
 import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
@@ -9,7 +9,7 @@ import { pluginName } from '../constants'
 
 const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.cjs' : './loader.cjs')
 
-const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
+const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
   const ctx = new Context()
   let filter = (_id: string) => true
   return [
@@ -18,9 +18,9 @@ const factory: UnpluginFactory<MangleUserConfig | undefined> = (options) => {
       enforce: 'pre',
       async buildStart() {
         await ctx.initConfig({
-          mangleOptions: options,
+          transformerOptions: options,
         })
-        filter = createFilter(ctx.options.include, ctx.options.exclude)
+        filter = createFilter(ctx.options.sources?.include, ctx.options.sources?.exclude)
       },
     },
     {

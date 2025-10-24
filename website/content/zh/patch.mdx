@@ -7,7 +7,7 @@ import { Callout } from 'nextra/components'
 ## 8.0 版本速览
 
 - 模块重新分层（`api/`、`patching/`、`runtime/`、`extraction/`、`cache/`），提供清晰且类型化的导入入口。
-- 统一的配置对象自动兼容旧版 `patch`/`cache` 结构，同时集中管理缓存、输出与功能开关。
+- 统一的 `registry` 配置对象自动兼容旧版 `patch`/`cache` 结构，同时集中管理缓存、输出与功能开关。
 - 对 Tailwind CSS v4 提供一等支持，可直接扫描 CSS 产物与项目内容源，与 v2/v3 的运行时补丁并行工作。
 - 全新的 CLI 日志体验，并为 `extract` 命令带来 `--output`、`--format`、`--css`、`--no-write` 等新选项。
 
@@ -78,23 +78,23 @@ npx tw-patch init
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
+  registry: {
     output: {
-      filename: '.tw-patch/tw-class-list.json',
+      file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      removeUniversalSelector: true,
+      stripUniversalSelector: true,
     },
-    tailwindcss: {
+    tailwind: {
       version: 4,
-      v4: {
+      next: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
         ],
       },
     },
-    applyPatches: {
+    features: {
       exportContext: true,
       extendLengthUnits: {
         units: ['rpx'],
@@ -104,7 +104,7 @@ export default defineConfig({
 })
 ```
 
-虽然 `defineConfig` 仍然返回旧版结构（`patch`、`applyPatches`、`tailwindcss`），但 8.0 新字段已经全部支持。你可以按需逐步迁移，运行时会自动标准化配置。
+`defineConfig` 会在内部将旧有的 `patch` / `mangle` 字段转换成新的 `registry` / `transformer` 结构，可按需逐步迁移，运行时会自动完成归一化。
 
 ## 编程接口
 

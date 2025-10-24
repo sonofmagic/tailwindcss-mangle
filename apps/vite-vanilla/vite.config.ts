@@ -4,7 +4,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }),
   ],
 })

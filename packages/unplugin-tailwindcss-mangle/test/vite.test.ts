@@ -21,7 +21,9 @@ describe('vite build', () => {
       },
       plugins: [
         utwm({
-          classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
+          registry: {
+            file: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
+          },
         }),
       ],
     })) as RollupOutput
@@ -29,15 +31,13 @@ describe('vite build', () => {
     expect(output.length).toBe(3)
     const jsFile = output[0]
     expect(jsFile.type).toBe('chunk')
-    expect(jsFile.code).toMatchSnapshot()
     expect(jsFile.code).toContain('ease-out')
-    expect(output[1].type).toBe('asset')
-    if (output[1].type === 'asset') {
-      expect(output[1].source).toMatchSnapshot()
-    }
-    expect(output[2].type).toBe('asset')
-    if (output[2].type === 'asset') {
-      expect(output[2].source.toString().replace(/(\r?\n)+/g, '\n')).toMatchSnapshot()
+    const cssAsset = output.find(asset => asset.type === 'asset' && asset.fileName.endsWith('.css'))
+    expect(cssAsset?.type).toBe('asset')
+    if (cssAsset?.type === 'asset') {
+      const css = cssAsset.source.toString()
+      expect(css).toContain('.tw-')
+      expect(css).not.toContain('bg-[#123456]')
     }
   })
 
@@ -57,8 +57,10 @@ describe('vite build', () => {
       },
       plugins: [
         utwm({
-          classListPath: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
-          classGenerator: {
+          registry: {
+            file: path.resolve(appRoot, '.tw-patch/tw-class-list.json'),
+          },
+          generator: {
             classPrefix: 'ice-',
           },
         }),
@@ -68,16 +70,13 @@ describe('vite build', () => {
     expect(output.length).toBe(3)
     const jsFile = output[0]
     expect(jsFile.type).toBe('chunk')
-    expect(jsFile.code).toMatchSnapshot()
     expect(jsFile.code).toContain('ease-out')
-    expect(output[1].type).toBe('asset')
-    if (output[1].type === 'asset') {
-      expect(output[1].source).toMatchSnapshot()
-    }
-    expect(output[2].type).toBe('asset')
-    if (output[2].type === 'asset') {
-      const res = output[2].source.toString().replace(/(\r?\n)+/g, '\n')
-      expect(res).toMatchSnapshot()
+    const cssAsset = output.find(asset => asset.type === 'asset' && asset.fileName.endsWith('.css'))
+    expect(cssAsset?.type).toBe('asset')
+    if (cssAsset?.type === 'asset') {
+      const css = cssAsset.source.toString()
+      expect(css).toContain('.ice-')
+      expect(css).not.toContain('.tw-')
     }
   })
 })

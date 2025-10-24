@@ -14,17 +14,17 @@ describe('config', () => {
 
   it('defineConfig helper returns provided config', () => {
     const config = defineConfig({
-      patch: {
+      registry: {
         output: {
-          filename: 'custom.json',
+          file: 'custom.json',
         },
       },
     })
 
     expect(config).toEqual({
-      patch: {
+      registry: {
         output: {
-          filename: 'custom.json',
+          file: 'custom.json',
         },
       },
     })

@@ -1,13 +1,13 @@
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
+  registry: {
     output: {
-      filename: 'xxx/yyy/zzz.json',
-      loose: false,
-      removeUniversalSelector: false,
+      file: 'xxx/yyy/zzz.json',
+      pretty: false,
+      stripUniversalSelector: false,
     },
-    tailwindcss: {
+    tailwind: {
       cwd: 'aaa/bbb/cc',
     },
   },

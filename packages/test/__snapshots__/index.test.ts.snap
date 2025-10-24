@@ -1,39 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`defaults > getDefaultRegistryConfig 1`] = `
-{
-  "output": {
-    "file": ".tw-patch/tw-class-list.json",
-    "pretty": true,
-    "stripUniversalSelector": true,
-  },
-  "tailwind": {},
-}
-`;
-
-exports[`defaults > getDefaultUserConfig 1`] = `
+exports[`config > 2.mangle-options 1`] = `
 {
   "registry": {
     "output": {
-      "file": ".tw-patch/tw-class-list.json",
-      "pretty": true,
-      "stripUniversalSelector": true,
+      "file": "xxx/yyy/zzz.json",
+      "pretty": false,
+      "stripUniversalSelector": false,
     },
-    "tailwind": {},
+    "tailwind": {
+      "cwd": "aaa/bbb/cc",
+    },
   },
   "transformer": {
     "disabled": false,
     "filter": [Function],
+    "generator": {
+      "log": true,
+    },
     "preserve": {
       "classes": [],
       "functions": [],
     },
     "registry": {
-      "file": ".tw-patch/tw-class-list.json",
+      "file": "zzzzz.json",
       "mapping": {
-        "enabled": false,
-        "file": ".tw-patch/tw-map-list.json",
-        "loose": true,
+        "enabled": true,
+        "file": "ffff.json",
+        "loose": false,
       },
     },
     "sources": {

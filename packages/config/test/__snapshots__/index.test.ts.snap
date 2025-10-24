@@ -1,34 +1,41 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`config > 2.mangle-options 1`] = `
+exports[`config > 2.transformer-options 1`] = `
 {
-  "mangle": {
-    "classGenerator": {
+  "registry": {
+    "output": {
+      "file": "xxx/yyy/zzz.json",
+      "pretty": false,
+      "stripUniversalSelector": false,
+    },
+    "tailwind": {
+      "cwd": "aaa/bbb/cc",
+    },
+  },
+  "transformer": {
+    "disabled": false,
+    "filter": [Function],
+    "generator": {
       "log": true,
     },
-    "classListPath": "zzzzz.json",
-    "classMapOutput": {
-      "enable": true,
-      "filename": "ffff.json",
-      "loose": false,
+    "preserve": {
+      "classes": [],
+      "functions": [],
     },
-    "disabled": false,
-    "exclude": [],
-    "include": [
-      /\\\\\\.\\(html\\|js\\|ts\\|jsx\\|tsx\\|vue\\|svelte\\|astro\\|elm\\|php\\|phtml\\|mdx\\|md\\)\\(\\?:\\$\\|\\\\\\?\\)/,
-      /\\\\\\.\\(css\\|less\\|sass\\|scss\\|styl\\|stylus\\|pcss\\|postcss\\|sss\\)\\(\\?:\\$\\|\\\\\\?\\)/,
-    ],
-    "mangleClassFilter": [Function],
-    "preserveFunction": [],
-  },
-  "patch": {
-    "output": {
-      "filename": "xxx/yyy/zzz.json",
-      "loose": false,
-      "removeUniversalSelector": false,
+    "registry": {
+      "file": "zzzzz.json",
+      "mapping": {
+        "enabled": true,
+        "file": "ffff.json",
+        "loose": false,
+      },
     },
-    "tailwindcss": {
-      "cwd": "aaa/bbb/cc",
+    "sources": {
+      "exclude": [],
+      "include": [
+        "/\\.(html|js|ts|jsx|tsx|vue|svelte|astro|elm|php|phtml|mdx|md)(?:$|\\?)/",
+        "/\\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\\?)/",
+      ],
     },
   },
 }

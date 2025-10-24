@@ -38,7 +38,7 @@ import { Callout } from 'nextra/components'
    }
    ```
 
-4. Register the plugin for your bundler and point `classListPath` at `.tw-patch/tw-class-list.json`.
+4. Register the plugin for your bundler. Most projects spread `config.transformer` so CLI and bundler stay in sync.
 
 <Callout type="info">
 The config loader merges `tailwindcss-patch` and `unplugin-tailwindcss-mangle` settings. Adjust paths or filters once in <a href="../config">Config</a>, then reuse them everywhere.
@@ -52,13 +52,14 @@ The config loader merges `tailwindcss-patch` and `unplugin-tailwindcss-mangle` s
 // vite.config.ts
 import vue from '@vitejs/plugin-vue'
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/vite'
+import appConfig from './tailwindcss-patch.config'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     vue(),
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 })
@@ -69,12 +70,13 @@ export default defineConfig({
 ```js
 // webpack.config.js
 const { webpackPlugin: tailwindcssMangle } = require('unplugin-tailwindcss-mangle')
+const appConfig = require('./tailwindcss-patch.config')
 
 module.exports = {
   // ...
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 }
@@ -85,11 +87,12 @@ module.exports = {
 ```ts
 // rollup.config.ts
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/rollup'
+import appConfig from './tailwindcss-patch.config'
 
 export default {
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 }
@@ -100,6 +103,7 @@ export default {
 ```ts
 // nuxt.config.ts
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/nuxt'
+import appConfig from './tailwindcss-patch.config'
 
 export default defineNuxtConfig({
   experimental: {
@@ -109,7 +113,7 @@ export default defineNuxtConfig({
     [
       tailwindcssMangle,
       {
-        classListPath: '.tw-patch/tw-class-list.json',
+        ...appConfig.transformer,
       },
     ],
   ],
@@ -122,6 +126,7 @@ export default defineNuxtConfig({
 // build.mjs
 import { build } from 'esbuild'
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/esbuild'
+import appConfig from './tailwindcss-patch.config'
 
 await build({
   entryPoints: ['src/main.ts'],
@@ -129,7 +134,7 @@ await build({
   outfile: 'dist/index.js',
   plugins: [
     tailwindcssMangle({
-      classListPath: '.tw-patch/tw-class-list.json',
+      ...appConfig.transformer,
     }),
   ],
 })
@@ -139,12 +144,12 @@ await build({
 
 Configure the plugin inline or through the shared config file.
 
-- `classListPath` – points to the class inventory produced by `tw-patch extract`.
-- `include` / `exclude` – refine which files are scanned. The defaults cover HTML, major frameworks, CSS, and MDX.
-- `mangleClassFilter` – skip classes based on custom logic before they are rewritten.
-- `classGenerator` – tweak the generator (prefix, reserved classes, or provide a `customGenerate` callback).
-- `classMapOutput` – set to `true` or provide `{ enable, filename, loose }` to write a JSON map of before/after pairs.
-- `preserveFunction` – mark helper functions (such as `twIgnore`) that should keep template literals untouched.
+- `registry.file` – points to the class inventory produced by `tw-patch extract`.
+- `sources.include` / `sources.exclude` – refine which files are scanned. The defaults cover HTML, major frameworks, CSS, and MDX.
+- `filter` – skip classes based on custom logic before they are rewritten.
+- `generator` – tweak the generator (prefix, reserved classes, or provide a `customGenerate` callback).
+- `registry.mapping` – set to `true` or provide `{ enabled, file, loose }` to write a JSON map of before/after pairs.
+- `preserve.functions` – mark helper functions (such as `twIgnore`) that should keep template literals untouched.
 - `disabled` – skip mangling entirely (auto-disabled in development by default).
 
 ## Ignoring and preserving

@@ -9,7 +9,9 @@ export default defineConfig({
   plugins: [
     vue(),
     utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }),
   ],
   css: {

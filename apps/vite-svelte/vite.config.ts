@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [
     svelte(),
     utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }),
   ],
 })

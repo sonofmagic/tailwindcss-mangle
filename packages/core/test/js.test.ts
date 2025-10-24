@@ -321,8 +321,8 @@ describe('js handler', async () => {
 
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
-      mangleOptions: {
-        preserveFunction: ['cn'],
+      transformerOptions: {
+        preserve: { functions: ['cn'] },
       },
     })
 
@@ -353,8 +353,8 @@ describe('js handler', async () => {
 
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
-      mangleOptions: {
-        preserveFunction: ['twMerge'],
+      transformerOptions: {
+        preserve: { functions: ['twMerge'] },
       },
     })
 
@@ -376,8 +376,8 @@ describe('js handler', async () => {
 
     await ctx.initConfig({
       classList: 'bg-red-500/50 bg-red-500 w-2 h-2 w-1 h-1 bg-red-400 bg-red-400/50'.split(' '),
-      mangleOptions: {
-        preserveFunction: ['twMerge', 'cn'],
+      transformerOptions: {
+        preserve: { functions: ['twMerge', 'cn'] },
       },
     })
 
@@ -400,8 +400,8 @@ describe('js handler', async () => {
     const testCase = getTestCase('preserve-fn-case0.vue')
     await ctx.initConfig({
       classList: 'px-2 py-1 bg-red hover:bg-dark-red p-3 bg-[#B91C1C] flex min-h-screen flex-col items-center justify-between p-24'.split(' '),
-      mangleOptions: {
-        preserveFunction: ['twMerge'],
+      transformerOptions: {
+        preserve: { functions: ['twMerge'] },
       },
     })
 
@@ -422,8 +422,8 @@ describe('js handler', async () => {
 
     await ctx.initConfig({
       classList: require('./fixtures/preserve-fn-case1.json') as string[],
-      mangleOptions: {
-        preserveFunction: ['twMerge'],
+      transformerOptions: {
+        preserve: { functions: ['twMerge'] },
       },
     })
     const replaceMap = ctx.getReplaceMap()
@@ -441,8 +441,8 @@ describe('js handler', async () => {
 
     await ctx.initConfig({
       classList: require('./fixtures/preserve-fn-case2.json') as string[],
-      mangleOptions: {
-        preserveFunction: ['twMerge'],
+      transformerOptions: {
+        preserve: { functions: ['twMerge'] },
       },
     })
     const replaceMap = ctx.getReplaceMap()
@@ -494,8 +494,8 @@ describe('js handler', async () => {
     )`
     await ctx.initConfig({
       classList: 'p-1 p-2 p-3 p-4'.split(' '),
-      mangleOptions: {
-        preserveFunction: ['cn'],
+      transformerOptions: {
+        preserve: { functions: ['cn'] },
       },
     })
 

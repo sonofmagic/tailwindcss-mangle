@@ -1,4 +1,4 @@
-import type { ClassMapOutputItem, MangleUserConfig } from '@tailwindcss-mangle/config'
+import type { TransformerMappingEntry, TransformerOptions } from '@tailwindcss-mangle/config'
 import process from 'node:process'
 import { getConfig } from '@tailwindcss-mangle/config'
 import { defu } from 'defu'
@@ -10,15 +10,17 @@ import { ClassGenerator, defaultMangleClassFilter, escapeStringRegexp } from '..
 interface InitConfigOptions {
   cwd?: string
   classList?: string[]
-  mangleOptions?: MangleUserConfig
+  transformerOptions?: TransformerOptions
 }
 
 export class Context {
-  options: MangleUserConfig
+  options: TransformerOptions
   public replaceMap: Map<string, string>
   classSet: Set<string>
 
   classGenerator: ClassGenerator
+
+  configRoot: string
 
   preserveFunctionSet: Set<string>
   preserveClassNamesSet: Set<string>
@@ -28,6 +30,7 @@ export class Context {
     this.classSet = new Set()
     this.replaceMap = new Map()
     this.classGenerator = new ClassGenerator()
+    this.configRoot = process.cwd()
     this.preserveFunctionSet = new Set()
     this.preserveClassNamesSet = new Set()
     this.preserveFunctionRegexs = []
@@ -45,18 +48,23 @@ export class Context {
     return this.preserveFunctionSet.has(calleeName)
   }
 
-  private mergeOptions(...opts: (MangleUserConfig | undefined)[]) {
+  private mergeOptions(...opts: (TransformerOptions | undefined)[]) {
     // 配置选项优先
     this.options = defu(this.options, ...opts)
-    this.classGenerator = new ClassGenerator(this.options.classGenerator)
-    this.preserveFunctionSet = new Set(this.options?.preserveFunction ?? [])
+    this.classGenerator = new ClassGenerator(this.options.generator)
+    const preserveOptions = this.options.preserve ?? {}
+    this.preserveFunctionSet = new Set(preserveOptions.functions ?? [])
+    this.preserveClassNamesSet = new Set(preserveOptions.classes ?? [])
     this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {
       return new RegExp(`${escapeStringRegexp(x)}\\(([^)]*)\\)`, 'g')
     })
   }
 
   currentMangleClassFilter(className: string) {
-    return (this.options.mangleClassFilter ?? defaultMangleClassFilter)(className)
+    if (this.preserveClassNamesSet.has(className)) {
+      return false
+    }
+    return (this.options.filter ?? defaultMangleClassFilter)(className)
   }
 
   getClassSet() {
@@ -87,31 +95,52 @@ export class Context {
   }
 
   async initConfig(opts: InitConfigOptions = {}) {
-    const { cwd, classList: _classList, mangleOptions } = opts
+    const { cwd, classList: _classList, transformerOptions } = opts
     const { config, cwd: configCwd } = await getConfig(cwd)
-    if (mangleOptions?.classMapOutput === true) {
-      mangleOptions.classMapOutput = config.mangle?.classMapOutput
-      if (typeof mangleOptions.classMapOutput === 'object') {
-        mangleOptions.classMapOutput.enable = true
+    this.configRoot = configCwd ?? cwd ?? process.cwd()
+
+    let normalizedTransformer = transformerOptions
+      ? { ...transformerOptions, registry: { ...transformerOptions.registry } }
+      : undefined
+
+    if (normalizedTransformer?.registry?.mapping === true) {
+      const fallback = config?.transformer?.registry?.mapping
+      if (typeof fallback === 'function') {
+        normalizedTransformer.registry.mapping = fallback
+      }
+      else if (fallback && typeof fallback === 'object') {
+        normalizedTransformer.registry.mapping = {
+          ...fallback,
+          enabled: true,
+        }
+      }
+      else {
+        normalizedTransformer.registry.mapping = {
+          enabled: true,
+        }
       }
     }
-    this.mergeOptions(mangleOptions, config?.mangle)
+
+    this.mergeOptions(normalizedTransformer, config?.transformer)
     if (_classList) {
       this.loadClassSet(_classList)
     }
     else {
-      let jsonPath = this.options.classListPath ?? resolve(process.cwd(), config?.patch?.output?.filename as string)
-      if (!isAbsolute(jsonPath)) {
-        jsonPath = resolve(configCwd ?? process.cwd(), jsonPath)
-      }
+      const fallbackFile = config?.registry?.output?.file
+      let jsonPath = this.options.registry?.file ?? fallbackFile
+      if (jsonPath) {
+        if (!isAbsolute(jsonPath)) {
+          jsonPath = resolve(this.configRoot, jsonPath)
+        }
 
-      if (jsonPath && fs.existsSync(jsonPath)) {
-        const rawClassList = fs.readFileSync(jsonPath, 'utf8')
-        const list = JSON.parse(rawClassList) as string[]
-        // why?
-        // cause bg-red-500 and bg-red-500/50 same time
-        // transform bg-red-500/50 first
-        this.loadClassSet(list)
+        if (fs.existsSync(jsonPath)) {
+          const rawClassList = fs.readFileSync(jsonPath, 'utf8')
+          const list = JSON.parse(rawClassList) as string[]
+          // why?
+          // cause bg-red-500 and bg-red-500/50 same time
+          // transform bg-red-500/50 first
+          this.loadClassSet(list)
+        }
       }
     }
 
@@ -127,19 +156,21 @@ export class Context {
 
   async dump() {
     try {
-      const arr = Object.entries(this.classGenerator.newClassMap).map<ClassMapOutputItem>((x) => {
+      const arr = Object.entries(this.classGenerator.newClassMap).map<TransformerMappingEntry>((x) => {
         return {
-          before: x[0],
-          after: x[1].name,
+          original: x[0],
+          mangled: x[1].name,
           usedBy: Array.from(x[1].usedBy),
         }
       })
-      if (typeof this.options.classMapOutput === 'function') {
-        await this.options.classMapOutput(arr)
+      const mappingOption = this.options.registry?.mapping
+      if (typeof mappingOption === 'function') {
+        await mappingOption(arr)
       }
-      else if (typeof this.options.classMapOutput === 'object' && this.options.classMapOutput.enable && this.options.classMapOutput.filename) {
-        fs.mkdirSync(dirname(this.options.classMapOutput.filename), { recursive: true })
-        fs.writeFileSync(this.options.classMapOutput.filename, JSON.stringify(arr, null, 2))
+      else if (mappingOption && typeof mappingOption === 'object' && mappingOption.enabled && mappingOption.file) {
+        const outputFile = isAbsolute(mappingOption.file) ? mappingOption.file : resolve(this.configRoot, mappingOption.file)
+        fs.mkdirSync(dirname(outputFile), { recursive: true })
+        fs.writeFileSync(outputFile, JSON.stringify(arr, null, 2))
       }
     }
     catch (error) {

@@ -2,7 +2,12 @@ import { Callout } from 'nextra/components'
 
 # 3.Config
 
-The toolchain reads configuration through `@tailwindcss-mangle/config`. Both `tailwindcss-patch.config.ts` and the historic `tailwindcss-mangle.config.ts` are recognised, so you can migrate gradually without breaking existing projects.
+The toolchain now exposes a single configuration surface through `@tailwindcss-mangle/config`. Two top-level sections keep responsibilities clear:
+
+- `registry` drives class discovery and Tailwind patching.
+- `transformer` controls how the collected classes are rewritten in application code.
+
+Legacy files that still export `patch` / `mangle` continue to load, but new projects should adopt the updated shape for clarity and better tooling.
 
 ## Generate a starter file
 
@@ -19,7 +24,7 @@ export default defineConfig({})
 ```
 
 <Callout type="info">
-`defineConfig` provides typed completion, but the runtime accepts additional fields that map to the modern `TailwindcssPatcher` options. Unknown keys are forwarded during normalisation.
+`defineConfig` provides typed completion. Unknown keys are preserved so you can pass additional options directly to `TailwindcssPatcher` or the bundler plugin.
 </Callout>
 
 ## Example configuration
@@ -28,101 +33,102 @@ export default defineConfig({})
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
+  registry: {
     output: {
-      filename: '.tw-patch/tw-class-list.json',
+      file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      removeUniversalSelector: true,
+      stripUniversalSelector: true,
     },
-    tailwindcss: {
+    tailwind: {
       version: 4,
-      v4: {
+      next: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{astro,tsx,mdx}', negated: false },
         ],
       },
     },
-    applyPatches: {
+    features: {
       exportContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
     },
+    cache: {
+      enabled: true,
+      dir: '.tw-patch/cache',
+      strategy: 'merge',
+    },
   },
-  cache: {
-    enabled: true,
-    dir: '.tw-patch/cache',
-    strategy: 'merge',
-  },
-  mangle: {
-    classListPath: '.tw-patch/tw-class-list.json',
-    include: [
-      /\.(html|vue|tsx|jsx|mdx)$/,
-    ],
-    classGenerator: {
+  transformer: {
+    sources: {
+      include: [/\.(html|vue|tsx|jsx|mdx)$/],
+    },
+    generator: {
       classPrefix: 'tw-',
       reserveClassName: [/^theme-/],
     },
-    classMapOutput: {
-      enable: false,
-      filename: '.tw-patch/tw-map-list.json',
-      loose: true,
+    registry: {
+      file: '.tw-patch/tw-class-list.json',
+      mapping: {
+        enabled: false,
+        file: '.tw-patch/tw-map-list.json',
+        loose: true,
+      },
     },
-    preserveFunction: ['twIgnore'],
+    preserve: {
+      functions: ['twIgnore'],
+    },
   },
 })
 ```
 
-## Patch options
-
-The `patch` block keeps the legacy shape but is converted to the new `TailwindcssPatchOptions` internally.
+## Registry options
 
 ### `output`
 
-- `filename` – destination for the extracted inventory (default `.tw-patch/tw-class-list.json`).
+- `file` – destination for the extracted inventory (default `.tw-patch/tw-class-list.json`).
 - `format` – either `json` or `lines`; the CLI uses JSON by default.
 - `pretty` – `false`, a boolean, or a number of spaces when writing JSON.
-- `removeUniversalSelector` – skip `*` from the generated list when `true`.
+- `stripUniversalSelector` – skip `*` from the generated list when `true`.
 
-### `tailwindcss`
+### `tailwind`
 
 - `version` – optional hint (`2`, `3`, or `4`) when multiple versions are installed.
-- `v2` / `v3` – provide `cwd` and `config` when Tailwind lives in a workspace package.
-- `v4.cssEntries` – CSS entry files used by the Oxide scanner. Repeat for multi-bundle setups.
-- `v4.sources` – custom content sources for v4 projects (defaults to `**/*` under `base`).
+- `legacy` / `classic` – configure Tailwind v2/v3 instances living in workspace packages (`cwd`, `config`).
+- `next.cssEntries` – CSS entry files used by the Oxide scanner. Repeat for multi-bundle setups.
+- `next.sources` – custom content sources for v4 projects (defaults to `**/*` under `base`).
 
-### `applyPatches`
+### `features`
 
 - `exportContext` – expose Tailwind contexts at runtime so the API can read them back later.
-- `extendLengthUnits` – customise the built-in length-unit patching; accepts booleans or an option object (`units`, `overwrite`, etc.).
+- `extendLengthUnits` – customise the built-in length-unit patching; accepts `false`, `true`, or an option object (`units`, `overwrite`, etc.).
 
-### `cache` and `overwrite`
+### `cache`
 
-- `cache.enabled` – persist collected classes under `node_modules/.cache/tailwindcss-patch` (enabled by default).
-- `cache.dir` / `cache.file` – control where the cache set is stored.
-- `cache.strategy` – `merge` adds to the existing cache, `overwrite` replaces it on each extraction.
-- `overwrite` (top-level) – reapply Tailwind patches even if a patched version already exists.
+- `enabled` – persist collected classes under `node_modules/.cache/tailwindcss-patch` (enabled by default).
+- `dir` / `file` – control where the cache set is stored.
+- `strategy` – `merge` adds to the existing cache, `overwrite` replaces it on each extraction.
 
-### `filter`
+## Transformer options
 
-Provide a function to skip classes during extraction. Return `false` to drop a class; all other return values keep it.
+The transformer block is consumed by both the core runtime and `unplugin-tailwindcss-mangle`.
 
-## Mangle options
+- `sources.include` / `sources.exclude` – control which files the plugin scans; defaults cover HTML, frameworks, CSS, and MDX.
+- `generator` – customise minified names via `classPrefix`, `reserveClassName`, `exclude`, or `customGenerate`.
+- `registry.file` – path to the class list produced by the registry.
+- `registry.mapping` – `true` reuses defaults, an object enables JSON output (`enabled`, `file`, `loose`), or supply a callback for full control.
+- `filter` – override the class-level filter before the generator runs.
+- `preserve.functions` – helper names (e.g. `twIgnore`) that mark template literals as safe from mangling.
+- `disabled` – when `true`, skips rewriting (defaults to `process.env.NODE_ENV === 'development'`).
 
-The `mangle` block is read by both the core runtime and `unplugin-tailwindcss-mangle`.
-
-- `classListPath` – absolute or relative path to the extracted class list.
-- `include` / `exclude` – control which files the plugin scans; defaults cover HTML, frameworks, CSS, and MDX.
-- `mangleClassFilter` – override the class-level filter before the generator runs.
-- `classGenerator` – customise minified names via `classPrefix`, `reserveClassName`, `exclude`, or `customGenerate`.
-- `classMapOutput` – set to `true` to reuse config defaults, provide an object (`enable`, `filename`, `loose`) to emit JSON, or supply a callback for full control.
-- `preserveFunction` – list of helper names (e.g. `twIgnore`) that mark template literals as safe from mangling.
-- `disabled` – when `true`, skips rewriting (the default is `process.env.NODE_ENV === 'development'`).
+<Callout type="info">
+Existing configs that expose `patch` / `mangle` still load. The loader converts them to the new shape internally so you can migrate incrementally.
+</Callout>
 
 ## Using the config
 
 - `tw-patch install` / `tw-patch extract` resolve this file automatically.
 - `unplugin-tailwindcss-mangle` mirrors the same configuration, so plugin options and CLI behaviour stay aligned.
-- When you need programmatic control, construct a `TailwindcssPatcher` manually and pass the modern options object—the legacy config is converted for you at runtime.
+- When you need programmatic control, construct a `TailwindcssPatcher` manually and pass the registry portion—the legacy keys are converted for you at runtime.

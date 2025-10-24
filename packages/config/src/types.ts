@@ -5,73 +5,86 @@ import type { IClassGeneratorOptions } from '@tailwindcss-mangle/shared'
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageResolvingOptions } from 'local-pkg'
 
-export interface ClassMapOutputOptions {
-  enable?: boolean
-  filename?: string
+export interface TransformerMappingConfig {
+  enabled?: boolean
+  file?: string
   loose?: boolean
 }
 
-export interface ClassMapOutputItem {
-  before: string
-  after: string
+export interface TransformerMappingEntry {
+  original: string
+  mangled: string
   usedBy: string[]
 }
 
-export interface MangleUserConfig {
-  mangleClassFilter?: (className: string) => boolean
-  classGenerator?: IClassGeneratorOptions
-  exclude?: FilterPattern
+export type TransformerMappingOption =
+  | boolean
+  | TransformerMappingConfig
+  | ((entries: TransformerMappingEntry[]) => void)
+
+export interface TransformerRegistryOptions {
+  file?: string
+  mapping?: TransformerMappingOption
+}
+
+export interface TransformerSourceOptions {
   include?: FilterPattern
-  classListPath?: string
-  classMapOutput?: boolean | ClassMapOutputOptions | ((json: ClassMapOutputItem[]) => void)
+  exclude?: FilterPattern
+}
+
+export interface TransformerPreserveOptions {
+  functions?: string[]
+  classes?: string[]
+}
+
+export interface TransformerOptions {
   disabled?: boolean
-  preserveFunction?: string[]
+  filter?: (className: string) => boolean
+  generator?: IClassGeneratorOptions
+  sources?: TransformerSourceOptions
+  registry?: TransformerRegistryOptions
+  preserve?: TransformerPreserveOptions
 }
 
-export interface TailwindcssV2PatchConfig {
+export interface TailwindLocatorOptions {
   cwd?: string
   config?: string
 }
-export interface TailwindcssV3PatchConfig {
-  cwd?: string
-  config?: string
-}
 
-export interface TailwindcssV4PatchConfig {
+export interface TailwindNextOptions {
   sources?: SourceEntry[]
   base?: string
   css?: string
   cssEntries?: string[]
 }
 
-export interface TailwindcssUserConfig {
+export interface TailwindTargetOptions {
   version?: 2 | 3 | 4
-  // only support jit mode
-  v2?: TailwindcssV2PatchConfig
-  v3?: TailwindcssV3PatchConfig
-  v4?: TailwindcssV4PatchConfig
-}
-
-export interface OutputUserConfig {
-  filename?: string
-
-  loose?: boolean
-  /**
-   * @description remove * in output json
-   */
-  removeUniversalSelector?: boolean
-}
-
-export interface PatchUserConfig {
-  packageName?: string
-  output?: OutputUserConfig
-  tailwindcss?: TailwindcssUserConfig
+  package?: string
   resolve?: PackageResolvingOptions
+  legacy?: TailwindLocatorOptions
+  classic?: TailwindLocatorOptions
+  next?: TailwindNextOptions
+  cwd?: string
+  config?: string
 }
 
-export interface UserConfig {
-  patch?: PatchUserConfig
-  mangle?: MangleUserConfig
+export interface RegistryOutputOptions {
+  file?: string
+  pretty?: boolean | number
+  stripUniversalSelector?: boolean
 }
+
+export interface RegistryOptions {
+  output?: RegistryOutputOptions
+  tailwind?: TailwindTargetOptions
+}
+
+export interface TailwindcssMangleConfig {
+  registry?: RegistryOptions
+  transformer?: TransformerOptions
+}
+
+export type UserConfig = TailwindcssMangleConfig
 
 /* c8 ignore end */

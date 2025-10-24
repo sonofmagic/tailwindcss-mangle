@@ -9,7 +9,9 @@ export default defineConfig({
   plugins: [
     react(),
     utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }),
   ],
   css: {

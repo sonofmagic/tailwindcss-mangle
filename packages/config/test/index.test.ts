@@ -2,9 +2,22 @@ import { deleteAsync } from 'del'
 import { existsSync } from 'fs-extra'
 import { resolve } from 'pathe'
 import { CONFIG_NAME } from '@/constants'
-import { getDefaultMangleUserConfig, getDefaultUserConfig } from '@/defaults'
+import { getDefaultTransformerConfig, getDefaultUserConfig } from '@/defaults'
 import { getConfig, initConfig } from '@/index'
 import { fixturesRoot } from './utils'
+
+function normaliseRegex(value: any): any {
+  if (Array.isArray(value)) {
+    return value.map(normaliseRegex)
+  }
+  if (value instanceof RegExp) {
+    return value.toString()
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, normaliseRegex(val)]))
+  }
+  return value
+}
 
 describe('config', () => {
   it('0.default', async () => {
@@ -18,30 +31,30 @@ describe('config', () => {
     expect(existsSync(configPath)).toBe(true)
 
     const { config } = await getConfig(cwd)
-    expect(config).toEqual(getDefaultUserConfig())
+    expect(normaliseRegex(config)).toEqual(normaliseRegex(getDefaultUserConfig()))
   })
 
   it('1.change-options', async () => {
     const cwd = resolve(fixturesRoot, './config/1.change-options')
     const { config } = await getConfig(cwd)
     expect(config).toEqual({
-      patch: {
+      registry: {
         output: {
-          filename: 'xxx/yyy/zzz.json',
-          loose: false,
-          removeUniversalSelector: false,
+          file: 'xxx/yyy/zzz.json',
+          pretty: false,
+          stripUniversalSelector: false,
         },
-        tailwindcss: {
+        tailwind: {
           cwd: 'aaa/bbb/cc',
         },
       },
-      mangle: getDefaultMangleUserConfig(),
+      transformer: getDefaultTransformerConfig(),
     })
   })
 
-  it('2.mangle-options', async () => {
-    const cwd = resolve(fixturesRoot, './config/2.mangle-options')
+  it('2.transformer-options', async () => {
+    const cwd = resolve(fixturesRoot, './config/2.transformer-options')
     const { config } = await getConfig(cwd)
-    expect(config).toMatchSnapshot()
+    expect(normaliseRegex(config)).toMatchSnapshot()
   })
 })

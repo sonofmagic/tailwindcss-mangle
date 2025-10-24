@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 describe('getConfig delegation', () => {
   it('passes cwd and defaults to c12.loadConfig', async () => {
     const loadConfig = vi.fn().mockResolvedValue({ config: {} })
-    const getDefaultUserConfig = vi.fn().mockReturnValue({ patch: {}, mangle: {} })
+    const getDefaultUserConfig = vi.fn().mockReturnValue({ registry: {}, transformer: {} })
     const constants = await vi.importActual<typeof import('../src/constants')>('../src/constants')
 
     vi.doMock('c12', () => ({

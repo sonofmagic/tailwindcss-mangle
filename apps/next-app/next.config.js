@@ -8,11 +8,15 @@ const nextConfig = {
     // console.log(process.env.NODE_ENV)
     // if (process.env.NODE_ENV === 'production') {
     //   config.plugins.push(utwm({
-    //     classMapOutput: true,
+    //     registry: {
+    //       mapping: true,
+    //     },
     //   }))
     // }
     config.plugins.push(utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }))
     return config
   },

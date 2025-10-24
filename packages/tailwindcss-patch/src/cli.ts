@@ -5,13 +5,17 @@ import { defu } from '@tailwindcss-mangle/shared'
 import cac from 'cac'
 import logger from './logger'
 import { TailwindcssPatcher } from './api/tailwindcss-patcher'
-import { fromLegacyOptions } from './options/legacy'
+import { fromLegacyOptions, fromUnifiedConfig } from './options/legacy'
 
 const cli = cac('tw-patch')
 
 async function loadPatchOptions(cwd: string, overrides?: TailwindcssPatchOptions) {
   const { config } = await getConfig(cwd)
-  const base = config?.patch ? fromLegacyOptions({ patch: config.patch }) : {}
+  const base = config?.registry
+    ? fromUnifiedConfig(config.registry)
+    : config?.patch
+      ? fromLegacyOptions({ patch: config.patch })
+      : {}
   const merged = defu<TailwindcssPatchOptions, TailwindcssPatchOptions[]>(overrides ?? {}, base)
   return merged
 }

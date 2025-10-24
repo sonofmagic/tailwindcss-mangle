@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [
     solidPlugin(),
     utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }),
   ],
   server: {

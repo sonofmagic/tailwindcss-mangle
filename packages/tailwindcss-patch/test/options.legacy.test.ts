@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fromLegacyOptions } from '@/options/legacy'
+import { fromLegacyOptions, fromUnifiedConfig } from '@/options/legacy'
 
 describe('fromLegacyOptions', () => {
   it('converts legacy patcher options to the new format', () => {
@@ -44,5 +44,47 @@ describe('fromLegacyOptions', () => {
     })
     expect(converted.tailwind?.version).toBe(3)
     expect(converted.tailwind?.v3?.cwd).toBe('./fixtures/apps/basic')
+  })
+})
+
+describe('fromUnifiedConfig', () => {
+  it('maps unified registry options to patcher options', () => {
+    const converted = fromUnifiedConfig({
+      output: {
+        file: 'classes.json',
+        pretty: false,
+        stripUniversalSelector: false,
+      },
+      tailwind: {
+        version: 4,
+        package: 'tailwindcss',
+        resolve: {
+          paths: ['node_modules'],
+        },
+        next: {
+          cssEntries: ['src/styles.css'],
+        },
+      },
+    })
+
+    expect(converted.output).toEqual({
+      file: 'classes.json',
+      pretty: false,
+      removeUniversalSelector: false,
+    })
+    expect(converted.tailwind).toEqual({
+      version: 4,
+      packageName: 'tailwindcss',
+      resolve: {
+        paths: ['node_modules'],
+      },
+      config: undefined,
+      cwd: undefined,
+      v2: undefined,
+      v3: undefined,
+      v4: {
+        cssEntries: ['src/styles.css'],
+      },
+    })
   })
 })

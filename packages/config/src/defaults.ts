@@ -1,4 +1,4 @@
-import type { MangleUserConfig, PatchUserConfig, UserConfig } from './types'
+import type { RegistryOptions, TailwindcssMangleConfig, TransformerOptions } from './types'
 import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 import { CSS_LANGS_RE } from 'is-css-request'
@@ -10,36 +10,43 @@ const defaultPipelineInclude = [
 
 const defaultPipelineExclude: string[] = []
 
-export function getDefaultPatchConfig(): PatchUserConfig {
+export function getDefaultRegistryConfig(): RegistryOptions {
   return {
     output: {
-      filename: '.tw-patch/tw-class-list.json',
-      removeUniversalSelector: true,
-      loose: true,
+      file: '.tw-patch/tw-class-list.json',
+      stripUniversalSelector: true,
+      pretty: true,
     },
-    tailwindcss: {},
+    tailwind: {},
   }
 }
 
-export function getDefaultMangleUserConfig(): MangleUserConfig {
+export function getDefaultTransformerConfig(): TransformerOptions {
   return {
-    mangleClassFilter: defaultMangleClassFilter,
-    include: defaultPipelineInclude,
-    exclude: defaultPipelineExclude,
+    filter: defaultMangleClassFilter,
+    sources: {
+      include: defaultPipelineInclude,
+      exclude: defaultPipelineExclude,
+    },
     disabled: process.env.NODE_ENV === 'development',
-    classListPath: '.tw-patch/tw-class-list.json',
-    classMapOutput: {
-      enable: false,
-      filename: '.tw-patch/tw-map-list.json',
-      loose: true,
+    registry: {
+      file: '.tw-patch/tw-class-list.json',
+      mapping: {
+        enabled: false,
+        file: '.tw-patch/tw-map-list.json',
+        loose: true,
+      },
     },
-    preserveFunction: [],
+    preserve: {
+      functions: [],
+      classes: [],
+    },
   }
 }
 
-export function getDefaultUserConfig(): UserConfig {
+export function getDefaultUserConfig(): TailwindcssMangleConfig {
   return {
-    patch: getDefaultPatchConfig(),
-    mangle: getDefaultMangleUserConfig(),
+    registry: getDefaultRegistryConfig(),
+    transformer: getDefaultTransformerConfig(),
   }
 }

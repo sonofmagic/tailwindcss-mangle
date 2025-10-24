@@ -4,7 +4,9 @@ import utwm from 'unplugin-tailwindcss-mangle/webpack'
 const nextConfig = {
   webpack: (config) => {
     config.plugins.push(utwm({
-      classMapOutput: true,
+      registry: {
+        mapping: true,
+      },
     }))
     return config
   },

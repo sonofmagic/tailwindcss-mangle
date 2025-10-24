@@ -1,7 +1,9 @@
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  mangle: {
-    preserveFunction: ['twMerge'],
+  transformer: {
+    preserve: {
+      functions: ['twMerge'],
+    },
   },
 })

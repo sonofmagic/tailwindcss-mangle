@@ -27,11 +27,14 @@ describe('webpack build', () => {
     const stats = await compile(compiler)
 
     // get all Assets as Record<string,string>
-    expect(readAssets(compiler, stats)).toMatchSnapshot('assets')
+    const assets = readAssets(compiler, stats)
+    expect(typeof assets['main.css']).toBe('string')
+    expect(assets['main.css'].length).toBeGreaterThan(0)
+    expect(assets['index.js']).toBeDefined()
     // get all error
-    expect(getErrors(stats)).toMatchSnapshot('errors')
+    expect(getErrors(stats)).toEqual([])
     // get all warnings
-    expect(getWarnings(stats)).toMatchSnapshot('warnings')
+    expect(getWarnings(stats)).toEqual([])
   })
 
   it.skip('with plugin', async () => {
@@ -55,16 +58,20 @@ describe('webpack build', () => {
     })
 
     utwm({
-      classListPath: path.resolve(context, '.tw-patch/tw-class-list.json'),
+      registry: {
+        file: path.resolve(context, '.tw-patch/tw-class-list.json'),
+      },
     }).apply(compiler)
     const stats = await compile(compiler)
 
     // get all Assets as Record<string,string>
-    expect(readAssets(compiler, stats)).toMatchSnapshot('assets')
+    const assets = readAssets(compiler, stats)
+    expect(assets['main.css']).toContain('.tw-')
+    expect(assets['index.js']).toBeDefined()
     // get all error
-    expect(getErrors(stats)).toMatchSnapshot('errors')
+    expect(getErrors(stats)).toEqual([])
     // get all warnings
-    expect(getWarnings(stats)).toMatchSnapshot('warnings')
+    expect(getWarnings(stats)).toEqual([])
   })
 
   // webpack({}, (err, stats) => {

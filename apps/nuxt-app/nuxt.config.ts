@@ -17,7 +17,9 @@ export default defineNuxtConfig({
     // [
     //   nuxtPlugin,
     //   {
-    //     classMapOutput: true,
+    //     registry: {
+    //       mapping: true,
+    //     },
     //   },
     // ],
   ],

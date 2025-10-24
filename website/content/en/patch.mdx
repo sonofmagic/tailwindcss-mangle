@@ -7,7 +7,7 @@ import { Callout } from 'nextra/components'
 ## Tailwindcss-Patch 8.0 at a glance
 
 - Re-architected modules (`api/`, `patching/`, `runtime/`, `extraction/`, `cache/`) with typed entry points for direct imports.
-- Unified options object that normalises legacy `patch`/`cache` configs and unlocks cache, output, and feature flags in one place.
+- Unified `registry` configuration that normalises legacy `patch`/`cache` configs and unlocks cache, output, and feature flags in one place.
 - First-class Tailwind CSS v4 support by scanning CSS entry files and project sources alongside the existing v2/v3 runtime patch.
 - Refreshed CLI with clearer logging plus new `extract` flags (`--output`, `--format`, `--css`, `--no-write`) for automation.
 
@@ -78,23 +78,23 @@ npx tw-patch init
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
+  registry: {
     output: {
-      filename: '.tw-patch/tw-class-list.json',
+      file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      removeUniversalSelector: true,
+      stripUniversalSelector: true,
     },
-    tailwindcss: {
+    tailwind: {
       version: 4,
-      v4: {
+      next: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
         ],
       },
     },
-    applyPatches: {
+    features: {
       exportContext: true,
       extendLengthUnits: {
         units: ['rpx'],
@@ -104,7 +104,7 @@ export default defineConfig({
 })
 ```
 
-`defineConfig` still returns the legacy shape (`patch`, `applyPatches`, `tailwindcss`), but all new 8.0 fields are supported. You can migrate gradually by adding new keys; the runtime normalises them automatically.
+`defineConfig` still accepts legacy `patch` / `mangle` fields, converting them to the new `registry` / `transformer` shape so you can migrate at your own pace. Newly added fields are normalised automatically at runtime.
 
 ## Programmatic API
 

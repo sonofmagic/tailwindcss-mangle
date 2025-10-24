@@ -5,7 +5,9 @@ module.exports = defineConfig({
   transpileDependencies: true,
   // configureWebpack: (config) => {
   //   config.plugins.push(utwm({
-  //     classMapOutput: true,
+  //     registry: {
+  //       mapping: true,
+  //     },
   //   }))
   // },
 

@@ -1,7 +1,7 @@
-import type { MangleUserConfig } from './types'
+import type { TransformerOptions } from './types'
 import { unplugin } from './core'
 
-export default function (options: MangleUserConfig = {}, nuxt: any) {
+export default function (options: TransformerOptions = {}, nuxt: any) {
   // install webpack plugin
   nuxt.hook('webpack:config', (config: any) => {
     config.plugins = config.plugins || []

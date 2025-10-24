@@ -1,4 +1,8 @@
-import type { PatchUserConfig } from '@tailwindcss-mangle/config'
+import type {
+  RegistryOptions,
+  TailwindLocatorOptions,
+  TailwindNextOptions,
+} from '@tailwindcss-mangle/config'
 import type { PackageResolvingOptions } from 'local-pkg'
 import type { TailwindcssPatchOptions, ExtendLengthUnitsUserOptions } from './types'
 import type { ILengthUnitsPatchOptions } from '../types'
@@ -11,7 +15,25 @@ export interface LegacyCacheOptions {
   enabled?: boolean
 }
 
-export interface LegacyPatchOptions extends PatchUserConfig {
+export interface LegacyOutputOptions {
+  filename?: string
+  loose?: boolean
+  removeUniversalSelector?: boolean
+}
+
+export interface LegacyTailwindcssOptions {
+  version?: 2 | 3 | 4
+  v2?: TailwindLocatorOptions
+  v3?: TailwindLocatorOptions
+  v4?: TailwindNextOptions
+  config?: string
+  cwd?: string
+}
+
+export interface LegacyPatchOptions {
+  packageName?: string
+  output?: LegacyOutputOptions
+  tailwindcss?: LegacyTailwindcssOptions
   overwrite?: boolean
   applyPatches?: {
     exportContext?: boolean
@@ -105,5 +127,46 @@ export function fromLegacyOptions(options?: LegacyTailwindcssPatcherOptions): Ta
       exposeContext: features.exposeContext,
       extendLengthUnits: features.extendLengthUnits,
     },
+  }
+}
+
+export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchOptions {
+  if (!registry) {
+    return {}
+  }
+
+  const tailwind = registry.tailwind
+  const output = registry.output
+
+  const pretty = (() => {
+    if (output?.pretty === undefined) {
+      return undefined
+    }
+    if (typeof output.pretty === 'boolean') {
+      return output.pretty ? 2 : false
+    }
+    return output.pretty
+  })()
+
+  return {
+    output: output
+      ? {
+          file: output.file,
+          pretty,
+          removeUniversalSelector: output.stripUniversalSelector,
+        }
+      : undefined,
+    tailwind: tailwind
+      ? {
+          version: tailwind.version,
+          packageName: tailwind.package,
+          resolve: tailwind.resolve,
+          config: tailwind.config,
+          cwd: tailwind.cwd,
+          v2: tailwind.legacy,
+          v3: tailwind.classic,
+          v4: tailwind.next,
+        }
+      : undefined,
   }
 }
