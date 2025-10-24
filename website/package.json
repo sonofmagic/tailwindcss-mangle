@@ -14,11 +14,10 @@
     "dev": "next --turbopack",
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "types:check": "tsc --noEmit",
-    "translate": "tsx scripts/translate.ts"
+    "types:check": "tsc --noEmit"
   },
   "dependencies": {
-    "markdown-to-jsx": "^7.7.16",
+    "markdown-to-jsx": "^7.7.17",
     "next": "^16.0.0",
     "nextra": "^4.6.0",
     "nextra-theme-docs": "^4.6.0",

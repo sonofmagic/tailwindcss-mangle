@@ -6,10 +6,10 @@ packages:
 catalogs:
   tailwindcss3:
     tailwindcss: ^4.1.16
-    tailwindcss-3: npm:tailwindcss@^3.4.17
+    tailwindcss-3: npm:tailwindcss@^3.4.18
   tailwindcss4:
     tailwindcss: ^4.1.16
-    tailwindcss-4: npm:tailwindcss@^4.1.13
+    tailwindcss-4: npm:tailwindcss@^4.1.16
 
 onlyBuiltDependencies:
   - esbuild

@@ -76,7 +76,7 @@
     "@tailwindcss-mangle/core": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "is-css-request": "^1.0.1",
-    "magic-string": "^0.30.19",
+    "magic-string": "^0.30.21",
     "unplugin": "^2.3.10"
   },
   "publishConfig": {
