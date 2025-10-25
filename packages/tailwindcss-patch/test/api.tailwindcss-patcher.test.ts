@@ -1,5 +1,5 @@
-import fs from 'fs-extra'
 import os from 'node:os'
+import fs from 'fs-extra'
 import path from 'pathe'
 import { afterEach, describe, expect, it } from 'vitest'
 import { TailwindcssPatcher } from '@/api/tailwindcss-patcher'

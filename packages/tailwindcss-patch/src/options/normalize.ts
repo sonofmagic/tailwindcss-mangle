@@ -1,18 +1,20 @@
-import process from 'node:process'
-import path from 'pathe'
+import type { ILengthUnitsPatchOptions } from '../types'
 import type {
+  CacheStrategy,
+  FeatureUserOptions,
   NormalizedCacheOptions,
   NormalizedFeatureOptions,
   NormalizedOutputOptions,
   NormalizedTailwindConfigOptions,
-  NormalizedTailwindV4Options,
   NormalizedTailwindcssPatchOptions,
+  NormalizedTailwindV4Options,
+  OutputUserOptions,
   TailwindcssPatchOptions,
   TailwindUserOptions,
   TailwindV4UserOptions,
 } from './types'
-import type { CacheStrategy, ExtendLengthUnitsUserOptions, FeatureUserOptions, OutputUserOptions } from './types'
-import type { ILengthUnitsPatchOptions } from '../types'
+import process from 'node:process'
+import path from 'pathe'
 import { pkgName } from '../constants'
 
 function toPrettyValue(value: OutputUserOptions['pretty']): number | false {

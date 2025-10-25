@@ -1,5 +1,5 @@
-import fs from 'fs-extra'
 import os from 'node:os'
+import fs from 'fs-extra'
 import path from 'pathe'
 import { afterEach, describe, expect, it } from 'vitest'
 import { applyExtendLengthUnitsPatchV3, applyExtendLengthUnitsPatchV4 } from '@/patching/operations/extend-length-units'
@@ -26,7 +26,7 @@ describe('extend length units patch', () => {
     })
 
     expect(result.changed).toBe(true)
-    expect(result.code).toContain("'rpx'")
+    expect(result.code).toContain('\'rpx\'')
   })
 
   it('adds custom units to v4 distribution bundles', async () => {
@@ -42,6 +42,6 @@ describe('extend length units patch', () => {
 
     expect(result.changed).toBe(true)
     expect(result.files.length).toBeGreaterThan(0)
-    expect(result.files[0].code).toContain('"rpx"')
+    expect(result.files[0].code).toContain('\"rpx\"')
   })
 })

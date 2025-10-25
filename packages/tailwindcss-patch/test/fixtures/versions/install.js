@@ -1,28 +1,60 @@
 import { execa } from 'execa'
-// import { getCurrentFilename } from './utils.js'
-// import path from 'path'
-// import fs from 'fs/promises'
+import { fileURLToPath } from 'node:url'
 
-const args = process.argv.slice(2)
+const versions = process.argv.slice(2).map(arg => arg.trim()).filter(Boolean)
+const workspaceRoot = fileURLToPath(new URL('.', import.meta.url))
 
-const version = args[0]
-
-if (version) {
-  try {
-    const cwd = process.cwd()
-    // pnpm EPERM: operation not permitted,
-    // try yarn 
-    const { stdout } = await execa('yarn', ['add', `tailwindcss${version}@npm:tailwindcss@${version}`], {
-      cwd
-    }).pipeStdout(process.stdout)
-    // const filename = getCurrentFilename(import.meta.url)
-    // const dirname = path.dirname(filename)
-    // const nodeModulesPath = path.resolve(dirname, 'node_modules')
-    // await fs.rmdir(path.resolve(nodeModulesPath, '.bin'))
-    console.log(stdout)
-  } catch (error) {
-    console.error(error)
-  }
+if (!versions.length) {
+  console.error('[versions] Expected at least one Tailwind CSS version, e.g. `node install.js 3.4.18`.')
+  process.exitCode = 1
 } else {
-  console.warn('version is required!')
+  try {
+    for (const version of versions) {
+      await installVersion(version)
+    }
+    console.log('[versions] Installation complete.')
+  } catch (error) {
+    console.error('[versions] Failed to install requested version(s).')
+    console.error(error)
+    process.exitCode = 1
+  }
+}
+
+function normalizeVersion(version) {
+  if (!version) {
+    throw new Error('Version must be a non-empty string.')
+  }
+
+  const trimmed = version.trim()
+  if (trimmed === 'lts' || trimmed === 'latest') {
+    return {
+      display: 'tailwindcss@latest',
+      spec: 'tailwindcss',
+    }
+  }
+
+  const withoutPrefix = trimmed.replace(/^tailwindcss/i, '').replace(/^v/, '')
+  if (!withoutPrefix) {
+    throw new Error(`Unable to determine Tailwind CSS version from "${version}".`)
+  }
+
+  const alias = `tailwindcss${withoutPrefix}`
+  return {
+    display: `tailwindcss@${withoutPrefix}`,
+    spec: `${alias}@npm:tailwindcss@${withoutPrefix}`,
+  }
+}
+
+async function installVersion(version) {
+  const { display, spec } = normalizeVersion(version)
+  console.log(`[versions] Installing ${display} via yarn…`)
+  const child = execa('yarn', ['add', spec], {
+    cwd: workspaceRoot,
+    stdio: 'pipe',
+  })
+
+  child.stdout?.pipe(process.stdout)
+  child.stderr?.pipe(process.stderr)
+
+  await child
 }

@@ -1,16 +1,16 @@
 ---
 id: 20230630
-title: 'How to get the context of tailwindcss at runtime?'
+title: "How to get the context of tailwindcss at runtime?"
 date: 2023-06-30
-description: 'The core principle of `tailwindcss-patch`'
+description: "The core principle of `tailwindcss-patch`"
 authors:
   - icebreaker
 tags:
-  - 'tailwindcss'
-  - 'context'
-  - 'runtime'
-  - 'plugin'
-  - 'postcss'
+  - "tailwindcss"
+  - "context"
+  - "runtime"
+  - "plugin"
+  - "postcss"
 ---
 
 # How to get the context of tailwindcss at runtime?
@@ -251,13 +251,13 @@ In this file, we create a `contextRef` object, `push` the context of `tailwindcs
 
 At this point, we'll be able to create a method to get it
 
-```js
+```ts
 function getContexts() {
   const twPath = require.resolve('tailwindcss')
 
   const distPath = path.dirname(twPath)
 
-  let injectFilePath = path.join(distPath, 'plugin.js')
+  const injectFilePath = path.join(distPath, 'plugin.js')
 
   const mo = require(injectFilePath)
   if (mo.contextRef) {

@@ -1,8 +1,8 @@
 import fs from 'fs-extra'
 import path from 'pathe'
 import logger from '../../../logger'
-import { transformPostcssPlugin, transformProcessTailwindFeaturesReturnContext } from './postcss-v3'
 import { transformPostcssPluginV2, transformProcessTailwindFeaturesReturnContextV2 } from './postcss-v2'
+import { transformPostcssPlugin, transformProcessTailwindFeaturesReturnContext } from './postcss-v3'
 
 export interface ExposeContextPatchParams {
   rootDir: string

@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'pathe'
 
-import { copyFiles, ensureDir, getCurrentFilename } from './utils.js'
+import { copyFiles, ensureDir, getCurrentFilename, pathExists } from './utils.js'
 function getTailwindcssVersion(str) {
   // eslint-disable-next-line no-useless-escape
   const match = /^tailwindcss([\d\.]*)$/.exec(str)
@@ -27,12 +27,23 @@ async function main() {
   const filename = getCurrentFilename(import.meta.url)
   const dirname = path.dirname(filename)
   const nodeModulesPath = path.resolve(dirname, 'node_modules')
+  const packageJsonPath = path.resolve(dirname, 'package.json')
+
+  if (!(await pathExists(nodeModulesPath))) {
+    console.warn('[versions] node_modules directory not found. Run `yarn install` inside fixtures/versions first.')
+    return
+  }
+
   const filenames = await fs.readdir(nodeModulesPath)
-  const pkgJson = await fs.readFile(path.resolve(dirname, 'package.json'), 'utf8').then(res => {
-    return JSON.parse(res)
-  })
-  const dependencies = pkgJson.dependencies
+  const pkgJson = await fs.readFile(packageJsonPath, 'utf8').then(res => JSON.parse(res))
+  const dependencies = pkgJson.dependencies ?? {}
   const entries = Object.entries(dependencies)
+
+  if (entries.length === 0) {
+    console.warn('[versions] No dependencies found in fixtures/versions package.json.')
+    return
+  }
+
   for (let i = 0; i < entries.length; i++) {
     const [localPkgName] = entries[i]
 
@@ -46,8 +57,12 @@ async function main() {
           dest: path.resolve(targetDir, x)
         }
       }))
+    } else if (version) {
+      console.warn(`[versions] Package ${localPkgName} is listed but not installed. Re-run install.js for ${version}.`)
     }
   }
+
+  console.log('[versions] TailwindCSS snapshots updated.')
 }
 
 main()

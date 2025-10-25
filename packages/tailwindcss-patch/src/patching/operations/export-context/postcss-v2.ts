@@ -1,15 +1,15 @@
+import type { ExposeContextTransformOptions } from './postcss-v3'
 import * as t from '@babel/types'
 import { generate, parse, traverse } from '../../../babel'
-import { ExposeContextTransformOptions } from './postcss-v3'
 
-const IDENTIFIER_RE = /^[$A-Z_][0-9A-Z_$]*$/i
+const IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i
 
 function toIdentifierName(property: string) {
   if (!property) {
     return 'contextRef'
   }
-  const sanitized = property.replace(/[^0-9A-Za-z_$]/g, '_')
-  if (/^[0-9]/.test(sanitized)) {
+  const sanitized = property.replace(/[^\w$]/gu, '_')
+  if (/^\d/.test(sanitized)) {
     return `_${sanitized}`
   }
   return sanitized || 'contextRef'
@@ -32,23 +32,29 @@ export function transformProcessTailwindFeaturesReturnContextV2(content: string)
     FunctionDeclaration(path) {
       const node = path.node
       if (
-        node.id?.name === 'processTailwindFeatures'
-        && node.body.body.length === 1
-        && t.isReturnStatement(node.body.body[0])
+        node.id?.name !== 'processTailwindFeatures'
+        || node.body.body.length !== 1
+        || !t.isReturnStatement(node.body.body[0])
       ) {
-        const returnStatement = node.body.body[0]
-        if (t.isFunctionExpression(returnStatement.argument)) {
-          const body = returnStatement.argument.body.body
-          const lastStatement = body[body.length - 1]
-          hasPatched
-            = t.isReturnStatement(lastStatement)
-            && t.isIdentifier(lastStatement.argument)
-            && lastStatement.argument.name === 'context'
+        return
+      }
 
-          if (!hasPatched) {
-            body.push(t.returnStatement(t.identifier('context')))
-          }
-        }
+      const returnStatement = node.body.body[0]
+      if (!t.isFunctionExpression(returnStatement.argument)) {
+        return
+      }
+
+      const body = returnStatement.argument.body.body
+      const lastStatement = body[body.length - 1]
+      const alreadyReturnsContext = Boolean(
+        t.isReturnStatement(lastStatement)
+        && t.isIdentifier(lastStatement.argument)
+        && lastStatement.argument.name === 'context',
+      )
+
+      hasPatched = alreadyReturnsContext
+      if (!alreadyReturnsContext) {
+        body.push(t.returnStatement(t.identifier('context')))
       }
     },
   })
@@ -70,7 +76,9 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
   traverse(ast, {
     Program(path) {
       const program = path.node
-      const index = program.body.findIndex(statement => t.isFunctionDeclaration(statement) && statement.id?.name === '_default')
+      const index = program.body.findIndex((statement) => {
+        return t.isFunctionDeclaration(statement) && statement.id?.name === '_default'
+      })
 
       if (index === -1) {
         return
@@ -79,21 +87,23 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
       const previous = program.body[index - 1]
       const beforePrevious = program.body[index - 2]
 
-      const alreadyHasVariable
-        = previous
-          && t.isVariableDeclaration(previous)
-          && previous.declarations.length === 1
-          && t.isIdentifier(previous.declarations[0].id)
-          && previous.declarations[0].id.name === refIdentifier.name
+      const alreadyHasVariable = Boolean(
+        previous
+        && t.isVariableDeclaration(previous)
+        && previous.declarations.length === 1
+        && t.isIdentifier(previous.declarations[0].id)
+        && previous.declarations[0].id.name === refIdentifier.name,
+      )
 
-      const alreadyAssignsExports
-        = beforePrevious
-          && t.isExpressionStatement(beforePrevious)
-          && t.isAssignmentExpression(beforePrevious.expression)
-          && t.isMemberExpression(beforePrevious.expression.left)
-          && t.isIdentifier(beforePrevious.expression.right)
-          && beforePrevious.expression.right.name === refIdentifier.name
-          && generate(beforePrevious.expression.left).code === generate(exportMember).code
+      const alreadyAssignsExports = Boolean(
+        beforePrevious
+        && t.isExpressionStatement(beforePrevious)
+        && t.isAssignmentExpression(beforePrevious.expression)
+        && t.isMemberExpression(beforePrevious.expression.left)
+        && t.isIdentifier(beforePrevious.expression.right)
+        && beforePrevious.expression.right.name === refIdentifier.name
+        && generate(beforePrevious.expression.left).code === generate(exportMember).code,
+      )
 
       hasPatched = alreadyHasVariable && alreadyAssignsExports
 
@@ -146,13 +156,20 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
       const block = fnExpression.body
       const statements = block.body
 
-      if (t.isExpressionStatement(statements[0]) && t.isAssignmentExpression(statements[0].expression) && t.isNumericLiteral(statements[0].expression.right)) {
+      if (
+        t.isExpressionStatement(statements[0])
+        && t.isAssignmentExpression(statements[0].expression)
+        && t.isNumericLiteral(statements[0].expression.right)
+      ) {
         hasPatched = true
         return
       }
 
       const lastStatement = statements[statements.length - 1]
-      if (lastStatement && t.isExpressionStatement(lastStatement)) {
+      if (
+        lastStatement
+        && t.isExpressionStatement(lastStatement)
+      ) {
         statements[statements.length - 1] = t.expressionStatement(
           t.callExpression(
             t.memberExpression(valueMember, t.identifier('push')),
@@ -170,7 +187,10 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
           && t.isForOfStatement(ifStatement.consequent.body[1])
         ) {
           const forOf = ifStatement.consequent.body[1]
-          if (t.isBlockStatement(forOf.body) && forOf.body.body.length === 1) {
+          if (
+            t.isBlockStatement(forOf.body)
+            && forOf.body.body.length === 1
+          ) {
             const nestedIf = forOf.body.body[0]
             if (
               nestedIf

@@ -18,7 +18,7 @@ export async function copyFiles (arr) {
       const { src, dest } = arr[i]
       await ensureDir(path.dirname(dest))
 
-      const isExisted = await fs.access(src).then(() => true).catch(() => false)
+      const isExisted = await pathExists(src)
 
       if (isExisted) {
         await fs.copyFile(src, dest)
@@ -26,5 +26,14 @@ export async function copyFiles (arr) {
         console.warn(`[warning]: 404 ${src}`)
       }
     }
+  }
+}
+
+export async function pathExists (target) {
+  try {
+    await fs.access(target)
+    return true
+  } catch {
+    return false
   }
 }

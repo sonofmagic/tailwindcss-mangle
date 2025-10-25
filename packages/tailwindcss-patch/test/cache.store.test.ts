@@ -1,7 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import fs from 'fs-extra'
 import os from 'node:os'
+import fs from 'fs-extra'
 import path from 'pathe'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { CacheStore } from '@/cache/store'
 
 let tempDir: string

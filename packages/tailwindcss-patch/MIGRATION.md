@@ -6,11 +6,11 @@ This document describes the changes introduced by the full refactor of `tailwind
 
 ## 1. Package layout
 
-| Before | After |
-| --- | --- |
-| `src/core/**` mix of cache, patch and runtime helpers | Dedicated folders: `api/`, `cache/`, `patching/`, `runtime/`, `options/`, `extraction/` |
-| `CacheManager`, `InternalPatchOptions`, ad-hoc exports | `CacheStore`, `normalizeOptions`, typed helpers with explicit imports |
-| `processTailwindcss` | `runTailwindBuild` in `runtime/process-tailwindcss.ts` |
+| Before                                                 | After                                                                                   |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `src/core/**` mix of cache, patch and runtime helpers  | Dedicated folders: `api/`, `cache/`, `patching/`, `runtime/`, `options/`, `extraction/` |
+| `CacheManager`, `InternalPatchOptions`, ad-hoc exports | `CacheStore`, `normalizeOptions`, typed helpers with explicit imports                   |
+| `processTailwindcss`                                   | `runTailwindBuild` in `runtime/process-tailwindcss.ts`                                  |
 
 Imports such as `@/core/patcher` or `@/core/cache` must be updated. Use the new entry-points:
 
@@ -25,7 +25,7 @@ import { applyTailwindPatches } from 'tailwindcss-patch/patching/patch-runner'
 ### Previous shape
 
 ```ts
-new TailwindcssPatcher({
+const patcher = new TailwindcssPatcher({
   cache: { dir: '.cache', file: 'classes.json' },
   patch: {
     overwrite: true,
@@ -39,7 +39,7 @@ new TailwindcssPatcher({
 ### New shape
 
 ```ts
-new TailwindcssPatcher({
+const patcher = new TailwindcssPatcher({
   overwrite: true,
   cache: {
     enabled: true,

@@ -1,13 +1,14 @@
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
-import { transformPostcssPlugin, transformProcessTailwindFeaturesReturnContext } from '@/patching/operations/export-context/postcss-v3'
 import { transformPostcssPluginV2, transformProcessTailwindFeaturesReturnContextV2 } from '@/patching/operations/export-context/postcss-v2'
+import { transformPostcssPlugin, transformProcessTailwindFeaturesReturnContext } from '@/patching/operations/export-context/postcss-v3'
 
 const fixturesDir = path.resolve(__dirname, 'fixtures/versions')
+const v3Fixtures = ['3.3.1', '3.4.17', '3.4.18']
 
-describe('export context patch (v3)', () => {
-  const libDir = path.join(fixturesDir, '3.3.1/lib')
+describe.each(v3Fixtures)('export context patch (v3) - tailwind %s', (version) => {
+  const libDir = path.join(fixturesDir, `${version}/lib`)
 
   it('adds context collection logic to plugin entry', () => {
     const source = fs.readFileSync(path.join(libDir, 'plugin.js'), 'utf8')

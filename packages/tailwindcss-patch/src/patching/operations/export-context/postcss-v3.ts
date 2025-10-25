@@ -5,14 +5,14 @@ export interface ExposeContextTransformOptions {
   refProperty: string
 }
 
-const IDENTIFIER_RE = /^[$A-Z_][0-9A-Z_$]*$/i
+const IDENTIFIER_RE = /^[A-Z_$][\w$]*$/i
 
 function toIdentifierName(property: string) {
   if (!property) {
     return 'contextRef'
   }
-  const sanitized = property.replace(/[^0-9A-Za-z_$]/g, '_')
-  if (/^[0-9]/.test(sanitized)) {
+  const sanitized = property.replace(/[^\w$]/gu, '_')
+  if (/^\d/.test(sanitized)) {
     return `_${sanitized}`
   }
   return sanitized || 'contextRef'
@@ -33,20 +33,33 @@ export function transformProcessTailwindFeaturesReturnContext(content: string) {
   traverse(ast, {
     FunctionDeclaration(path) {
       const node = path.node
-      if (node.id?.name === 'processTailwindFeatures' && node.body.body.length === 1) {
-        const [returnStatement] = node.body.body
-        if (t.isReturnStatement(returnStatement) && t.isFunctionExpression(returnStatement.argument)) {
-          const expression = returnStatement.argument
-          const body = expression.body.body
-          const lastStatement = body[body.length - 1]
-          hasPatched
-            = t.isReturnStatement(lastStatement)
-            && t.isIdentifier(lastStatement.argument)
-            && lastStatement.argument.name === 'context'
-          if (!hasPatched) {
-            body.push(t.returnStatement(t.identifier('context')))
-          }
-        }
+      if (
+        node.id?.name !== 'processTailwindFeatures'
+        || node.body.body.length !== 1
+      ) {
+        return
+      }
+
+      const [returnStatement] = node.body.body
+      if (
+        !t.isReturnStatement(returnStatement)
+        || !t.isFunctionExpression(returnStatement.argument)
+      ) {
+        return
+      }
+
+      const expression = returnStatement.argument
+      const body = expression.body.body
+      const lastStatement = body[body.length - 1]
+      const alreadyReturnsContext = Boolean(
+        t.isReturnStatement(lastStatement)
+        && t.isIdentifier(lastStatement.argument)
+        && lastStatement.argument.name === 'context',
+      )
+
+      hasPatched = alreadyReturnsContext
+      if (!alreadyReturnsContext) {
+        body.push(t.returnStatement(t.identifier('context')))
       }
     },
   })
@@ -84,20 +97,22 @@ export function transformPostcssPlugin(content: string, { refProperty }: ExposeC
 
       const previousStatement = program.body[index - 1]
       const lastStatement = program.body[program.body.length - 1]
-      const alreadyHasVariable
-        = previousStatement
-          && t.isVariableDeclaration(previousStatement)
-          && previousStatement.declarations.length === 1
-          && t.isIdentifier(previousStatement.declarations[0].id)
-          && previousStatement.declarations[0].id.name === refIdentifier.name
+      const alreadyHasVariable = Boolean(
+        previousStatement
+        && t.isVariableDeclaration(previousStatement)
+        && previousStatement.declarations.length === 1
+        && t.isIdentifier(previousStatement.declarations[0].id)
+        && previousStatement.declarations[0].id.name === refIdentifier.name,
+      )
 
-      const alreadyAssignsModuleExports
-        = t.isExpressionStatement(lastStatement)
-          && t.isAssignmentExpression(lastStatement.expression)
-          && t.isMemberExpression(lastStatement.expression.left)
-          && t.isIdentifier(lastStatement.expression.right)
-          && lastStatement.expression.right.name === refIdentifier.name
-          && generate(lastStatement.expression.left).code === generate(moduleExportsMember).code
+      const alreadyAssignsModuleExports = Boolean(
+        t.isExpressionStatement(lastStatement)
+        && t.isAssignmentExpression(lastStatement.expression)
+        && t.isMemberExpression(lastStatement.expression.left)
+        && t.isIdentifier(lastStatement.expression.right)
+        && lastStatement.expression.right.name === refIdentifier.name
+        && generate(lastStatement.expression.left).code === generate(moduleExportsMember).code,
+      )
 
       hasPatched = alreadyHasVariable && alreadyAssignsModuleExports
 
@@ -168,7 +183,10 @@ export function transformPostcssPlugin(content: string, { refProperty }: ExposeC
       const statements = block.body
       const last = statements[statements.length - 1]
 
-      if (last && t.isExpressionStatement(last)) {
+      if (
+        last
+        && t.isExpressionStatement(last)
+      ) {
         statements[statements.length - 1] = t.expressionStatement(
           t.callExpression(
             t.memberExpression(valueMember, t.identifier('push')),
@@ -181,8 +199,12 @@ export function transformPostcssPlugin(content: string, { refProperty }: ExposeC
       if (index > -1) {
         const ifStatement = statements[index] as t.IfStatement
         if (t.isBlockStatement(ifStatement.consequent)) {
-          const [first, second] = ifStatement.consequent.body
-          if (second && t.isForOfStatement(second) && t.isBlockStatement(second.body)) {
+          const [, second] = ifStatement.consequent.body
+          if (
+            second
+            && t.isForOfStatement(second)
+            && t.isBlockStatement(second.body)
+          ) {
             const bodyStatement = second.body.body[0]
             if (
               bodyStatement

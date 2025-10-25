@@ -1,20 +1,24 @@
+import type { LegacyTailwindcssPatcherOptions } from './options/legacy'
 import type { TailwindcssPatchOptions } from './types'
 import process from 'node:process'
+
 import { CONFIG_NAME, getConfig, initConfig } from '@tailwindcss-mangle/config'
 import { defu } from '@tailwindcss-mangle/shared'
 import cac from 'cac'
-import logger from './logger'
+
 import { TailwindcssPatcher } from './api/tailwindcss-patcher'
+import logger from './logger'
 import { fromLegacyOptions, fromUnifiedConfig } from './options/legacy'
 
 const cli = cac('tw-patch')
 
 async function loadPatchOptions(cwd: string, overrides?: TailwindcssPatchOptions) {
   const { config } = await getConfig(cwd)
+  const legacyConfig = config as (typeof config) & { patch?: LegacyTailwindcssPatcherOptions['patch'] }
   const base = config?.registry
     ? fromUnifiedConfig(config.registry)
-    : config?.patch
-      ? fromLegacyOptions({ patch: config.patch })
+    : legacyConfig?.patch
+      ? fromLegacyOptions({ patch: legacyConfig.patch })
       : {}
   const merged = defu<TailwindcssPatchOptions, TailwindcssPatchOptions[]>(overrides ?? {}, base)
   return merged

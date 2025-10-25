@@ -4,8 +4,8 @@ import type {
   TailwindNextOptions,
 } from '@tailwindcss-mangle/config'
 import type { PackageResolvingOptions } from 'local-pkg'
-import type { TailwindcssPatchOptions, ExtendLengthUnitsUserOptions } from './types'
 import type { ILengthUnitsPatchOptions } from '../types'
+import type { ExtendLengthUnitsUserOptions, TailwindcssPatchOptions } from './types'
 
 export interface LegacyCacheOptions {
   dir?: string

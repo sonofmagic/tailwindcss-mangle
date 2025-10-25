@@ -38,13 +38,13 @@ pnpm dlx tw-patch extract
 
 ### `extract` 常用参数
 
-| 参数 | 说明 |
-| --- | --- |
-| `--cwd <dir>` | 指定读取配置的工作目录。 |
-| `--output <file>` | 覆盖输出文件路径。 |
-| `--format <json|lines>` | 切换 JSON（默认）或换行分隔的纯文本。 |
-| `--css <file>` | 使用 Tailwind v4 时指定 CSS 入口文件。 |
-| `--no-write` | 仅返回结果，不落盘。 |
+| 参数                     | 说明                                   |
+| ------------------------ | -------------------------------------- |
+| `--cwd <dir>`            | 指定读取配置的工作目录。               |
+| `--output <file>`        | 覆盖输出文件路径。                     |
+| `--format <json\|lines>` | 切换 JSON（默认）或换行分隔的纯文本。  |
+| `--css <file>`           | 使用 Tailwind v4 时指定 CSS 入口文件。 |
+| `--no-write`             | 仅返回结果，不落盘。                   |
 
 CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。旧配置仍可使用，详情请参考 [迁移指南](./MIGRATION.md)。
 
@@ -111,9 +111,7 @@ export default defineConfig({
       version: 4,
       v4: {
         cssEntries: ['dist/tailwind.css'],
-        sources: [
-          { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
-        ],
+        sources: [{ base: 'src', pattern: '**/*.{html,tsx}', negated: false }],
       },
     },
     applyPatches: {

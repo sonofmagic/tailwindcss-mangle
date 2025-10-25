@@ -38,13 +38,13 @@ pnpm dlx tw-patch extract
 
 ### Extract options
 
-| Flag | Description |
-| --- | --- |
-| `--cwd <dir>` | Use a different working directory when loading configuration. |
-| `--output <file>` | Override the target file for the generated class list. |
-| `--format <json|lines>` | Switch between JSON output (default) and newline-delimited text. |
-| `--css <file>` | Provide a CSS entry file when working with Tailwind v4 projects. |
-| `--no-write` | Skip writing to disk and only return the collected classes. |
+| Flag                     | Description                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `--cwd <dir>`            | Use a different working directory when loading configuration.    |
+| `--output <file>`        | Override the target file for the generated class list.           |
+| `--format <json\|lines>` | Switch between JSON output (default) and newline-delimited text. |
+| `--css <file>`           | Provide a CSS entry file when working with Tailwind v4 projects. |
+| `--no-write`             | Skip writing to disk and only return the collected classes.      |
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Legacy configs continue to work; see the [migration guide](./MIGRATION.md) for hints on the new fields.
 
@@ -111,9 +111,7 @@ export default defineConfig({
       version: 4,
       v4: {
         cssEntries: ['dist/tailwind.css'],
-        sources: [
-          { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
-        ],
+        sources: [{ base: 'src', pattern: '**/*.{html,tsx}', negated: false }],
       },
     },
     applyPatches: {

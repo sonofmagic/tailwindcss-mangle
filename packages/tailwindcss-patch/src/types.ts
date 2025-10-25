@@ -1,22 +1,14 @@
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
-import type {
-  CacheStrategy,
-  NormalizedTailwindcssPatchOptions,
-  TailwindcssPatchOptions,
-} from './options/types'
+import type { CacheStrategy, NormalizedTailwindcssPatchOptions, TailwindcssPatchOptions } from './options/types'
 
-export type TailwindcssClassCache = Map<
-  string,
-  (
-    | {
-        layer: string
-        options: Record<string, any>
-        sort: Record<string, any>
-      }
-    | Rule
-  )[]
->
+type TailwindcssClassCacheEntry = Rule | {
+  layer: string
+  options: Record<string, any>
+  sort: Record<string, any>
+}
+
+export type TailwindcssClassCache = Map<string, TailwindcssClassCacheEntry[]>
 
 export interface TailwindcssRuntimeContext {
   applyClassCache: Map<any, any>
@@ -58,7 +50,7 @@ export interface TailwindcssRuntimeContext {
   stylesheetCache: Record<string, Set<any>>
   tailwindConfig: Config
   userConfigPath: string | null
-  variantMap: Map<string, [[object, Function]]>
+  variantMap: Map<string, [[object, (...args: any[]) => unknown]]>
   variantOptions: Map<string, object>
 }
 
@@ -73,7 +65,7 @@ export interface TailwindPatchRuntime {
   majorVersion: 2 | 3 | 4
 }
 
-export type { CacheStrategy, TailwindcssPatchOptions, NormalizedTailwindcssPatchOptions }
+export type { CacheStrategy, NormalizedTailwindcssPatchOptions, TailwindcssPatchOptions }
 
 export interface ILengthUnitsPatchOptions {
   units: string[]

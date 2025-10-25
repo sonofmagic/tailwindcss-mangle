@@ -1,8 +1,8 @@
 import type { NormalizedTailwindcssPatchOptions } from '../options/types'
 import type { TailwindcssRuntimeContext } from '../types'
+import process from 'node:process'
 import fs from 'fs-extra'
 import path from 'pathe'
-import process from 'node:process'
 import { extractValidCandidates } from '../extraction/candidate-extractor'
 import { isObject } from '../utils'
 

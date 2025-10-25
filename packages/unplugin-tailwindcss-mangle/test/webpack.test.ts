@@ -19,7 +19,17 @@ describe('webpack build', () => {
         rules: [
           {
             test: /\.css$/i,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+            type: 'javascript/auto',
+            use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: 'css-loader',
+                options: {
+                  url: false,
+                },
+              },
+              'postcss-loader',
+            ],
           },
         ],
       },
@@ -28,8 +38,10 @@ describe('webpack build', () => {
 
     // get all Assets as Record<string,string>
     const assets = readAssets(compiler, stats)
-    expect(typeof assets['main.css']).toBe('string')
-    expect(assets['main.css'].length).toBeGreaterThan(0)
+    const cssAssetName = Object.keys(assets).find(name => name.endsWith('.css'))
+    expect(cssAssetName).toBeDefined()
+    expect(typeof assets[cssAssetName!]).toBe('string')
+    expect(assets[cssAssetName!].length).toBeGreaterThan(0)
     expect(assets['index.js']).toBeDefined()
     // get all error
     expect(getErrors(stats)).toEqual([])
@@ -51,7 +63,17 @@ describe('webpack build', () => {
         rules: [
           {
             test: /\.css$/i,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+            type: 'javascript/auto',
+            use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: 'css-loader',
+                options: {
+                  url: false,
+                },
+              },
+              'postcss-loader',
+            ],
           },
         ],
       },
@@ -66,7 +88,9 @@ describe('webpack build', () => {
 
     // get all Assets as Record<string,string>
     const assets = readAssets(compiler, stats)
-    expect(assets['main.css']).toContain('.tw-')
+    const cssAssetName = Object.keys(assets).find(name => name.endsWith('.css'))
+    expect(cssAssetName).toBeDefined()
+    expect(assets[cssAssetName!]).toContain('.tw-')
     expect(assets['index.js']).toBeDefined()
     // get all error
     expect(getErrors(stats)).toEqual([])
