@@ -1,5 +1,18 @@
 # tailwindcss-patch
 
+## 8.0.0
+
+### Major Changes
+
+- [`0e36bfe`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0e36bfe49c9d1e68d760759f54c80b80b9cc21f9) Thanks [@sonofmagic](https://github.com/sonofmagic)! - refactor!: redesign the patcher architecture, CLI surface, and documentation while adding Tailwind CSS v4 extraction support. Legacy APIs are wrapped for compatibility but consumers should migrate to the new entry points.
+
+- [`18a8c3c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/18a8c3c1ef704acd2b68dd93ac31f57d403fd8ed) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Adopt a unified `registry`/`transformer` configuration surface across the toolchain, update runtime consumers and tests to the new API, and refresh docs and examples to match the renamed options.
+
+### Patch Changes
+
+- Updated dependencies [[`18a8c3c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/18a8c3c1ef704acd2b68dd93ac31f57d403fd8ed)]:
+  - @tailwindcss-mangle/config@6.0.0
+
 ## Unreleased
 
 - refactor: rebuild around the new `TailwindcssPatcher` API, explicit module boundaries (`api/`, `patching/`, `runtime/`, `options/`, `extraction/`).

@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 6.0.0
+
+### Major Changes
+
+- [`18a8c3c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/18a8c3c1ef704acd2b68dd93ac31f57d403fd8ed) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Adopt a unified `registry`/`transformer` configuration surface across the toolchain, update runtime consumers and tests to the new API, and refresh docs and examples to match the renamed options.
+
 ## 5.1.2
 
 ### Patch Changes
