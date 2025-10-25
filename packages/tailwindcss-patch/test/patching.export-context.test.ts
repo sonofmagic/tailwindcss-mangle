@@ -22,6 +22,7 @@ describe.each(v3Fixtures)('export context patch (v3) - tailwind %s', (version) =
     const secondPass = transformPostcssPlugin(code, { refProperty: 'runtimeContexts' })
     expect(secondPass.hasPatched).toBe(true)
     expect(secondPass.code).toBe(code)
+    expect(code).toMatchSnapshot()
   })
 
   it('ensures processTailwindFeatures returns the runtime context', () => {
@@ -34,6 +35,7 @@ describe.each(v3Fixtures)('export context patch (v3) - tailwind %s', (version) =
     const secondPass = transformProcessTailwindFeaturesReturnContext(code)
     expect(secondPass.hasPatched).toBe(true)
     expect(secondPass.code).toBe(code)
+    expect(code).toMatchSnapshot()
   })
 })
 

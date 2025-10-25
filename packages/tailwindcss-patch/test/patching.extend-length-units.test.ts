@@ -27,6 +27,7 @@ describe('extend length units patch', () => {
 
     expect(result.changed).toBe(true)
     expect(result.code).toContain('\'rpx\'')
+    expect(result.code).toMatchSnapshot()
   })
 
   it('adds custom units to v4 distribution bundles', async () => {
@@ -43,5 +44,6 @@ describe('extend length units patch', () => {
     expect(result.changed).toBe(true)
     expect(result.files.length).toBeGreaterThan(0)
     expect(result.files[0].code).toContain('\"rpx\"')
+    expect(result.files[0].code).toMatchSnapshot()
   })
 })
