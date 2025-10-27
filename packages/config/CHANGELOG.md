@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 6.0.1
+
+### Patch Changes
+
+- [`ba12f2a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ba12f2afd8321e03d55f9f7b8cd5e60bf93da85d) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Lazy-load `c12` so CommonJS consumers avoid ESM require errors when loading the config helpers.
+
 ## 6.0.0
 
 ### Major Changes
