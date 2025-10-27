@@ -1,14 +1,25 @@
+import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageInfo } from 'local-pkg'
 import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
 import type { NormalizedTailwindcssPatchOptions } from '../options/types'
-import type { ExtractResult, TailwindcssPatchOptions } from '../types'
+import type {
+  ExtractResult,
+  TailwindcssPatchOptions,
+  TailwindTokenByFileMap,
+  TailwindTokenFileKey,
+  TailwindTokenReport,
+} from '../types'
 import process from 'node:process'
 import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
 import { coerce } from 'semver'
 import { CacheStore } from '../cache/store'
-import { extractValidCandidates as extractCandidates } from '../extraction/candidate-extractor'
+import {
+  extractValidCandidates as extractCandidates,
+  extractProjectCandidatesWithPositions,
+  groupTokensByFile,
+} from '../extraction/candidate-extractor'
 import logger from '../logger'
 import { fromLegacyOptions } from '../options/legacy'
 import { normalizeOptions } from '../options/normalize'
@@ -242,4 +253,27 @@ export class TailwindcssPatcher {
 
   // Backwards compatibility helper used by tests and API consumers.
   extractValidCandidates = extractCandidates
+
+  async collectContentTokens(options?: { cwd?: string, sources?: SourceEntry[] }): Promise<TailwindTokenReport> {
+    return extractProjectCandidatesWithPositions({
+      cwd: options?.cwd ?? this.options.projectRoot,
+      sources: options?.sources ?? this.options.tailwind.v4?.sources ?? [],
+    })
+  }
+
+  async collectContentTokensByFile(options?: {
+    cwd?: string
+    sources?: SourceEntry[]
+    key?: TailwindTokenFileKey
+    stripAbsolutePaths?: boolean
+  }): Promise<TailwindTokenByFileMap> {
+    const report = await this.collectContentTokens({
+      cwd: options?.cwd,
+      sources: options?.sources,
+    })
+    return groupTokensByFile(report, {
+      key: options?.key,
+      stripAbsolutePaths: options?.stripAbsolutePaths,
+    })
+  }
 }

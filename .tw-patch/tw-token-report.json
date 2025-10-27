@@ -1,0 +1,198 @@
+{
+  "page.html": [
+    {
+      "rawCandidate": "class",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 41,
+      "end": 46,
+      "length": 5,
+      "line": 4,
+      "column": 10,
+      "lineText": "    <div class=\"bg-blue-500 text-white\">"
+    },
+    {
+      "rawCandidate": "bg-blue-500",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 48,
+      "end": 59,
+      "length": 11,
+      "line": 4,
+      "column": 17,
+      "lineText": "    <div class=\"bg-blue-500 text-white\">"
+    },
+    {
+      "rawCandidate": "text-white",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 60,
+      "end": 70,
+      "length": 10,
+      "line": 4,
+      "column": 29,
+      "lineText": "    <div class=\"bg-blue-500 text-white\">"
+    },
+    {
+      "rawCandidate": "class",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 82,
+      "end": 87,
+      "length": 5,
+      "line": 5,
+      "column": 10,
+      "lineText": "      <p class=\"md:text-lg underline\">Token scan</p>"
+    },
+    {
+      "rawCandidate": "md:text-lg",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 89,
+      "end": 99,
+      "length": 10,
+      "line": 5,
+      "column": 17,
+      "lineText": "      <p class=\"md:text-lg underline\">Token scan</p>"
+    },
+    {
+      "rawCandidate": "underline",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 100,
+      "end": 109,
+      "length": 9,
+      "line": 5,
+      "column": 28,
+      "lineText": "      <p class=\"md:text-lg underline\">Token scan</p>"
+    },
+    {
+      "rawCandidate": "scan",
+      "file": "page.html",
+      "relativeFile": "page.html",
+      "extension": "html",
+      "start": 117,
+      "end": 121,
+      "length": 4,
+      "line": 5,
+      "column": 45,
+      "lineText": "      <p class=\"md:text-lg underline\">Token scan</p>"
+    }
+  ],
+  "button.tsx": [
+    {
+      "rawCandidate": "export",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 0,
+      "end": 6,
+      "length": 6,
+      "line": 1,
+      "column": 1,
+      "lineText": "export function Button() {"
+    },
+    {
+      "rawCandidate": "function",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 7,
+      "end": 15,
+      "length": 8,
+      "line": 1,
+      "column": 8,
+      "lineText": "export function Button() {"
+    },
+    {
+      "rawCandidate": "return",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 29,
+      "end": 35,
+      "length": 6,
+      "line": 2,
+      "column": 3,
+      "lineText": "  return ("
+    },
+    {
+      "rawCandidate": "className",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 50,
+      "end": 59,
+      "length": 9,
+      "line": 3,
+      "column": 13,
+      "lineText": "    <button className=\"text-red-500 px-4 py-2 rounded\">"
+    },
+    {
+      "rawCandidate": "text-red-500",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 61,
+      "end": 73,
+      "length": 12,
+      "line": 3,
+      "column": 24,
+      "lineText": "    <button className=\"text-red-500 px-4 py-2 rounded\">"
+    },
+    {
+      "rawCandidate": "px-4",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 74,
+      "end": 78,
+      "length": 4,
+      "line": 3,
+      "column": 37,
+      "lineText": "    <button className=\"text-red-500 px-4 py-2 rounded\">"
+    },
+    {
+      "rawCandidate": "py-2",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 79,
+      "end": 83,
+      "length": 4,
+      "line": 3,
+      "column": 42,
+      "lineText": "    <button className=\"text-red-500 px-4 py-2 rounded\">"
+    },
+    {
+      "rawCandidate": "rounded",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 84,
+      "end": 91,
+      "length": 7,
+      "line": 3,
+      "column": 47,
+      "lineText": "    <button className=\"text-red-500 px-4 py-2 rounded\">"
+    },
+    {
+      "rawCandidate": "me",
+      "file": "button.tsx",
+      "relativeFile": "button.tsx",
+      "extension": "tsx",
+      "start": 106,
+      "end": 108,
+      "length": 2,
+      "line": 4,
+      "column": 13,
+      "lineText": "      Click me"
+    }
+  ]
+}

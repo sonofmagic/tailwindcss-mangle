@@ -34,6 +34,9 @@ pnpm dlx tw-patch install
 
 # Extract all classes into the configured output file
 pnpm dlx tw-patch extract
+
+# Capture every token (candidate) with file/position metadata
+pnpm dlx tw-patch tokens --format lines
 ```
 
 ### Extract options
@@ -47,6 +50,16 @@ pnpm dlx tw-patch extract
 | `--no-write`             | Skip writing to disk and only return the collected classes.      |
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Legacy configs continue to work; see the [migration guide](./MIGRATION.md) for hints on the new fields.
+
+### Token report options
+
+| Flag                     | Description                                                                 |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `--cwd <dir>`            | Use a different working directory when loading configuration.               |
+| `--output <file>`        | Override the token report target file (defaults to `.tw-patch/tw-token-report.json`). |
+| `--format <json\|lines\|grouped-json>` | Choose between a JSON payload (default), newline summaries, or JSON grouped by file path. |
+| `--group-key <relative\|absolute>` | Control grouped-json keys (defaults to relative paths). |
+| `--no-write`             | Skip writing to disk and only print a preview.                              |
 
 ## Programmatic API
 
@@ -81,6 +94,12 @@ const patcher = new TailwindcssPatcher({
 
 await patcher.patch()
 const { classList, filename } = await patcher.extract()
+const tokenReport = await patcher.collectContentTokens()
+console.log(tokenReport.entries[0]) // { rawCandidate, file, line, column, ... }
+const groupedTokens = await patcher.collectContentTokensByFile()
+console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
+// Preserve absolute file paths:
+// await patcher.collectContentTokensByFile({ key: 'absolute', stripAbsolutePaths: false })
 ```
 
 The constructor accepts either the new object shown above or the historical `patch`/`cache` shape. Conversions happen internally so existing configs remain backwards compatible.
@@ -89,6 +108,8 @@ The constructor accepts either the new object shown above or the historical `pat
 
 - `normalizeOptions` – normalise raw user input to the runtime shape.
 - `CacheStore` – read/write class caches respecting merge or overwrite semantics.
+- `extractProjectCandidatesWithPositions` – gather Tailwind tokens for every configured source file with location metadata.
+- `groupTokensByFile` – convert a token report into a `{ [filePath]: TailwindTokenLocation[] }` map.
 - `extractValidCandidates` – scan Tailwind v4 CSS/content sources with the Tailwind Oxide scanner.
 - `runTailwindBuild` – run the Tailwind PostCSS plugin for v2/v3 projects to prime runtime contexts.
 

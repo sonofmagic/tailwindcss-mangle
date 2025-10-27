@@ -34,6 +34,9 @@ pnpm dlx tw-patch install
 
 # 生成类名清单到配置的输出文件
 pnpm dlx tw-patch extract
+
+# 扫描项目，导出包含文件/位置的 Tailwind token
+pnpm dlx tw-patch tokens --format lines
 ```
 
 ### `extract` 常用参数
@@ -47,6 +50,16 @@ pnpm dlx tw-patch extract
 | `--no-write`             | 仅返回结果，不落盘。                   |
 
 CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。旧配置仍可使用，详情请参考 [迁移指南](./MIGRATION.md)。
+
+### `tokens` 常用参数
+
+| 参数                     | 说明                                            |
+| ------------------------ | ----------------------------------------------- |
+| `--cwd <dir>`            | 指定扫描时使用的工作目录。                      |
+| `--output <file>`        | 覆盖输出文件路径（默认 `.tw-patch/tw-token-report.json`）。 |
+| `--format <json\|lines\|grouped-json>` | 选择 JSON（默认）、按行输出，或按文件路径分组的 JSON。 |
+| `--group-key <relative\|absolute>` | 分组 JSON 的键（默认使用相对路径）。 |
+| `--no-write`             | 只打印预览，不写入磁盘。                        |
 
 ## 编程接口
 
@@ -81,6 +94,12 @@ const patcher = new TailwindcssPatcher({
 
 await patcher.patch()
 const { classList, filename } = await patcher.extract()
+const tokenReport = await patcher.collectContentTokens()
+console.log(tokenReport.entries[0])
+const groupedTokens = await patcher.collectContentTokensByFile()
+console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
+// 如果需要保留绝对路径：
+// await patcher.collectContentTokensByFile({ key: 'absolute', stripAbsolutePaths: false })
 ```
 
 构造函数既可以接收上述新版对象，也可以传入旧的 `patch`/`cache` 结构；内部会自动完成兼容转换。
@@ -89,6 +108,8 @@ const { classList, filename } = await patcher.extract()
 
 - `normalizeOptions`：归一化用户输入并应用默认值。
 - `CacheStore`：读写类名缓存，支持合并或覆盖策略。
+- `extractProjectCandidatesWithPositions`：扫描内容源并返回带位置的 Tailwind token 信息。
+- `groupTokensByFile`：将 token 报告转换为 `{ [filePath]: TailwindTokenLocation[] }` 形式。
 - `extractValidCandidates`：利用 Tailwind Oxide 扫描 v4 CSS 与内容源。
 - `runTailwindBuild`：在 v2/v3 项目中运行 Tailwind PostCSS 插件以预热上下文。
 
