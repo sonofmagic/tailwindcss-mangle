@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.2.0
+
+### Minor Changes
+
+- [`d516eeb`](https://github.com/sonofmagic/tailwindcss-mangle/commit/d516eeb8cbe7f4d7ac2e099a1ef330816ed986b6) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Add grouped token exports, sanitized file metadata, and CLI options for the new token reporting flow.
+
 ## 8.1.0
 
 ### Minor Changes
