@@ -77,7 +77,7 @@
     "@babel/parser": "^7.28.5",
     "@babel/traverse": "^7.28.5",
     "@babel/types": "^7.28.5",
-    "@tailwindcss-mangle/config": "workspace:^",
+    "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss/node": "^4.1.16",
     "cac": "^6.7.14",
     "consola": "^3.4.2",
