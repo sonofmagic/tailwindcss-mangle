@@ -363,7 +363,7 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5
       '@tailwindcss-mangle/config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../config
       '@tailwindcss/node':
         specifier: ^4.1.16
