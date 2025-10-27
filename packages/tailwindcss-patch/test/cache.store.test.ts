@@ -52,4 +52,26 @@ describe('CacheStore', () => {
     expect(restored.size).toBe(0)
     expect(await fs.pathExists(cachePath)).toBe(false)
   })
+
+  it('reads and writes cache data synchronously', () => {
+    const cachePath = path.join(tempDir, 'cache.json')
+    const store = new CacheStore({
+      enabled: true,
+      cwd: tempDir,
+      dir: tempDir,
+      file: 'cache.json',
+      path: cachePath,
+      strategy: 'merge',
+    })
+
+    const initial = store.readSync()
+    expect(initial.size).toBe(0)
+
+    const data = new Set(['foo'])
+    store.writeSync(data)
+
+    const restored = store.readSync()
+    expect(restored.size).toBe(1)
+    expect(restored.has('foo')).toBe(true)
+  })
 })
