@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.1.0
+
+### Minor Changes
+
+- [`91f408c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/91f408cb4a010f1f339cf0469912a1006ad1d35c) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Add `getClassSetSync` along with synchronous cache utilities so consumers that cannot await the async API can still collect Tailwind classes.
+
 ## 8.0.0
 
 ### Major Changes
