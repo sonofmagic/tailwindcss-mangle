@@ -1,11 +1,23 @@
+import type { createDefineConfig, ResolvedConfig } from 'c12'
 import type { TailwindcssMangleConfig } from './types'
-import { createDefineConfig, loadConfig } from 'c12'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { CONFIG_NAME } from './constants'
 import { getDefaultUserConfig } from './defaults'
 
-export function getConfig(cwd?: string) {
+type DefineConfig = ReturnType<typeof createDefineConfig<TailwindcssMangleConfig>>
+
+let c12Promise: Promise<typeof import('c12')> | undefined
+
+async function loadC12() {
+  if (!c12Promise) {
+    c12Promise = import('c12')
+  }
+  return c12Promise
+}
+
+export async function getConfig(cwd?: string): Promise<ResolvedConfig<TailwindcssMangleConfig>> {
+  const { loadConfig } = await loadC12()
   return loadConfig<TailwindcssMangleConfig>({
     name: CONFIG_NAME,
     defaults: {
@@ -15,7 +27,7 @@ export function getConfig(cwd?: string) {
   })
 }
 
-export const defineConfig = createDefineConfig<TailwindcssMangleConfig>()
+export const defineConfig: DefineConfig = config => config
 
 export function initConfig(cwd: string) {
   return fs.outputFile(
