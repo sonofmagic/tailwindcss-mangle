@@ -33,7 +33,7 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
           ctx,
           id,
         }
-        if (/\.[jt]sx?(?:$|\?)/.test(id)) {
+        if (/\.[cm]?[jt]sx?(?:$|\?)/.test(id)) {
           return jsHandler(code, opts)
         }
         else if (/\.(?:vue|svelte)(?:$|\?)/.test(id)) {
