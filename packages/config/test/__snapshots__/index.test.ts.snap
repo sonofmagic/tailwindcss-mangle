@@ -33,7 +33,7 @@ exports[`config > 2.transformer-options 1`] = `
     "sources": {
       "exclude": [],
       "include": [
-        "/\\.(html|js|ts|jsx|tsx|vue|svelte|astro|elm|php|phtml|mdx|md)(?:$|\\?)/",
+        "/\\.(html|js|cjs|mjs|ts|cts|mts|jsx|tsx|vue|svelte|astro|elm|php|phtml|mdx|md)(?:$|\\?)/",
         "/\\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\\?)/",
       ],
     },
