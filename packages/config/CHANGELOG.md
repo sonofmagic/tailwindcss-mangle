@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 6.1.0
+
+### Minor Changes
+
+- [#165](https://github.com/sonofmagic/tailwindcss-mangle/pull/165) [`6799e3b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6799e3b319ed27f227f698c7971256fc427921f7) Thanks [@Ercilan](https://github.com/Ercilan)! - refine js-related file extension matching
+
 ## 6.0.1
 
 ### Patch Changes

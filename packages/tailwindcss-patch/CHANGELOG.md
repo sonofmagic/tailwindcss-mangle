@@ -1,5 +1,12 @@
 # tailwindcss-patch
 
+## 8.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`6799e3b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6799e3b319ed27f227f698c7971256fc427921f7)]:
+  - @tailwindcss-mangle/config@6.1.0
+
 ## 8.2.1
 
 ### Patch Changes
