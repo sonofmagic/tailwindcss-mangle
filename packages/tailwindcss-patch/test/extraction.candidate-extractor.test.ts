@@ -36,6 +36,24 @@ describe('candidate extractor', () => {
     expect(result).toContain('underline')
   })
 
+  it('ignores HTTP header literals when filtering candidates', async () => {
+    const result = await extractValidCandidates({
+      base: fixturesRoot,
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: 'http-headers.ts',
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toContain('text-red-500')
+    expect(result).not.toContain('text/event-stream')
+    expect(result).not.toContain('text/plain')
+    expect(result).not.toContain('text/html')
+  })
+
   it('scans project files for token metadata', async () => {
     const result = await extractProjectCandidatesWithPositions({
       cwd: tokenFixturesRoot,

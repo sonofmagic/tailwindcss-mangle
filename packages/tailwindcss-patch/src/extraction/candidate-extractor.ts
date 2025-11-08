@@ -72,9 +72,23 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   const designSystem = await __unstable__loadDesignSystem(css, { base })
 
   const candidates = await extractRawCandidates(sources)
-  const validCandidates = candidates.filter(
+  const parsedCandidates = candidates.filter(
     rawCandidate => designSystem.parseCandidate(rawCandidate).length > 0,
   )
+  if (parsedCandidates.length === 0) {
+    return parsedCandidates
+  }
+
+  const cssByCandidate = designSystem.candidatesToCss(parsedCandidates)
+  const validCandidates: string[] = []
+
+  for (let index = 0; index < parsedCandidates.length; index++) {
+    const css = cssByCandidate[index]
+    if (typeof css === 'string' && css.trim().length > 0) {
+      validCandidates.push(parsedCandidates[index])
+    }
+  }
+
   return validCandidates
 }
 
