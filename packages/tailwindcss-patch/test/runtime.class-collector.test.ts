@@ -55,7 +55,7 @@ describe('collectClassesFromTailwindV4', () => {
         cssPath,
         [
           '@config "../tailwind.config.js";',
-          '@utility bg-[#534312] {',
+          '@utility bg-brand {',
           '  background-color: #534312;',
           '}',
         ].join('\n'),
@@ -63,7 +63,7 @@ describe('collectClassesFromTailwindV4', () => {
       )
 
       const usageFile = path.join(cssDir, 'index.html')
-      await fs.writeFile(usageFile, '<div class="bg-[#534312]"></div>', 'utf8')
+      await fs.writeFile(usageFile, '<div class="bg-brand"></div>', 'utf8')
 
       const normalized = normalizeOptions({
         cwd: tempDir,
@@ -76,7 +76,7 @@ describe('collectClassesFromTailwindV4', () => {
       })
 
       const classes = await collectClassesFromTailwindV4(normalized)
-      expect(classes.has('bg-[#534312]')).toBe(true)
+      expect(classes.has('bg-brand')).toBe(true)
     }
     finally {
       await fs.remove(tempDir)
