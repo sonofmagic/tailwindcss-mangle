@@ -31,5 +31,8 @@ yarn-error.log*
 
 # turbo
 .turbo
+
 dist
-.nuxt
+vite.config.ts.timestamp-*.mjs
+config.ts.timestamp-*.mjs
+.vite-inspect

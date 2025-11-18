@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "markdown-to-jsx": "^8.0.0",
-    "next": "^16.0.1",
+    "next": "^16.0.3",
     "nextra": "^4.6.0",
     "nextra-theme-docs": "^4.6.0",
     "react": "19.2.0",
@@ -26,10 +26,10 @@
     "react-intersection-observer": "^10.0.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.0.1",
+    "@next/bundle-analyzer": "^16.0.3",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.17",
-    "@types/react": "19.2.2",
+    "@types/react": "19.2.6",
     "pagefind": "^1.4.0",
     "tailwindcss": "catalog:tailwindcss4"
   },
