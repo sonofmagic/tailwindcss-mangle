@@ -130,9 +130,10 @@ function normalizeTailwindV4Options(
   const cssEntries = Array.isArray(v4?.cssEntries)
     ? v4!.cssEntries.filter((entry): entry is string => Boolean(entry)).map(entry => path.resolve(entry))
     : []
-  const hasUserDefinedSources = Boolean(v4?.sources?.length)
-  const sources = hasUserDefinedSources
-    ? v4!.sources
+  const userSources = v4?.sources
+  const hasUserDefinedSources = Boolean(userSources?.length)
+  const sources: NormalizedTailwindV4Options['sources'] = hasUserDefinedSources
+    ? userSources!
     : [
         {
           base,
