@@ -35,13 +35,33 @@ export async function collectClassesFromTailwindV4(
     return set
   }
 
-  const sources = v4Options.sources?.map((source) => {
-    return {
-      base: source.base ?? v4Options.base ?? process.cwd(),
+  const toAbsolute = (value: string | undefined) => {
+    if (!value) {
+      return undefined
+    }
+    return path.isAbsolute(value) ? value : path.resolve(options.projectRoot, value)
+  }
+  const resolvedConfiguredBase = toAbsolute(v4Options.configuredBase)
+  const resolvedDefaultBase = toAbsolute(v4Options.base) ?? process.cwd()
+  const resolveSources = (base: string) => {
+    if (!v4Options.sources?.length) {
+      return undefined
+    }
+
+    if (!v4Options.hasUserDefinedSources && !resolvedConfiguredBase) {
+      return v4Options.sources.map(source => ({
+        base,
+        pattern: source.pattern,
+        negated: source.negated,
+      }))
+    }
+
+    return v4Options.sources.map(source => ({
+      base: source.base ?? base,
       pattern: source.pattern,
       negated: source.negated,
-    }
-  })
+    }))
+  }
 
   if (v4Options.cssEntries.length > 0) {
     for (const entry of v4Options.cssEntries) {
@@ -50,9 +70,12 @@ export async function collectClassesFromTailwindV4(
         continue
       }
       const css = await fs.readFile(filePath, 'utf8')
+      const entryDir = path.dirname(filePath)
+      const baseForEntry = resolvedConfiguredBase ?? entryDir
+      const sources = resolveSources(baseForEntry)
       const candidates = await extractValidCandidates({
         cwd: options.projectRoot,
-        base: v4Options.base,
+        base: baseForEntry,
         css,
         sources,
       })
@@ -64,9 +87,11 @@ export async function collectClassesFromTailwindV4(
     }
   }
   else {
+    const baseForCss = resolvedConfiguredBase ?? resolvedDefaultBase
+    const sources = resolveSources(baseForCss)
     const candidates = await extractValidCandidates({
       cwd: options.projectRoot,
-      base: v4Options.base,
+      base: baseForCss,
       css: v4Options.css,
       sources,
     })

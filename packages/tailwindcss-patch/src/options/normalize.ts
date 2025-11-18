@@ -125,12 +125,14 @@ function normalizeTailwindV4Options(
   v4: TailwindV4UserOptions | undefined,
   fallbackBase: string,
 ): NormalizedTailwindV4Options {
-  const base = v4?.base ? path.resolve(v4.base) : fallbackBase
+  const configuredBase = v4?.base ? path.resolve(v4.base) : undefined
+  const base = configuredBase ?? fallbackBase
   const cssEntries = Array.isArray(v4?.cssEntries)
     ? v4!.cssEntries.filter((entry): entry is string => Boolean(entry)).map(entry => path.resolve(entry))
     : []
-  const sources = v4?.sources?.length
-    ? v4.sources
+  const hasUserDefinedSources = Boolean(v4?.sources?.length)
+  const sources = hasUserDefinedSources
+    ? v4!.sources
     : [
         {
           base,
@@ -141,9 +143,11 @@ function normalizeTailwindV4Options(
 
   return {
     base,
+    configuredBase,
     css: v4?.css,
     cssEntries,
     sources,
+    hasUserDefinedSources,
   }
 }
 
