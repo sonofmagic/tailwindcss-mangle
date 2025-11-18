@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.2.4
+
+### Patch Changes
+
+- [`1af573b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/1af573b1cce1b1447f871943aae939e2a1202511) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Ensure Tailwind v4 CSS entries resolve `@config` paths relative to each CSS file when no explicit base is provided.
+
 ## 8.2.3
 
 ### Patch Changes
