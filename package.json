@@ -104,7 +104,7 @@
     "stylelint": "^16.26.0",
     "tailwindcss": "catalog:tailwindcss3",
     "tailwindcss-patch": "workspace:*",
-    "tailwindcss2": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "tailwindcss2": "catalog:tailwindcss2",
     "tsdown": "^0.16.6",
     "tslib": "^2.8.1",
     "tsup": "^8.5.1",

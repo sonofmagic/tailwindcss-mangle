@@ -29,7 +29,7 @@
     "@next/bundle-analyzer": "^16.0.3",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.17",
-    "@types/react": "19.2.6",
+    "@types/react": "19.2.7",
     "pagefind": "^1.4.0",
     "tailwindcss": "catalog:tailwindcss4"
   },
