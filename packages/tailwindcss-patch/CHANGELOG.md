@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.4.0
+
+### Minor Changes
+
+- [`9105a4a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9105a4a59fa20fb2fa0171562206648d2de71d45) Thanks [@sonofmagic](https://github.com/sonofmagic)! - expose hookable CLI command registration so host CLIs can customize command lifecycles, descriptions, and options without reimplementing tw-patch wiring
+
 ## 8.3.0
 
 ### Minor Changes
