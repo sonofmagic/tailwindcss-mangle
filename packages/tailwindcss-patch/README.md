@@ -39,6 +39,26 @@ pnpm dlx tw-patch extract
 pnpm dlx tw-patch tokens --format lines
 ```
 
+### Embed into another CLI
+
+Reuse the same commands inside your own `cac` program:
+
+```ts
+import cac from 'cac'
+import { mountTailwindcssPatchCommands } from 'tailwindcss-patch'
+
+const cli = cac('my-tool')
+mountTailwindcssPatchCommands(cli, {
+  commandPrefix: 'tw:', // optional
+  commands: ['install', 'tokens'], // mount a subset if needed (defaults to all)
+  commandOptions: {
+    install: { name: 'patch-install', aliases: ['tw-install'] }, // override names/aliases
+  },
+})
+cli.help()
+cli.parse()
+```
+
 ### Extract options
 
 | Flag                     | Description                                                      |

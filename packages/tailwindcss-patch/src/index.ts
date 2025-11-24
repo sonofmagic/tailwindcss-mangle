@@ -1,6 +1,15 @@
 export { TailwindcssPatcher } from './api/tailwindcss-patcher'
 export { CacheStore } from './cache/store'
 export {
+  createTailwindcssPatchCli,
+  mountTailwindcssPatchCommands,
+  type TailwindcssPatchCliMountOptions,
+  type TailwindcssPatchCliOptions,
+  type TailwindcssPatchCommand,
+  type TailwindcssPatchCommandOptions,
+  tailwindcssPatchCommands,
+} from './cli/commands'
+export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
