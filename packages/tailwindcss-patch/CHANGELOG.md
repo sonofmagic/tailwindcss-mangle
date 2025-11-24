@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.3.0
+
+### Minor Changes
+
+- [`6353ff5`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6353ff530064e086efc89d9e4950d00e6abe66b3) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Expose helpers to mount the Tailwind CSS patch CLI inside other `cac` apps with prefixed or renamed commands.
+
 ## 8.2.4
 
 ### Patch Changes
