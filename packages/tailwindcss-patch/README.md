@@ -59,6 +59,42 @@ cli.help()
 cli.parse()
 ```
 
+
+#### Custom command hooks
+
+Hosts can override per-command lifecycles by supplying `commandHandlers`. Each handler receives a context object (with the resolved `cwd`, parsed `args`, memoized `loadConfig`/`createPatcher` helpers, and the shared `logger`) plus a `next()` callback that runs the built-in action.
+
+```ts
+mountTailwindcssPatchCommands(cli, {
+  commandHandlers: {
+    install: async (ctx) => {
+      const patcher = await ctx.createPatcher()
+      await clearTailwindcssPatcherCache(ctx.cwd)
+      await patcher.patch()
+      await saveCliPatchTargetRecord({ cwd: ctx.cwd })
+    },
+    extract: async (ctx, next) => {
+      const result = await next() // run the default extract implementation
+      ctx.logger.success(`[host] wrote ${result.classList.length} classes`)
+      return result
+    },
+  },
+  commandOptions: {
+    extract: {
+      description: 'Localised extract command',
+      appendDefaultOptions: false,
+      optionDefs: [
+        { flags: '--entry <file>', description: 'Tailwind CSS entry file' },
+        { flags: '--preview', description: 'Print a preview instead of writing' },
+      ],
+    },
+  },
+})
+```
+
+Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing before `install`). Calling `next()` returns the default result—`ExtractResult`, `TailwindTokenReport`, etc.—so hosts can log metadata or feed it into their own telemetry without re-implementing the commands.
+
+
 ### Extract options
 
 | Flag                     | Description                                                      |

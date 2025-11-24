@@ -1,5 +1,9 @@
 import cac from 'cac'
+import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
+import { mountTailwindcssPatchCommands } from '../src/cli/commands'
+import logger from '../src/logger'
 
 const patcherInstances: any[] = []
 
@@ -32,16 +36,20 @@ vi.mock('../src/api/tailwindcss-patcher', () => {
     sources: [],
   }
 
+  function createTailwindcssPatcherMock() {
+    const instance = {
+      patch: vi.fn(),
+      extract: vi.fn().mockResolvedValue({ classList: ['foo'], filename: '.tw-patch/classes.json' }),
+      collectContentTokens: vi.fn().mockResolvedValue(tokenReport),
+    }
+    patcherInstances.push(instance)
+    return instance
+  }
+
+  const TailwindcssPatcher = vi.fn().mockImplementation(createTailwindcssPatcherMock)
+
   return {
-    TailwindcssPatcher: vi.fn(function TailwindcssPatcherMock() {
-      const instance = {
-        patch: vi.fn(),
-        extract: vi.fn().mockResolvedValue({ classList: ['foo'], filename: '.tw-patch/classes.json' }),
-        collectContentTokens: vi.fn().mockResolvedValue(tokenReport),
-      }
-      patcherInstances.push(instance)
-      return instance
-    }),
+    TailwindcssPatcher,
   }
 })
 
@@ -56,9 +64,6 @@ vi.mock('../src/logger', () => {
     default: logger,
   }
 })
-
-import { mountTailwindcssPatchCommands } from '../src/cli/commands'
-import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
 
 describe('mountTailwindcssPatchCommands', () => {
   beforeEach(() => {
@@ -117,5 +122,73 @@ describe('mountTailwindcssPatchCommands', () => {
     await cli.runMatchedCommand()
     expect(TailwindcssPatcher).toHaveBeenCalledTimes(2)
     expect(patcherInstances[1].patch).toHaveBeenCalledTimes(1)
+  })
+
+  it('invokes custom command handlers with structured context', async () => {
+    const handler = vi.fn(async (ctx, next) => {
+      expect(ctx.commandName).toBe('extract')
+      expect(ctx.cwd).toBe(path.resolve('./tmp/project'))
+      await ctx.loadConfig()
+      const patcher = await ctx.createPatcher()
+      expect(TailwindcssPatcher).toHaveBeenCalledTimes(1)
+      const result = await next()
+      expect(result.classList).toEqual(['foo'])
+      expect(patcher.extract).toHaveBeenCalledTimes(1)
+      return result
+    })
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli, {
+      commandHandlers: {
+        extract: handler,
+      },
+    })
+
+    cli.parse(['node', 'embedded', 'extract', '--cwd', './tmp/project'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(TailwindcssPatcher).toHaveBeenCalledTimes(1)
+    expect(patcherInstances[0].extract).toHaveBeenCalledTimes(1)
+  })
+
+  it('allows command handlers to replace default actions entirely', async () => {
+    const handler = vi.fn(async (ctx) => {
+      const patcher = await ctx.createPatcher()
+      await patcher.patch()
+      ctx.logger.success('custom handler finished')
+    })
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli, {
+      commandHandlers: {
+        install: handler,
+      },
+    })
+
+    cli.parse(['node', 'embedded', 'install'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(logger.success).toHaveBeenCalledTimes(1)
+    expect(logger.success).toHaveBeenCalledWith('custom handler finished')
+  })
+
+  it('supports overriding command descriptions and option definitions', () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli, {
+      commandOptions: {
+        tokens: {
+          description: 'Custom tokens description',
+          appendDefaultOptions: false,
+          optionDefs: [{ flags: '--preview', description: 'Preview tokens' }],
+        },
+      },
+    })
+
+    const tokensCommand = cli.commands.find(command => command.name === 'tokens')
+    expect(tokensCommand?.description).toBe('Custom tokens description')
+    expect(tokensCommand?.options).toHaveLength(1)
+    expect(tokensCommand?.options?.[0].rawName).toBe('--preview')
   })
 })

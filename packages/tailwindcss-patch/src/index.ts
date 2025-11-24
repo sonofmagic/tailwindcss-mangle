@@ -6,6 +6,10 @@ export {
   type TailwindcssPatchCliMountOptions,
   type TailwindcssPatchCliOptions,
   type TailwindcssPatchCommand,
+  type TailwindcssPatchCommandContext,
+  type TailwindcssPatchCommandHandler,
+  type TailwindcssPatchCommandHandlerMap,
+  type TailwindcssPatchCommandOptionDefinition,
   type TailwindcssPatchCommandOptions,
   tailwindcssPatchCommands,
 } from './cli/commands'

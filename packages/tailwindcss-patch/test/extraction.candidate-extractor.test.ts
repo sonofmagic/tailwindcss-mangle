@@ -108,7 +108,7 @@ describe('candidate extractor', () => {
     }
   })
 
-  it('prints the CLI token command output', async () => {
+  it('generates the CLI token command output', async () => {
     const report = await extractProjectCandidatesWithPositions({
       cwd: tokenFixturesRoot,
       sources: [
@@ -126,8 +126,10 @@ describe('candidate extractor', () => {
 
     expect(lines.length).toBeGreaterThan(0)
 
-    // Mirror the CLI output to demonstrate `pnpm dlx tw-patch tokens --format lines`.
-    console.log('pnpm dlx tw-patch tokens --format lines --no-write')
-    console.log(lines.join('\n'))
+    const cliCommand = 'pnpm dlx tw-patch tokens --format lines --no-write'
+    const preview = `${cliCommand}\n${lines.join('\n')}`
+
+    expect(preview.startsWith(cliCommand)).toBe(true)
+    expect(preview.split('\n').length).toBe(lines.length + 1)
   })
 })

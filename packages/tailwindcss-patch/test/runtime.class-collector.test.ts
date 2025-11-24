@@ -2,8 +2,8 @@ import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
-import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '@/runtime/class-collector'
 import { normalizeOptions } from '@/options/normalize'
+import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '@/runtime/class-collector'
 
 function createContext(classes: string[]) {
   const map = new Map()
@@ -41,7 +41,7 @@ describe('collectClassesFromTailwindV4', () => {
           '  theme: {',
           '    extend: {',
           '      colors: {',
-          "        brand: '#534312',",
+          '        brand: \'#534312\',',
           '      },',
           '    },',
           '  },',
