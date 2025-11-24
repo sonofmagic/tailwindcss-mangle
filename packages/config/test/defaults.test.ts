@@ -24,6 +24,14 @@ describe('defaults', () => {
     expect(omitCwdPath(getDefaultRegistryConfig())).toMatchSnapshot()
   })
 
+  it('exposes default pipeline include/exclude patterns', () => {
+    const transformer = getDefaultTransformerConfig()
+
+    expect(transformer.sources.include.some(re => re.test('index.html'))).toBe(true)
+    expect(transformer.sources.include.some(re => re.test('styles.css'))).toBe(true)
+    expect(transformer.sources.exclude).toEqual([])
+  })
+
   it('getDefaultUserConfig', () => {
     expect(normaliseRegex(omitCwdPath(getDefaultUserConfig()))).toMatchSnapshot()
   })

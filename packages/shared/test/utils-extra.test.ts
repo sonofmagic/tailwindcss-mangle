@@ -66,6 +66,11 @@ describe('shared utils', () => {
     expect(() => regExpTest('invalid' as unknown as (string | RegExp)[], 'foo')).toThrowError(TypeError)
   })
 
+  it('returns false for empty or non-regexp entries', () => {
+    expect(regExpTest([], 'foo')).toBe(false)
+    expect(regExpTest([123 as unknown as RegExp], 'foo')).toBe(false)
+  })
+
   it('exposes alphabet characters', () => {
     expect(acceptChars.length).toBe(26)
     expect(acceptChars[0]).toBe('a')

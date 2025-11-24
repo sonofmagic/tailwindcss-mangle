@@ -50,6 +50,20 @@ describe('ClassGenerator behaviour', () => {
     expect(again).toBe(first)
   })
 
+  it('skips logging when reserved name is encountered without log flag', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+    const generator = new ClassGenerator({
+      reserveClassName: [/^tw-a$/u],
+    })
+
+    const result = generator.generateClassName('foo')
+    expect(result.name).toBe('tw-b')
+    expect(generator.newClassSize).toBe(2)
+    expect(logSpy).not.toHaveBeenCalled()
+
+    logSpy.mockRestore()
+  })
+
   it('falls back to default generator and skips reserved results', () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
     const generator = new ClassGenerator({
