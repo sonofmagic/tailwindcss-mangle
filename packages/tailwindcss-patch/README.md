@@ -59,7 +59,6 @@ cli.help()
 cli.parse()
 ```
 
-
 #### Custom command hooks
 
 Hosts can override per-command lifecycles by supplying `commandHandlers`. Each handler receives a context object (with the resolved `cwd`, parsed `args`, memoized `loadConfig`/`createPatcher` helpers, and the shared `logger`) plus a `next()` callback that runs the built-in action.
@@ -94,7 +93,6 @@ mountTailwindcssPatchCommands(cli, {
 
 Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing before `install`). Calling `next()` returns the default result—`ExtractResult`, `TailwindTokenReport`, etc.—so hosts can log metadata or feed it into their own telemetry without re-implementing the commands.
 
-
 ### Extract options
 
 | Flag                     | Description                                                      |
@@ -109,13 +107,13 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 
 ### Token report options
 
-| Flag                     | Description                                                                 |
-| ------------------------ | --------------------------------------------------------------------------- |
-| `--cwd <dir>`            | Use a different working directory when loading configuration.               |
-| `--output <file>`        | Override the token report target file (defaults to `.tw-patch/tw-token-report.json`). |
+| Flag                                   | Description                                                                               |
+| -------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `--cwd <dir>`                          | Use a different working directory when loading configuration.                             |
+| `--output <file>`                      | Override the token report target file (defaults to `.tw-patch/tw-token-report.json`).     |
 | `--format <json\|lines\|grouped-json>` | Choose between a JSON payload (default), newline summaries, or JSON grouped by file path. |
-| `--group-key <relative\|absolute>` | Control grouped-json keys (defaults to relative paths). |
-| `--no-write`             | Skip writing to disk and only print a preview.                              |
+| `--group-key <relative\|absolute>`     | Control grouped-json keys (defaults to relative paths).                                   |
+| `--no-write`                           | Skip writing to disk and only print a preview.                                            |
 
 ## Programmatic API
 

@@ -53,13 +53,13 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 ### `tokens` 常用参数
 
-| 参数                     | 说明                                            |
-| ------------------------ | ----------------------------------------------- |
-| `--cwd <dir>`            | 指定扫描时使用的工作目录。                      |
-| `--output <file>`        | 覆盖输出文件路径（默认 `.tw-patch/tw-token-report.json`）。 |
-| `--format <json\|lines\|grouped-json>` | 选择 JSON（默认）、按行输出，或按文件路径分组的 JSON。 |
-| `--group-key <relative\|absolute>` | 分组 JSON 的键（默认使用相对路径）。 |
-| `--no-write`             | 只打印预览，不写入磁盘。                        |
+| 参数                                   | 说明                                                        |
+| -------------------------------------- | ----------------------------------------------------------- |
+| `--cwd <dir>`                          | 指定扫描时使用的工作目录。                                  |
+| `--output <file>`                      | 覆盖输出文件路径（默认 `.tw-patch/tw-token-report.json`）。 |
+| `--format <json\|lines\|grouped-json>` | 选择 JSON（默认）、按行输出，或按文件路径分组的 JSON。      |
+| `--group-key <relative\|absolute>`     | 分组 JSON 的键（默认使用相对路径）。                        |
+| `--no-write`                           | 只打印预览，不写入磁盘。                                    |
 
 ## 编程接口
 

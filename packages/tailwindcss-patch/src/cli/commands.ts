@@ -1,4 +1,4 @@
-import type { CAC, Command, OptionConfig } from 'cac'
+import type { CAC, Command } from 'cac'
 import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
 import type {
   ExtractResult,
@@ -26,11 +26,12 @@ export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', '
 
 type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
 type TokenGroupKey = 'relative' | 'absolute'
+type CacOptionConfig = Parameters<Command['option']>[2]
 
 export interface TailwindcssPatchCommandOptionDefinition {
   flags: string
   description?: string
-  config?: OptionConfig
+  config?: CacOptionConfig
 }
 
 export interface TailwindcssPatchCommandOptions {
