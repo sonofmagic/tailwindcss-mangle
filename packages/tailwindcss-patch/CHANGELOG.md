@@ -1,5 +1,13 @@
 # tailwindcss-patch
 
+## 8.4.1
+
+### Patch Changes
+
+- [`e5c8155`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e5c8155afc6ee30b311b9fb90616d2560a5fa2cc) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Ensure TailwindcssPatcher uses the workspace root as the default v4 source when cssEntries point at empty folders so extract() still reports runtime classes in v4 mode.
+
+- [`4df42ed`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4df42ed3bc3006ce643206f5781314da17876b74) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Stop logging cache warnings when the Tailwind class cache file is missing so repeated builds on Windows no longer show ENOENT errors.
+
 ## 8.4.0
 
 ### Minor Changes
