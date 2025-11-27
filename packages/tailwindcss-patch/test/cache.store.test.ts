@@ -76,6 +76,75 @@ describe('CacheStore', () => {
     expect(restored.has('foo')).toBe(true)
   })
 
+  it('writes through a temporary file then renames atomically', async () => {
+    const cachePath = path.join(tempDir, 'cache.json')
+    const store = new CacheStore({
+      enabled: true,
+      cwd: tempDir,
+      dir: tempDir,
+      file: 'cache.json',
+      path: cachePath,
+      strategy: 'merge',
+    })
+
+    const writeJSONSpy = vi.spyOn(fs, 'writeJSON')
+    const renameSpy = vi.spyOn(fs, 'rename')
+
+    const data = new Set(['safe'])
+    await store.write(data)
+
+    expect(writeJSONSpy).toHaveBeenCalled()
+    const tempPath = writeJSONSpy.mock.calls[0]?.[0] as string
+    expect(tempPath).not.toBe(cachePath)
+    expect(tempPath?.startsWith(`${cachePath}.`)).toBe(true)
+    expect(renameSpy).toHaveBeenCalledWith(tempPath, cachePath)
+
+    writeJSONSpy.mockRestore()
+    renameSpy.mockRestore()
+  })
+
+  it('retries rename conflicts by replacing the destination file', async () => {
+    const cachePath = path.join(tempDir, 'cache.json')
+    await fs.writeJSON(cachePath, ['old'])
+
+    const store = new CacheStore({
+      enabled: true,
+      cwd: tempDir,
+      dir: tempDir,
+      file: 'cache.json',
+      path: cachePath,
+      strategy: 'merge',
+    })
+
+    const originalRename = fs.rename
+    const renameSpy = vi.spyOn(fs, 'rename')
+    let attempt = 0
+    renameSpy.mockImplementation(async (...args) => {
+      if (attempt === 0) {
+        attempt += 1
+        const error = Object.assign(new Error('exists'), {
+          code: 'EEXIST' as NodeJS.ErrnoException['code'],
+        })
+        throw error
+      }
+
+      return originalRename.apply(fs, args as Parameters<typeof fs.rename>)
+    })
+
+    const removeSpy = vi.spyOn(fs, 'remove')
+
+    await store.write(new Set(['fresh']))
+
+    expect(renameSpy).toHaveBeenCalledTimes(2)
+    expect(removeSpy).toHaveBeenCalledTimes(1)
+
+    const restored = await store.read()
+    expect(restored.has('fresh')).toBe(true)
+
+    renameSpy.mockRestore()
+    removeSpy.mockRestore()
+  })
+
   it('ignores ENOENT errors while reading cache files', async () => {
     const cachePath = path.join(tempDir, 'cache.json')
     const store = new CacheStore({

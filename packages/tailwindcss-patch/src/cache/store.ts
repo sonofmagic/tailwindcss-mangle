@@ -1,4 +1,5 @@
 import type { NormalizedCacheOptions } from '../options/types'
+import process from 'node:process'
 import fs from 'fs-extra'
 import logger from '../logger'
 
@@ -17,17 +18,87 @@ export class CacheStore {
     fs.ensureDirSync(this.options.dir)
   }
 
+  private createTempPath() {
+    const uniqueSuffix = `${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    return `${this.options.path}.${uniqueSuffix}.tmp`
+  }
+
+  private async replaceCacheFile(tempPath: string) {
+    try {
+      await fs.rename(tempPath, this.options.path)
+    }
+    catch (error) {
+      if (isErrnoException(error) && (error.code === 'EEXIST' || error.code === 'EPERM')) {
+        try {
+          await fs.remove(this.options.path)
+        }
+        catch (removeError) {
+          if (!isErrnoException(removeError) || removeError.code !== 'ENOENT') {
+            throw removeError
+          }
+        }
+
+        await fs.rename(tempPath, this.options.path)
+        return
+      }
+
+      throw error
+    }
+  }
+
+  private replaceCacheFileSync(tempPath: string) {
+    try {
+      fs.renameSync(tempPath, this.options.path)
+    }
+    catch (error) {
+      if (isErrnoException(error) && (error.code === 'EEXIST' || error.code === 'EPERM')) {
+        try {
+          fs.removeSync(this.options.path)
+        }
+        catch (removeError) {
+          if (!isErrnoException(removeError) || removeError.code !== 'ENOENT') {
+            throw removeError
+          }
+        }
+
+        fs.renameSync(tempPath, this.options.path)
+        return
+      }
+
+      throw error
+    }
+  }
+
+  private async cleanupTempFile(tempPath: string) {
+    try {
+      await fs.remove(tempPath)
+    }
+    catch {}
+  }
+
+  private cleanupTempFileSync(tempPath: string) {
+    try {
+      fs.removeSync(tempPath)
+    }
+    catch {}
+  }
+
   async write(data: Set<string>): Promise<string | undefined> {
     if (!this.options.enabled) {
       return undefined
     }
 
+    const tempPath = this.createTempPath()
+
     try {
       await this.ensureDir()
-      await fs.writeJSON(this.options.path, Array.from(data))
+      // Persist to a temp file first so concurrent writers never expose partial JSON
+      await fs.writeJSON(tempPath, Array.from(data))
+      await this.replaceCacheFile(tempPath)
       return this.options.path
     }
     catch (error) {
+      await this.cleanupTempFile(tempPath)
       logger.error('Unable to persist Tailwind class cache', error)
       return undefined
     }
@@ -38,12 +109,16 @@ export class CacheStore {
       return undefined
     }
 
+    const tempPath = this.createTempPath()
+
     try {
       this.ensureDirSync()
-      fs.writeJSONSync(this.options.path, Array.from(data))
+      fs.writeJSONSync(tempPath, Array.from(data))
+      this.replaceCacheFileSync(tempPath)
       return this.options.path
     }
     catch (error) {
+      this.cleanupTempFileSync(tempPath)
       logger.error('Unable to persist Tailwind class cache', error)
       return undefined
     }
