@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.4.2
+
+### Patch Changes
+
+- [`6bd5faa`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6bd5faa394ce5612ee5c9e2951d828eb585636ff) Thanks [@sonofmagic](https://github.com/sonofmagic)! - fix cache store to write through temp files and rename atomically so concurrent patchers never read truncated JSON
+
 ## 8.4.1
 
 ### Patch Changes
