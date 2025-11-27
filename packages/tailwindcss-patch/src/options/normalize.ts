@@ -136,7 +136,7 @@ function normalizeTailwindV4Options(
     ? userSources!
     : [
         {
-          base,
+          base: fallbackBase,
           pattern: '**/*',
           negated: false,
         },

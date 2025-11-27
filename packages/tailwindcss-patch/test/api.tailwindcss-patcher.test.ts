@@ -41,6 +41,66 @@ describe('TailwindcssPatcher', () => {
     expect(await fs.pathExists(outputFile)).toBe(true)
   })
 
+  it('falls back to workspace sources when cssEntries directory is empty', async () => {
+    const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-workspace-'))
+    try {
+      const cssDir = path.join(workspaceRoot, 'src/style')
+      const cssEntry = path.join(cssDir, 'main.css')
+      const usageFile = path.join(workspaceRoot, 'src/pages/home.html')
+      const configPath = path.join(workspaceRoot, 'tailwind.config.js')
+
+      await fs.ensureDir(cssDir)
+      await fs.ensureDir(path.dirname(usageFile))
+
+      await fs.writeFile(
+        configPath,
+        [
+          'module.exports = {',
+          '  content: [],',
+          '  theme: {},',
+          '};',
+        ].join('\n'),
+        'utf8',
+      )
+
+      await fs.writeFile(
+        cssEntry,
+        [
+          '@config "../../tailwind.config.js";',
+          '@source not "../../dist/**/*";',
+          '@import "tailwindcss";',
+        ].join('\n'),
+        'utf8',
+      )
+
+      await fs.writeFile(usageFile, '<div class="bg-[#00aa55]"></div>', 'utf8')
+
+      const patcher = new TailwindcssPatcher({
+        cwd: workspaceRoot,
+        overwrite: false,
+        cache: false,
+        output: {
+          enabled: false,
+        },
+        tailwind: {
+          version: 4,
+          cwd: workspaceRoot,
+          v4: {
+            base: cssDir,
+            cssEntries: [cssEntry],
+          },
+        },
+      })
+
+      const result = await patcher.extract({ write: false })
+
+      expect(result.classSet?.has('bg-[#00aa55]')).toBe(true)
+    }
+    finally {
+      await fs.remove(workspaceRoot)
+    }
+  })
+
   it('collects classes synchronously from runtime contexts', () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     const patcher = new TailwindcssPatcher({

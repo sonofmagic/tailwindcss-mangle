@@ -48,14 +48,6 @@ export async function collectClassesFromTailwindV4(
       return undefined
     }
 
-    if (!v4Options.hasUserDefinedSources && !resolvedConfiguredBase) {
-      return v4Options.sources.map(source => ({
-        base,
-        pattern: source.pattern,
-        negated: source.negated,
-      }))
-    }
-
     return v4Options.sources.map(source => ({
       base: source.base ?? base,
       pattern: source.pattern,
