@@ -2,6 +2,10 @@ import type { NormalizedCacheOptions } from '../options/types'
 import fs from 'fs-extra'
 import logger from '../logger'
 
+function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && typeof (error as NodeJS.ErrnoException).code === 'string'
+}
+
 export class CacheStore {
   constructor(private readonly options: NormalizedCacheOptions) {}
 
@@ -62,6 +66,10 @@ export class CacheStore {
       }
     }
     catch (error) {
+      if (isErrnoException(error) && error.code === 'ENOENT') {
+        return new Set()
+      }
+
       logger.warn('Unable to read Tailwind class cache, removing invalid file.', error)
       try {
         await fs.remove(this.options.path)
@@ -91,6 +99,10 @@ export class CacheStore {
       }
     }
     catch (error) {
+      if (isErrnoException(error) && error.code === 'ENOENT') {
+        return new Set()
+      }
+
       logger.warn('Unable to read Tailwind class cache, removing invalid file.', error)
       try {
         fs.removeSync(this.options.path)
