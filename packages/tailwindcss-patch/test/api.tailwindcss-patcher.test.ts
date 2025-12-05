@@ -128,8 +128,9 @@ describe('TailwindcssPatcher', () => {
 
     const result = patcher.getClassSetSync()
 
-    expect(result.has('foo')).toBe(true)
-    expect(result.has('bar')).toBe(true)
+    expect(result).toBeDefined()
+    expect(result?.has('foo')).toBe(true)
+    expect(result?.has('bar')).toBe(true)
     expect(fs.pathExistsSync(cacheFile)).toBe(true)
     const cacheContent = fs.readJSONSync(cacheFile)
     expect(cacheContent).toEqual(expect.arrayContaining(['foo', 'bar']))
@@ -161,7 +162,37 @@ describe('TailwindcssPatcher', () => {
 
     const result = patcher.getClassSetSync()
 
-    expect(result.size).toBe(1)
-    expect(result.has('cached-class')).toBe(true)
+    expect(result).toBeDefined()
+    expect(result?.size).toBe(1)
+    expect(result?.has('cached-class')).toBe(true)
+  })
+
+  it('defers synchronous class access until runtime contexts are populated', async () => {
+    const tooltipClass = 'text-[#123456]'
+    const contexts: any[] = []
+
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      tailwind: {
+        packageName: 'tailwindcss-3',
+        version: 3,
+      },
+    })
+
+    vi.spyOn(patcher, 'getContexts').mockImplementation(() => contexts)
+    vi.spyOn(patcher as any, 'runTailwindBuildIfNeeded').mockImplementation(async () => {
+      contexts.push({
+        classCache: new Map([[tooltipClass, []]]),
+      })
+    })
+
+    expect(patcher.getClassSetSync()).toBeUndefined()
+
+    const { classSet } = await patcher.extract({ write: false })
+    expect(classSet?.has(tooltipClass)).toBe(true)
+
+    const syncSet = patcher.getClassSetSync()
+    expect(syncSet?.has(tooltipClass)).toBe(true)
   })
 })

@@ -150,15 +150,6 @@ export class TailwindcssPatcher {
     return collectClassesFromContexts(contexts, this.options.filter)
   }
 
-  private collectClassSetSync(): Set<string> {
-    if (this.majorVersion === 4) {
-      throw new Error('getClassSetSync is not supported for Tailwind CSS v4 projects. Use getClassSet instead.')
-    }
-
-    const contexts = this.getContexts()
-    return collectClassesFromContexts(contexts, this.options.filter)
-  }
-
   private async mergeWithCache(set: Set<string>) {
     if (!this.options.cache.enabled) {
       return set
@@ -213,9 +204,18 @@ export class TailwindcssPatcher {
     return this.mergeWithCache(set)
   }
 
-  getClassSetSync() {
-    const set = this.collectClassSetSync()
-    return this.mergeWithCacheSync(set)
+  getClassSetSync(): Set<string> | undefined {
+    if (this.majorVersion === 4) {
+      throw new Error('getClassSetSync is not supported for Tailwind CSS v4 projects. Use getClassSet instead.')
+    }
+
+    const contexts = this.getContexts()
+    const set = collectClassesFromContexts(contexts, this.options.filter)
+    const merged = this.mergeWithCacheSync(set)
+    if (contexts.length === 0 && merged.size === 0) {
+      return undefined
+    }
+    return merged
   }
 
   async extract(options?: { write?: boolean }): Promise<ExtractResult> {
