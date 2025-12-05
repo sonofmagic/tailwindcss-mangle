@@ -75,6 +75,6 @@
     "magic-string": "^0.30.21",
     "pathe": "^2.0.3",
     "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.0"
+    "postcss-selector-parser": "^7.1.1"
   }
 }
