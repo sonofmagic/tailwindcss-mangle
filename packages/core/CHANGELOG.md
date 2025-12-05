@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/core
 
+## 5.0.1
+
+### Patch Changes
+
+- [`0b484c1`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0b484c187257ccdbe04224280a77174330341ce6) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(deps): upgrade
+
 ## 5.0.0
 
 ### Major Changes

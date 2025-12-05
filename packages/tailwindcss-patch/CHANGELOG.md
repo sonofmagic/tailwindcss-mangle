@@ -1,5 +1,13 @@
 # tailwindcss-patch
 
+## 8.4.3
+
+### Patch Changes
+
+- [`0b484c1`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0b484c187257ccdbe04224280a77174330341ce6) Thanks [@sonofmagic](https://github.com/sonofmagic)! - chore(deps): upgrade
+
+- [`6542453`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6542453f28ea5bb6f6e90023ad93f557524afb80) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Fix `getClassSetSync()` returning an empty set before Tailwind v3 contexts are ready so runtime collectors fall back to the async extraction path instead of skipping class discovery.
+
 ## 8.4.2
 
 ### Patch Changes
