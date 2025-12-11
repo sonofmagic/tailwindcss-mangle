@@ -17,8 +17,8 @@
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
-    "markdown-to-jsx": "^9.3.0",
-    "next": "^16.0.7",
+    "markdown-to-jsx": "^9.3.4",
+    "next": "^16.0.8",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
     "react": "19.2.1",
@@ -26,7 +26,7 @@
     "react-intersection-observer": "^10.0.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.0.7",
+    "@next/bundle-analyzer": "^16.0.8",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/react": "19.2.7",
