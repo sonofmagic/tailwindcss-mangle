@@ -102,3 +102,24 @@ export interface ILengthUnitsPatchOptions {
   overwrite?: boolean
   destPath?: string
 }
+
+export type PatchCheckStatus = 'applied' | 'not-applied' | 'skipped' | 'unsupported'
+
+export type PatchName = 'exposeContext' | 'extendLengthUnits'
+
+export interface PatchStatusEntry {
+  name: PatchName
+  status: PatchCheckStatus
+  reason?: string
+  files: string[]
+}
+
+export interface PatchStatusReport {
+  package: {
+    name?: string
+    version?: string
+    root: string
+  }
+  majorVersion: 2 | 3 | 4
+  entries: PatchStatusEntry[]
+}

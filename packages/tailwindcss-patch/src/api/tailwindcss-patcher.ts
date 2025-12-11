@@ -24,6 +24,7 @@ import logger from '../logger'
 import { fromLegacyOptions } from '../options/legacy'
 import { normalizeOptions } from '../options/normalize'
 import { applyTailwindPatches } from '../patching/patch-runner'
+import { getPatchStatusReport } from '../patching/status'
 import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../runtime/class-collector'
 import { loadRuntimeContexts } from '../runtime/context-registry'
 import { runTailwindBuild } from '../runtime/process-tailwindcss'
@@ -115,6 +116,14 @@ export class TailwindcssPatcher {
 
   async patch() {
     return applyTailwindPatches({
+      packageInfo: this.packageInfo,
+      options: this.options,
+      majorVersion: this.majorVersion,
+    })
+  }
+
+  async getPatchStatus() {
+    return getPatchStatusReport({
       packageInfo: this.packageInfo,
       options: this.options,
       majorVersion: this.majorVersion,

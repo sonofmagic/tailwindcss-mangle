@@ -158,7 +158,7 @@ describe('CacheStore', () => {
 
     const warnSpy = vi.spyOn(logger, 'warn')
     const removeSpy = vi.spyOn(fs, 'remove')
-    const pathExistsSpy = vi.spyOn(fs, 'pathExists').mockResolvedValue(true)
+    const pathExistsSpy = vi.spyOn(fs, 'pathExists').mockImplementation(async () => true)
     const enoentError = Object.assign(new Error('missing'), { code: 'ENOENT' as NodeJS.ErrnoException['code'] })
     const readSpy = vi.spyOn(fs, 'readJSON').mockRejectedValue(enoentError)
 

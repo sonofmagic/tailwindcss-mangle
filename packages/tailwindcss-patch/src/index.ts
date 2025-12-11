@@ -22,6 +22,7 @@ export {
 } from './extraction/candidate-extractor'
 export { default as logger } from './logger'
 export { normalizeOptions } from './options/normalize'
+export { getPatchStatusReport } from './patching/status'
 export { collectClassesFromContexts, collectClassesFromTailwindV4 } from './runtime/class-collector'
 export { loadRuntimeContexts } from './runtime/context-registry'
 export { runTailwindBuild } from './runtime/process-tailwindcss'

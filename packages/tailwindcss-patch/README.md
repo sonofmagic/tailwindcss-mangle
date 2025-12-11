@@ -37,6 +37,9 @@ pnpm dlx tw-patch extract
 
 # Capture every token (candidate) with file/position metadata
 pnpm dlx tw-patch tokens --format lines
+
+# Check which patches are applied
+pnpm dlx tw-patch status --json
 ```
 
 ### Embed into another CLI
@@ -154,6 +157,8 @@ const groupedTokens = await patcher.collectContentTokensByFile()
 console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 // Preserve absolute file paths:
 // await patcher.collectContentTokensByFile({ key: 'absolute', stripAbsolutePaths: false })
+const patchStatus = await patcher.getPatchStatus()
+console.log(patchStatus.entries)
 ```
 
 The constructor accepts either the new object shown above or the historical `patch`/`cache` shape. Conversions happen internally so existing configs remain backwards compatible.

@@ -36,11 +36,22 @@ vi.mock('../src/api/tailwindcss-patcher', () => {
     sources: [],
   }
 
+  const patchReport = {
+    package: {
+      name: 'tailwindcss',
+      version: '3.4.0',
+      root: '/tmp/project',
+    },
+    majorVersion: 3,
+    entries: [],
+  }
+
   function createTailwindcssPatcherMock() {
     const instance = {
       patch: vi.fn(),
       extract: vi.fn().mockResolvedValue({ classList: ['foo'], filename: '.tw-patch/classes.json' }),
       collectContentTokens: vi.fn().mockResolvedValue(tokenReport),
+      getPatchStatus: vi.fn().mockResolvedValue(patchReport),
     }
     patcherInstances.push(instance)
     return instance
@@ -102,6 +113,26 @@ describe('mountTailwindcssPatchCommands', () => {
     expect(commandNames).not.toContain('install')
     expect(commandNames).not.toContain('extract')
     expect(commandNames).not.toContain('init')
+  })
+
+  it('runs the status command and can emit JSON', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'status', '--json'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(TailwindcssPatcher).toHaveBeenCalledTimes(1)
+    expect(patcherInstances[0].getPatchStatus).toHaveBeenCalledTimes(1)
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      package: {
+        name: 'tailwindcss',
+        version: '3.4.0',
+        root: '/tmp/project',
+      },
+      majorVersion: 3,
+      entries: [],
+    }, null, 2))
   })
 
   it('supports custom command names and aliases', async () => {

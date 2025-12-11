@@ -2,6 +2,7 @@ import type { CAC, Command } from 'cac'
 import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
 import type {
   ExtractResult,
+  PatchStatusReport,
   TailwindcssPatchOptions,
   TailwindTokenByFileMap,
   TailwindTokenLocation,
@@ -20,9 +21,9 @@ import { groupTokensByFile } from '../extraction/candidate-extractor'
 import logger from '../logger'
 import { fromLegacyOptions, fromUnifiedConfig } from '../options/legacy'
 
-export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init'
+export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'status'
 
-export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init']
+export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'status']
 
 type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
 type TokenGroupKey = 'relative' | 'absolute'
@@ -60,12 +61,16 @@ interface TokensCommandArgs extends BaseCommandArgs {
   write?: boolean
 }
 interface InitCommandArgs extends BaseCommandArgs {}
+interface StatusCommandArgs extends BaseCommandArgs {
+  json?: boolean
+}
 
 interface TailwindcssPatchCommandArgMap {
   install: InstallCommandArgs
   extract: ExtractCommandArgs
   tokens: TokensCommandArgs
   init: InitCommandArgs
+  status: StatusCommandArgs
 }
 
 interface TailwindcssPatchCommandResultMap {
@@ -73,6 +78,7 @@ interface TailwindcssPatchCommandResultMap {
   extract: ExtractResult
   tokens: TailwindTokenReport
   init: void
+  status: PatchStatusReport
 }
 
 export interface TailwindcssPatchCommandContext<TCommand extends TailwindcssPatchCommand> {
@@ -263,6 +269,13 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
     init: {
       description: 'Generate a tailwindcss-patch config file',
       optionDefs: [createCwdOptionDefinition()],
+    },
+    status: {
+      description: 'Check which Tailwind patches are applied',
+      optionDefs: [
+        createCwdOptionDefinition(),
+        { flags: '--json', description: 'Print a JSON report of patch status' },
+      ],
     },
   }
 }
@@ -469,6 +482,56 @@ async function initCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'in
   logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
 }
 
+function formatFilesHint(entry: PatchStatusReport['entries'][number]) {
+  if (!entry.files.length) {
+    return ''
+  }
+  return ` (${entry.files.join(', ')})`
+}
+
+async function statusCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'status'>) {
+  const patcher = await ctx.createPatcher()
+  const report = await patcher.getPatchStatus()
+
+  if (ctx.args.json) {
+    logger.log(JSON.stringify(report, null, 2))
+    return report
+  }
+
+  const applied = report.entries.filter(entry => entry.status === 'applied')
+  const pending = report.entries.filter(entry => entry.status === 'not-applied')
+  const skipped = report.entries.filter(entry => entry.status === 'skipped' || entry.status === 'unsupported')
+
+  const packageLabel = `${report.package.name ?? 'tailwindcss'}@${report.package.version ?? 'unknown'}`
+  logger.info(`Patch status for ${packageLabel} (v${report.majorVersion})`)
+
+  if (applied.length) {
+    logger.success('Applied:')
+    applied.forEach(entry => logger.success(`  • ${entry.name}${formatFilesHint(entry)}`))
+  }
+
+  if (pending.length) {
+    logger.warn('Needs attention:')
+    pending.forEach((entry) => {
+      const details = entry.reason ? ` – ${entry.reason}` : ''
+      logger.warn(`  • ${entry.name}${formatFilesHint(entry)}${details}`)
+    })
+  }
+  else {
+    logger.success('All applicable patches are applied.')
+  }
+
+  if (skipped.length) {
+    logger.info('Skipped:')
+    skipped.forEach((entry) => {
+      const details = entry.reason ? ` – ${entry.reason}` : ''
+      logger.info(`  • ${entry.name}${details}`)
+    })
+  }
+
+  return report
+}
+
 export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatchCliMountOptions = {}) {
   const prefix = options.commandPrefix ?? ''
   const selectedCommands = options.commands ?? tailwindcssPatchCommands
@@ -535,6 +598,22 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
           args,
           options.commandHandlers?.init,
           initCommandDefaultHandler,
+        )
+      })
+      metadata.aliases.forEach(alias => command.alias(alias))
+    },
+    status: () => {
+      const metadata = resolveCommandMetadata('status', options, prefix, defaultDefinitions)
+      const command = cli.command(metadata.name, metadata.description)
+      applyCommandOptions(command, metadata.optionDefs)
+      command.action(async (args: StatusCommandArgs) => {
+        return runWithCommandHandler(
+          cli,
+          command,
+          'status',
+          args,
+          options.commandHandlers?.status,
+          statusCommandDefaultHandler,
         )
       })
       metadata.aliases.forEach(alias => command.alias(alias))
