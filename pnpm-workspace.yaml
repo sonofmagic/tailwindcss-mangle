@@ -5,14 +5,14 @@ packages:
 
 catalogs:
   tailwindcss2:
-    tailwindcss: catalog:tailwindcss2
+    tailwindcss: npm:@tailwindcss/postcss7-compat@^2.2.17
     tailwindcss2: npm:@tailwindcss/postcss7-compat@^2.2.17
   tailwindcss3:
     tailwindcss: ^3.4.19
-    tailwindcss-3: npm:tailwindcss@^3.4.18
+    tailwindcss-3: npm:tailwindcss@^3.4.19
   tailwindcss4:
     tailwindcss: ^4.1.18
-    tailwindcss-4: npm:tailwindcss@^4.1.17
+    tailwindcss-4: npm:tailwindcss@^4.1.18
 
 onlyBuiltDependencies:
   - esbuild
