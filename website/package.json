@@ -17,7 +17,7 @@
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
-    "markdown-to-jsx": "^9.3.4",
+    "markdown-to-jsx": "^9.3.5",
     "next": "^16.0.10",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
