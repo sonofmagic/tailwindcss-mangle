@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.5.0
+
+### Minor Changes
+
+- [`5b11714`](https://github.com/sonofmagic/tailwindcss-mangle/commit/5b1171478412dc53a94109792bc3aeef50399442) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Add CLI/API support for reporting which Tailwind patches are applied or pending.
+
 ## 8.4.3
 
 ### Patch Changes
