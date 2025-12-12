@@ -18,17 +18,17 @@
   },
   "dependencies": {
     "markdown-to-jsx": "^9.3.4",
-    "next": "^16.0.8",
+    "next": "^16.0.10",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-intersection-observer": "^10.0.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.0.8",
+    "@next/bundle-analyzer": "^16.0.10",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/react": "19.2.7",
     "pagefind": "^1.4.0",
     "tailwindcss": "catalog:tailwindcss4"

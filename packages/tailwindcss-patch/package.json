@@ -78,7 +78,7 @@
     "@babel/traverse": "^7.28.5",
     "@babel/types": "^7.28.5",
     "@tailwindcss-mangle/config": "workspace:*",
-    "@tailwindcss/node": "^4.1.17",
+    "@tailwindcss/node": "^4.1.18",
     "cac": "^6.7.14",
     "consola": "^3.4.2",
     "fs-extra": "^11.3.2",
@@ -89,9 +89,9 @@
     "tailwindcss-config": "^1.1.3"
   },
   "devDependencies": {
-    "@tailwindcss/oxide": "^4.1.17",
-    "@tailwindcss/postcss": "^4.1.17",
-    "@tailwindcss/vite": "^4.1.17",
+    "@tailwindcss/oxide": "^4.1.18",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
     "tailwindcss": "catalog:tailwindcss4",
     "tailwindcss-3": "catalog:tailwindcss3",
     "tailwindcss-4": "catalog:tailwindcss4"
