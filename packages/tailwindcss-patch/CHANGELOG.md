@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.6.0
+
+### Minor Changes
+
+- [`c2fd4c1`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c2fd4c1e237d0edf60baf7f222e81129dca0e463) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Add configurable cache drivers (file, memory, noop) while keeping the file cache as the default fallback.
+
 ## 8.5.1
 
 ### Patch Changes
