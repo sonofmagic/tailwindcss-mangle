@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.5.1
+
+### Patch Changes
+
+- [`edd1171`](https://github.com/sonofmagic/tailwindcss-mangle/commit/edd11710d93825ec05d5c0e401f893ca93bbd519) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Gracefully skip cache updates when the cache file is locked on Windows to avoid EPERM failures.
+
 ## 8.5.0
 
 ### Minor Changes
