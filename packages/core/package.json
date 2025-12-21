@@ -70,7 +70,7 @@
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
     "fast-sort": "^3.4.1",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.3",
     "htmlparser2": "10.0.0",
     "magic-string": "^0.30.21",
     "pathe": "^2.0.3",
