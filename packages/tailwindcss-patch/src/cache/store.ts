@@ -7,6 +7,11 @@ function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
   return error instanceof Error && typeof (error as NodeJS.ErrnoException).code === 'string'
 }
 
+function isAccessDenied(error: unknown): error is NodeJS.ErrnoException {
+  return isErrnoException(error)
+    && Boolean(error.code && ['EPERM', 'EBUSY', 'EACCES'].includes(error.code))
+}
+
 export class CacheStore {
   constructor(private readonly options: NormalizedCacheOptions) {}
 
@@ -23,9 +28,10 @@ export class CacheStore {
     return `${this.options.path}.${uniqueSuffix}.tmp`
   }
 
-  private async replaceCacheFile(tempPath: string) {
+  private async replaceCacheFile(tempPath: string): Promise<boolean> {
     try {
       await fs.rename(tempPath, this.options.path)
+      return true
     }
     catch (error) {
       if (isErrnoException(error) && (error.code === 'EEXIST' || error.code === 'EPERM')) {
@@ -33,22 +39,28 @@ export class CacheStore {
           await fs.remove(this.options.path)
         }
         catch (removeError) {
+          if (isAccessDenied(removeError)) {
+            logger.debug('Tailwind class cache locked or read-only, skipping update.', removeError)
+            return false
+          }
+
           if (!isErrnoException(removeError) || removeError.code !== 'ENOENT') {
             throw removeError
           }
         }
 
         await fs.rename(tempPath, this.options.path)
-        return
+        return true
       }
 
       throw error
     }
   }
 
-  private replaceCacheFileSync(tempPath: string) {
+  private replaceCacheFileSync(tempPath: string): boolean {
     try {
       fs.renameSync(tempPath, this.options.path)
+      return true
     }
     catch (error) {
       if (isErrnoException(error) && (error.code === 'EEXIST' || error.code === 'EPERM')) {
@@ -56,13 +68,18 @@ export class CacheStore {
           fs.removeSync(this.options.path)
         }
         catch (removeError) {
+          if (isAccessDenied(removeError)) {
+            logger.debug('Tailwind class cache locked or read-only, skipping update.', removeError)
+            return false
+          }
+
           if (!isErrnoException(removeError) || removeError.code !== 'ENOENT') {
             throw removeError
           }
         }
 
         fs.renameSync(tempPath, this.options.path)
-        return
+        return true
       }
 
       throw error
@@ -94,8 +111,13 @@ export class CacheStore {
       await this.ensureDir()
       // Persist to a temp file first so concurrent writers never expose partial JSON
       await fs.writeJSON(tempPath, Array.from(data))
-      await this.replaceCacheFile(tempPath)
-      return this.options.path
+      const replaced = await this.replaceCacheFile(tempPath)
+      if (replaced) {
+        return this.options.path
+      }
+
+      await this.cleanupTempFile(tempPath)
+      return undefined
     }
     catch (error) {
       await this.cleanupTempFile(tempPath)
@@ -114,8 +136,13 @@ export class CacheStore {
     try {
       this.ensureDirSync()
       fs.writeJSONSync(tempPath, Array.from(data))
-      this.replaceCacheFileSync(tempPath)
-      return this.options.path
+      const replaced = this.replaceCacheFileSync(tempPath)
+      if (replaced) {
+        return this.options.path
+      }
+
+      this.cleanupTempFileSync(tempPath)
+      return undefined
     }
     catch (error) {
       this.cleanupTempFileSync(tempPath)
