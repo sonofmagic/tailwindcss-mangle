@@ -119,6 +119,7 @@ const patcher = new TailwindcssPatcher({
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
+    driver: 'file',
   },
   output: {
     file: '.tw-patch/tw-class-list.json',
@@ -148,7 +149,7 @@ const classSet = await patcher.getClassSet()
 
 还可以直接使用以下导出的工具来构建自定义工作流：
 
-- `CacheStore` —— 管理类名缓存，可选择合并或覆盖策略。
+- `CacheStore` —— 管理类名缓存（支持文件、内存或 noop 驱动），可选择合并或覆盖策略。
 - `normalizeOptions` —— 将用户输入转换成运行时使用的标准结构。
 - `extractValidCandidates` —— 基于 Tailwind Oxide 的 v4 候选提取器。
 - `runTailwindBuild` —— 启动 Tailwind v2/v3 编译以收集运行时上下文。

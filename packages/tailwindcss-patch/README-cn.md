@@ -72,6 +72,7 @@ const patcher = new TailwindcssPatcher({
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
+    driver: 'file',
   },
   output: {
     file: '.tw-patch/tw-class-list.json',
@@ -104,10 +105,12 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 
 构造函数既可以接收上述新版对象，也可以传入旧的 `patch`/`cache` 结构；内部会自动完成兼容转换。
 
+当遇到文件权限受限等情况时，可通过 cache.driver 切换为默认的文件缓存、内存缓存（memory）或无操作模式（noop）。
+
 ### 可复用工具
 
 - `normalizeOptions`：归一化用户输入并应用默认值。
-- `CacheStore`：读写类名缓存，支持合并或覆盖策略。
+- `CacheStore`：读写类名缓存（支持文件、内存或 noop 驱动），可选择合并或覆盖策略。
 - `extractProjectCandidatesWithPositions`：扫描内容源并返回带位置的 Tailwind token 信息。
 - `groupTokensByFile`：将 token 报告转换为 `{ [filePath]: TailwindTokenLocation[] }` 形式。
 - `extractValidCandidates`：利用 Tailwind Oxide 扫描 v4 CSS 与内容源。

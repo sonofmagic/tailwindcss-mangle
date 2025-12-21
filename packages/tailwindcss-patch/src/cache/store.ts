@@ -13,7 +13,12 @@ function isAccessDenied(error: unknown): error is NodeJS.ErrnoException {
 }
 
 export class CacheStore {
-  constructor(private readonly options: NormalizedCacheOptions) {}
+  private readonly driver: NormalizedCacheOptions['driver']
+  private memoryCache: Set<string> | null = null
+
+  constructor(private readonly options: NormalizedCacheOptions) {
+    this.driver = options.driver ?? 'file'
+  }
 
   private async ensureDir() {
     await fs.ensureDir(this.options.dir)
@@ -105,6 +110,15 @@ export class CacheStore {
       return undefined
     }
 
+    if (this.driver === 'noop') {
+      return undefined
+    }
+
+    if (this.driver === 'memory') {
+      this.memoryCache = new Set(data)
+      return 'memory'
+    }
+
     const tempPath = this.createTempPath()
 
     try {
@@ -131,6 +145,15 @@ export class CacheStore {
       return undefined
     }
 
+    if (this.driver === 'noop') {
+      return undefined
+    }
+
+    if (this.driver === 'memory') {
+      this.memoryCache = new Set(data)
+      return 'memory'
+    }
+
     const tempPath = this.createTempPath()
 
     try {
@@ -154,6 +177,14 @@ export class CacheStore {
   async read(): Promise<Set<string>> {
     if (!this.options.enabled) {
       return new Set()
+    }
+
+    if (this.driver === 'noop') {
+      return new Set()
+    }
+
+    if (this.driver === 'memory') {
+      return new Set(this.memoryCache ?? [])
     }
 
     try {
@@ -187,6 +218,14 @@ export class CacheStore {
   readSync(): Set<string> {
     if (!this.options.enabled) {
       return new Set()
+    }
+
+    if (this.driver === 'noop') {
+      return new Set()
+    }
+
+    if (this.driver === 'memory') {
+      return new Set(this.memoryCache ?? [])
     }
 
     try {

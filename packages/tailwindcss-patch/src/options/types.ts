@@ -3,6 +3,7 @@ import type { PackageResolvingOptions } from 'local-pkg'
 import type { ILengthUnitsPatchOptions } from '../types'
 
 export type CacheStrategy = 'merge' | 'overwrite'
+export type CacheDriver = 'file' | 'memory' | 'noop'
 
 /**
  * Configures how the Tailwind class cache is stored and where it lives on disk.
@@ -21,6 +22,8 @@ export interface CacheUserOptions {
   file?: string
   /** Strategy used when merging new class lists with an existing cache. */
   strategy?: CacheStrategy
+  /** Backend used to persist the cache (`file`, `memory`, or `noop`). Defaults to `file`. */
+  driver?: CacheDriver
 }
 
 /**
@@ -156,6 +159,7 @@ export interface NormalizedCacheOptions {
   file: string
   path: string
   strategy: CacheStrategy
+  driver: CacheDriver
 }
 
 /** Tracks whether runtime contexts should be exposed and via which property. */

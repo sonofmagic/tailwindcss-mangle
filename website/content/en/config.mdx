@@ -110,6 +110,7 @@ export default defineConfig({
 - `enabled` – persist collected classes under `node_modules/.cache/tailwindcss-patch` (enabled by default).
 - `dir` / `file` – control where the cache set is stored.
 - `strategy` – `merge` adds to the existing cache, `overwrite` replaces it on each extraction.
+- `driver` – pick `file` (default), `memory` for in-process caching, or `noop` to skip persistence when file writes are blocked.
 
 ## Transformer options
 

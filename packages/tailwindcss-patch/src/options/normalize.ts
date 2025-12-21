@@ -1,5 +1,6 @@
 import type { ILengthUnitsPatchOptions } from '../types'
 import type {
+  CacheDriver,
   CacheStrategy,
   FeatureUserOptions,
   NormalizedCacheOptions,
@@ -27,6 +28,13 @@ function toPrettyValue(value: OutputUserOptions['pretty']): number | false {
   return false
 }
 
+function normalizeCacheDriver(driver: CacheDriver | undefined): CacheDriver {
+  if (driver === 'memory' || driver === 'noop') {
+    return driver
+  }
+  return 'file'
+}
+
 function normalizeCacheOptions(
   cache: TailwindcssPatchOptions['cache'],
   projectRoot: string,
@@ -36,6 +44,7 @@ function normalizeCacheOptions(
   let dir = path.resolve(cwd, 'node_modules/.cache', pkgName)
   let file = 'class-cache.json'
   let strategy: CacheStrategy = 'merge'
+  let driver: CacheDriver = 'file'
 
   if (typeof cache === 'boolean') {
     enabled = cache
@@ -46,6 +55,7 @@ function normalizeCacheOptions(
     dir = cache.dir ? path.resolve(cache.dir) : path.resolve(cwd, 'node_modules/.cache', pkgName)
     file = cache.file ?? file
     strategy = cache.strategy ?? strategy
+    driver = normalizeCacheDriver(cache.driver)
   }
 
   const filename = path.resolve(dir, file)
@@ -57,6 +67,7 @@ function normalizeCacheOptions(
     file,
     path: filename,
     strategy,
+    driver,
   }
 }
 

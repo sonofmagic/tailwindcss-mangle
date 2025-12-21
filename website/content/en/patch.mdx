@@ -119,6 +119,7 @@ const patcher = new TailwindcssPatcher({
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
+    driver: 'file',
   },
   output: {
     file: '.tw-patch/tw-class-list.json',
@@ -148,7 +149,7 @@ const classSet = await patcher.getClassSet()
 
 Specific helpers are available for custom tooling:
 
-- `CacheStore` – persistent cache manager that merges or overwrites class sets.
+- `CacheStore` – persistent cache manager (file, memory, or noop drivers) that merges or overwrites class sets.
 - `normalizeOptions` – convert raw user input to the runtime-ready shape.
 - `extractValidCandidates` – Tailwind v4 candidate extractor backed by the Oxide scanner.
 - `runTailwindBuild` – run Tailwind v2/v3 builds to materialise runtime contexts.

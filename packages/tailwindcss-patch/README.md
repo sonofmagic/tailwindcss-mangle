@@ -129,6 +129,7 @@ const patcher = new TailwindcssPatcher({
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
+    driver: 'file',
   },
   output: {
     file: '.tw-patch/tw-class-list.json',
@@ -163,10 +164,12 @@ console.log(patchStatus.entries)
 
 The constructor accepts either the new object shown above or the historical `patch`/`cache` shape. Conversions happen internally so existing configs remain backwards compatible.
 
+Use cache.driver to switch between the default file-backed cache, an in-memory cache (memory), or a no-op cache (noop) when filesystem permissions are restricted.
+
 ### Helper utilities
 
 - `normalizeOptions` – normalise raw user input to the runtime shape.
-- `CacheStore` – read/write class caches respecting merge or overwrite semantics.
+- `CacheStore` – read/write class caches (file, memory, or noop drivers) respecting merge or overwrite semantics.
 - `extractProjectCandidatesWithPositions` – gather Tailwind tokens for every configured source file with location metadata.
 - `groupTokensByFile` – convert a token report into a `{ [filePath]: TailwindTokenLocation[] }` map.
 - `extractValidCandidates` – scan Tailwind v4 CSS/content sources with the Tailwind Oxide scanner.

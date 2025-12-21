@@ -110,6 +110,7 @@ export default defineConfig({
 - `enabled` – 是否缓存已收集的类名（默认启用，目录位于 `node_modules/.cache/tailwindcss-patch`）。
 - `dir` / `file` – 缓存文件的目录与名称。
 - `strategy` – `merge` 追加至现有集合，`overwrite` 每次重新生成。
+- `driver` – 选择 `file`（默认）、`memory`（进程内缓存）或 `noop`（无法写文件时跳过持久化）。
 
 ## Transformer 选项
 

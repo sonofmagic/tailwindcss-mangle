@@ -24,6 +24,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: path.join(tempDir, 'cache.json'),
       strategy: 'merge',
+      driver: 'file',
     })
 
     const initial = await store.read()
@@ -34,6 +35,74 @@ describe('CacheStore', () => {
     const restored = await store.read()
     expect(restored.size).toBe(2)
     expect(restored.has('a')).toBe(true)
+  })
+
+  it('supports an in-memory cache driver without touching the filesystem', async () => {
+    const cachePath = path.join(tempDir, 'cache.json')
+    const store = new CacheStore({
+      enabled: true,
+      cwd: tempDir,
+      dir: tempDir,
+      file: 'cache.json',
+      path: cachePath,
+      strategy: 'merge',
+      driver: 'memory',
+    })
+
+    const ensureDirSpy = vi.spyOn(fs, 'ensureDir')
+    const writeJSONSpy = vi.spyOn(fs, 'writeJSON')
+    const writeJSONSyncSpy = vi.spyOn(fs, 'writeJSONSync')
+
+    const writeResult = await store.write(new Set(['foo', 'bar']))
+    expect(writeResult).toBe('memory')
+
+    const restored = store.readSync()
+    expect(restored.size).toBe(2)
+    expect(restored.has('foo')).toBe(true)
+    expect(restored.has('bar')).toBe(true)
+
+    store.writeSync(new Set(['baz']))
+    const updated = await store.read()
+    expect(updated.size).toBe(1)
+    expect(updated.has('baz')).toBe(true)
+
+    expect(ensureDirSpy).not.toHaveBeenCalled()
+    expect(writeJSONSpy).not.toHaveBeenCalled()
+    expect(writeJSONSyncSpy).not.toHaveBeenCalled()
+
+    ensureDirSpy.mockRestore()
+    writeJSONSpy.mockRestore()
+    writeJSONSyncSpy.mockRestore()
+  })
+
+  it('allows opting out of caching via a noop driver', async () => {
+    const cachePath = path.join(tempDir, 'cache.json')
+    const store = new CacheStore({
+      enabled: true,
+      cwd: tempDir,
+      dir: tempDir,
+      file: 'cache.json',
+      path: cachePath,
+      strategy: 'merge',
+      driver: 'noop',
+    })
+
+    const writeJSONSpy = vi.spyOn(fs, 'writeJSON')
+    const writeJSONSyncSpy = vi.spyOn(fs, 'writeJSONSync')
+
+    const result = await store.write(new Set(['foo']))
+    expect(result).toBeUndefined()
+    expect(await store.read()).toEqual(new Set())
+
+    const syncResult = store.writeSync(new Set(['bar']))
+    expect(syncResult).toBeUndefined()
+    expect(store.readSync()).toEqual(new Set())
+
+    expect(writeJSONSpy).not.toHaveBeenCalled()
+    expect(writeJSONSyncSpy).not.toHaveBeenCalled()
+
+    writeJSONSpy.mockRestore()
+    writeJSONSyncSpy.mockRestore()
   })
 
   it('clears invalid cache files automatically', async () => {
@@ -47,6 +116,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const restored = await store.read()
@@ -63,6 +133,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const initial = store.readSync()
@@ -85,6 +156,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const writeJSONSpy = vi.spyOn(fs, 'writeJSON')
@@ -114,6 +186,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const originalRename = fs.rename
@@ -154,6 +227,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const warnSpy = vi.spyOn(logger, 'warn')
@@ -182,6 +256,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const warnSpy = vi.spyOn(logger, 'warn')
@@ -214,6 +289,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const writeJSONSpy = vi.spyOn(fs, 'writeJSON')
@@ -259,6 +335,7 @@ describe('CacheStore', () => {
       file: 'cache.json',
       path: cachePath,
       strategy: 'merge',
+      driver: 'file',
     })
 
     const writeJSONSpy = vi.spyOn(fs, 'writeJSONSync')

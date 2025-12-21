@@ -9,6 +9,7 @@ describe('normalizeOptions', () => {
     expect(normalized.output.file).toBe('.tw-patch/tw-class-list.json')
     expect(normalized.output.removeUniversalSelector).toBe(true)
     expect(normalized.cache.enabled).toBe(false)
+    expect(normalized.cache.driver).toBe('file')
     expect(normalized.features.exposeContext.enabled).toBe(true)
     expect(normalized.features.extendLengthUnits).toBeNull()
   })
@@ -27,6 +28,7 @@ describe('normalizeOptions', () => {
         dir: './.cache/custom',
         file: 'classes.json',
         strategy: 'overwrite',
+        driver: 'memory',
       },
       features: {
         exposeContext: { refProperty: 'runtimeContexts' },
@@ -41,6 +43,7 @@ describe('normalizeOptions', () => {
     expect(normalized.output.removeUniversalSelector).toBe(false)
     expect(normalized.cache.enabled).toBe(true)
     expect(normalized.cache.strategy).toBe('overwrite')
+    expect(normalized.cache.driver).toBe('memory')
     expect(normalized.features.exposeContext.refProperty).toBe('runtimeContexts')
     expect(normalized.features.extendLengthUnits?.units).toContain('vh')
   })
