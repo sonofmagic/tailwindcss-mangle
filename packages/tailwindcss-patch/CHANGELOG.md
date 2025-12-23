@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.6.1
+
+### Patch Changes
+
+- [`1c0405c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/1c0405c7415adc888d058668119eae35eb037d5a) Thanks [@sonofmagic](https://github.com/sonofmagic)! - Prefer CSS entry directories when resolving Tailwind v4 `@config` so relative configs are found even when a base directory is provided.
+
 ## 8.6.0
 
 ### Minor Changes
