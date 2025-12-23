@@ -93,6 +93,84 @@ describe('TailwindcssPatcher', () => {
     }
   })
 
+  it('merges multiple @config directives in a single CSS entry', async () => {
+    const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-multi-config-'))
+    try {
+      const cssDir = path.join(workspaceRoot, 'src')
+      await fs.ensureDir(cssDir)
+
+      const configA = path.join(workspaceRoot, 'tailwind.config.js')
+      const configB = path.join(workspaceRoot, 'tailwind.extra.js')
+
+      await fs.writeFile(
+        configA,
+        [
+          'module.exports = {',
+          '  content: ["./src/**/*.{html,css}"],',
+          '  theme: {',
+          '    extend: {',
+          '      colors: { configa: "#111111" },',
+          '    },',
+          '  },',
+          '};',
+        ].join('\n'),
+        'utf8',
+      )
+
+      await fs.writeFile(
+        configB,
+        [
+          'module.exports = {',
+          '  content: ["./src/**/*.{html,css}"],',
+          '  theme: {',
+          '    extend: {',
+          '      colors: { configb: "#222222" },',
+          '    },',
+          '  },',
+          '};',
+        ].join('\n'),
+        'utf8',
+      )
+
+      const cssEntry = path.join(cssDir, 'app.css')
+      await fs.writeFile(
+        cssEntry,
+        [
+          '@import "tailwindcss";',
+          '@config "../tailwind.config.js";',
+          '@config "../tailwind.extra.js";',
+        ].join('\n'),
+        'utf8',
+      )
+
+      const usageFile = path.join(cssDir, 'index.html')
+      await fs.writeFile(usageFile, '<div class="bg-configa bg-configb"></div>', 'utf8')
+
+      const patcher = new TailwindcssPatcher({
+        cwd: workspaceRoot,
+        overwrite: false,
+        cache: false,
+        output: {
+          enabled: false,
+        },
+        tailwind: {
+          version: 4,
+          v4: {
+            base: workspaceRoot,
+            cssEntries: [cssEntry],
+          },
+        },
+      })
+
+      const result = await patcher.extract({ write: false })
+      expect(result.classSet?.has('bg-configa')).toBe(true)
+      expect(result.classSet?.has('bg-configb')).toBe(true)
+    }
+    finally {
+      await fs.remove(workspaceRoot)
+    }
+  })
+
   it('falls back to workspace sources when cssEntries directory is empty', async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-workspace-'))
     try {
