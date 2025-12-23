@@ -41,6 +41,58 @@ describe('TailwindcssPatcher', () => {
     expect(await fs.pathExists(outputFile)).toBe(true)
   })
 
+  it('resolves @config relative to the CSS entry directory even when base is set', async () => {
+    const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-entry-base-'))
+    try {
+      const cssDir = path.join(workspaceRoot, 'src')
+      await fs.ensureDir(cssDir)
+
+      const configPath = path.join(workspaceRoot, 'tailwind.config.js')
+      await fs.writeFile(
+        configPath,
+        [
+          'module.exports = {',
+          '  content: ["./src/**/*.{html,css}"],',
+          '  theme: {},',
+          '};',
+        ].join('\n'),
+        'utf8',
+      )
+
+      const cssEntry = path.join(cssDir, 'app.css')
+      await fs.writeFile(
+        cssEntry,
+        ['@import "tailwindcss";', '@config "../tailwind.config.js";'].join('\n'),
+        'utf8',
+      )
+
+      const usageFile = path.join(cssDir, 'page.html')
+      await fs.writeFile(usageFile, '<div class="px-[48rpx]"></div>', 'utf8')
+
+      const patcher = new TailwindcssPatcher({
+        cwd: workspaceRoot,
+        overwrite: false,
+        cache: false,
+        output: {
+          enabled: false,
+        },
+        tailwind: {
+          version: 4,
+          v4: {
+            base: workspaceRoot,
+            cssEntries: [cssEntry],
+          },
+        },
+      })
+
+      const result = await patcher.extract({ write: false })
+      expect(result.classSet?.has('px-[48rpx]')).toBe(true)
+    }
+    finally {
+      await fs.remove(workspaceRoot)
+    }
+  })
+
   it('falls back to workspace sources when cssEntries directory is empty', async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-workspace-'))
     try {

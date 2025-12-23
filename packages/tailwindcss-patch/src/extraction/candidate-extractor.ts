@@ -17,9 +17,34 @@ async function importOxide() {
   return import('@tailwindcss/oxide')
 }
 
+async function loadDesignSystem(css: string, bases: string[]) {
+  const uniqueBases = Array.from(new Set(bases.filter(Boolean)))
+  if (uniqueBases.length === 0) {
+    throw new Error('No base directories provided for Tailwind CSS design system.')
+  }
+
+  const { __unstable__loadDesignSystem } = await importNode()
+  let lastError: unknown
+
+  for (const base of uniqueBases) {
+    try {
+      return await __unstable__loadDesignSystem(css, { base })
+    }
+    catch (error) {
+      lastError = error
+    }
+  }
+
+  if (lastError instanceof Error) {
+    throw lastError
+  }
+  throw new Error('Failed to load Tailwind CSS design system.')
+}
+
 export interface ExtractValidCandidatesOption {
   sources?: SourceEntry[]
   base?: string
+  baseFallbacks?: string[]
   css?: string
   cwd?: string
 }
@@ -55,6 +80,7 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   const defaultCwd = providedOptions.cwd ?? process.cwd()
 
   const base = providedOptions.base ?? defaultCwd
+  const baseFallbacks = providedOptions.baseFallbacks ?? []
   const css = providedOptions.css ?? '@import "tailwindcss";'
   const sources = (providedOptions.sources ?? [
     {
@@ -68,8 +94,7 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     negated: source.negated,
   }))
 
-  const { __unstable__loadDesignSystem } = await importNode()
-  const designSystem = await __unstable__loadDesignSystem(css, { base })
+  const designSystem = await loadDesignSystem(css, [base, ...baseFallbacks])
 
   const candidates = await extractRawCandidates(sources)
   const parsedCandidates = candidates.filter(

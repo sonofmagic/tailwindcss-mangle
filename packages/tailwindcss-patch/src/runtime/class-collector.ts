@@ -63,11 +63,15 @@ export async function collectClassesFromTailwindV4(
       }
       const css = await fs.readFile(filePath, 'utf8')
       const entryDir = path.dirname(filePath)
-      const baseForEntry = resolvedConfiguredBase ?? entryDir
-      const sources = resolveSources(baseForEntry)
+      const designSystemBases = resolvedConfiguredBase && resolvedConfiguredBase !== entryDir
+        ? [entryDir, resolvedConfiguredBase]
+        : [entryDir]
+      const sourcesBase = resolvedConfiguredBase ?? entryDir
+      const sources = resolveSources(sourcesBase)
       const candidates = await extractValidCandidates({
         cwd: options.projectRoot,
-        base: baseForEntry,
+        base: designSystemBases[0],
+        baseFallbacks: designSystemBases.slice(1),
         css,
         sources,
       })
