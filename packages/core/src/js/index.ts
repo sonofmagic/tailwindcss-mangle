@@ -48,6 +48,7 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
   try {
     ast = parse(ms.original, {
       sourceType: 'unambiguous',
+      plugins: ['jsx', 'typescript'],
     })
   }
   catch {

@@ -1,5 +1,62 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`js handler > JSX/TSX support > should handle className prop in JSX with variable 1`] = `
+"
+        const className = 'bg-red-500 text-white'
+        <div className={className}>Hello</div>
+      "
+`;
+
+exports[`js handler > JSX/TSX support > should handle dynamic className with template literal in JSX 1`] = `
+"
+        const isActive = true
+        <div className={\`bg-red-500 \${isActive ? 'text-white' : 'text-black'}\`}>Hello</div>
+      "
+`;
+
+exports[`js handler > JSX/TSX support > should handle fragment and nested JSX elements 1`] = `
+"
+        <>
+          <div className="flex tw-a">
+            <span className="tw-b">Title</span>
+          </div>
+          <p className="tw-d tw-c">Description</p>
+        </>
+      "
+`;
+
+exports[`js handler > JSX/TSX support > should handle self-closing JSX elements with className 1`] = `"<img src="/logo.png" className="tw-b tw-c tw-a" alt="Logo" />"`;
+
+exports[`js handler > JSX/TSX support > should preserve twMerge classes in JSX 1`] = `
+"
+        const className = twMerge('bg-red-500', 'bg-blue-500')
+        <div className={className}>Hello</div>
+      "
+`;
+
+exports[`js handler > JSX/TSX support > should transform TSX with type annotations 1`] = `
+"
+        interface Props {
+          className?: string
+        }
+        const MyComponent: React.FC<Props> = ({ className }) => {
+          return <div className="tw-a tw-b">Hello</div>
+        }
+      "
+`;
+
+exports[`js handler > JSX/TSX support > should transform className in JSX element 1`] = `"<div className="tw-a tw-b">Hello</div>"`;
+
+exports[`js handler > JSX/TSX support > should transform multiple className attributes in JSX 1`] = `
+"
+        <header className="flex tw-c tw-b">
+          <div className="tw-e tw-f tw-d tw-a">
+            Content
+          </div>
+        </header>
+      "
+`;
+
 exports[`js handler > cn 1`] = `
 "const bbb = cn(
       {
@@ -386,275 +443,6 @@ module.exports = __webpack_exports__;
 })();"
 `;
 
-exports[`js handler > preProcessRawCode case 0 1`] = `
-"<script setup lang="ts">
-import { twMerge } from 'tailwind-merge'
-
-const aaa = twMerge('px-2 py-1 bg-red hover:bg-dark-red', 'p-3 bg-[#B91C1C]')
-
-</script>
-
-<template>
-  <main class="flex min-h-screen flex-col items-center justify-between p-24 " :class="['before:text-[#123456]']">
-    <nav :class="aaa">aaa</nav>
-  </main>
-</template>
-
-<script lang="ts">
-import { onMounted, defineComponent } from 'vue'
-
-export default defineComponent({
-  setup() {
-    onMounted(() => {
-      const clipPath = '';
-      document.documentElement.animate(
-        {
-          clipPath
-        },
-        {
-          duration: 500,
-          easing: /* tw-mangle ignore */ 'ease-out',
-          pseudoElement: '::view-transition-new(root)'
-        })
-      document.documentElement.animate(
-        {
-          clipPath
-        },
-        {
-          duration: 500,
-          easing: 'ease-out',
-          pseudoElement: '::view-transition-new(root)'
-        }
-      )
-    })
-    return {}
-  }
-})
-
-</script>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
-"
-`;
-
-exports[`js handler > preProcessRawCode case 1 1`] = `
-{
-  "code": "<script setup lang="ts">
-import { twMerge } from 'tailwind-merge'
-// 'hover:bg-dark-red p-3 bg-[#B91C1C]'
-const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
-
-</script>
-
-<template>
-  <main class="flex min-h-screen flex-col items-center justify-between p-24 " :class="['before:text-[#123456]']">
-    <nav :class="aaa">{{ aaa }}</nav>
-    <div class="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-      <p
-        class="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-        Get started by editing&nbsp;
-        <code class="font-mono font-bold">pages/index.tsx</code>
-      </p>
-      <div
-        class="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-        <a class="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank" rel="noopener noreferrer">
-          By
-          <img src="/vite.svg" alt="Vercel Logo" class="dark:invert" priority />
-        </a>
-      </div>
-    </div>
-
-    <div
-      class="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-      <img class="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert" src="./assets/vue.svg" alt="Next.js Logo"
-        priority />
-    </div>
-
-    <div class="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left ">
-      <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        target="_blank" rel="noopener noreferrer">
-        <h2 class="bg-red-200 mb-3 text-2xl font-semibold">
-          Docs <span
-            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
-        </h2>
-        <p class="m-0 max-w-[30ch] text-sm opacity-50">Find in-depth information about Next.js
-          features and API.</p>
-      </a>
-
-      <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        target="_blank" rel="noopener noreferrer">
-        <h2 class="bg-red-200/40 mb-3 text-2xl font-semibold">
-          Learn <span
-            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
-        </h2>
-        <p class="m-0 max-w-[30ch] text-sm opacity-50">Learn about Next.js in an interactive
-          course with&nbsp;quizzes!</p>
-      </a>
-
-      <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        target="_blank" rel="noopener noreferrer">
-        <h2 class="bg-red-200/70 mb-3 text-2xl font-semibold">
-          Templates <span
-            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
-        </h2>
-        <p class="m-0 max-w-[30ch] text-sm opacity-50">Discover and deploy boilerplate example
-          Next.js&nbsp;projects.</p>
-      </a>
-
-      <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        target="_blank" rel="noopener noreferrer">
-        <h2 class="bg-red-200/90 mb-3 text-2xl font-semibold">
-          Deploy <span
-            class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">-&gt;</span>
-        </h2>
-        <p class="m-0 max-w-[30ch] text-sm opacity-50">Instantly deploy your Next.js site to a
-          shareable URL with Vercel.</p>
-      </a>
-    </div>
-  </main>
-</template>
-
-<script lang="ts">
-import { onMounted, defineComponent } from 'vue'
-
-export default defineComponent({
-  setup() {
-    onMounted(() => {
-      const clipPath = '';
-      document.documentElement.animate(
-        {
-          clipPath
-        },
-        {
-          duration: 500,
-          easing: /* tw-mangle ignore */ 'ease-out',
-          pseudoElement: '::view-transition-new(root)'
-        })
-      document.documentElement.animate(
-        {
-          clipPath
-        },
-        {
-          duration: 500,
-          easing: 'ease-out',
-          pseudoElement: '::view-transition-new(root)'
-        }
-      )
-    })
-    return {}
-  }
-})
-
-</script>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
-",
-}
-`;
-
-exports[`js handler > preProcessRawCode case 2 1`] = `
-"<script setup lang="ts">
-import { twMerge } from 'tailwind-merge'
-// 'hover:bg-dark-red tw-n tw-e'
-const aaa = twMerge('px-2 py-1 bg-red-100 hover:bg-red-800', 'p-3 bg-[#B91C1C]')
-
-</script>
-
-<template>
-  <main class="flex tw-g tw-j tw-f tw-d tw-k tw-i">
-    <nav :class="aaa">{{ aaa }}</nav>
-  </main>
-</template>
-
-<script lang="ts">
-import { onMounted, defineComponent } from 'vue'
-import { twMerge } from 'tailwind-merge'
-
-export default defineComponent({
-  setup() {
-    const bbb = twMerge('bg-red-100 hover:bg-red-100 lg:dark:bg-red-100', 'p-3 bg-[#B91C1C]')
-    return {
-      bbb
-    }
-  }
-})
-
-</script>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: tw-h(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: tw-h(0 0 2em #42b883aa);
-}
-</style>
-"
-`;
-
-exports[`js handler > preProcessRawCode case 2 2`] = `
-Map {
-  "lg:dark:bg-red-100" => "tw-a",
-  "hover:bg-red-100" => "tw-b",
-  "hover:bg-red-800" => "tw-c",
-  "justify-between" => "tw-d",
-  "bg-[#B91C1C]" => "tw-e",
-  "items-center" => "tw-f",
-  "min-h-screen" => "tw-g",
-  "drop-shadow" => "tw-h",
-  "bg-red-100" => "tw-i",
-  "flex-col" => "tw-j",
-  "p-24" => "tw-k",
-  "px-2" => "tw-l",
-  "py-1" => "tw-m",
-  "p-3" => "tw-n",
-}
-`;
-
 exports[`js handler > preserve-fn-case0.js case 0 1`] = `
 "import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -767,177 +555,6 @@ exports[`js handler > trailing slash case 1 1`] = `
 exports[`js handler > trailing slash case 2 1`] = `
 "document.querySelector('#app').classList.add('tw-a tw-b tw-a s tw-a')
 "
-`;
-
-exports[`js handler > ts vanilla-0 1`] = `
-"import './style.css'
-import typescriptLogo from './typescript.svg'
-
-import { setupCounter } from './counter'
-
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = \`
-<main class="flex tw-fb tw-yb tw-cb tw-ra tw-mc">
-<div class="tw-rc tw-gc tw-ub tw-cb tw-ra tw-ob tw-cc tw-ac">
-  <p
-    class="fixed tw-dc tw-jc flex tw-gc tw-va tw-wb tw-pa tw-ja tw-za tw-nc tw-oc tw-ca tw-l tw-v tw-ea tw-sb tw-tb  tw-ab tw-qb tw-wa tw-fc tw-m">
-    Get started by editing&nbsp;
-    <code class="tw-ob tw-nb">pages/index.tsx</code>
-  </p>
-  <div
-    class="fixed tw-xb tw-dc flex tw-kc tw-gc tw-pb tw-va tw-ka tw-jb tw-vb tw-qa tw-ua tw-sb tw-rb tw-tb tw-kb">
-    <a class="tw-w flex tw-ba tw-hc tw-tc tw-n tw-ec"
-      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-      target="_blank" rel="noopener noreferrer">
-      By
-      <img src="\${typescriptLogo}" alt="Vercel Logo" class="tw-hb" priority />
-    </a>
-  </div>
-</div>
-
-<div
-  class="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
-  <img class="relative tw-a tw-hb" src="/vite.svg" alt="Next.js Logo"
-    priority />
-</div>
-
-<div class="tw-ic grid tw-ib tw-bc tw-xa tw-db">
-  <a href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
-    target="_blank" rel="noopener noreferrer">
-    <h2 class="tw-lc tw-zb tw-ya">
-      Docs <span
-        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
-    </h2>
-    <p class="tw-sc tw-eb tw-cc tw-lb">Find in-depth information about Next.js
-      features and API.</p>
-  </a>
-
-  <a href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
-    target="_blank" rel="noopener noreferrer">
-    <h2 class="tw-lc tw-zb tw-ya">
-      Learn <span
-        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
-    </h2>
-    <p class="tw-sc tw-eb tw-cc tw-lb">Learn about Next.js in an interactive
-      course with&nbsp;quizzes!</p>
-  </a>
-
-  <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
-    target="_blank" rel="noopener noreferrer">
-    <h2 class="tw-lc tw-zb tw-ya">
-      Templates <span
-        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
-    </h2>
-    <p class="tw-sc tw-eb tw-cc tw-lb">Discover and deploy boilerplate example
-      Next.js&nbsp;projects.</p>
-  </a>
-
-  <a href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-    class="group tw-mb border tw-aa tw-pc tw-qc tw-ga tw-q tw-fa tw-c tw-e"
-    target="_blank" rel="noopener noreferrer">
-    <h2 class="tw-lc tw-zb tw-ya">
-      Deploy <span
-        class="tw-bb tw-r tw-i tw-f">-&gt;</span>
-    </h2>
-    <p class="tw-sc tw-eb tw-cc tw-lb">Instantly deploy your Next.js site to a
-      shareable URL with Vercel.</p>
-  </a>
-</div>
-</main>
-\`
-
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
-"
-`;
-
-exports[`js handler > tsx app0 1`] = `
-"import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <main className="flex tw-fb tw-zb tw-cb tw-ra tw-nc">
-      <div className="tw-sc tw-hc tw-vb tw-cb tw-ra tw-pb tw-dc tw-bc">
-        <p className="fixed tw-ec tw-kc flex tw-hc tw-va tw-xb tw-pa tw-ja tw-za tw-oc tw-pc tw-ca tw-l tw-v tw-ea tw-tb tw-ub  tw-ab tw-rb tw-wa tw-gc tw-m">
-          Get started by editing&nbsp;
-          <code className="tw-pb tw-ob">pages/index.tsx</code>
-        </p>
-        <div className="fixed tw-yb tw-ec flex tw-lc tw-hc tw-qb tw-va tw-ka tw-jb tw-wb tw-qa tw-ua tw-tb tw-sb tw-ub tw-kb">
-          <a
-            className="tw-w flex tw-ba tw-ic tw-uc tw-n tw-fc"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By <img src="/vite.svg" alt="Vercel Logo" className="tw-hb" width={100} height={24} />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex tw-ba tw-na tw-ha tw-ia tw-k tw-u before:bg-gradient-radial tw-da tw-p tw-oa tw-s tw-sa tw-gb tw-la tw-ma tw-o after:bg-gradient-conic tw-y tw-z tw-ta tw-x tw-b tw-d tw-h tw-j tw-g tw-t">
-        <img className="relative tw-a tw-hb" src={reactLogo} alt="Next.js Logo" width={180} height={37} />
-      </div>
-
-      <div className="tw-jc grid tw-ib tw-cc tw-xa tw-db">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Docs <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
-          </h2>
-          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Learn <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
-          </h2>
-          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Templates <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
-          </h2>
-          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Discover and deploy boilerplate example Next.js&nbsp;projects.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group tw-mb border tw-aa tw-qc tw-rc tw-ga tw-q tw-fa tw-c tw-e"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={\` tw-mc tw-ac tw-ya\`}>
-            Deploy <span className="tw-bb tw-r tw-i tw-f">-&gt;</span>
-          </h2>
-          <p className={\` tw-tc tw-eb tw-dc tw-lb\`}>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
-        </a>
-      </div>
-    </main>
-  )
-}
-
-export default App"
 `;
 
 exports[`js handler > z-10 not transform 1`] = `"{ className: "tw-a tw-b tw-c tw-d tw-e tw-f tw-g tw-h" }"`;

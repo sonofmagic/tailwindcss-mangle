@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`vue handler > should handle complete SFC with template, script and style 1`] = `
+"<script setup>
+const className = 'tw-c'
+</script>
+
+<template>
+  <div class="tw-a tw-b" :class="className">
+    Hello World
+  </div>
+</template>
+
+<style scoped>
+.\\31 {
+  color: white;
+}
+</style>"
+`;
+
+exports[`vue handler > should handle dynamic :class binding 1`] = `
+"<template>
+  <div :class="dynamicClass">Hello</div>
+</template>"
+`;
+
+exports[`vue handler > should preserve twMerge classes 1`] = `
+"<script setup>
+import { twMerge } from 'tailwind-merge'
+const cls = twMerge('tw-b', 'tw-a')
+</script>"
+`;
+
+exports[`vue handler > should transform class in script setup 1`] = `
+"<script setup>
+const cls = 'tw-a tw-b'
+</script>"
+`;
+
+exports[`vue handler > should transform class in style section 1`] = `
+"<style scoped>
+.\\31 {
+  color: white;
+}
+</style>"
+`;
+
+exports[`vue handler > should transform static class in template 1`] = `
+"<template>
+  <div class="tw-a tw-b">Hello</div>
+</template>"
+`;

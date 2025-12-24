@@ -7,6 +7,7 @@ export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOpti
   const { ctx, id } = options
   const { replaceMap, classGenerator } = ctx
   const ms: MagicString = typeof raw === 'string' ? new MagicString(raw) : raw
+
   const parser = new Parser({
     onattribute(name, value) {
       if (name === 'class') {
@@ -19,7 +20,9 @@ export function htmlHandler(raw: string | MagicString, options: IHtmlHandlerOpti
           if (replaceMap.has(v)) {
             const gen = classGenerator.generateClassName(v)
             rawValue = rawValue.replace(makeRegex(v), gen.name)
-            ctx.addToUsedBy(v, id)
+            if (id) {
+              ctx.addToUsedBy(v, id)
+            }
             needUpdate = true
           }
         }

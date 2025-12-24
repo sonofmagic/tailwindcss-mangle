@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`svelte handler > should handle class directives 1`] = `"<div class:bg-red-500={isActive}>Hello</div>"`;
+
+exports[`svelte handler > should handle complete component with script, template and style 1`] = `
+"<script>
+let className = 'bg-blue-500'
+</script>
+
+<div class="bg-red-500 text-white" class:bg-blue-500={true}>
+  Hello World
+</div>
+
+<style>
+.bg-red-500 {
+  color: white;
+}
+</style>"
+`;
+
+exports[`svelte handler > should handle multiple class attributes 1`] = `"<div class="p-4 m-2 bg-red-500 hover:bg-red-600">Content</div>"`;
+
+exports[`svelte handler > should transform class in script tag 1`] = `
+"<script>
+const cls = 'bg-red-500 text-white'
+</script>"
+`;
+
+exports[`svelte handler > should transform class in style tag 1`] = `
+"<style>
+.bg-red-500 {
+  color: white;
+}
+</style>"
+`;
+
+exports[`svelte handler > should transform static class 1`] = `"<div class="bg-red-500 text-white">Hello</div>"`;

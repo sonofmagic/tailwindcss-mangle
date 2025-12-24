@@ -518,4 +518,148 @@ describe('js handler', async () => {
     })
     expect(res).toMatchSnapshot()
   })
+
+  describe('JSX/TSX support', () => {
+    beforeEach(() => {
+      ctx = new Context()
+    })
+
+    it('should transform className in JSX element', async () => {
+      const code = `<div className="bg-red-500 text-white">Hello</div>`
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'text-white'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should transform multiple className attributes in JSX', async () => {
+      const code = `
+        <header className="flex items-center justify-between">
+          <div className="p-4 m-2 bg-red-500 hover:bg-red-600">
+            Content
+          </div>
+        </header>
+      `
+      await ctx.initConfig({
+        classList: ['flex', 'items-center', 'justify-between', 'p-4', 'm-2', 'bg-red-500', 'hover:bg-red-600'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should handle dynamic className with template literal in JSX', async () => {
+      const code = `
+        const isActive = true
+        <div className={\`bg-red-500 \${isActive ? 'text-white' : 'text-black'}\`}>Hello</div>
+      `
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'text-white', 'text-black'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should handle className prop in JSX with variable', async () => {
+      const code = `
+        const className = 'bg-red-500 text-white'
+        <div className={className}>Hello</div>
+      `
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'text-white'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should transform TSX with type annotations', async () => {
+      const code = `
+        interface Props {
+          className?: string
+        }
+        const MyComponent: React.FC<Props> = ({ className }) => {
+          return <div className="bg-red-500 text-white">Hello</div>
+        }
+      `
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'text-white'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.tsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should handle self-closing JSX elements with className', async () => {
+      const code = `<img src="/logo.png" className="w-10 h-10 rounded-full" alt="Logo" />`
+      await ctx.initConfig({
+        classList: ['w-10', 'h-10', 'rounded-full'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should handle fragment and nested JSX elements', async () => {
+      const code = `
+        <>
+          <div className="flex items-center">
+            <span className="text-red-500">Title</span>
+          </div>
+          <p className="mt-4 text-sm">Description</p>
+        </>
+      `
+      await ctx.initConfig({
+        classList: ['flex', 'items-center', 'text-red-500', 'mt-4', 'text-sm'],
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    it('should preserve twMerge classes in JSX', async () => {
+      const code = `
+        const className = twMerge('bg-red-500', 'bg-blue-500')
+        <div className={className}>Hello</div>
+      `
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'bg-blue-500'],
+        transformerOptions: {
+          preserve: { functions: ['twMerge'] },
+        },
+      })
+
+      const { code: res } = jsHandler(code, {
+        ctx,
+        id: 'test.jsx',
+      })
+      expect(res).toMatchSnapshot()
+      // twMerge classes should not be transformed in the string literals
+      expect(res).toContain('twMerge')
+    })
+  })
 })

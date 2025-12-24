@@ -1,7 +1,7 @@
 import type { TransformerOptions } from '@tailwindcss-mangle/config'
 import type { UnpluginFactory } from 'unplugin'
 import { createFilter } from '@rollup/pluginutils'
-import { Context, cssHandler, htmlHandler, jsHandler } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, jsHandler, vueHandler, svelteHandler } from '@tailwindcss-mangle/core'
 import { isCSSRequest } from 'is-css-request'
 import path from 'pathe'
 import { getGroupedEntries } from '@/utils'
@@ -36,12 +36,20 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
         if (/\.[cm]?[jt]sx?(?:$|\?)/.test(id)) {
           return jsHandler(code, opts)
         }
-        else if (/\.(?:vue|svelte)(?:$|\?)/.test(id)) {
+        else if (/\.vue(?:$|\?)/.test(id)) {
           if (isCSSRequest(id)) {
             return await cssHandler(code, opts)
           }
           else {
-            return jsHandler(code, opts)
+            return await vueHandler(code, opts)
+          }
+        }
+        else if (/\.svelte(?:$|\?)/.test(id)) {
+          if (isCSSRequest(id)) {
+            return await cssHandler(code, opts)
+          }
+          else {
+            return await svelteHandler(code, opts)
           }
         }
         else if (isCSSRequest(id)) {

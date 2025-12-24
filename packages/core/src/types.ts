@@ -38,3 +38,9 @@ export interface IJsHandlerOptions extends IHandlerOptions {
 export interface ICssHandlerOptions extends IHandlerOptions {
   ignoreVueScoped?: boolean
 }
+
+export interface IVueHandlerOptions extends IJsHandlerOptions {
+  preserveScoped?: boolean
+}
+
+export interface ISvelteHandlerOptions extends IJsHandlerOptions {}
