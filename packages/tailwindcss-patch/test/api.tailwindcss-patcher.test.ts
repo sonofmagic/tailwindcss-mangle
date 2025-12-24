@@ -240,10 +240,6 @@ describe('TailwindcssPatcher', () => {
         dir: tempDir,
         file: 'cache.json',
       },
-      tailwind: {
-        packageName: 'tailwindcss-3',
-        version: 3,
-      },
     })
 
     const classCache = new Map<string, any>([
@@ -278,10 +274,6 @@ describe('TailwindcssPatcher', () => {
         file: 'cache.json',
         strategy: 'overwrite',
       },
-      tailwind: {
-        packageName: 'tailwindcss-3',
-        version: 3,
-      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockReturnValue([
@@ -304,10 +296,6 @@ describe('TailwindcssPatcher', () => {
     const patcher = new TailwindcssPatcher({
       overwrite: false,
       cache: false,
-      tailwind: {
-        packageName: 'tailwindcss-3',
-        version: 3,
-      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockImplementation(() => contexts)
