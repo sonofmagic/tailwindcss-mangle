@@ -4,7 +4,7 @@ mangle tailwindcss utilities plugin
 
 It is recommended to read the documentation of [tailwindcss-patch](https://github.com/sonofmagic/tailwindcss-mangle/tree/main/packages/tailwindcss-patch) first, `unplugin-tailwindcss-mangle` depends on this tool.
 
-> Now Support `vite` and `webpack`
+> Now Support `vite`, `webpack`, `esbuild`, and `nuxt`
 
 - [unplugin-tailwindcss-mangle](#unplugin-tailwindcss-mangle)
   - [Docs](#docs)
@@ -17,6 +17,7 @@ It is recommended to read the documentation of [tailwindcss-patch](https://githu
     - [5. Register this plugin](#5-register-this-plugin)
       - [vite](#vite)
       - [webpack](#webpack)
+      - [esbuild](#esbuild)
       - [Nuxt 3](#nuxt-3)
   - [Options](#options)
   - [Notice](#notice)
@@ -116,6 +117,20 @@ module.exports = defineConfig({
       config.plugins.push(utwm())
     }
   }
+})
+```
+
+#### esbuild
+
+```js
+import { build } from 'esbuild'
+import utwm from 'unplugin-tailwindcss-mangle/esbuild'
+
+await build({
+  entryPoints: ['src/main.ts'],
+  bundle: true,
+  outfile: 'dist/index.js',
+  plugins: [utwm()]
 })
 ```
 

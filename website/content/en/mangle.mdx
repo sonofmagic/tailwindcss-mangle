@@ -122,21 +122,18 @@ export default defineNuxtConfig({
 
 ### Esbuild
 
+Use the shared config by swapping in `tailwindcssMangle({ ...appConfig.transformer })`.
+
 ```ts
 // build.mjs
 import { build } from 'esbuild'
 import tailwindcssMangle from 'unplugin-tailwindcss-mangle/esbuild'
-import appConfig from './tailwindcss-patch.config'
 
 await build({
   entryPoints: ['src/main.ts'],
   bundle: true,
   outfile: 'dist/index.js',
-  plugins: [
-    tailwindcssMangle({
-      ...appConfig.transformer,
-    }),
-  ],
+  plugins: [tailwindcssMangle()],
 })
 ```
 
