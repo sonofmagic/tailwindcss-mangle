@@ -163,7 +163,9 @@ With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when
 
 `tw-patch validate` performs migration report compatibility checks without writing restored files. It runs report schema validation and scans backup references in dry-run mode.
 
-Migration report schema is published at package subpath: `tailwindcss-patch/migration-report.schema.json`.
+Schemas are published at package subpaths:
+`tailwindcss-patch/migration-report.schema.json`,
+`tailwindcss-patch/restore-result.schema.json`.
 Programmatic consumers can also import report helpers/types from package entry:
 `migrateConfigFiles`, `restoreConfigFiles`, `MIGRATION_REPORT_KIND`, `MIGRATION_REPORT_SCHEMA_VERSION`, `ConfigFileMigrationReport`.
 

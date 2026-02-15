@@ -32,3 +32,18 @@ describe('migration report json schema', () => {
     )
   })
 })
+
+describe('restore result json schema', () => {
+  it('ships a restore-result schema file aligned with exported constants', async () => {
+    const schemaPath = path.resolve(process.cwd(), 'schema/restore-result.schema.json')
+    const schema = await fs.readJSON(schemaPath) as Record<string, any>
+
+    expect(schema.$schema).toContain('json-schema.org')
+    expect(schema.type).toBe('object')
+    expect(schema.required).toEqual(
+      expect.arrayContaining(['reportFile', 'dryRun', 'restored', 'missingBackups']),
+    )
+    expect(schema.properties.reportKind.const).toBe(MIGRATION_REPORT_KIND)
+    expect(schema.properties.reportSchemaVersion.minimum).toBe(MIGRATION_REPORT_SCHEMA_VERSION)
+  })
+})

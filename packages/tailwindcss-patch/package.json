@@ -25,7 +25,8 @@
       "import": "./src/index.ts",
       "require": "./src/index.ts"
     },
-    "./migration-report.schema.json": "./schema/migration-report.schema.json"
+    "./migration-report.schema.json": "./schema/migration-report.schema.json",
+    "./restore-result.schema.json": "./schema/restore-result.schema.json"
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -61,7 +62,8 @@
         "import": "./dist/index.mjs",
         "require": "./dist/index.js"
       },
-      "./migration-report.schema.json": "./schema/migration-report.schema.json"
+      "./migration-report.schema.json": "./schema/migration-report.schema.json",
+      "./restore-result.schema.json": "./schema/restore-result.schema.json"
     },
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

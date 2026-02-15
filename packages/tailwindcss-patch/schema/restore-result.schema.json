@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangle.icebreaker.top/schemas/tailwindcss-patch/restore-result.schema.json",
+  "title": "tailwindcss-patch restore/validate result",
+  "description": "Schema for JSON output from `tw-patch restore --json` and `tw-patch validate --json`.",
+  "type": "object",
+  "required": [
+    "cwd",
+    "reportFile",
+    "dryRun",
+    "strict",
+    "scannedEntries",
+    "restorableEntries",
+    "restoredFiles",
+    "missingBackups",
+    "skippedEntries",
+    "restored"
+  ],
+  "properties": {
+    "cwd": {
+      "type": "string"
+    },
+    "reportFile": {
+      "type": "string"
+    },
+    "reportKind": {
+      "type": "string",
+      "const": "tw-patch-migrate-report"
+    },
+    "reportSchemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "dryRun": {
+      "type": "boolean"
+    },
+    "strict": {
+      "type": "boolean"
+    },
+    "scannedEntries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "restorableEntries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "restoredFiles": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "missingBackups": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "skippedEntries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "restored": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

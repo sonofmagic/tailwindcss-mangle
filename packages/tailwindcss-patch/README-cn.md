@@ -106,7 +106,9 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 `tw-patch validate` 会以 dry-run 模式执行迁移报告校验，不写回任何恢复文件，同时校验报告 schema 与备份引用状态。
 
-迁移报告 JSON Schema 通过子路径发布：`tailwindcss-patch/migration-report.schema.json`。
+JSON Schema 通过子路径发布：
+`tailwindcss-patch/migration-report.schema.json`、
+`tailwindcss-patch/restore-result.schema.json`。
 编程场景也可直接从包入口导入报告相关导出：
 `migrateConfigFiles`、`restoreConfigFiles`、`MIGRATION_REPORT_KIND`、`MIGRATION_REPORT_SCHEMA_VERSION`、`ConfigFileMigrationReport`。
 
