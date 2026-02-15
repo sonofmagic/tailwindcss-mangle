@@ -5,6 +5,7 @@ import generate from '@babel/generator'
 import * as t from '@babel/types'
 import fs from 'fs-extra'
 import path from 'pathe'
+import { pkgName, pkgVersion } from '../constants'
 
 export const DEFAULT_CONFIG_FILENAMES = [
   'tailwindcss-patch.config.ts',
@@ -30,6 +31,8 @@ const DEFAULT_WORKSPACE_IGNORED_DIRS = new Set([
   'tmp',
 ])
 const DEFAULT_WORKSPACE_MAX_DEPTH = 6
+const MIGRATION_REPORT_KIND = 'tw-patch-migrate-report'
+const MIGRATION_REPORT_SCHEMA_VERSION = 1
 
 const ROOT_LEGACY_KEYS = ['cwd', 'overwrite', 'tailwind', 'features', 'output', 'applyPatches'] as const
 
@@ -51,6 +54,13 @@ export interface ConfigFileMigrationEntry {
 }
 
 export interface ConfigFileMigrationReport {
+  reportKind: typeof MIGRATION_REPORT_KIND
+  schemaVersion: typeof MIGRATION_REPORT_SCHEMA_VERSION
+  generatedAt: string
+  tool: {
+    name: string
+    version: string
+  }
   cwd: string
   dryRun: boolean
   rollbackOnError: boolean
@@ -86,6 +96,7 @@ export interface RestoreConfigFilesOptions {
 export interface RestoreConfigFilesResult {
   cwd: string
   reportFile: string
+  reportSchemaVersion?: number
   dryRun: boolean
   strict: boolean
   scannedEntries: number
@@ -620,6 +631,13 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
   }
 
   return {
+    reportKind: MIGRATION_REPORT_KIND,
+    schemaVersion: MIGRATION_REPORT_SCHEMA_VERSION,
+    generatedAt: new Date().toISOString(),
+    tool: {
+      name: pkgName,
+      version: pkgVersion,
+    },
     cwd,
     dryRun,
     rollbackOnError,
@@ -640,7 +658,22 @@ export async function restoreConfigFiles(options: RestoreConfigFilesOptions): Pr
   const strict = options.strict ?? false
   const reportFile = path.resolve(cwd, options.reportFile)
 
-  const report = await fs.readJSON(reportFile) as { entries?: Array<{ file?: string, backupFile?: string }> }
+  const report = await fs.readJSON(reportFile) as {
+    reportKind?: string
+    schemaVersion?: number
+    entries?: Array<{ file?: string, backupFile?: string }>
+  }
+  if (report.reportKind !== undefined && report.reportKind !== MIGRATION_REPORT_KIND) {
+    throw new Error(`Unsupported report kind "${report.reportKind}" in ${reportFile}.`)
+  }
+  if (
+    report.schemaVersion !== undefined
+    && (!Number.isInteger(report.schemaVersion) || report.schemaVersion > MIGRATION_REPORT_SCHEMA_VERSION)
+  ) {
+    throw new Error(
+      `Unsupported report schema version "${String(report.schemaVersion)}" in ${reportFile}. Current supported version is ${MIGRATION_REPORT_SCHEMA_VERSION}.`,
+    )
+  }
   const entries = Array.isArray(report.entries) ? report.entries : []
 
   let scannedEntries = 0
@@ -685,6 +718,7 @@ export async function restoreConfigFiles(options: RestoreConfigFilesOptions): Pr
   return {
     cwd,
     reportFile,
+    ...(report.schemaVersion === undefined ? {} : { reportSchemaVersion: report.schemaVersion }),
     dryRun,
     strict,
     scannedEntries,

@@ -77,6 +77,8 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 迁移写入默认采用“事务式”策略：如果后续文件写入失败，会自动回滚此前已经写入的迁移文件，避免留下半迁移状态。若需要显式保留原始文件快照，可配合 `--backup-dir`；若需要审计产物，可配合 `--report-file`。
 
+迁移报告现在会携带元数据：`reportKind`、`schemaVersion`、`generatedAt` 和 `tool`（`name` / `version`），便于恢复阶段做兼容性校验。
+
 ### `restore` 常用参数
 
 | 参数                   | 说明                                                         |
@@ -86,6 +88,8 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 | `--dry-run`            | 仅预览恢复目标，不执行写入。                                 |
 | `--strict`             | 报告中的备份文件缺失时直接报错退出。                         |
 | `--json`               | 输出 JSON 格式的恢复结果。                                   |
+
+`tw-patch restore` 在报告包含元数据时会执行 schema 校验。若 `reportKind` 不匹配或 `schemaVersion` 高于当前支持版本，会拒绝恢复；不包含该元数据的历史报告仍保持兼容。
 
 ### `tokens` 常用参数
 

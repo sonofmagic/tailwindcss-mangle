@@ -102,6 +102,10 @@ describe('migrateConfigFiles', () => {
         dryRun: true,
       })
 
+      expect(report.reportKind).toBe('tw-patch-migrate-report')
+      expect(report.schemaVersion).toBe(1)
+      expect(report.generatedAt).toBeTypeOf('string')
+      expect(report.tool.name).toBe('tailwindcss-patch')
       expect(report.scannedFiles).toBe(1)
       expect(report.changedFiles).toBe(1)
       expect(report.writtenFiles).toBe(0)
@@ -300,6 +304,7 @@ describe('restoreConfigFiles', () => {
         reportFile: '.tw-patch/migrate-report.json',
       })
 
+      expect(result.reportSchemaVersion).toBeUndefined()
       expect(result.restoredFiles).toBe(1)
       expect(result.missingBackups).toBe(0)
       const restored = await fs.readFile(target, 'utf8')
@@ -355,6 +360,45 @@ describe('restoreConfigFiles', () => {
         reportFile: '.tw-patch/migrate-report.json',
         strict: true,
       })).rejects.toThrow('Restore failed')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('throws on unsupported report schema versions', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-schema-'))
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      await fs.outputJSON(reportPath, {
+        reportKind: 'tw-patch-migrate-report',
+        schemaVersion: 999,
+        entries: [],
+      }, { spaces: 2 })
+
+      await expect(restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+      })).rejects.toThrow('Unsupported report schema version')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('throws on unsupported report kind', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-kind-'))
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      await fs.outputJSON(reportPath, {
+        reportKind: 'unknown-report',
+        entries: [],
+      }, { spaces: 2 })
+
+      await expect(restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+      })).rejects.toThrow('Unsupported report kind')
     }
     finally {
       await fs.remove(cwd)

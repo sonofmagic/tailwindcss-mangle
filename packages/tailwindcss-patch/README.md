@@ -134,6 +134,8 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 
 When writing files, migration uses a transactional strategy by default: if a later file write fails, already written migration files are rolled back to avoid partial updates. Use `--backup-dir` if you want explicit backup snapshots for audit/manual recovery. Use `--report-file` to keep a machine-readable migration artifact.
 
+Migration reports now include envelope metadata: `reportKind`, `schemaVersion`, `generatedAt`, and `tool` (`name` / `version`). This metadata helps restore tooling validate report compatibility.
+
 ### Restore options
 
 | Flag                  | Description                                                       |
@@ -143,6 +145,8 @@ When writing files, migration uses a transactional strategy by default: if a lat
 | `--dry-run`           | Preview restore targets without writing files.                    |
 | `--strict`            | Fail when any backup file in the report is missing.               |
 | `--json`              | Print restore summary as JSON.                                    |
+
+`tw-patch restore` validates report schema metadata when available. Reports with unsupported `reportKind` or newer `schemaVersion` are rejected to avoid unsafe restores. Legacy reports without metadata are still supported.
 
 ### Token report options
 

@@ -89,6 +89,8 @@ Migration mapping:
 - Optional `--backup-dir` can persist per-file pre-migration snapshots for manual recovery or auditing.
 - `--include` / `--exclude` patterns can narrow workspace migration scope, and `--report-file` can persist machine-readable migration reports.
 - `tw-patch restore` can restore config files from a migration report (`backupFile` entries) with optional `--dry-run`, `--strict`, and `--json`.
+- Migration reports now include envelope metadata: `reportKind`, `schemaVersion`, `generatedAt`, and `tool` (`name` / `version`).
+- `tw-patch restore` validates report metadata when present, rejects unknown kinds/newer schema versions, and keeps legacy metadata-free reports backward compatible.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
 ## 4. Cache handling
