@@ -198,6 +198,7 @@ esac
 GitHub Actions templates:
 - single job: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
 - monorepo matrix shards (`root/apps/packages`): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
+- monorepo affected shards (PR diff-aware): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
 
 ### Token report options
 

@@ -97,6 +97,7 @@ Migration mapping:
 - `tw-patch validate --json` now emits a stable discriminated payload (`ok: true` success / `ok: false` failure with `reason` + `exitCode`), covered by `tailwindcss-patch/validate-result.schema.json`.
 - A ready-to-use GitHub Actions example is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`.
 - A matrix-based monorepo GitHub Actions example is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`.
+- An affected-shards monorepo GitHub Actions example (PR diff aware) is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`.
 - Migration report tooling now has public exports from package entry (`migrateConfigFiles`, `restoreConfigFiles`, report constants/types) and published JSON schema subpaths: `tailwindcss-patch/migration-report.schema.json`, `tailwindcss-patch/restore-result.schema.json`, `tailwindcss-patch/validate-result.schema.json`.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 

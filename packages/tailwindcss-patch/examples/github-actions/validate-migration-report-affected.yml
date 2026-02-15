@@ -1,0 +1,175 @@
+name: Validate Tailwind Patch Migration Report (Affected Shards)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  detect-shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      has_changes: ${{ steps.resolve.outputs.has_changes }}
+      matrix: ${{ steps.resolve.outputs.matrix }}
+      shards: ${{ steps.resolve.outputs.shards }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Resolve affected shards
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            shards=(root apps packages)
+          else
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.sha }}"
+            mapfile -t changed_files < <(git diff --name-only "$base_sha" "$head_sha")
+
+            run_all=false
+            root=false
+            apps=false
+            packages=false
+
+            for file in "${changed_files[@]}"; do
+              [ -z "$file" ] && continue
+
+              case "$file" in
+                apps/*) apps=true ;;
+                packages/*) packages=true ;;
+                tailwindcss-patch.config.*|tailwindcss-mangle.config.*) root=true ;;
+              esac
+
+              case "$file" in
+                packages/tailwindcss-patch/*|pnpm-lock.yaml|pnpm-workspace.yaml)
+                  run_all=true
+                  ;;
+              esac
+            done
+
+            if [ "$run_all" = true ]; then
+              shards=(root apps packages)
+            else
+              shards=()
+              [ "$root" = true ] && shards+=(root)
+              [ "$apps" = true ] && shards+=(apps)
+              [ "$packages" = true ] && shards+=(packages)
+            fi
+          fi
+
+          if [ "${#shards[@]}" -eq 0 ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "shards=none" >> "$GITHUB_OUTPUT"
+            echo 'matrix={"shard":[]}' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          shard_csv="$(IFS=,; echo "${shards[*]}")"
+          matrix_json="$(SHARDS="$shard_csv" node -e '
+            const names = (process.env.SHARDS || "").split(",").filter(Boolean)
+            const reportMap = {
+              root: ".tw-patch/migrate-report-root.json",
+              apps: ".tw-patch/migrate-report-apps.json",
+              packages: ".tw-patch/migrate-report-packages.json",
+            }
+            const shard = names.map(name => ({ name, report_file: reportMap[name] }))
+            process.stdout.write(JSON.stringify({ shard }))
+          ')"
+
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "shards=$shard_csv" >> "$GITHUB_OUTPUT"
+          echo "matrix=$matrix_json" >> "$GITHUB_OUTPUT"
+
+  validate-migration-report:
+    needs: detect-shards
+    if: needs.detect-shards.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-shards.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Ensure migration report is up-to-date (${{ matrix.shard.name }})
+        shell: bash
+        run: |
+          include_args=()
+          case "${{ matrix.shard.name }}" in
+            root)
+              include_args+=(--include "tailwindcss-patch.config.*")
+              include_args+=(--include "tailwindcss-mangle.config.*")
+              ;;
+            apps)
+              include_args+=(--include "apps/**")
+              ;;
+            packages)
+              include_args+=(--include "packages/**")
+              ;;
+            *)
+              echo "::error::Unknown shard: ${{ matrix.shard.name }}"
+              exit 1
+              ;;
+          esac
+
+          pnpm dlx tw-patch migrate --workspace --check "${include_args[@]}" --report-file "${{ matrix.shard.report_file }}"
+
+      - name: Validate migration report (${{ matrix.shard.name }})
+        shell: bash
+        run: |
+          mkdir -p .tw-patch
+          set +e
+          pnpm dlx tw-patch validate --report-file "${{ matrix.shard.report_file }}" --strict --json > ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
+          status=$?
+          set -e
+
+          if [ "$status" -ne 0 ]; then
+            cat ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
+          fi
+
+          case "$status" in
+            0)  echo "validate ok (${{ matrix.shard.name }})" ;;
+            21) echo "::error::Migration report schema/kind incompatible (${{ matrix.shard.name }})"; exit 1 ;;
+            22) echo "::error::Missing backups under --strict (${{ matrix.shard.name }})"; exit 1 ;;
+            23) echo "::error::I/O failure while reading report/backups (${{ matrix.shard.name }})"; exit 1 ;;
+            *)  echo "::error::Unknown validate failure (exit $status, shard=${{ matrix.shard.name }})"; exit "$status" ;;
+          esac
+
+      - name: Upload validate result (${{ matrix.shard.name }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tw-patch-validate-result-${{ matrix.shard.name }}
+          path: .tw-patch/validate-result-${{ matrix.shard.name }}.json
+
+  no-affected-shards:
+    needs: detect-shards
+    if: needs.detect-shards.outputs.has_changes != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip
+        run: echo "No affected shards for migration report validation."

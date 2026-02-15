@@ -141,6 +141,7 @@ esac
 GitHub Actions 模板：
 - 单任务版本：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
 - monorepo 矩阵分片（`root/apps/packages`）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
+- monorepo 按变更分片（基于 PR diff）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
 
 ### `tokens` 常用参数
 
