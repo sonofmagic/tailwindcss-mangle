@@ -233,9 +233,10 @@ All helpers are exported from the package root for direct consumption in custom 
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
-    output: {
-      filename: '.tw-patch/tw-class-list.json',
+  registry: {
+    projectRoot: '.',
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
       removeUniversalSelector: true,
       format: 'json',
     },
@@ -246,8 +247,9 @@ export default defineConfig({
         sources: [{ base: 'src', pattern: '**/*.{html,tsx}', negated: false }],
       },
     },
-    applyPatches: {
-      exportContext: true,
+    apply: {
+      overwrite: true,
+      exposeContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
@@ -256,7 +258,7 @@ export default defineConfig({
 })
 ```
 
-Even though `defineConfig` still exposes the historical shape, every new option is supported and will be normalised automatically.
+`defineConfig` supports both modern `registry` fields (`projectRoot`, `tailwindcss`, `apply`, `extract`) and historical keys. The patcher normalizer handles both and always prefers modern fields when both are present.
 
 ## Migration
 

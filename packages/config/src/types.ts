@@ -58,12 +58,56 @@ export interface TailwindNextOptions {
   cssEntries?: string[]
 }
 
+export interface RegistryExposeContextOptions {
+  refProperty?: string
+}
+
+export interface RegistryExtendLengthUnitsOptions {
+  enabled?: boolean
+  units?: string[]
+  lengthUnitsFilePath?: string
+  variableName?: string
+  overwrite?: boolean
+  destPath?: string
+}
+
+export interface RegistryApplyOptions {
+  overwrite?: boolean
+  exposeContext?: boolean | RegistryExposeContextOptions
+  extendLengthUnits?: false | RegistryExtendLengthUnitsOptions
+}
+
+export interface RegistryExtractOptions {
+  write?: boolean
+  file?: string
+  format?: 'json' | 'lines'
+  pretty?: boolean | number
+  removeUniversalSelector?: boolean
+}
+
+export interface RegistryCacheOptions {
+  enabled?: boolean
+  cwd?: string
+  dir?: string
+  file?: string
+  strategy?: 'merge' | 'overwrite'
+  driver?: 'file' | 'memory' | 'noop'
+}
+
 export interface TailwindTargetOptions {
   version?: 2 | 3 | 4
+  packageName?: string
+  /** @deprecated Use `packageName` instead. */
   package?: string
   resolve?: PackageResolvingOptions
+  v2?: TailwindLocatorOptions
+  v3?: TailwindLocatorOptions
+  v4?: TailwindNextOptions
+  /** @deprecated Use `v2` instead. */
   legacy?: TailwindLocatorOptions
+  /** @deprecated Use `v3` instead. */
   classic?: TailwindLocatorOptions
+  /** @deprecated Use `v4` instead. */
   next?: TailwindNextOptions
   cwd?: string
   config?: string
@@ -76,7 +120,15 @@ export interface RegistryOutputOptions {
 }
 
 export interface RegistryOptions {
+  projectRoot?: string
+  tailwindcss?: TailwindTargetOptions
+  apply?: RegistryApplyOptions
+  extract?: RegistryExtractOptions
+  cache?: RegistryCacheOptions
+  filter?: (className: string) => boolean
+  /** @deprecated Use `extract` instead. */
   output?: RegistryOutputOptions
+  /** @deprecated Use `tailwindcss` instead. */
   tailwind?: TailwindTargetOptions
 }
 

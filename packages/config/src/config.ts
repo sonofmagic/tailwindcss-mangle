@@ -36,9 +36,10 @@ export function initConfig(cwd: string) {
 
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
     },
+    tailwindcss: {},
   },
   transformer: {
     registry: {

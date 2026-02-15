@@ -3,6 +3,9 @@
 exports[`config > 2.transformer-options 1`] = `
 {
   "registry": {
+    "extract": {
+      "file": ".tw-patch/tw-class-list.json",
+    },
     "output": {
       "file": "xxx/yyy/zzz.json",
       "pretty": false,
@@ -11,6 +14,7 @@ exports[`config > 2.transformer-options 1`] = `
     "tailwind": {
       "cwd": "aaa/bbb/cc",
     },
+    "tailwindcss": {},
   },
   "transformer": {
     "disabled": false,

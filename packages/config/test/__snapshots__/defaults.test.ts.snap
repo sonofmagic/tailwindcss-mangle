@@ -2,24 +2,32 @@
 
 exports[`defaults > getDefaultRegistryConfig 1`] = `
 {
+  "extract": {
+    "file": ".tw-patch/tw-class-list.json",
+  },
   "output": {
     "file": ".tw-patch/tw-class-list.json",
     "pretty": true,
     "stripUniversalSelector": true,
   },
   "tailwind": {},
+  "tailwindcss": {},
 }
 `;
 
 exports[`defaults > getDefaultUserConfig 1`] = `
 {
   "registry": {
+    "extract": {
+      "file": ".tw-patch/tw-class-list.json",
+    },
     "output": {
       "file": ".tw-patch/tw-class-list.json",
       "pretty": true,
       "stripUniversalSelector": true,
     },
     "tailwind": {},
+    "tailwindcss": {},
   },
   "transformer": {
     "disabled": false,

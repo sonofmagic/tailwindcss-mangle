@@ -87,4 +87,72 @@ describe('fromUnifiedConfig', () => {
       },
     })
   })
+
+  it('prefers modern unified registry fields when both modern and legacy keys are present', () => {
+    const converted = fromUnifiedConfig({
+      projectRoot: '/tmp/new-root',
+      extract: {
+        write: false,
+        file: 'new.json',
+        format: 'lines',
+        pretty: 4,
+        removeUniversalSelector: true,
+      },
+      output: {
+        file: 'legacy.json',
+        pretty: false,
+        stripUniversalSelector: false,
+      },
+      apply: {
+        overwrite: false,
+        exposeContext: {
+          refProperty: 'runtimeCtx',
+        },
+      },
+      cache: {
+        enabled: true,
+        dir: '.cache',
+      },
+      tailwindcss: {
+        packageName: 'tailwindcss-modern',
+        version: 4,
+        v4: {
+          cssEntries: ['src/new.css'],
+        },
+      },
+      tailwind: {
+        package: 'tailwindcss-legacy',
+        version: 3,
+        next: {
+          cssEntries: ['src/legacy.css'],
+        },
+      },
+    })
+
+    expect(converted.projectRoot).toBe('/tmp/new-root')
+    expect(converted.extract).toEqual({
+      write: false,
+      file: 'new.json',
+      format: 'lines',
+      pretty: 4,
+      removeUniversalSelector: true,
+    })
+    expect(converted.apply).toEqual({
+      overwrite: false,
+      exposeContext: {
+        refProperty: 'runtimeCtx',
+      },
+    })
+    expect(converted.cache).toMatchObject({
+      enabled: true,
+      dir: '.cache',
+    })
+    expect(converted.tailwindcss).toEqual({
+      packageName: 'tailwindcss-modern',
+      version: 4,
+      v4: {
+        cssEntries: ['src/new.css'],
+      },
+    })
+  })
 })

@@ -30,6 +30,34 @@ describe('config', () => {
     })
   })
 
+  it('defineConfig helper accepts modern registry options', () => {
+    const config = defineConfig({
+      registry: {
+        projectRoot: 'apps/demo-a',
+        extract: {
+          file: 'classes.txt',
+          format: 'lines',
+        },
+        tailwindcss: {
+          version: 4,
+        },
+      },
+    })
+
+    expect(config).toEqual({
+      registry: {
+        projectRoot: 'apps/demo-a',
+        extract: {
+          file: 'classes.txt',
+          format: 'lines',
+        },
+        tailwindcss: {
+          version: 4,
+        },
+      },
+    })
+  })
+
   it('getConfig falls back to defaults when config file is absent', async () => {
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'config-test-'))
     const { config } = await getConfig(tempDir)

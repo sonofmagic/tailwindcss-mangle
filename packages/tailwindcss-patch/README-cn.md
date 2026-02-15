@@ -174,9 +174,10 @@ const all = await patcher.clearCache({ scope: 'all' })
 import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
-  patch: {
-    output: {
-      filename: '.tw-patch/tw-class-list.json',
+  registry: {
+    projectRoot: '.',
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
       removeUniversalSelector: true,
       format: 'json',
     },
@@ -187,8 +188,9 @@ export default defineConfig({
         sources: [{ base: 'src', pattern: '**/*.{html,tsx}', negated: false }],
       },
     },
-    applyPatches: {
-      exportContext: true,
+    apply: {
+      overwrite: true,
+      exposeContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
@@ -197,7 +199,7 @@ export default defineConfig({
 })
 ```
 
-虽然 `defineConfig` 仍然暴露旧的字段名，但所有新增字段都会被自动识别并归一化。
+`defineConfig` 同时支持现代 `registry` 字段（`projectRoot`、`tailwindcss`、`apply`、`extract`）和旧字段。两者同时存在时，patcher 归一化会优先采用现代字段。
 
 ## 迁移
 

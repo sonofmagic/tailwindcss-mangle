@@ -12,11 +12,15 @@ const defaultPipelineExclude: string[] = []
 
 export function getDefaultRegistryConfig(): RegistryOptions {
   return {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
     output: {
       file: '.tw-patch/tw-class-list.json',
       stripUniversalSelector: true,
       pretty: true,
     },
+    tailwindcss: {},
     tailwind: {},
   }
 }

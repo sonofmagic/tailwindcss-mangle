@@ -140,39 +140,81 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
     return {}
   }
 
-  const tailwind = registry.tailwind
-  const output = registry.output
+  const tailwind = registry.tailwindcss ?? registry.tailwind
+  const modernExtract = registry.extract
+  const legacyOutput = registry.output
 
   const pretty = (() => {
-    if (output?.pretty === undefined) {
+    const value = modernExtract?.pretty ?? legacyOutput?.pretty
+    if (value === undefined) {
       return undefined
     }
-    if (typeof output.pretty === 'boolean') {
-      return output.pretty ? 2 : false
+    if (typeof value === 'boolean') {
+      return value ? 2 : false
     }
-    return output.pretty
+    return value
   })()
-  const normalizedExtract = output
+  const removeUniversalSelector = modernExtract?.removeUniversalSelector ?? legacyOutput?.stripUniversalSelector
+  const outputFile = modernExtract?.file ?? legacyOutput?.file
+  const normalizedExtract = modernExtract || legacyOutput
     ? {
-        ...(output.file === undefined ? {} : { file: output.file }),
+        ...(modernExtract?.write === undefined ? {} : { write: modernExtract.write }),
+        ...(outputFile === undefined ? {} : { file: outputFile }),
         ...(pretty === undefined ? {} : { pretty }),
-        ...(output.stripUniversalSelector === undefined ? {} : { removeUniversalSelector: output.stripUniversalSelector }),
+        ...(removeUniversalSelector === undefined ? {} : { removeUniversalSelector }),
+        ...(modernExtract?.format === undefined ? {} : { format: modernExtract.format }),
       }
     : undefined
   const normalizedTailwindcss = tailwind
     ? {
         ...(tailwind.version === undefined ? {} : { version: tailwind.version }),
-        ...(tailwind.package === undefined ? {} : { packageName: tailwind.package }),
+        ...(
+          tailwind.packageName === undefined
+            ? tailwind.package === undefined
+              ? {}
+              : { packageName: tailwind.package }
+            : { packageName: tailwind.packageName }
+        ),
         ...(tailwind.resolve === undefined ? {} : { resolve: tailwind.resolve }),
         ...(tailwind.config === undefined ? {} : { config: tailwind.config }),
         ...(tailwind.cwd === undefined ? {} : { cwd: tailwind.cwd }),
-        ...(tailwind.legacy === undefined ? {} : { v2: tailwind.legacy }),
-        ...(tailwind.classic === undefined ? {} : { v3: tailwind.classic }),
-        ...(tailwind.next === undefined ? {} : { v4: tailwind.next }),
+        ...(
+          tailwind.v2 === undefined
+            ? tailwind.legacy === undefined
+              ? {}
+              : { v2: tailwind.legacy }
+            : { v2: tailwind.v2 }
+        ),
+        ...(
+          tailwind.v3 === undefined
+            ? tailwind.classic === undefined
+              ? {}
+              : { v3: tailwind.classic }
+            : { v3: tailwind.v3 }
+        ),
+        ...(
+          tailwind.v4 === undefined
+            ? tailwind.next === undefined
+              ? {}
+              : { v4: tailwind.next }
+            : { v4: tailwind.v4 }
+        ),
+      }
+    : undefined
+
+  const normalizedApply = registry.apply
+    ? {
+        ...(registry.apply.overwrite === undefined ? {} : { overwrite: registry.apply.overwrite }),
+        ...(registry.apply.exposeContext === undefined ? {} : { exposeContext: registry.apply.exposeContext }),
+        ...(registry.apply.extendLengthUnits === undefined ? {} : { extendLengthUnits: registry.apply.extendLengthUnits }),
       }
     : undefined
 
   return {
+    ...(registry.projectRoot === undefined ? {} : { projectRoot: registry.projectRoot }),
+    ...(normalizedApply === undefined ? {} : { apply: normalizedApply }),
+    ...(registry.cache === undefined ? {} : { cache: registry.cache }),
+    ...(registry.filter === undefined ? {} : { filter: registry.filter }),
     ...(normalizedExtract === undefined ? {} : { extract: normalizedExtract }),
     ...(normalizedTailwindcss === undefined ? {} : { tailwindcss: normalizedTailwindcss }),
   }

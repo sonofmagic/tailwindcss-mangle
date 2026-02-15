@@ -39,11 +39,15 @@ describe('config', () => {
     const { config } = await getConfig(cwd)
     expect(config).toEqual({
       registry: {
+        extract: {
+          file: '.tw-patch/tw-class-list.json',
+        },
         output: {
           file: 'xxx/yyy/zzz.json',
           pretty: false,
           stripUniversalSelector: false,
         },
+        tailwindcss: {},
         tailwind: {
           cwd: 'aaa/bbb/cc',
         },
@@ -56,5 +60,50 @@ describe('config', () => {
     const cwd = resolve(fixturesRoot, './config/2.transformer-options')
     const { config } = await getConfig(cwd)
     expect(normaliseRegex(config)).toMatchSnapshot()
+  })
+
+  it('3.modern-options', async () => {
+    const cwd = resolve(fixturesRoot, './config/3.modern-options')
+    const { config } = await getConfig(cwd)
+    expect(normaliseRegex(config)).toEqual(normaliseRegex({
+      registry: {
+        output: {
+          file: '.tw-patch/tw-class-list.json',
+          pretty: true,
+          stripUniversalSelector: true,
+        },
+        tailwind: {},
+        projectRoot: 'apps/demo-a',
+        extract: {
+          write: false,
+          file: 'modern/classes.txt',
+          format: 'lines',
+          pretty: false,
+          removeUniversalSelector: false,
+        },
+        apply: {
+          overwrite: false,
+          exposeContext: {
+            refProperty: 'runtimeContexts',
+          },
+          extendLengthUnits: {
+            units: ['rpx', 'vh'],
+          },
+        },
+        tailwindcss: {
+          packageName: 'tailwindcss-modern',
+          version: 4,
+          v4: {
+            cssEntries: ['dist/tailwind.css'],
+          },
+        },
+        cache: {
+          enabled: true,
+          dir: '.cache/modern',
+          strategy: 'overwrite',
+        },
+      },
+      transformer: getDefaultTransformerConfig(),
+    }))
   })
 })
