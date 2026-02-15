@@ -26,7 +26,8 @@
       "require": "./src/index.ts"
     },
     "./migration-report.schema.json": "./schema/migration-report.schema.json",
-    "./restore-result.schema.json": "./schema/restore-result.schema.json"
+    "./restore-result.schema.json": "./schema/restore-result.schema.json",
+    "./validate-result.schema.json": "./schema/validate-result.schema.json"
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -63,7 +64,8 @@
         "require": "./dist/index.js"
       },
       "./migration-report.schema.json": "./schema/migration-report.schema.json",
-      "./restore-result.schema.json": "./schema/restore-result.schema.json"
+      "./restore-result.schema.json": "./schema/restore-result.schema.json",
+      "./validate-result.schema.json": "./schema/validate-result.schema.json"
     },
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

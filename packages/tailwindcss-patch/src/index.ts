@@ -15,6 +15,7 @@ export {
   type ValidateFailureSummary,
   ValidateCommandError,
   VALIDATE_EXIT_CODES,
+  VALIDATE_FAILURE_REASONS,
   tailwindcssPatchCommands,
 } from './cli/commands'
 export {

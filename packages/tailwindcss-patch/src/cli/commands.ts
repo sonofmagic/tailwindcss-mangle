@@ -39,7 +39,14 @@ export const VALIDATE_EXIT_CODES = {
   UNKNOWN_ERROR: 24,
 } as const
 
-export type ValidateFailureReason = 'report-incompatible' | 'missing-backups' | 'io-error' | 'unknown-error'
+export const VALIDATE_FAILURE_REASONS = [
+  'report-incompatible',
+  'missing-backups',
+  'io-error',
+  'unknown-error',
+] as const
+
+export type ValidateFailureReason = (typeof VALIDATE_FAILURE_REASONS)[number]
 
 export interface ValidateFailureSummary {
   reason: ValidateFailureReason

@@ -167,9 +167,10 @@ On failure, validate uses dedicated exit codes for CI:
 
 Schemas are published at package subpaths:
 `tailwindcss-patch/migration-report.schema.json`,
-`tailwindcss-patch/restore-result.schema.json`.
+`tailwindcss-patch/restore-result.schema.json`,
+`tailwindcss-patch/validate-result.schema.json`.
 Programmatic consumers can also import report helpers/types from package entry:
-`migrateConfigFiles`, `restoreConfigFiles`, `MIGRATION_REPORT_KIND`, `MIGRATION_REPORT_SCHEMA_VERSION`, `ConfigFileMigrationReport`.
+`migrateConfigFiles`, `restoreConfigFiles`, `MIGRATION_REPORT_KIND`, `MIGRATION_REPORT_SCHEMA_VERSION`, `ConfigFileMigrationReport`, `VALIDATE_EXIT_CODES`.
 
 ### Token report options
 

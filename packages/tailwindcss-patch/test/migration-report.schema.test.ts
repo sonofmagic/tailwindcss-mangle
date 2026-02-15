@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 import {
   MIGRATION_REPORT_KIND,
   MIGRATION_REPORT_SCHEMA_VERSION,
+  VALIDATE_EXIT_CODES,
+  VALIDATE_FAILURE_REASONS,
   migrateConfigFiles,
   restoreConfigFiles,
 } from '../src'
@@ -45,5 +47,23 @@ describe('restore result json schema', () => {
     )
     expect(schema.properties.reportKind.const).toBe(MIGRATION_REPORT_KIND)
     expect(schema.properties.reportSchemaVersion.minimum).toBe(MIGRATION_REPORT_SCHEMA_VERSION)
+  })
+})
+
+describe('validate result json schema', () => {
+  it('ships a validate-result schema aligned with validate failure contracts', async () => {
+    const schemaPath = path.resolve(process.cwd(), 'schema/validate-result.schema.json')
+    const schema = await fs.readJSON(schemaPath) as Record<string, any>
+
+    expect(schema.$schema).toContain('json-schema.org')
+    expect(schema.oneOf).toHaveLength(2)
+    expect(schema.oneOf[0].$ref).toContain('restore-result.schema.json')
+    expect(schema.$defs.failure.properties.reason.enum).toEqual([...VALIDATE_FAILURE_REASONS])
+    expect(schema.$defs.failure.properties.exitCode.enum).toEqual([
+      VALIDATE_EXIT_CODES.REPORT_INCOMPATIBLE,
+      VALIDATE_EXIT_CODES.MISSING_BACKUPS,
+      VALIDATE_EXIT_CODES.IO_ERROR,
+      VALIDATE_EXIT_CODES.UNKNOWN_ERROR,
+    ])
   })
 })

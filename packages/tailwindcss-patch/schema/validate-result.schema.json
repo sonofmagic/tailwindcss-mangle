@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangle.icebreaker.top/schemas/tailwindcss-patch/validate-result.schema.json",
+  "title": "tailwindcss-patch validate result",
+  "description": "Schema for JSON output from `tw-patch validate --json`.",
+  "oneOf": [
+    {
+      "$ref": "./restore-result.schema.json"
+    },
+    {
+      "$ref": "#/$defs/failure"
+    }
+  ],
+  "$defs": {
+    "failure": {
+      "type": "object",
+      "required": [
+        "ok",
+        "reason",
+        "exitCode",
+        "message"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "const": false
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "report-incompatible",
+            "missing-backups",
+            "io-error",
+            "unknown-error"
+          ]
+        },
+        "exitCode": {
+          "type": "integer",
+          "enum": [
+            21,
+            22,
+            23,
+            24
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

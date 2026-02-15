@@ -110,9 +110,10 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 JSON Schema 通过子路径发布：
 `tailwindcss-patch/migration-report.schema.json`、
-`tailwindcss-patch/restore-result.schema.json`。
+`tailwindcss-patch/restore-result.schema.json`、
+`tailwindcss-patch/validate-result.schema.json`。
 编程场景也可直接从包入口导入报告相关导出：
-`migrateConfigFiles`、`restoreConfigFiles`、`MIGRATION_REPORT_KIND`、`MIGRATION_REPORT_SCHEMA_VERSION`、`ConfigFileMigrationReport`。
+`migrateConfigFiles`、`restoreConfigFiles`、`MIGRATION_REPORT_KIND`、`MIGRATION_REPORT_SCHEMA_VERSION`、`ConfigFileMigrationReport`、`VALIDATE_EXIT_CODES`。
 
 ### `tokens` 常用参数
 
