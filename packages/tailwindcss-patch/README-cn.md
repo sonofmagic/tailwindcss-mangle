@@ -150,6 +150,10 @@ GitHub Actions 模板：
 对于按变更分片模板，可在仓库中添加 `.tw-patch/ci-shards.json` 自定义分片匹配规则和全量触发规则。
 示例配置见 `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`。
 
+共享 composite action 现支持可选环境准备参数：
+`setup-pnpm`、`setup-node`、`node-version`、`cache-dependency-path`、`install-deps`、`install-command`。
+可根据 CI 策略选择“由 action 负责安装环境”或“由 workflow 自行安装环境”。
+
 ### `tokens` 常用参数
 
 | 参数                                   | 说明                                                        |

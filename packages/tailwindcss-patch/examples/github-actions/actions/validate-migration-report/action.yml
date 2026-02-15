@@ -2,6 +2,30 @@ name: Validate migration report
 description: Run tw-patch migrate --check and tw-patch validate with CI-friendly exit mapping.
 
 inputs:
+  setup-pnpm:
+    description: Whether to setup pnpm in this action.
+    required: false
+    default: "false"
+  setup-node:
+    description: Whether to setup Node.js in this action.
+    required: false
+    default: "false"
+  node-version:
+    description: Node.js version used when setup-node is enabled.
+    required: false
+    default: "20"
+  cache-dependency-path:
+    description: Cache dependency path for actions/setup-node.
+    required: false
+    default: pnpm-lock.yaml
+  install-deps:
+    description: Whether to run dependency installation in this action.
+    required: false
+    default: "false"
+  install-command:
+    description: Dependency install command.
+    required: false
+    default: pnpm install --frozen-lockfile
   report-file:
     description: Migration report file path.
     required: true
@@ -24,6 +48,23 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup pnpm
+      if: ${{ inputs.setup-pnpm == 'true' }}
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      if: ${{ inputs.setup-node == 'true' }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+
+    - name: Install dependencies
+      if: ${{ inputs.install-deps == 'true' }}
+      shell: bash
+      run: ${{ inputs.install-command }}
+
     - name: Ensure migration report is up-to-date
       shell: bash
       run: |

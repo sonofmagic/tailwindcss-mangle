@@ -207,6 +207,10 @@ GitHub Actions templates:
 For the affected-shards template, you can customize shard matching and run-all triggers by adding `.tw-patch/ci-shards.json` in your repo.
 A sample config is available at `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`.
 
+The shared composite action now supports optional environment bootstrap inputs:
+`setup-pnpm`, `setup-node`, `node-version`, `cache-dependency-path`, `install-deps`, and `install-command`.
+This lets you choose between action-managed setup or workflow-managed setup depending on your CI strategy.
+
 ### Token report options
 
 | Flag                                   | Description                                                                               |

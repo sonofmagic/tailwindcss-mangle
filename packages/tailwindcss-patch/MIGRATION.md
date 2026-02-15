@@ -99,6 +99,7 @@ Migration mapping:
 - A matrix-based monorepo GitHub Actions example is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`.
 - An affected-shards monorepo GitHub Actions example (PR diff aware) is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`.
 - The three templates share a local composite action: `packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`.
+- The shared composite action supports optional setup/install inputs (`setup-pnpm`, `setup-node`, `node-version`, `cache-dependency-path`, `install-deps`, `install-command`) for reusable CI bootstrapping.
 - The affected-shards template resolver is externalized at `packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs` for testability.
 - Resolver JSON contract is documented via `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json` with dispatch snapshot fixture `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`.
 - The affected-shards template supports repo-level shard config via `.tw-patch/ci-shards.json` (example: `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`).
