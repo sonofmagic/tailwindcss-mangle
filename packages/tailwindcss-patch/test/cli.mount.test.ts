@@ -7,7 +7,7 @@ import { mountTailwindcssPatchCommands } from '../src/cli/commands'
 import logger from '../src/logger'
 
 const patcherInstances: any[] = []
-const { migrateConfigFilesMock } = vi.hoisted(() => {
+const { migrateConfigFilesMock, restoreConfigFilesMock } = vi.hoisted(() => {
   return {
     migrateConfigFilesMock: vi.fn(async () => ({
       cwd: '/tmp/project',
@@ -28,6 +28,18 @@ const { migrateConfigFilesMock } = vi.hoisted(() => {
           changes: ['registry.output -> registry.extract'],
         },
       ],
+    })),
+    restoreConfigFilesMock: vi.fn(async () => ({
+      cwd: '/tmp/project',
+      reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      dryRun: false,
+      strict: false,
+      scannedEntries: 1,
+      restorableEntries: 1,
+      restoredFiles: 1,
+      missingBackups: 0,
+      skippedEntries: 0,
+      restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
     })),
   }
 })
@@ -104,6 +116,7 @@ vi.mock('../src/logger', () => {
 vi.mock('../src/cli/migrate-config', () => {
   return {
     migrateConfigFiles: migrateConfigFilesMock,
+    restoreConfigFiles: restoreConfigFilesMock,
   }
 })
 
@@ -144,6 +157,7 @@ describe('mountTailwindcssPatchCommands', () => {
     expect(commandNames).not.toContain('install')
     expect(commandNames).not.toContain('extract')
     expect(commandNames).not.toContain('init')
+    expect(commandNames).not.toContain('restore')
   })
 
   it('runs the status command and can emit JSON', async () => {
@@ -418,5 +432,46 @@ describe('mountTailwindcssPatchCommands', () => {
     finally {
       writeJSONSpy.mockRestore()
     }
+  })
+
+  it('runs restore command with report file and strict mode', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(
+      ['node', 'embedded', 'restore', '--cwd', '/tmp/project', '--report-file', '.tw-patch/migrate-report.json', '--strict'],
+      { run: false },
+    )
+    await cli.runMatchedCommand()
+
+    expect(restoreConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(restoreConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      reportFile: '.tw-patch/migrate-report.json',
+      dryRun: false,
+      strict: true,
+    })
+  })
+
+  it('prints restore result as json', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'restore', '--cwd', '/tmp/project', '--json'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(restoreConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      cwd: '/tmp/project',
+      reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      dryRun: false,
+      strict: false,
+      scannedEntries: 1,
+      restorableEntries: 1,
+      restoredFiles: 1,
+      missingBackups: 0,
+      skippedEntries: 0,
+      restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
+    }, null, 2))
   })
 })

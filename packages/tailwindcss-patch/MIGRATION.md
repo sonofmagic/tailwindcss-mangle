@@ -88,6 +88,7 @@ Migration mapping:
 - Migration writes are transactional by default: if one file write fails, previously written migration files are rolled back.
 - Optional `--backup-dir` can persist per-file pre-migration snapshots for manual recovery or auditing.
 - `--include` / `--exclude` patterns can narrow workspace migration scope, and `--report-file` can persist machine-readable migration reports.
+- `tw-patch restore` can restore config files from a migration report (`backupFile` entries) with optional `--dry-run`, `--strict`, and `--json`.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
 ## 4. Cache handling

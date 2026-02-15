@@ -2,7 +2,7 @@ import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it, vi } from 'vitest'
-import { migrateConfigFiles, migrateConfigSource } from '../src/cli/migrate-config'
+import { migrateConfigFiles, migrateConfigSource, restoreConfigFiles } from '../src/cli/migrate-config'
 
 describe('migrateConfigSource', () => {
   it('migrates registry legacy keys to modern shape', () => {
@@ -277,6 +277,86 @@ describe('migrateConfigFiles', () => {
     }
     finally {
       vi.restoreAllMocks()
+      await fs.remove(cwd)
+    }
+  })
+})
+
+describe('restoreConfigFiles', () => {
+  it('restores config files from migration report backups', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-'))
+    const target = path.resolve(cwd, 'tailwindcss-patch.config.ts')
+    const backup = path.resolve(cwd, '.tw-patch/migrate-backups/tailwindcss-patch.config.ts.bak')
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      await fs.outputFile(target, `export default { registry: { extract: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputFile(backup, `export default { registry: { output: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputJSON(reportPath, {
+        entries: [{ file: target, backupFile: backup }],
+      }, { spaces: 2 })
+
+      const result = await restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+      })
+
+      expect(result.restoredFiles).toBe(1)
+      expect(result.missingBackups).toBe(0)
+      const restored = await fs.readFile(target, 'utf8')
+      expect(restored).toContain('output')
+      expect(restored).not.toContain('extract')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('supports dry-run restore without writing files', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-dry-'))
+    const target = path.resolve(cwd, 'tailwindcss-patch.config.ts')
+    const backup = path.resolve(cwd, '.tw-patch/migrate-backups/tailwindcss-patch.config.ts.bak')
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      const targetContent = `export default { registry: { extract: { file: 'x.json' } } }\n`
+      await fs.outputFile(target, targetContent, 'utf8')
+      await fs.outputFile(backup, `export default { registry: { output: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputJSON(reportPath, {
+        entries: [{ file: target, backupFile: backup }],
+      }, { spaces: 2 })
+
+      const result = await restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+        dryRun: true,
+      })
+
+      expect(result.restoredFiles).toBe(1)
+      const after = await fs.readFile(target, 'utf8')
+      expect(after).toBe(targetContent)
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('throws in strict mode when backup files are missing', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-strict-'))
+    const target = path.resolve(cwd, 'tailwindcss-patch.config.ts')
+    const backup = path.resolve(cwd, '.tw-patch/migrate-backups/tailwindcss-patch.config.ts.bak')
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      await fs.outputFile(target, `export default { registry: { extract: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputJSON(reportPath, {
+        entries: [{ file: target, backupFile: backup }],
+      }, { spaces: 2 })
+
+      await expect(restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+        strict: true,
+      })).rejects.toThrow('Restore failed')
+    }
+    finally {
       await fs.remove(cwd)
     }
   })

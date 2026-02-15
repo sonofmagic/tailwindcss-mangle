@@ -43,6 +43,9 @@ pnpm dlx tw-patch status --json
 
 # Migrate deprecated config fields to modern keys
 pnpm dlx tw-patch migrate --dry-run
+
+# Restore configs from a migration report backup snapshot
+pnpm dlx tw-patch restore --report-file .tw-patch/migrate-report.json --dry-run
 ```
 
 ### Embed into another CLI
@@ -130,6 +133,16 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 `tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). Use `--include` / `--exclude` to control monorepo scanning ranges. It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
 When writing files, migration uses a transactional strategy by default: if a later file write fails, already written migration files are rolled back to avoid partial updates. Use `--backup-dir` if you want explicit backup snapshots for audit/manual recovery. Use `--report-file` to keep a machine-readable migration artifact.
+
+### Restore options
+
+| Flag                  | Description                                                       |
+| --------------------- | ----------------------------------------------------------------- |
+| `--cwd <dir>`         | Working directory used to resolve report and target paths.        |
+| `--report-file <file>`| Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
+| `--dry-run`           | Preview restore targets without writing files.                    |
+| `--strict`            | Fail when any backup file in the report is missing.               |
+| `--json`              | Print restore summary as JSON.                                    |
 
 ### Token report options
 

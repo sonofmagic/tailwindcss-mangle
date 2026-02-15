@@ -76,6 +76,26 @@ export interface MigrateConfigFilesOptions {
   exclude?: string[]
 }
 
+export interface RestoreConfigFilesOptions {
+  cwd: string
+  reportFile: string
+  dryRun?: boolean
+  strict?: boolean
+}
+
+export interface RestoreConfigFilesResult {
+  cwd: string
+  reportFile: string
+  dryRun: boolean
+  strict: boolean
+  scannedEntries: number
+  restorableEntries: number
+  restoredFiles: number
+  missingBackups: number
+  skippedEntries: number
+  restored: string[]
+}
+
 function getPropertyKeyName(property: ObjectProperty | ObjectMethod): string | undefined {
   if (!property.computed && t.isIdentifier(property.key)) {
     return property.key.name
@@ -611,5 +631,67 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
     unchangedFiles,
     missingFiles,
     entries,
+  }
+}
+
+export async function restoreConfigFiles(options: RestoreConfigFilesOptions): Promise<RestoreConfigFilesResult> {
+  const cwd = path.resolve(options.cwd)
+  const dryRun = options.dryRun ?? false
+  const strict = options.strict ?? false
+  const reportFile = path.resolve(cwd, options.reportFile)
+
+  const report = await fs.readJSON(reportFile) as { entries?: Array<{ file?: string, backupFile?: string }> }
+  const entries = Array.isArray(report.entries) ? report.entries : []
+
+  let scannedEntries = 0
+  let restorableEntries = 0
+  let restoredFiles = 0
+  let missingBackups = 0
+  let skippedEntries = 0
+  const restored: string[] = []
+
+  for (const entry of entries) {
+    scannedEntries += 1
+    const targetFile = entry.file ? path.resolve(entry.file) : undefined
+    const backupFile = entry.backupFile ? path.resolve(entry.backupFile) : undefined
+
+    if (!targetFile || !backupFile) {
+      skippedEntries += 1
+      continue
+    }
+
+    restorableEntries += 1
+
+    const backupExists = await fs.pathExists(backupFile)
+    if (!backupExists) {
+      missingBackups += 1
+      continue
+    }
+
+    if (!dryRun) {
+      const backupContent = await fs.readFile(backupFile, 'utf8')
+      await fs.ensureDir(path.dirname(targetFile))
+      await fs.writeFile(targetFile, backupContent, 'utf8')
+    }
+
+    restoredFiles += 1
+    restored.push(targetFile)
+  }
+
+  if (strict && missingBackups > 0) {
+    throw new Error(`Restore failed: ${missingBackups} backup file(s) missing in report ${reportFile}.`)
+  }
+
+  return {
+    cwd,
+    reportFile,
+    dryRun,
+    strict,
+    scannedEntries,
+    restorableEntries,
+    restoredFiles,
+    missingBackups,
+    skippedEntries,
+    restored,
   }
 }

@@ -40,6 +40,9 @@ pnpm dlx tw-patch tokens --format lines
 
 # 迁移已废弃的配置字段（预览模式）
 pnpm dlx tw-patch migrate --dry-run
+
+# 基于迁移报告中的备份快照恢复配置（预览模式）
+pnpm dlx tw-patch restore --report-file .tw-patch/migrate-report.json --dry-run
 ```
 
 ### `extract` 常用参数
@@ -73,6 +76,16 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 `tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），可通过 `--include` / `--exclude` 控制扫描范围，并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
 迁移写入默认采用“事务式”策略：如果后续文件写入失败，会自动回滚此前已经写入的迁移文件，避免留下半迁移状态。若需要显式保留原始文件快照，可配合 `--backup-dir`；若需要审计产物，可配合 `--report-file`。
+
+### `restore` 常用参数
+
+| 参数                   | 说明                                                         |
+| ---------------------- | ------------------------------------------------------------ |
+| `--cwd <dir>`          | 指定恢复时使用的工作目录。                                   |
+| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。   |
+| `--dry-run`            | 仅预览恢复目标，不执行写入。                                 |
+| `--strict`             | 报告中的备份文件缺失时直接报错退出。                         |
+| `--json`               | 输出 JSON 格式的恢复结果。                                   |
 
 ### `tokens` 常用参数
 
