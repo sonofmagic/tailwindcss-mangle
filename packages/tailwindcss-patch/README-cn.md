@@ -105,6 +105,8 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 | `--json`               | 输出 JSON 格式的校验结果。                                   |
 
 `tw-patch validate` 会以 dry-run 模式执行迁移报告校验，不写回任何恢复文件，同时校验报告 schema 与备份引用状态。
+校验失败时提供分层退出码，便于 CI 判定：
+`21` 报告不兼容，`22` 严格模式下备份缺失，`23` I/O 错误，`24` 未知错误。
 
 JSON Schema 通过子路径发布：
 `tailwindcss-patch/migration-report.schema.json`、

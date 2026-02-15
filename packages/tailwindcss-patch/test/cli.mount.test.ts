@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
-import { mountTailwindcssPatchCommands } from '../src/cli/commands'
+import { mountTailwindcssPatchCommands, ValidateCommandError, VALIDATE_EXIT_CODES } from '../src/cli/commands'
 import logger from '../src/logger'
 
 const patcherInstances: any[] = []
@@ -109,6 +109,7 @@ vi.mock('../src/logger', () => {
     warn: vi.fn(),
     log: vi.fn(),
     info: vi.fn(),
+    error: vi.fn(),
   }
   return {
     default: logger,
@@ -540,6 +541,73 @@ describe('mountTailwindcssPatchCommands', () => {
       missingBackups: 0,
       skippedEntries: 0,
       restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
+    }, null, 2))
+  })
+
+  it('classifies incompatible report errors with dedicated validate exit code', async () => {
+    restoreConfigFilesMock.mockRejectedValueOnce(
+      new Error('Unsupported report schema version "999" in /tmp/project/.tw-patch/migrate-report.json. Current supported version is 1.'),
+    )
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'validate', '--cwd', '/tmp/project'], { run: false })
+    const runner = cli.runMatchedCommand()
+    await expect(runner).rejects.toBeInstanceOf(ValidateCommandError)
+    await expect(runner).rejects.toMatchObject({
+      reason: 'report-incompatible',
+      exitCode: VALIDATE_EXIT_CODES.REPORT_INCOMPATIBLE,
+    })
+  })
+
+  it('classifies strict missing backups with dedicated validate exit code', async () => {
+    restoreConfigFilesMock.mockRejectedValueOnce(
+      new Error('Restore failed: 1 backup file(s) missing in report /tmp/project/.tw-patch/migrate-report.json.'),
+    )
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'validate', '--cwd', '/tmp/project', '--strict'], { run: false })
+    await expect(cli.runMatchedCommand()).rejects.toMatchObject({
+      reason: 'missing-backups',
+      exitCode: VALIDATE_EXIT_CODES.MISSING_BACKUPS,
+    })
+  })
+
+  it('classifies fs read errors with dedicated validate exit code', async () => {
+    const err = Object.assign(new Error('ENOENT: no such file or directory'), { code: 'ENOENT' })
+    restoreConfigFilesMock.mockRejectedValueOnce(err)
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'validate', '--cwd', '/tmp/project'], { run: false })
+    await expect(cli.runMatchedCommand()).rejects.toMatchObject({
+      reason: 'io-error',
+      exitCode: VALIDATE_EXIT_CODES.IO_ERROR,
+    })
+  })
+
+  it('prints structured validate failure json payload', async () => {
+    restoreConfigFilesMock.mockRejectedValueOnce(
+      new Error('Restore failed: 2 backup file(s) missing in report /tmp/project/.tw-patch/migrate-report.json.'),
+    )
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'validate', '--cwd', '/tmp/project', '--json'], { run: false })
+    await expect(cli.runMatchedCommand()).rejects.toMatchObject({
+      reason: 'missing-backups',
+      exitCode: VALIDATE_EXIT_CODES.MISSING_BACKUPS,
+    })
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      ok: false,
+      reason: 'missing-backups',
+      exitCode: VALIDATE_EXIT_CODES.MISSING_BACKUPS,
+      message: 'Restore failed: 2 backup file(s) missing in report /tmp/project/.tw-patch/migrate-report.json.',
     }, null, 2))
   })
 })

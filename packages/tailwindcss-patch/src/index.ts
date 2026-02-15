@@ -11,6 +11,10 @@ export {
   type TailwindcssPatchCommandHandlerMap,
   type TailwindcssPatchCommandOptionDefinition,
   type TailwindcssPatchCommandOptions,
+  type ValidateFailureReason,
+  type ValidateFailureSummary,
+  ValidateCommandError,
+  VALIDATE_EXIT_CODES,
   tailwindcssPatchCommands,
 } from './cli/commands'
 export {

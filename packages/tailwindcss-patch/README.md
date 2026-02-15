@@ -162,6 +162,8 @@ With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when
 | `--json`              | Print validation result as JSON.                                  |
 
 `tw-patch validate` performs migration report compatibility checks without writing restored files. It runs report schema validation and scans backup references in dry-run mode.
+On failure, validate uses dedicated exit codes for CI:
+`21` report incompatibility, `22` strict missing backups, `23` I/O errors, `24` unknown errors.
 
 Schemas are published at package subpaths:
 `tailwindcss-patch/migration-report.schema.json`,

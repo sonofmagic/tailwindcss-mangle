@@ -31,6 +31,70 @@ export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' 
 
 export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'migrate', 'restore', 'validate', 'status']
 
+export const VALIDATE_EXIT_CODES = {
+  OK: 0,
+  REPORT_INCOMPATIBLE: 21,
+  MISSING_BACKUPS: 22,
+  IO_ERROR: 23,
+  UNKNOWN_ERROR: 24,
+} as const
+
+export type ValidateFailureReason = 'report-incompatible' | 'missing-backups' | 'io-error' | 'unknown-error'
+
+export interface ValidateFailureSummary {
+  reason: ValidateFailureReason
+  exitCode: number
+  message: string
+}
+
+const IO_ERROR_CODES = new Set(['ENOENT', 'EACCES', 'EPERM', 'EISDIR', 'ENOTDIR', 'EMFILE', 'ENFILE'])
+
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+  return !!error && typeof error === 'object' && ('code' in error || 'message' in error)
+}
+
+function classifyValidateError(error: unknown): ValidateFailureSummary {
+  const message = error instanceof Error ? error.message : String(error)
+  if (message.startsWith('Unsupported report kind') || message.startsWith('Unsupported report schema version')) {
+    return {
+      reason: 'report-incompatible',
+      exitCode: VALIDATE_EXIT_CODES.REPORT_INCOMPATIBLE,
+      message,
+    }
+  }
+  if (message.startsWith('Restore failed:')) {
+    return {
+      reason: 'missing-backups',
+      exitCode: VALIDATE_EXIT_CODES.MISSING_BACKUPS,
+      message,
+    }
+  }
+  if (isNodeError(error) && typeof error.code === 'string' && IO_ERROR_CODES.has(error.code)) {
+    return {
+      reason: 'io-error',
+      exitCode: VALIDATE_EXIT_CODES.IO_ERROR,
+      message,
+    }
+  }
+  return {
+    reason: 'unknown-error',
+    exitCode: VALIDATE_EXIT_CODES.UNKNOWN_ERROR,
+    message,
+  }
+}
+
+export class ValidateCommandError extends Error {
+  reason: ValidateFailureReason
+  exitCode: number
+
+  constructor(summary: ValidateFailureSummary, options?: ErrorOptions) {
+    super(summary.message, options)
+    this.name = 'ValidateCommandError'
+    this.reason = summary.reason
+    this.exitCode = summary.exitCode
+  }
+}
+
 type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
 type TokenGroupKey = 'relative' | 'absolute'
 type CacOptionConfig = Parameters<Command['option']>[2]
@@ -674,28 +738,45 @@ async function restoreCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
 async function validateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'validate'>) {
   const { args } = ctx
   const reportFile = args.reportFile ?? '.tw-patch/migrate-report.json'
-  const result = await restoreConfigFiles({
-    cwd: ctx.cwd,
-    reportFile,
-    dryRun: true,
-    strict: args.strict ?? false,
-  })
+  try {
+    const result = await restoreConfigFiles({
+      cwd: ctx.cwd,
+      reportFile,
+      dryRun: true,
+      strict: args.strict ?? false,
+    })
 
-  if (args.json) {
-    logger.log(JSON.stringify(result, null, 2))
+    if (args.json) {
+      logger.log(JSON.stringify(result, null, 2))
+      return result
+    }
+
+    logger.success(
+      `Migration report validated: scanned=${result.scannedEntries}, restorable=${result.restorableEntries}, missingBackups=${result.missingBackups}, skipped=${result.skippedEntries}`,
+    )
+
+    if (result.reportKind || result.reportSchemaVersion !== undefined) {
+      const kind = result.reportKind ?? 'unknown'
+      const schema = result.reportSchemaVersion === undefined ? 'unknown' : String(result.reportSchemaVersion)
+      logger.info(`  metadata: kind=${kind}, schema=${schema}`)
+    }
     return result
   }
-
-  logger.success(
-    `Migration report validated: scanned=${result.scannedEntries}, restorable=${result.restorableEntries}, missingBackups=${result.missingBackups}, skipped=${result.skippedEntries}`,
-  )
-
-  if (result.reportKind || result.reportSchemaVersion !== undefined) {
-    const kind = result.reportKind ?? 'unknown'
-    const schema = result.reportSchemaVersion === undefined ? 'unknown' : String(result.reportSchemaVersion)
-    logger.info(`  metadata: kind=${kind}, schema=${schema}`)
+  catch (error) {
+    const summary = classifyValidateError(error)
+    if (args.json) {
+      logger.log(JSON.stringify({
+        ok: false,
+        reason: summary.reason,
+        exitCode: summary.exitCode,
+        message: summary.message,
+      }, null, 2))
+    }
+    else {
+      logger.error(`Validation failed [${summary.reason}] (exit ${summary.exitCode}): ${summary.message}`)
+    }
+    throw new ValidateCommandError(summary, { cause: error })
   }
-  return result
 }
 
 function formatFilesHint(entry: PatchStatusReport['entries'][number]) {
