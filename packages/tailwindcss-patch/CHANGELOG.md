@@ -1,5 +1,155 @@
 # tailwindcss-patch
 
+## 8.7.0
+
+### Minor Changes
+
+- ✨ **Introduce context-aware cache governance for `tailwindcss-patch` with schema v2 isolation and explicit cache management APIs.** [`24ebd4b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/24ebd4b4ad08c0aaeb0a5a7b106558cb008c39a0) by @sonofmagic
+  - add context fingerprint based cache isolation (cwd/config/package/options/version) to prevent cross-project cache pollution in monorepos
+  - upgrade cache index schema to include `schemaVersion` and per-context metadata, with safe legacy fallback and lazy rebuild behavior
+  - add `TailwindcssPatcher#clearCache(options?)` to clear current context (default) or all cache contexts with removal statistics
+  - improve cache observability via debug logs that explain hit/miss reasons and mismatch details
+  - harden file cache writes with lock-file coordination plus atomic temp-file rename for concurrent writers
+  - add coverage for same-project hit, cross-project isolation, config/version invalidation, clearCache scopes, legacy schema handling, and concurrent writes
+
+- ✨ **Add `tw-patch migrate` to automatically rewrite deprecated config keys to the modern option shape.** [`64820ed`](https://github.com/sonofmagic/tailwindcss-mangle/commit/64820ed0343c658fe94121a164def0546a65b2b3) by @sonofmagic
+  - introduce a migration engine for `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*`
+  - support dry-run previews via `tw-patch migrate --dry-run`
+  - migrate common legacy keys such as `output` -> `extract`, `tailwind` -> `tailwindcss`, `overwrite` -> `apply.overwrite`, plus nested legacy aliases
+  - include migration summaries to explain per-file changes
+
+- ✨ **Redesign `TailwindcssPatcher` options to a simpler, migration-friendly shape while preserving backward compatibility.** [`a9172ef`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a9172efbad8a337456ebc3d254e79b51f9d53169) by @sonofmagic
+  - add modern constructor fields:
+    - `projectRoot` (replaces `cwd`)
+    - `tailwindcss` (replaces `tailwind`)
+    - `apply` (replaces `overwrite` + `features`)
+    - `extract` (replaces `output`)
+  - keep existing fields working, but mark legacy fields with `@deprecated` JSDoc and document planned removal in the next major release
+  - make option normalization prefer modern fields when both modern and legacy values are provided
+  - update legacy/unified config conversion and CLI overrides to emit the modern option shape
+
+- ✨ **Add `tw-patch restore` command to recover configs from migration backups.** [`277acbd`](https://github.com/sonofmagic/tailwindcss-mangle/commit/277acbdb549534f81bf46bf688345d5eb8861e9e) by @sonofmagic
+  - introduce `restore` command with `--report-file`, `--dry-run`, `--strict`, and `--json`
+  - add restore core API that replays `backupFile` entries from migration reports
+  - include tests for restore success, dry-run behavior, and strict missing-backup failures
+
+### Patch Changes
+
+- 🐛 **Improve `tw-patch migrate` with CI-friendly and machine-readable output modes.** [`d93110a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/d93110ad5c43715e729c4608a77bad11fc36a805) by @sonofmagic
+  - add `--check` to fail when migration changes are still required
+  - add `--json` to print structured migration reports
+  - make `--check` run in dry-run mode automatically
+
+- 🐛 **Add a reusable GitHub Actions template for migration report validation.** [`c1ce57b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c1ce57bc37021618c0529e4136632925b3dd71f4) by @sonofmagic
+  - add `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
+  - document how to map validate exit codes (`21/22/23/24`) in CI workflows
+  - link the example template from README and migration notes
+
+- 🐛 **Improve CI template maintainability with a testable affected-shard resolver and workflow linting.** [`4a2f00b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4a2f00b02ccfb1862612584236dfb5c9f422bf49) by @sonofmagic
+  - extract affected-shard detection logic to `examples/github-actions/scripts/resolve-shards.mjs`
+  - add unit tests covering resolver behavior and output contract
+  - add `.github/workflows/workflow-lint.yml` to lint workflow templates and verify local template wiring
+
+- 🐛 **Expose migration report types and publish a JSON schema.** [`1ed3b24`](https://github.com/sonofmagic/tailwindcss-mangle/commit/1ed3b241b7db6819d94454234fd31b5dac2b111a) by @sonofmagic
+  - export migration report helpers, constants, and related types from the package entry
+  - publish `tailwindcss-patch/migration-report.schema.json` as a stable schema subpath
+  - add tests to verify schema availability and alignment with exported constants
+
+- 🐛 **Add a PR diff-aware GitHub Actions template for migration report validation in monorepos.** [`fefc69a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/fefc69a0a59d2bb70c8a25a03634fc193cc765ab) by @sonofmagic
+  - add `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
+  - detect affected shards from pull request file changes and only run required shards
+  - add docs links in README/README-cn and migration notes
+
+- 🐛 **Add layered validate exit codes for CI diagnostics.** [`d143d48`](https://github.com/sonofmagic/tailwindcss-mangle/commit/d143d4896809a5383f4030c790a8337657d21d5d) by @sonofmagic
+  - classify `tw-patch validate` failures into report incompatibility, missing backups, I/O, and unknown errors
+  - expose `VALIDATE_EXIT_CODES` and `ValidateCommandError` for host integrations
+  - set process exit code from validate failures in the standalone CLI entry
+
+- 🐛 **Add migration report schema metadata and restore compatibility validation.** [`275c02d`](https://github.com/sonofmagic/tailwindcss-mangle/commit/275c02d42e60c797f9c7877b99bf54571f41f9d3) by @sonofmagic
+  - include `reportKind`, `schemaVersion`, `generatedAt`, and `tool` metadata in `tw-patch migrate` reports
+  - validate `reportKind` and `schemaVersion` in `tw-patch restore` for safer report compatibility checks
+  - keep backward compatibility with legacy reports that do not include envelope metadata
+
+- 🐛 **Publish schema for validate JSON output.** [`4fc6a94`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4fc6a94e2bbb56002d5610ca782fe71f5b7509da) by @sonofmagic
+  - add `tailwindcss-patch/validate-result.schema.json` for `tw-patch validate --json`
+  - include success/failure payload contracts (`ok: true` success and `ok: false` failure with `reason`, `exitCode`, `message`)
+  - export `VALIDATE_FAILURE_REASONS` and align schema tests with public validate constants
+
+- 🐛 **Refactor GitHub Actions migration-report templates to use a shared composite action.** [`8cc6dfe`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8cc6dfe25dcb9ffdde64c0b6d051a42abe71efd6) by @sonofmagic
+  - add `examples/github-actions/actions/validate-migration-report/action.yml`
+  - deduplicate migrate/validate shell logic across single, matrix, and affected templates
+  - keep CI exit-code mapping (`21/22/23`) centralized in one reusable action
+
+- 🐛 **Improve the affected-shards GitHub Actions template for monorepo validation.** [`41ecdc6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/41ecdc6ca548ebd5bb00eff771b714db0803d7c6) by @sonofmagic
+  - add optional repo-level shard config support via `.tw-patch/ci-shards.json`
+  - add base SHA fallback logic (`merge-base`) and safer run-all fallbacks when diff resolution fails
+  - expand default run-all triggers for root/tooling changes
+  - add `ci-shards.example.json` and document customization in README/MIGRATION
+
+- 🐛 **Make `tw-patch migrate` file writes transactional by default.** [`8cfe325`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8cfe325b318d8186d3d1e4b69ca49c0bc38c3ed8) by @sonofmagic
+  - rollback already written migration files when a later write fails
+  - improve migration error messages to include rollback status
+  - add tests covering failure rollback behavior
+
+- 🐛 **Add a matrix GitHub Actions template for monorepo migration report validation.** [`4070450`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4070450a83f1ce5388556029f22846246057558e) by @sonofmagic
+  - add `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
+  - split validation into `root`, `apps`, and `packages` shards with per-shard artifacts
+  - document single-job and matrix template choices in README and migration notes
+
+- 🐛 **Improve the shared GitHub Actions composite action with optional environment setup controls.** [`8b3bf38`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8b3bf3805646be70592c5afd5e12c2e8d45caebf) by @sonofmagic
+  - add optional inputs to `validate-migration-report` action for pnpm/node setup and dependency install
+  - switch single/matrix/affected workflow templates to use action-managed setup/install
+  - document new action inputs in README and migration notes
+
+- 🐛 **Improve CI documentation with copy checklists and troubleshooting guidance.** [`b0baa22`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b0baa22085c5bf2529ee95991f5761b92ea880d5) by @sonofmagic
+  - add CI copy checklists to README and README-cn covering required workflow/action/resolver files
+  - add troubleshooting notes for common migration-report CI failures and local action wiring issues
+  - record the documentation update in migration notes
+
+- 🐛 **Add modern `defineConfig` registry support and bridge it end-to-end into `tailwindcss-patch`.** [`27c4976`](https://github.com/sonofmagic/tailwindcss-mangle/commit/27c4976173ea650daa417bbf857890feb69630c2) by @sonofmagic
+  - extend `@tailwindcss-mangle/config` `RegistryOptions` to support modern fields: `projectRoot`, `tailwindcss`, `apply`, `extract`, `cache`, and `filter`
+  - keep legacy `registry.output` and `registry.tailwind` available with deprecation annotations
+  - update `initConfig` and default registry shape to include modern `extract`/`tailwindcss` keys
+  - update `tailwindcss-patch` unified config mapping to read both modern and legacy registry fields, preferring modern values when both are present
+
+- 🐛 **Add a migration report validation CLI command.** [`f69f17c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f69f17ceba9dfc858b855d873c1cb8a156215649) by @sonofmagic
+  - introduce `tw-patch validate` to verify migration report compatibility without restoring files
+  - reuse restore dry-run checks for schema validation and backup reference scanning
+  - support `--report-file`, `--strict`, and `--json` for validation workflows
+
+- 🐛 **Enhance `tw-patch migrate` for monorepo workflows with recursive workspace scanning.** [`cac638a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/cac638ade1d20aa7029985e45c301dacc3f51f53) by @sonofmagic
+  - add `--workspace` to discover `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in sub-projects
+  - add `--max-depth` to control recursion depth (default `6`)
+  - ignore common generated folders such as `node_modules`, `.git`, and `dist` during workspace scans
+
+- 🐛 **Improve restore JSON observability for migration reports.** [`0f472ae`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0f472ae731f6406d1e7d7dbd40d1c0ebf9dcc755) by @sonofmagic
+  - expose `reportKind` and `reportSchemaVersion` in `tw-patch restore --json` output when report metadata is present
+  - keep compatibility with legacy reports that do not contain schema metadata
+  - add unit tests for metadata and legacy restore report behavior
+
+- 🐛 **Publish JSON schema for restore and validate outputs.** [`4e0ffcd`](https://github.com/sonofmagic/tailwindcss-mangle/commit/4e0ffcdd3b218aad1447e7ca6ebe292aefcffc88) by @sonofmagic
+  - add `tailwindcss-patch/restore-result.schema.json` for `tw-patch restore --json` and `tw-patch validate --json`
+  - expose the schema through package exports (source and publish configs)
+  - add tests and docs to keep schema fields aligned with public report constants
+
+- 🐛 **Add backup snapshot support for `tw-patch migrate`.** [`d30bdd4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/d30bdd4f4fcfbce7f0e8e1f9ea2436aee498e9f9) by @sonofmagic
+  - introduce `--backup-dir` to save pre-migration file snapshots
+  - include backup metadata in migration reports
+  - extend tests to cover backup output paths and content
+
+- 🐛 **Extend `tw-patch migrate` with scan filtering and report persistence.** [`487741a`](https://github.com/sonofmagic/tailwindcss-mangle/commit/487741af691f29ef8fbeeeb2b4cc670aa19d45a6) by @sonofmagic
+  - add `--include` and `--exclude` glob filters for migration target control
+  - add `--report-file` to persist migration JSON reports
+  - keep compatibility with existing `--workspace`, `--check`, and `--backup-dir` flows
+
+- 🐛 **Add a stable JSON contract for affected-shard resolver outputs and enforce it in CI.** [`e6cdcc2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e6cdcc2bf4b9699a2d24c95dde5112d376162003) by @sonofmagic
+  - add resolver JSON output mode (`RESOLVE_SHARDS_OUTPUT=json`) in `resolve-shards.mjs`
+  - add resolver output schema and workflow-dispatch snapshot fixtures
+  - add contract snapshot diff check in `.github/workflows/workflow-lint.yml`
+  - extend resolver tests to cover JSON contract and snapshot alignment
+- 📦 **Dependencies** [`27c4976`](https://github.com/sonofmagic/tailwindcss-mangle/commit/27c4976173ea650daa417bbf857890feb69630c2)
+  → `@tailwindcss-mangle/config@6.1.1`
+
 ## 8.6.1
 
 ### Patch Changes

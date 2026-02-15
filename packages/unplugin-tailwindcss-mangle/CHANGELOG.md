@@ -1,5 +1,22 @@
 # unplugin-tailwindcss-mangle
 
+## 5.1.0
+
+### Minor Changes
+
+- ✨ **Add AST-based transformation support for Vue SFC, Svelte components, and JSX/TSX using framework-specific compilers. This provides more precise class name mangling for framework-specific files.** [`5ecbf02`](https://github.com/sonofmagic/tailwindcss-mangle/commit/5ecbf02acdcbd1e727a375c880df4805f4082b7b) by @sonofmagic
+  **Features:**
+  - Vue SFC handler: Parse and transform classes in template, script, and style sections using `@vue/compiler-sfc`
+  - Svelte handler: Parse and transform classes in components with support for class directives using `svelte/compiler`
+  - JSX/TSX support: Enable Babel `jsx` and `typescript` plugins for proper React component transformation
+  - Proper AST traversal for accurate class name replacement in all framework files
+  - Comprehensive test coverage for Vue, Svelte, and JSX/TSX transformations
+
+### Patch Changes
+
+- 📦 **Dependencies** [`5ecbf02`](https://github.com/sonofmagic/tailwindcss-mangle/commit/5ecbf02acdcbd1e727a375c880df4805f4082b7b)
+  → `@tailwindcss-mangle/core@5.1.0`, `@tailwindcss-mangle/config@6.1.1`
+
 ## 5.0.0
 
 ### Major Changes
