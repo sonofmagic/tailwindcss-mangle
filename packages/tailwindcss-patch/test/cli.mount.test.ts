@@ -529,6 +529,7 @@ describe('mountTailwindcssPatchCommands', () => {
       strict: false,
     })
     expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      ok: true,
       cwd: '/tmp/project',
       reportFile: '/tmp/project/.tw-patch/migrate-report.json',
       reportKind: 'tw-patch-migrate-report',

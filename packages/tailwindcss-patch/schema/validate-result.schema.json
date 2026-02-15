@@ -5,13 +5,82 @@
   "description": "Schema for JSON output from `tw-patch validate --json`.",
   "oneOf": [
     {
-      "$ref": "./restore-result.schema.json"
+      "$ref": "#/$defs/success"
     },
     {
       "$ref": "#/$defs/failure"
     }
   ],
   "$defs": {
+    "success": {
+      "type": "object",
+      "required": [
+        "ok",
+        "cwd",
+        "reportFile",
+        "dryRun",
+        "strict",
+        "scannedEntries",
+        "restorableEntries",
+        "restoredFiles",
+        "missingBackups",
+        "skippedEntries",
+        "restored"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "const": true
+        },
+        "cwd": {
+          "type": "string"
+        },
+        "reportFile": {
+          "type": "string"
+        },
+        "reportKind": {
+          "type": "string",
+          "const": "tw-patch-migrate-report"
+        },
+        "reportSchemaVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "strict": {
+          "type": "boolean"
+        },
+        "scannedEntries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "restorableEntries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "restoredFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missingBackups": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skippedEntries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "restored": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "failure": {
       "type": "object",
       "required": [

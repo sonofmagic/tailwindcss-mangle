@@ -57,7 +57,10 @@ describe('validate result json schema', () => {
 
     expect(schema.$schema).toContain('json-schema.org')
     expect(schema.oneOf).toHaveLength(2)
-    expect(schema.oneOf[0].$ref).toContain('restore-result.schema.json')
+    expect(schema.$defs.success.required).toEqual(
+      expect.arrayContaining(['ok', 'reportFile', 'dryRun', 'restored']),
+    )
+    expect(schema.$defs.success.properties.ok.const).toBe(true)
     expect(schema.$defs.failure.properties.reason.enum).toEqual([...VALIDATE_FAILURE_REASONS])
     expect(schema.$defs.failure.properties.exitCode.enum).toEqual([
       VALIDATE_EXIT_CODES.REPORT_INCOMPATIBLE,

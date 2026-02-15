@@ -107,6 +107,8 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 `tw-patch validate` 会以 dry-run 模式执行迁移报告校验，不写回任何恢复文件，同时校验报告 schema 与备份引用状态。
 校验失败时提供分层退出码，便于 CI 判定：
 `21` 报告不兼容，`22` 严格模式下备份缺失，`23` I/O 错误，`24` 未知错误。
+使用 `--json` 时会输出稳定结构：
+成功 => `{ ok: true, ...restoreFields }`，失败 => `{ ok: false, reason, exitCode, message }`。
 
 JSON Schema 通过子路径发布：
 `tailwindcss-patch/migration-report.schema.json`、
@@ -114,6 +116,27 @@ JSON Schema 通过子路径发布：
 `tailwindcss-patch/validate-result.schema.json`。
 编程场景也可直接从包入口导入报告相关导出：
 `migrateConfigFiles`、`restoreConfigFiles`、`MIGRATION_REPORT_KIND`、`MIGRATION_REPORT_SCHEMA_VERSION`、`ConfigFileMigrationReport`、`VALIDATE_EXIT_CODES`。
+
+### CI 推荐流程
+
+```bash
+# 1) 先检查 workspace 中是否还有待迁移配置
+pnpm dlx tw-patch migrate --workspace --check --report-file .tw-patch/migrate-report.json
+
+# 2) 再校验报告兼容性与备份引用，并保存 JSON 结果
+set +e
+pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --strict --json > .tw-patch/validate-result.json
+status=$?
+set -e
+
+case "$status" in
+  0)  echo "validate ok" ;;
+  21) echo "报告 schema/kind 不兼容"; exit 1 ;;
+  22) echo "--strict 下存在缺失备份"; exit 1 ;;
+  23) echo "读取报告或备份时发生 I/O 错误"; exit 1 ;;
+  *)  echo "未知校验错误"; exit "$status" ;;
+esac
+```
 
 ### `tokens` 常用参数
 

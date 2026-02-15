@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://mangle.icebreaker.top/schemas/tailwindcss-patch/restore-result.schema.json",
-  "title": "tailwindcss-patch restore/validate result",
-  "description": "Schema for JSON output from `tw-patch restore --json` and `tw-patch validate --json`.",
+  "title": "tailwindcss-patch restore result",
+  "description": "Schema for JSON output from `tw-patch restore --json`.",
   "type": "object",
   "required": [
     "cwd",

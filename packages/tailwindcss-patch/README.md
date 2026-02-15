@@ -164,6 +164,8 @@ With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when
 `tw-patch validate` performs migration report compatibility checks without writing restored files. It runs report schema validation and scans backup references in dry-run mode.
 On failure, validate uses dedicated exit codes for CI:
 `21` report incompatibility, `22` strict missing backups, `23` I/O errors, `24` unknown errors.
+With `--json`, validate emits a stable payload:
+success => `{ ok: true, ...restoreFields }`, failure => `{ ok: false, reason, exitCode, message }`.
 
 Schemas are published at package subpaths:
 `tailwindcss-patch/migration-report.schema.json`,
@@ -171,6 +173,27 @@ Schemas are published at package subpaths:
 `tailwindcss-patch/validate-result.schema.json`.
 Programmatic consumers can also import report helpers/types from package entry:
 `migrateConfigFiles`, `restoreConfigFiles`, `MIGRATION_REPORT_KIND`, `MIGRATION_REPORT_SCHEMA_VERSION`, `ConfigFileMigrationReport`, `VALIDATE_EXIT_CODES`.
+
+### CI recipe
+
+```bash
+# 1) fail fast when workspace configs still need migration
+pnpm dlx tw-patch migrate --workspace --check --report-file .tw-patch/migrate-report.json
+
+# 2) validate report schema/backup references and keep machine-readable output
+set +e
+pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --strict --json > .tw-patch/validate-result.json
+status=$?
+set -e
+
+case "$status" in
+  0)  echo "validate ok" ;;
+  21) echo "report schema/kind incompatible"; exit 1 ;;
+  22) echo "missing backups under --strict"; exit 1 ;;
+  23) echo "I/O failure while reading report/backups"; exit 1 ;;
+  *)  echo "unknown validate failure"; exit "$status" ;;
+esac
+```
 
 ### Token report options
 

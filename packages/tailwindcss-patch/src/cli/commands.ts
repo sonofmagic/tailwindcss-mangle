@@ -54,6 +54,17 @@ export interface ValidateFailureSummary {
   message: string
 }
 
+export interface ValidateJsonSuccessPayload extends RestoreConfigFilesResult {
+  ok: true
+}
+
+export interface ValidateJsonFailurePayload {
+  ok: false
+  reason: ValidateFailureReason
+  exitCode: number
+  message: string
+}
+
 const IO_ERROR_CODES = new Set(['ENOENT', 'EACCES', 'EPERM', 'EISDIR', 'ENOTDIR', 'EMFILE', 'ENFILE'])
 
 function isNodeError(error: unknown): error is NodeJS.ErrnoException {
@@ -754,7 +765,11 @@ async function validateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext
     })
 
     if (args.json) {
-      logger.log(JSON.stringify(result, null, 2))
+      const payload: ValidateJsonSuccessPayload = {
+        ok: true,
+        ...result,
+      }
+      logger.log(JSON.stringify(payload, null, 2))
       return result
     }
 
@@ -772,12 +787,13 @@ async function validateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext
   catch (error) {
     const summary = classifyValidateError(error)
     if (args.json) {
-      logger.log(JSON.stringify({
+      const payload: ValidateJsonFailurePayload = {
         ok: false,
         reason: summary.reason,
         exitCode: summary.exitCode,
         message: summary.message,
-      }, null, 2))
+      }
+      logger.log(JSON.stringify(payload, null, 2))
     }
     else {
       logger.error(`Validation failed [${summary.reason}] (exit ${summary.exitCode}): ${summary.message}`)

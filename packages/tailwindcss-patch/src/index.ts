@@ -13,6 +13,8 @@ export {
   type TailwindcssPatchCommandOptions,
   type ValidateFailureReason,
   type ValidateFailureSummary,
+  type ValidateJsonFailurePayload,
+  type ValidateJsonSuccessPayload,
   ValidateCommandError,
   VALIDATE_EXIT_CODES,
   VALIDATE_FAILURE_REASONS,
