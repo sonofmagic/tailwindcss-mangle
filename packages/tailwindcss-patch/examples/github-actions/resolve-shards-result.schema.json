@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tailwindcss-patch.dev/schemas/resolve-shards-result.schema.json",
+  "title": "ResolveShardsResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "hasChanges",
+    "shards",
+    "matrix"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "hasChanges": {
+      "type": "boolean"
+    },
+    "shards": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shard"
+      ],
+      "properties": {
+        "shard": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "report_file"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "report_file": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

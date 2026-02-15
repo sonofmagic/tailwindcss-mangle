@@ -1,13 +1,24 @@
 import path from 'pathe'
+import fs from 'fs-extra'
 import { pathToFileURL } from 'node:url'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 let mod: any
+let schemaPath: string
+let dispatchSnapshotPath: string
 
 beforeAll(async () => {
   const scriptPath = path.resolve(
     __dirname,
     '../examples/github-actions/scripts/resolve-shards.mjs',
+  )
+  schemaPath = path.resolve(
+    __dirname,
+    '../examples/github-actions/resolve-shards-result.schema.json',
+  )
+  dispatchSnapshotPath = path.resolve(
+    __dirname,
+    '../examples/github-actions/resolve-shards-result.dispatch.snapshot.json',
   )
   mod = await import(pathToFileURL(scriptPath).href)
 })
@@ -169,5 +180,74 @@ describe('resolve-shards script', () => {
     expect(lines).toContain('has_changes=true')
     expect(lines).toContain('shards=docs')
     expect(lines).toContain('matrix={"shard":[{"name":"docs","report_file":".tw-patch/migrate-report-docs.json"}]}')
+  })
+
+  it('toJsonContract keeps a stable machine-readable payload', () => {
+    const contract = mod.toJsonContract({
+      hasChanges: true,
+      shards: ['apps'],
+      matrix: [{ name: 'apps', report_file: '.tw-patch/migrate-report-apps.json' }],
+    })
+
+    expect(contract).toEqual({
+      version: 1,
+      hasChanges: true,
+      shards: ['apps'],
+      matrix: {
+        shard: [{ name: 'apps', report_file: '.tw-patch/migrate-report-apps.json' }],
+      },
+    })
+  })
+
+  it('main supports json output mode for contract checks', () => {
+    const logger = { log: vi.fn() }
+    const io = {
+      existsSync: vi.fn(() => false),
+      readFileSync: vi.fn(),
+      appendFileSync: vi.fn(),
+    }
+
+    const result = mod.main({
+      EVENT_NAME: 'workflow_dispatch',
+      RESOLVE_SHARDS_OUTPUT: 'json',
+    }, io, logger)
+
+    expect(result.shards).toEqual(['root', 'apps', 'packages'])
+    expect(io.appendFileSync).not.toHaveBeenCalled()
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      version: 1,
+      hasChanges: true,
+      shards: ['root', 'apps', 'packages'],
+      matrix: {
+        shard: [
+          { name: 'root', report_file: '.tw-patch/migrate-report-root.json' },
+          { name: 'apps', report_file: '.tw-patch/migrate-report-apps.json' },
+          { name: 'packages', report_file: '.tw-patch/migrate-report-packages.json' },
+        ],
+      },
+    }, null, 2))
+  })
+
+  it('ships resolver result schema and dispatch snapshot aligned with contract', async () => {
+    const schema = await fs.readJSON(schemaPath) as Record<string, any>
+    const snapshot = await fs.readJSON(dispatchSnapshotPath) as Record<string, any>
+
+    expect(schema.$schema).toContain('json-schema.org')
+    expect(schema.required).toEqual(
+      expect.arrayContaining(['version', 'hasChanges', 'shards', 'matrix']),
+    )
+    expect(schema.properties.version.const).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
+    expect(schema.properties.matrix.properties.shard.items.required).toEqual(
+      expect.arrayContaining(['name', 'report_file']),
+    )
+
+    expect(snapshot.version).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
+    expect(snapshot.hasChanges).toBe(true)
+    expect(snapshot.shards).toEqual(['root', 'apps', 'packages'])
+    expect(snapshot.matrix.shard).toEqual([
+      { name: 'root', report_file: '.tw-patch/migrate-report-root.json' },
+      { name: 'apps', report_file: '.tw-patch/migrate-report-apps.json' },
+      { name: 'packages', report_file: '.tw-patch/migrate-report-packages.json' },
+    ])
   })
 })

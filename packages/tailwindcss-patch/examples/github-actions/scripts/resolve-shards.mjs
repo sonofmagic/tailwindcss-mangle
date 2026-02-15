@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 
+export const RESOLVE_SHARDS_RESULT_SCHEMA_VERSION = 1
+
 export const DEFAULT_SHARD_CONFIG = {
   runAllPatterns: [
     'packages/tailwindcss-patch/**',
@@ -197,6 +199,17 @@ export function toGithubOutputLines(result) {
   ].join('\n')
 }
 
+export function toJsonContract(result) {
+  return {
+    version: RESOLVE_SHARDS_RESULT_SCHEMA_VERSION,
+    hasChanges: result.hasChanges,
+    shards: [...result.shards],
+    matrix: {
+      shard: [...result.matrix],
+    },
+  }
+}
+
 function defaultRunGit(args) {
   return execFileSync('git', args, { encoding: 'utf8' }).trim()
 }
@@ -214,8 +227,12 @@ function defaultHasCommit(sha) {
 }
 
 export function main(env = process.env, io = fs, logger = console) {
+  const outputFormat = env.RESOLVE_SHARDS_OUTPUT === 'json' ? 'json' : 'github-output'
+  const resolverLogger = outputFormat === 'json'
+    ? { log: () => {} }
+    : logger
   const configPath = env.CI_SHARDS_CONFIG_PATH || '.tw-patch/ci-shards.json'
-  const config = loadShardConfig(configPath, io, logger)
+  const config = loadShardConfig(configPath, io, resolverLogger)
 
   const result = resolveShardsFromGit({
     config,
@@ -225,8 +242,13 @@ export function main(env = process.env, io = fs, logger = console) {
     headSha: env.HEAD_SHA || 'HEAD',
     runGit: defaultRunGit,
     hasCommit: defaultHasCommit,
-    logger,
+    logger: resolverLogger,
   })
+
+  if (outputFormat === 'json') {
+    logger.log(JSON.stringify(toJsonContract(result), null, 2))
+    return result
+  }
 
   const lines = toGithubOutputLines(result)
   if (env.GITHUB_OUTPUT) {

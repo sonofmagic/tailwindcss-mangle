@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "hasChanges": true,
+  "shards": [
+    "root",
+    "apps",
+    "packages"
+  ],
+  "matrix": {
+    "shard": [
+      {
+        "name": "root",
+        "report_file": ".tw-patch/migrate-report-root.json"
+      },
+      {
+        "name": "apps",
+        "report_file": ".tw-patch/migrate-report-apps.json"
+      },
+      {
+        "name": "packages",
+        "report_file": ".tw-patch/migrate-report-packages.json"
+      }
+    ]
+  }
+}

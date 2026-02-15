@@ -41,3 +41,16 @@ jobs:
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml \
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml \
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml
+
+      - name: Check resolver contract snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json'
+          actual="$(mktemp)"
+
+          EVENT_NAME=workflow_dispatch \
+          RESOLVE_SHARDS_OUTPUT=json \
+          node packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs > "$actual"
+
+          diff -u "$expected" "$actual"
