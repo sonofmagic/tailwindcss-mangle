@@ -67,6 +67,7 @@ interface MigrateCommandArgs extends BaseCommandArgs {
   dryRun?: boolean
   workspace?: boolean
   maxDepth?: string | number
+  backupDir?: string
   check?: boolean
   json?: boolean
 }
@@ -288,6 +289,7 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
         { flags: '--config <file>', description: 'Migrate a specific config file path' },
         { flags: '--workspace', description: 'Scan workspace recursively for config files' },
         { flags: '--max-depth <n>', description: 'Maximum recursion depth for --workspace', config: { default: 6 } },
+        { flags: '--backup-dir <dir>', description: 'Write pre-migration backups into this directory' },
         { flags: '--check', description: 'Exit with an error when migration changes are required' },
         { flags: '--json', description: 'Print the migration report as JSON' },
         { flags: '--dry-run', description: 'Preview changes without writing files' },
@@ -523,6 +525,7 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
     ...(args.config ? { files: [args.config] } : {}),
     ...(args.workspace ? { workspace: true } : {}),
     ...(args.workspace && maxDepth !== undefined ? { maxDepth } : {}),
+    ...(args.backupDir ? { backupDir: args.backupDir } : {}),
   })
 
   if (args.json) {
@@ -556,10 +559,13 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
     for (const change of entry.changes) {
       logger.info(`  - ${change}`)
     }
+    if (entry.backupFile) {
+      logger.info(`  - backup: ${entry.backupFile.replace(process.cwd(), '.')}`)
+    }
   }
 
   logger.info(
-    `Migration summary: scanned=${report.scannedFiles}, changed=${report.changedFiles}, written=${report.writtenFiles}, missing=${report.missingFiles}, unchanged=${report.unchangedFiles}`,
+    `Migration summary: scanned=${report.scannedFiles}, changed=${report.changedFiles}, written=${report.writtenFiles}, backups=${report.backupsWritten}, missing=${report.missingFiles}, unchanged=${report.unchangedFiles}`,
   )
 
   if (checkMode && report.changedFiles > 0) {

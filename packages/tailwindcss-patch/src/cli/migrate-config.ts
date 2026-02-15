@@ -46,6 +46,7 @@ export interface ConfigFileMigrationEntry {
   changed: boolean
   written: boolean
   rolledBack: boolean
+  backupFile?: string
   changes: string[]
 }
 
@@ -53,9 +54,11 @@ export interface ConfigFileMigrationReport {
   cwd: string
   dryRun: boolean
   rollbackOnError: boolean
+  backupDirectory?: string
   scannedFiles: number
   changedFiles: number
   writtenFiles: number
+  backupsWritten: number
   unchangedFiles: number
   missingFiles: number
   entries: ConfigFileMigrationEntry[]
@@ -68,6 +71,7 @@ export interface MigrateConfigFilesOptions {
   workspace?: boolean
   maxDepth?: number
   rollbackOnError?: boolean
+  backupDir?: string
 }
 
 function getPropertyKeyName(property: ObjectProperty | ObjectMethod): string | undefined {
@@ -424,10 +428,21 @@ async function collectWorkspaceConfigFiles(cwd: string, maxDepth: number) {
   return [...files].sort((a, b) => a.localeCompare(b))
 }
 
+function resolveBackupRelativePath(cwd: string, file: string) {
+  const relative = path.relative(cwd, file)
+  const isExternal = relative.startsWith('..') || path.isAbsolute(relative)
+  if (isExternal) {
+    const sanitized = file.replace(/[:/\\]+/g, '_')
+    return path.join('__external__', `${sanitized}.bak`)
+  }
+  return `${relative}.bak`
+}
+
 export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Promise<ConfigFileMigrationReport> {
   const cwd = path.resolve(options.cwd)
   const dryRun = options.dryRun ?? false
   const rollbackOnError = options.rollbackOnError ?? true
+  const backupDirectory = options.backupDir ? path.resolve(cwd, options.backupDir) : undefined
   const maxDepth = options.maxDepth ?? DEFAULT_WORKSPACE_MAX_DEPTH
   const targetFiles = options.files && options.files.length > 0
     ? resolveTargetFiles(cwd, options.files)
@@ -439,6 +454,7 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
   let scannedFiles = 0
   let changedFiles = 0
   let writtenFiles = 0
+  let backupsWritten = 0
   let unchangedFiles = 0
   let missingFiles = 0
   const wroteEntries: Array<{ file: string, source: string, entry: ConfigFileMigrationEntry }> = []
@@ -467,6 +483,14 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
       changedFiles += 1
       if (!dryRun) {
         try {
+          if (backupDirectory) {
+            const backupRelativePath = resolveBackupRelativePath(cwd, file)
+            const backupFile = path.resolve(backupDirectory, backupRelativePath)
+            await fs.ensureDir(path.dirname(backupFile))
+            await fs.writeFile(backupFile, source, 'utf8')
+            entry.backupFile = backupFile
+            backupsWritten += 1
+          }
           await fs.writeFile(file, migrated.code, 'utf8')
           entry.written = true
           wroteEntries.push({ file, source, entry })
@@ -505,9 +529,11 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
     cwd,
     dryRun,
     rollbackOnError,
+    ...(backupDirectory ? { backupDirectory } : {}),
     scannedFiles,
     changedFiles,
     writtenFiles,
+    backupsWritten,
     unchangedFiles,
     missingFiles,
     entries,

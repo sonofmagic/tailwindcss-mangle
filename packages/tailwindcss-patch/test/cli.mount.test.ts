@@ -11,9 +11,11 @@ const { migrateConfigFilesMock } = vi.hoisted(() => {
     migrateConfigFilesMock: vi.fn(async () => ({
       cwd: '/tmp/project',
       dryRun: false,
+      rollbackOnError: true,
       scannedFiles: 1,
       changedFiles: 1,
       writtenFiles: 1,
+      backupsWritten: 0,
       unchangedFiles: 0,
       missingFiles: 0,
       entries: [
@@ -21,6 +23,7 @@ const { migrateConfigFilesMock } = vi.hoisted(() => {
           file: '/tmp/project/tailwindcss-patch.config.ts',
           changed: true,
           written: true,
+          rolledBack: false,
           changes: ['registry.output -> registry.extract'],
         },
       ],
@@ -299,9 +302,11 @@ describe('mountTailwindcssPatchCommands', () => {
     migrateConfigFilesMock.mockResolvedValueOnce({
       cwd: '/tmp/project',
       dryRun: true,
+      rollbackOnError: true,
       scannedFiles: 1,
       changedFiles: 0,
       writtenFiles: 0,
+      backupsWritten: 0,
       unchangedFiles: 1,
       missingFiles: 0,
       entries: [
@@ -309,6 +314,7 @@ describe('mountTailwindcssPatchCommands', () => {
           file: '/tmp/project/tailwindcss-patch.config.ts',
           changed: false,
           written: false,
+          rolledBack: false,
           changes: [],
         },
       ],
@@ -335,9 +341,11 @@ describe('mountTailwindcssPatchCommands', () => {
     expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
       cwd: '/tmp/project',
       dryRun: false,
+      rollbackOnError: true,
       scannedFiles: 1,
       changedFiles: 1,
       writtenFiles: 1,
+      backupsWritten: 0,
       unchangedFiles: 0,
       missingFiles: 0,
       entries: [
@@ -345,9 +353,25 @@ describe('mountTailwindcssPatchCommands', () => {
           file: '/tmp/project/tailwindcss-patch.config.ts',
           changed: true,
           written: true,
+          rolledBack: false,
           changes: ['registry.output -> registry.extract'],
         },
       ],
     }, null, 2))
+  })
+
+  it('passes backup directory to migrate runner', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--backup-dir', '.tw-patch/migrate-backups'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(migrateConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      dryRun: false,
+      backupDir: '.tw-patch/migrate-backups',
+    })
   })
 })

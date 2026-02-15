@@ -105,6 +105,7 @@ describe('migrateConfigFiles', () => {
       expect(report.scannedFiles).toBe(1)
       expect(report.changedFiles).toBe(1)
       expect(report.writtenFiles).toBe(0)
+      expect(report.backupsWritten).toBe(0)
       expect(report.rollbackOnError).toBe(true)
       const after = await fs.readFile(file, 'utf8')
       expect(after).toContain('output')
@@ -125,16 +126,23 @@ describe('migrateConfigFiles', () => {
       const report = await migrateConfigFiles({
         cwd,
         files: ['tailwindcss-patch.config.ts'],
+        backupDir: '.tw-patch/migrate-backups',
       })
 
       expect(report.scannedFiles).toBe(1)
       expect(report.changedFiles).toBe(1)
       expect(report.writtenFiles).toBe(1)
+      expect(report.backupsWritten).toBe(1)
       expect(report.missingFiles).toBe(0)
+      expect(report.backupDirectory).toBe(path.resolve(cwd, '.tw-patch/migrate-backups'))
 
       const migrated = await fs.readFile(target, 'utf8')
       expect(migrated).toContain('extract')
       expect(migrated).not.toContain('output')
+      const backupFile = path.resolve(cwd, '.tw-patch/migrate-backups/tailwindcss-patch.config.ts.bak')
+      const backupContent = await fs.readFile(backupFile, 'utf8')
+      expect(backupContent).toContain('output')
+      expect(backupContent).not.toContain('extract')
 
       const untouchedContent = await fs.readFile(untouched, 'utf8')
       expect(untouchedContent).toContain('output')
@@ -162,6 +170,7 @@ describe('migrateConfigFiles', () => {
       expect(report.scannedFiles).toBe(2)
       expect(report.changedFiles).toBe(2)
       expect(report.writtenFiles).toBe(2)
+      expect(report.backupsWritten).toBe(0)
       expect(report.missingFiles).toBe(0)
 
       const appResult = await fs.readFile(appConfig, 'utf8')
@@ -191,6 +200,7 @@ describe('migrateConfigFiles', () => {
       expect(report.scannedFiles).toBe(0)
       expect(report.changedFiles).toBe(0)
       expect(report.writtenFiles).toBe(0)
+      expect(report.backupsWritten).toBe(0)
 
       const result = await fs.readFile(deepConfig, 'utf8')
       expect(result).toContain('output')
