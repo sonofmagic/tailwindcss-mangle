@@ -1,0 +1,91 @@
+name: Validate Tailwind Patch Migration Report (Matrix)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-migration-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - name: root
+            report_file: .tw-patch/migrate-report-root.json
+          - name: apps
+            report_file: .tw-patch/migrate-report-apps.json
+          - name: packages
+            report_file: .tw-patch/migrate-report-packages.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Ensure migration report is up-to-date (${{ matrix.shard.name }})
+        shell: bash
+        run: |
+          include_args=()
+          case "${{ matrix.shard.name }}" in
+            root)
+              include_args+=(--include "tailwindcss-patch.config.*")
+              include_args+=(--include "tailwindcss-mangle.config.*")
+              ;;
+            apps)
+              include_args+=(--include "apps/**")
+              ;;
+            packages)
+              include_args+=(--include "packages/**")
+              ;;
+            *)
+              echo "::error::Unknown shard: ${{ matrix.shard.name }}"
+              exit 1
+              ;;
+          esac
+
+          pnpm dlx tw-patch migrate --workspace --check "${include_args[@]}" --report-file "${{ matrix.shard.report_file }}"
+
+      - name: Validate migration report (${{ matrix.shard.name }})
+        shell: bash
+        run: |
+          mkdir -p .tw-patch
+          set +e
+          pnpm dlx tw-patch validate --report-file "${{ matrix.shard.report_file }}" --strict --json > ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
+          status=$?
+          set -e
+
+          if [ "$status" -ne 0 ]; then
+            cat ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
+          fi
+
+          case "$status" in
+            0)  echo "validate ok (${{ matrix.shard.name }})" ;;
+            21) echo "::error::Migration report schema/kind incompatible (${{ matrix.shard.name }})"; exit 1 ;;
+            22) echo "::error::Missing backups under --strict (${{ matrix.shard.name }})"; exit 1 ;;
+            23) echo "::error::I/O failure while reading report/backups (${{ matrix.shard.name }})"; exit 1 ;;
+            *)  echo "::error::Unknown validate failure (exit $status, shard=${{ matrix.shard.name }})"; exit "$status" ;;
+          esac
+
+      - name: Upload validate result (${{ matrix.shard.name }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tw-patch-validate-result-${{ matrix.shard.name }}
+          path: .tw-patch/validate-result-${{ matrix.shard.name }}.json

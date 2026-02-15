@@ -195,7 +195,9 @@ case "$status" in
 esac
 ```
 
-GitHub Actions template: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`.
+GitHub Actions templates:
+- single job: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
+- monorepo matrix shards (`root/apps/packages`): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
 
 ### Token report options
 
