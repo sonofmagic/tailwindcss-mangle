@@ -39,49 +39,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Ensure migration report is up-to-date (${{ matrix.shard.name }})
-        shell: bash
-        run: |
-          include_args=()
-          case "${{ matrix.shard.name }}" in
-            root)
-              include_args+=(--include "tailwindcss-patch.config.*")
-              include_args+=(--include "tailwindcss-mangle.config.*")
-              ;;
-            apps)
-              include_args+=(--include "apps/**")
-              ;;
-            packages)
-              include_args+=(--include "packages/**")
-              ;;
-            *)
-              echo "::error::Unknown shard: ${{ matrix.shard.name }}"
-              exit 1
-              ;;
-          esac
-
-          pnpm dlx tw-patch migrate --workspace --check "${include_args[@]}" --report-file "${{ matrix.shard.report_file }}"
-
-      - name: Validate migration report (${{ matrix.shard.name }})
-        shell: bash
-        run: |
-          mkdir -p .tw-patch
-          set +e
-          pnpm dlx tw-patch validate --report-file "${{ matrix.shard.report_file }}" --strict --json > ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
-          status=$?
-          set -e
-
-          if [ "$status" -ne 0 ]; then
-            cat ".tw-patch/validate-result-${{ matrix.shard.name }}.json"
-          fi
-
-          case "$status" in
-            0)  echo "validate ok (${{ matrix.shard.name }})" ;;
-            21) echo "::error::Migration report schema/kind incompatible (${{ matrix.shard.name }})"; exit 1 ;;
-            22) echo "::error::Missing backups under --strict (${{ matrix.shard.name }})"; exit 1 ;;
-            23) echo "::error::I/O failure while reading report/backups (${{ matrix.shard.name }})"; exit 1 ;;
-            *)  echo "::error::Unknown validate failure (exit $status, shard=${{ matrix.shard.name }})"; exit "$status" ;;
-          esac
+      - name: Run migration report checks (${{ matrix.shard.name }})
+        uses: ./packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report
+        with:
+          scope: ${{ matrix.shard.name }}
+          shard-name: ${{ matrix.shard.name }}
+          report-file: ${{ matrix.shard.report_file }}
+          validate-output-file: .tw-patch/validate-result-${{ matrix.shard.name }}.json
 
       - name: Upload validate result (${{ matrix.shard.name }})
         if: always()

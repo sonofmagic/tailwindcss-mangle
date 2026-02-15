@@ -1,0 +1,91 @@
+name: Validate migration report
+description: Run tw-patch migrate --check and tw-patch validate with CI-friendly exit mapping.
+
+inputs:
+  report-file:
+    description: Migration report file path.
+    required: true
+  validate-output-file:
+    description: Path to write validate --json output.
+    required: true
+  scope:
+    description: Scope selector for --include patterns (all|root|apps|packages).
+    required: false
+    default: all
+  shard-name:
+    description: Optional shard label for logs.
+    required: false
+    default: ""
+  strict:
+    description: Whether to pass --strict to tw-patch validate.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure migration report is up-to-date
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        include_args=()
+        case "${{ inputs.scope }}" in
+          all|"")
+            ;;
+          root)
+            include_args+=(--include "tailwindcss-patch.config.*")
+            include_args+=(--include "tailwindcss-mangle.config.*")
+            ;;
+          apps)
+            include_args+=(--include "apps/**")
+            ;;
+          packages)
+            include_args+=(--include "packages/**")
+            ;;
+          *)
+            echo "::error::Unknown scope: ${{ inputs.scope }}"
+            exit 1
+            ;;
+        esac
+
+        if [ "${#include_args[@]}" -eq 0 ]; then
+          pnpm dlx tw-patch migrate --workspace --check --report-file "${{ inputs.report-file }}"
+        else
+          pnpm dlx tw-patch migrate --workspace --check "${include_args[@]}" --report-file "${{ inputs.report-file }}"
+        fi
+
+    - name: Validate migration report
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        output_file="${{ inputs.validate-output-file }}"
+        mkdir -p "$(dirname "$output_file")"
+
+        label=""
+        if [ -n "${{ inputs.shard-name }}" ]; then
+          label=" (${{ inputs.shard-name }})"
+        fi
+
+        strict_args=()
+        if [ "${{ inputs.strict }}" = "true" ]; then
+          strict_args+=(--strict)
+        fi
+
+        set +e
+        pnpm dlx tw-patch validate --report-file "${{ inputs.report-file }}" "${strict_args[@]}" --json > "$output_file"
+        status=$?
+        set -e
+
+        if [ "$status" -ne 0 ]; then
+          cat "$output_file"
+        fi
+
+        case "$status" in
+          0)  echo "validate ok$label" ;;
+          21) echo "::error::Migration report schema/kind incompatible$label"; exit 1 ;;
+          22) echo "::error::Missing backups under --strict$label"; exit 1 ;;
+          23) echo "::error::I/O failure while reading report/backups$label"; exit 1 ;;
+          *)  echo "::error::Unknown validate failure (exit $status)$label"; exit "$status" ;;
+        esac

@@ -199,6 +199,7 @@ GitHub Actions templates:
 - single job: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
 - monorepo matrix shards (`root/apps/packages`): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
 - monorepo affected shards (PR diff-aware): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
+- shared composite action (used by all templates): `packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`
 
 For the affected-shards template, you can customize shard matching and run-all triggers by adding `.tw-patch/ci-shards.json` in your repo.
 A sample config is available at `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`.

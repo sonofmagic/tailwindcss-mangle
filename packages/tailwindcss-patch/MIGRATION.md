@@ -98,6 +98,7 @@ Migration mapping:
 - A ready-to-use GitHub Actions example is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`.
 - A matrix-based monorepo GitHub Actions example is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`.
 - An affected-shards monorepo GitHub Actions example (PR diff aware) is available at `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`.
+- The three templates share a local composite action: `packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`.
 - The affected-shards template supports repo-level shard config via `.tw-patch/ci-shards.json` (example: `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`).
 - Migration report tooling now has public exports from package entry (`migrateConfigFiles`, `restoreConfigFiles`, report constants/types) and published JSON schema subpaths: `tailwindcss-patch/migration-report.schema.json`, `tailwindcss-patch/restore-result.schema.json`, `tailwindcss-patch/validate-result.schema.json`.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
