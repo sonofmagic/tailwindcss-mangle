@@ -211,6 +211,34 @@ The shared composite action now supports optional environment bootstrap inputs:
 `setup-pnpm`, `setup-node`, `node-version`, `cache-dependency-path`, `install-deps`, and `install-command`.
 This lets you choose between action-managed setup or workflow-managed setup depending on your CI strategy.
 
+### CI copy checklist
+
+1. Pick one workflow template based on your repository shape:
+`validate-migration-report.yml` (single job), `validate-migration-report-matrix.yml` (fixed shards), or `validate-migration-report-affected.yml` (PR diff-aware shards).
+2. Always copy the shared composite action:
+`packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`.
+3. If you use the affected-shards template, also copy:
+`packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`,
+`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`,
+`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`.
+4. If your workspace paths differ from defaults, add `.tw-patch/ci-shards.json` (based on `ci-shards.example.json`) and adjust shard patterns/report files.
+5. Confirm the composite action inputs match your runner setup:
+action-managed setup (`setup-pnpm/setup-node/install-deps`) or pre-provisioned setup (`false` + custom install command).
+6. Keep `permissions.contents: read` and ensure `pnpm-lock.yaml` path matches `cache-dependency-path`.
+
+### CI troubleshooting
+
+- `uses: ./.../validate-migration-report` not found:
+the workflow references a local action path; copy the action directory with the workflow file.
+- `No affected shards for migration report validation.` in PR:
+either files are outside configured shard patterns or base diff resolution returned empty; verify `.tw-patch/ci-shards.json` and PR base branch.
+- `Unknown scope` in composite action:
+`scope` currently accepts only `all`, `root`, `apps`, `packages` unless you customize action logic.
+- `validate` exits `21/22/23`:
+`21` incompatible report schema/kind, `22` missing backups under `--strict`, `23` report/backup I/O failure.
+- Resolver snapshot diff failure in `workflow-lint`:
+you changed resolver contract behavior; update both schema/snapshot fixtures and corresponding tests in one commit.
+
 ### Token report options
 
 | Flag                                   | Description                                                                               |

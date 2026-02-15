@@ -154,6 +154,36 @@ GitHub Actions 模板：
 `setup-pnpm`、`setup-node`、`node-version`、`cache-dependency-path`、`install-deps`、`install-command`。
 可根据 CI 策略选择“由 action 负责安装环境”或“由 workflow 自行安装环境”。
 
+### CI 复制清单
+
+1. 根据仓库形态选择一个 workflow 模板：
+`validate-migration-report.yml`（单任务）、
+`validate-migration-report-matrix.yml`（固定分片）、
+`validate-migration-report-affected.yml`（按 PR diff 分片）。
+2. 必须同时复制共享 composite action：
+`packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`。
+3. 如果使用 affected 模板，还需要额外复制：
+`packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`、
+`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`、
+`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`。
+4. 如果你的 monorepo 目录结构与默认不同，请新增 `.tw-patch/ci-shards.json`（可基于 `ci-shards.example.json`）并调整分片匹配与报告路径。
+5. 核对 composite action 输入是否符合当前 Runner 策略：
+由 action 安装（`setup-pnpm/setup-node/install-deps`）或由 workflow 预装（传 `false` 并自定义安装命令）。
+6. 保留 `permissions.contents: read`，并确保 `cache-dependency-path` 与实际 lockfile 路径一致。
+
+### CI 常见问题排查
+
+- 报错 `uses: ./.../validate-migration-report` 找不到：
+workflow 使用的是本地 action 路径，需要连同 action 目录一起复制。
+- PR 中显示 `No affected shards for migration report validation.`：
+通常是变更文件不匹配当前分片规则，或 diff 基线为空；请检查 `.tw-patch/ci-shards.json` 与 PR base 分支配置。
+- composite action 报 `Unknown scope`：
+当前仅支持 `all`、`root`、`apps`、`packages`，自定义 scope 需要同步调整 action 逻辑。
+- `validate` 退出码 `21/22/23`：
+`21` 报告 schema/kind 不兼容，`22` `--strict` 下缺失备份，`23` 读取报告或备份时 I/O 失败。
+- `workflow-lint` 的 resolver 快照 diff 失败：
+说明你调整了解析协议；需同时更新 schema、snapshot 与测试用例。
+
 ### `tokens` 常用参数
 
 | 参数                                   | 说明                                                        |

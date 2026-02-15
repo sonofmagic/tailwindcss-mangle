@@ -103,6 +103,7 @@ Migration mapping:
 - The affected-shards template resolver is externalized at `packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs` for testability.
 - Resolver JSON contract is documented via `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json` with dispatch snapshot fixture `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`.
 - The affected-shards template supports repo-level shard config via `.tw-patch/ci-shards.json` (example: `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`).
+- README/README-cn now include a CI copy checklist and troubleshooting notes for local action wiring and common failure modes.
 - Migration report tooling now has public exports from package entry (`migrateConfigFiles`, `restoreConfigFiles`, report constants/types) and published JSON schema subpaths: `tailwindcss-patch/migration-report.schema.json`, `tailwindcss-patch/restore-result.schema.json`, `tailwindcss-patch/validate-result.schema.json`.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
