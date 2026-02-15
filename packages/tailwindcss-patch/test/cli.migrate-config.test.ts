@@ -210,6 +210,35 @@ describe('migrateConfigFiles', () => {
     }
   })
 
+  it('filters workspace files by include/exclude glob patterns', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-migrate-filter-'))
+    const appConfig = path.resolve(cwd, 'apps/demo-a/tailwindcss-mangle.config.ts')
+    const packageConfig = path.resolve(cwd, 'packages/demo-b/tailwindcss-patch.config.ts')
+    try {
+      await fs.outputFile(appConfig, `export default { registry: { output: { file: 'app.json' } } }\n`, 'utf8')
+      await fs.outputFile(packageConfig, `export default { registry: { output: { file: 'pkg.json' } } }\n`, 'utf8')
+
+      const report = await migrateConfigFiles({
+        cwd,
+        workspace: true,
+        include: ['apps/**'],
+        exclude: ['**/demo-b/**'],
+      })
+
+      expect(report.scannedFiles).toBe(1)
+      expect(report.changedFiles).toBe(1)
+      expect(report.writtenFiles).toBe(1)
+
+      const appAfter = await fs.readFile(appConfig, 'utf8')
+      const packageAfter = await fs.readFile(packageConfig, 'utf8')
+      expect(appAfter).toContain('extract')
+      expect(packageAfter).toContain('output')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
   it('rolls back already written files when a later write fails', async () => {
     const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-migrate-rollback-'))
     const first = path.resolve(cwd, 'tailwindcss-patch.config.ts')

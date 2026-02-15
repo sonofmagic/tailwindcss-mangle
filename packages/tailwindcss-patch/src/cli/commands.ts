@@ -67,6 +67,9 @@ interface MigrateCommandArgs extends BaseCommandArgs {
   dryRun?: boolean
   workspace?: boolean
   maxDepth?: string | number
+  include?: string | string[]
+  exclude?: string | string[]
+  reportFile?: string
   backupDir?: string
   check?: boolean
   json?: boolean
@@ -289,6 +292,9 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
         { flags: '--config <file>', description: 'Migrate a specific config file path' },
         { flags: '--workspace', description: 'Scan workspace recursively for config files' },
         { flags: '--max-depth <n>', description: 'Maximum recursion depth for --workspace', config: { default: 6 } },
+        { flags: '--include <glob>', description: 'Only migrate files that match this glob (repeatable)' },
+        { flags: '--exclude <glob>', description: 'Skip files that match this glob (repeatable)' },
+        { flags: '--report-file <file>', description: 'Write migration report JSON to a file' },
         { flags: '--backup-dir <dir>', description: 'Write pre-migration backups into this directory' },
         { flags: '--check', description: 'Exit with an error when migration changes are required' },
         { flags: '--json', description: 'Print the migration report as JSON' },
@@ -510,6 +516,19 @@ async function initCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'in
 
 async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
   const { args } = ctx
+  const normalizePatternArgs = (value?: string | string[]) => {
+    if (!value) {
+      return undefined
+    }
+    const raw = Array.isArray(value) ? value : [value]
+    const values = raw
+      .flatMap(item => item.split(','))
+      .map(item => item.trim())
+      .filter(Boolean)
+    return values.length > 0 ? values : undefined
+  }
+  const include = normalizePatternArgs(args.include)
+  const exclude = normalizePatternArgs(args.exclude)
   const parsedMaxDepth = args.maxDepth === undefined ? undefined : Number(args.maxDepth)
   const maxDepth = parsedMaxDepth !== undefined && Number.isFinite(parsedMaxDepth) && parsedMaxDepth >= 0
     ? Math.floor(parsedMaxDepth)
@@ -526,7 +545,16 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
     ...(args.workspace ? { workspace: true } : {}),
     ...(args.workspace && maxDepth !== undefined ? { maxDepth } : {}),
     ...(args.backupDir ? { backupDir: args.backupDir } : {}),
+    ...(include ? { include } : {}),
+    ...(exclude ? { exclude } : {}),
   })
+
+  if (args.reportFile) {
+    const reportPath = path.resolve(ctx.cwd, args.reportFile)
+    await fs.ensureDir(path.dirname(reportPath))
+    await fs.writeJSON(reportPath, report, { spaces: 2 })
+    logger.info(`Migration report written: ${reportPath.replace(process.cwd(), '.')}`)
+  }
 
   if (args.json) {
     logger.log(JSON.stringify(report, null, 2))

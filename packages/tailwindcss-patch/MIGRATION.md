@@ -87,6 +87,7 @@ Migration mapping:
 - `tw-patch migrate` can rewrite deprecated config keys to modern fields (`--dry-run` for preview, `--workspace` for recursive monorepo scans, `--check` for CI enforcement).
 - Migration writes are transactional by default: if one file write fails, previously written migration files are rolled back.
 - Optional `--backup-dir` can persist per-file pre-migration snapshots for manual recovery or auditing.
+- `--include` / `--exclude` patterns can narrow workspace migration scope, and `--report-file` can persist machine-readable migration reports.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
 ## 4. Cache handling

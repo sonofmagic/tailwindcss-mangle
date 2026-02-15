@@ -1,4 +1,5 @@
 import cac from 'cac'
+import fs from 'fs-extra'
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
@@ -373,5 +374,49 @@ describe('mountTailwindcssPatchCommands', () => {
       dryRun: false,
       backupDir: '.tw-patch/migrate-backups',
     })
+  })
+
+  it('passes include and exclude patterns to migrate runner', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(
+      ['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--include', 'apps/**', '--include', 'packages/**', '--exclude', '**/legacy/**'],
+      { run: false },
+    )
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(migrateConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      dryRun: false,
+      include: ['apps/**', 'packages/**'],
+      exclude: ['**/legacy/**'],
+    })
+  })
+
+  it('writes migrate report to report file when requested', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    const writeJSONSpy = vi.spyOn(fs, 'writeJSON').mockResolvedValue(undefined)
+    try {
+      cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--report-file', '.tw-patch/migrate-report.json'], { run: false })
+      await cli.runMatchedCommand()
+      expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+      expect(writeJSONSpy).toHaveBeenCalledTimes(1)
+      expect(writeJSONSpy).toHaveBeenCalledWith(
+        path.resolve('/tmp/project', '.tw-patch/migrate-report.json'),
+        expect.objectContaining({
+          cwd: '/tmp/project',
+          changedFiles: 1,
+        }),
+        { spaces: 2 },
+      )
+      expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('Migration report written'))
+    }
+    finally {
+      writeJSONSpy.mockRestore()
+    }
   })
 })

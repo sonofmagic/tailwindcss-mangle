@@ -72,6 +72,8 @@ export interface MigrateConfigFilesOptions {
   maxDepth?: number
   rollbackOnError?: boolean
   backupDir?: string
+  include?: string[]
+  exclude?: string[]
 }
 
 function getPropertyKeyName(property: ObjectProperty | ObjectMethod): string | undefined {
@@ -438,17 +440,89 @@ function resolveBackupRelativePath(cwd: string, file: string) {
   return `${relative}.bak`
 }
 
+function normalizePattern(pattern: string) {
+  return pattern.replace(/\\/g, '/').replace(/^\.\/+/, '').replace(/^\/+/, '')
+}
+
+function globToRegExp(globPattern: string) {
+  const normalized = normalizePattern(globPattern)
+  let pattern = ''
+
+  for (let i = 0; i < normalized.length; i += 1) {
+    const char = normalized[i]!
+    if (char === '*') {
+      if (normalized[i + 1] === '*') {
+        pattern += '.*'
+        i += 1
+      }
+      else {
+        pattern += '[^/]*'
+      }
+      continue
+    }
+    if (char === '?') {
+      pattern += '[^/]'
+      continue
+    }
+    if ('\\^$+?.()|{}[]'.includes(char)) {
+      pattern += `\\${char}`
+      continue
+    }
+    pattern += char
+  }
+
+  return new RegExp(`^${pattern}$`)
+}
+
+function toPatternList(patterns?: string[]) {
+  if (!patterns || patterns.length === 0) {
+    return []
+  }
+  return patterns
+    .map(pattern => pattern.trim())
+    .filter(Boolean)
+    .map(globToRegExp)
+}
+
+function normalizeFileForPattern(file: string, cwd: string) {
+  const relative = path.relative(cwd, file)
+  if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
+    return relative.replace(/\\/g, '/')
+  }
+  return file.replace(/\\/g, '/')
+}
+
+function filterTargetFiles(targetFiles: string[], cwd: string, include?: string[], exclude?: string[]) {
+  const includePatterns = toPatternList(include)
+  const excludePatterns = toPatternList(exclude)
+
+  if (includePatterns.length === 0 && excludePatterns.length === 0) {
+    return targetFiles
+  }
+
+  return targetFiles.filter((file) => {
+    const normalized = normalizeFileForPattern(file, cwd)
+    const inInclude = includePatterns.length === 0 || includePatterns.some(pattern => pattern.test(normalized))
+    if (!inInclude) {
+      return false
+    }
+    const inExclude = excludePatterns.some(pattern => pattern.test(normalized))
+    return !inExclude
+  })
+}
+
 export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Promise<ConfigFileMigrationReport> {
   const cwd = path.resolve(options.cwd)
   const dryRun = options.dryRun ?? false
   const rollbackOnError = options.rollbackOnError ?? true
   const backupDirectory = options.backupDir ? path.resolve(cwd, options.backupDir) : undefined
   const maxDepth = options.maxDepth ?? DEFAULT_WORKSPACE_MAX_DEPTH
-  const targetFiles = options.files && options.files.length > 0
+  const discoveredTargetFiles = options.files && options.files.length > 0
     ? resolveTargetFiles(cwd, options.files)
     : options.workspace
       ? await collectWorkspaceConfigFiles(cwd, maxDepth)
       : resolveTargetFiles(cwd)
+  const targetFiles = filterTargetFiles(discoveredTargetFiles, cwd, options.include, options.exclude)
   const entries: ConfigFileMigrationEntry[] = []
 
   let scannedFiles = 0

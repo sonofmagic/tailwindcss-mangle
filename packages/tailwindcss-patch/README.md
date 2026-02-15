@@ -119,14 +119,17 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 | `--config <file>`| Migrate only one specific config file path.                                  |
 | `--workspace`    | Recursively scan the workspace for supported config filenames.               |
 | `--max-depth <n>`| Maximum recursion depth for `--workspace` mode (default: `6`).               |
+| `--include <glob>` | Only migrate files matching this glob pattern (repeatable).                |
+| `--exclude <glob>` | Skip files matching this glob pattern (repeatable).                        |
+| `--report-file <file>` | Write the migration report JSON to this file.                         |
 | `--backup-dir <dir>` | Store pre-migration file backups in this directory.                     |
 | `--check`        | Check mode for CI. Exits with an error if files still need migration.        |
 | `--json`         | Print the migration report as JSON.                                           |
 | `--dry-run`      | Preview planned changes without writing files.                               |
 
-`tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
+`tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). Use `--include` / `--exclude` to control monorepo scanning ranges. It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
-When writing files, migration uses a transactional strategy by default: if a later file write fails, already written migration files are rolled back to avoid partial updates. Use `--backup-dir` if you want explicit backup snapshots for audit/manual recovery.
+When writing files, migration uses a transactional strategy by default: if a later file write fails, already written migration files are rolled back to avoid partial updates. Use `--backup-dir` if you want explicit backup snapshots for audit/manual recovery. Use `--report-file` to keep a machine-readable migration artifact.
 
 ### Token report options
 

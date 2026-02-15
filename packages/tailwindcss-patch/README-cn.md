@@ -62,14 +62,17 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 | `--config <file>` | 仅迁移指定的配置文件。                 |
 | `--workspace`     | 递归扫描 workspace 下的配置文件。      |
 | `--max-depth <n>` | `--workspace` 模式下的最大递归深度（默认 `6`）。 |
+| `--include <glob>` | 仅迁移匹配该 glob 的文件（可重复传参）。 |
+| `--exclude <glob>` | 跳过匹配该 glob 的文件（可重复传参）。 |
+| `--report-file <file>` | 把迁移报告写入 JSON 文件。         |
 | `--backup-dir <dir>` | 把迁移前的原始文件备份到指定目录。   |
 | `--check`         | CI 检查模式，若仍有文件需要迁移则报错退出。 |
 | `--json`          | 输出 JSON 格式的迁移报告。             |
 | `--dry-run`       | 仅预览将要变更的内容，不写入磁盘。     |
 
-`tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
+`tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），可通过 `--include` / `--exclude` 控制扫描范围，并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
-迁移写入默认采用“事务式”策略：如果后续文件写入失败，会自动回滚此前已经写入的迁移文件，避免留下半迁移状态。若需要显式保留原始文件快照，可配合 `--backup-dir`。
+迁移写入默认采用“事务式”策略：如果后续文件写入失败，会自动回滚此前已经写入的迁移文件，避免留下半迁移状态。若需要显式保留原始文件快照，可配合 `--backup-dir`；若需要审计产物，可配合 `--report-file`。
 
 ### `tokens` 常用参数
 
