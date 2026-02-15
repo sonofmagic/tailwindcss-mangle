@@ -45,12 +45,14 @@ export interface ConfigFileMigrationEntry {
   file: string
   changed: boolean
   written: boolean
+  rolledBack: boolean
   changes: string[]
 }
 
 export interface ConfigFileMigrationReport {
   cwd: string
   dryRun: boolean
+  rollbackOnError: boolean
   scannedFiles: number
   changedFiles: number
   writtenFiles: number
@@ -65,6 +67,7 @@ export interface MigrateConfigFilesOptions {
   dryRun?: boolean
   workspace?: boolean
   maxDepth?: number
+  rollbackOnError?: boolean
 }
 
 function getPropertyKeyName(property: ObjectProperty | ObjectMethod): string | undefined {
@@ -424,6 +427,7 @@ async function collectWorkspaceConfigFiles(cwd: string, maxDepth: number) {
 export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Promise<ConfigFileMigrationReport> {
   const cwd = path.resolve(options.cwd)
   const dryRun = options.dryRun ?? false
+  const rollbackOnError = options.rollbackOnError ?? true
   const maxDepth = options.maxDepth ?? DEFAULT_WORKSPACE_MAX_DEPTH
   const targetFiles = options.files && options.files.length > 0
     ? resolveTargetFiles(cwd, options.files)
@@ -437,6 +441,7 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
   let writtenFiles = 0
   let unchangedFiles = 0
   let missingFiles = 0
+  const wroteEntries: Array<{ file: string, source: string, entry: ConfigFileMigrationEntry }> = []
 
   for (const file of targetFiles) {
     const exists = await fs.pathExists(file)
@@ -453,27 +458,53 @@ export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Pr
       file,
       changed: migrated.changed,
       written: false,
+      rolledBack: false,
       changes: migrated.changes,
     }
+    entries.push(entry)
 
     if (migrated.changed) {
       changedFiles += 1
       if (!dryRun) {
-        await fs.writeFile(file, migrated.code, 'utf8')
-        entry.written = true
-        writtenFiles += 1
+        try {
+          await fs.writeFile(file, migrated.code, 'utf8')
+          entry.written = true
+          wroteEntries.push({ file, source, entry })
+          writtenFiles += 1
+        }
+        catch (error) {
+          let rollbackCount = 0
+          if (rollbackOnError && wroteEntries.length > 0) {
+            for (const written of [...wroteEntries].reverse()) {
+              try {
+                await fs.writeFile(written.file, written.source, 'utf8')
+                written.entry.written = false
+                written.entry.rolledBack = true
+                rollbackCount += 1
+              }
+              catch {
+                // Continue best-effort rollback to avoid leaving even more partial state.
+              }
+            }
+            writtenFiles = Math.max(0, writtenFiles - rollbackCount)
+          }
+          const reason = error instanceof Error ? error.message : String(error)
+          const rollbackHint = rollbackOnError && rollbackCount > 0
+            ? ` Rolled back ${rollbackCount} previously written file(s).`
+            : ''
+          throw new Error(`Failed to write migrated config "${file}": ${reason}.${rollbackHint}`)
+        }
       }
     }
     else {
       unchangedFiles += 1
     }
-
-    entries.push(entry)
   }
 
   return {
     cwd,
     dryRun,
+    rollbackOnError,
     scannedFiles,
     changedFiles,
     writtenFiles,

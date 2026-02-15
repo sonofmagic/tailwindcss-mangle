@@ -125,6 +125,8 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 
 `tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
+When writing files, migration uses a transactional strategy by default: if a later file write fails, already written migration files are rolled back to avoid partial updates.
+
 ### Token report options
 
 | Flag                                   | Description                                                                               |

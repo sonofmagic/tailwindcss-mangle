@@ -1,7 +1,7 @@
 import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { migrateConfigFiles, migrateConfigSource } from '../src/cli/migrate-config'
 
 describe('migrateConfigSource', () => {
@@ -105,6 +105,7 @@ describe('migrateConfigFiles', () => {
       expect(report.scannedFiles).toBe(1)
       expect(report.changedFiles).toBe(1)
       expect(report.writtenFiles).toBe(0)
+      expect(report.rollbackOnError).toBe(true)
       const after = await fs.readFile(file, 'utf8')
       expect(after).toContain('output')
     }
@@ -195,6 +196,48 @@ describe('migrateConfigFiles', () => {
       expect(result).toContain('output')
     }
     finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('rolls back already written files when a later write fails', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-migrate-rollback-'))
+    const first = path.resolve(cwd, 'tailwindcss-patch.config.ts')
+    const second = path.resolve(cwd, 'tailwindcss-mangle.config.ts')
+    try {
+      await fs.writeFile(first, `export default { registry: { output: { file: 'first.json' } } }\n`, 'utf8')
+      await fs.writeFile(second, `export default { registry: { output: { file: 'second.json' } } }\n`, 'utf8')
+
+      const originalWriteFile = fs.writeFile.bind(fs)
+      let migrationWriteCount = 0
+      const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(async (...args) => {
+        const [target] = args
+        const filePath = String(target)
+        if (filePath === first || filePath === second) {
+          migrationWriteCount += 1
+          if (migrationWriteCount === 2) {
+            throw new Error('simulated write failure')
+          }
+        }
+        return originalWriteFile(...args)
+      })
+
+      await expect(migrateConfigFiles({
+        cwd,
+        files: ['tailwindcss-patch.config.ts', 'tailwindcss-mangle.config.ts'],
+      })).rejects.toThrow('Failed to write migrated config')
+
+      writeSpy.mockRestore()
+
+      const firstAfter = await fs.readFile(first, 'utf8')
+      const secondAfter = await fs.readFile(second, 'utf8')
+      expect(firstAfter).toContain('output')
+      expect(firstAfter).not.toContain('extract')
+      expect(secondAfter).toContain('output')
+      expect(secondAfter).not.toContain('extract')
+    }
+    finally {
+      vi.restoreAllMocks()
       await fs.remove(cwd)
     }
   })

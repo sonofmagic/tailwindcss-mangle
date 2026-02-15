@@ -68,6 +68,8 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 `tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
+迁移写入默认采用“事务式”策略：如果后续文件写入失败，会自动回滚此前已经写入的迁移文件，避免留下半迁移状态。
+
 ### `tokens` 常用参数
 
 | 参数                                   | 说明                                                        |
