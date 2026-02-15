@@ -1,0 +1,43 @@
+name: Workflow Lint
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "packages/tailwindcss-patch/examples/github-actions/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-workflows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Lint workflow files
+        uses: rhysd/actionlint@v1
+        with:
+          args: >-
+            -color
+            .github/workflows/*.yml
+            packages/tailwindcss-patch/examples/github-actions/*.yml
+
+      - name: Validate example workflow wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          action_path='packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml'
+          script_path='packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs'
+
+          test -f "$action_path"
+          test -f "$script_path"
+
+          rg -n "uses: ./packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report" \
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml \
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml \
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml
