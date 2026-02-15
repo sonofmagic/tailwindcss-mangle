@@ -68,9 +68,7 @@ export async function extractRawCandidates(
   sources?: SourceEntry[],
 ): Promise<string[]> {
   const { Scanner } = await importOxide()
-  const scanner = new Scanner({
-    sources,
-  })
+  const scanner = new Scanner(sources === undefined ? {} : { sources })
 
   return scanner.scan()
 }
@@ -108,9 +106,13 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   const validCandidates: string[] = []
 
   for (let index = 0; index < parsedCandidates.length; index++) {
+    const candidate = parsedCandidates[index]
+    if (candidate === undefined) {
+      continue
+    }
     const css = cssByCandidate[index]
     if (typeof css === 'string' && css.trim().length > 0) {
-      validCandidates.push(parsedCandidates[index])
+      validCandidates.push(candidate)
     }
   }
 
@@ -155,6 +157,9 @@ function resolveLineMeta(content: string, offsets: number[], index: number) {
   while (low <= high) {
     const mid = Math.floor((low + high) / 2)
     const start = offsets[mid]
+    if (start === undefined) {
+      break
+    }
     const nextStart = offsets[mid + 1] ?? content.length
 
     if (index < start) {

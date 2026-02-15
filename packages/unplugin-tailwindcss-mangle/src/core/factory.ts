@@ -17,9 +17,8 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
       name: `${pluginName}:pre`,
       enforce: 'pre',
       async buildStart() {
-        await ctx.initConfig({
-          transformerOptions: options,
-        })
+        const initOptions = options === undefined ? {} : { transformerOptions: options }
+        await ctx.initConfig(initOptions)
         filter = createFilter(ctx.options.sources?.include, ctx.options.sources?.exclude)
       },
     },
@@ -137,7 +136,11 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
 
               if (groupedEntries.css.length > 0) {
                 for (let i = 0; i < groupedEntries.css.length; i++) {
-                  const [id, cssSource] = groupedEntries.css[i]
+                  const entry = groupedEntries.css[i]
+                  if (!entry) {
+                    continue
+                  }
+                  const [id, cssSource] = entry
 
                   const { code } = await cssHandler(cssSource.source().toString(), {
                     id,

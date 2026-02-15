@@ -126,7 +126,7 @@ function checkExposeContextPatch(context: PatchStatusContext): PatchStatusEntry 
   return {
     name: 'exposeContext',
     status: reasons.length ? 'not-applied' : 'applied',
-    reason: reasons.length ? reasons.join('; ') : undefined,
+    ...(reasons.length ? { reason: reasons.join('; ') } : {}),
     files,
   }
 }

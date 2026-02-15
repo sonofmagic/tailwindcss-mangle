@@ -97,7 +97,8 @@ async function processSvelteAst(
       const contentEnd = node.content.end
       const innerContent = ms.original.slice(contentStart, contentEnd)
 
-      const result = jsHandler(innerContent, { ctx, id })
+      const jsHandlerOptions = id === undefined ? { ctx } : { ctx, id }
+      const result = jsHandler(innerContent, jsHandlerOptions)
       if (result.code !== innerContent) {
         ms.update(contentStart, contentEnd, result.code)
       }
@@ -110,7 +111,8 @@ async function processSvelteAst(
       const contentEnd = node.content.end
       const innerContent = ms.original.slice(contentStart, contentEnd)
 
-      const promise = cssHandler(innerContent, { ctx, id }).then((result) => {
+      const cssHandlerOptions = id === undefined ? { ctx } : { ctx, id }
+      const promise = cssHandler(innerContent, cssHandlerOptions).then((result) => {
         if (result.code !== innerContent) {
           ms.update(contentStart, contentEnd, result.code)
         }

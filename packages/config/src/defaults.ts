@@ -28,7 +28,7 @@ export function getDefaultTransformerConfig(): TransformerOptions {
       include: defaultPipelineInclude,
       exclude: defaultPipelineExclude,
     },
-    disabled: process.env.NODE_ENV === 'development',
+    disabled: process.env['NODE_ENV'] === 'development',
     registry: {
       file: '.tw-patch/tw-class-list.json',
       mapping: {

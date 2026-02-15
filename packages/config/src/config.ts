@@ -23,7 +23,7 @@ export async function getConfig(cwd?: string): Promise<ResolvedConfig<Tailwindcs
     defaults: {
       ...getDefaultUserConfig(),
     },
-    cwd,
+    ...(cwd === undefined ? {} : { cwd }),
   })
 }
 

@@ -68,13 +68,15 @@ export async function collectClassesFromTailwindV4(
         : [entryDir]
       const sourcesBase = resolvedConfiguredBase ?? entryDir
       const sources = resolveSources(sourcesBase)
-      const candidates = await extractValidCandidates({
+      const firstBase = designSystemBases[0] ?? entryDir
+      const extractOptions = {
         cwd: options.projectRoot,
-        base: designSystemBases[0],
+        base: firstBase,
         baseFallbacks: designSystemBases.slice(1),
         css,
-        sources,
-      })
+        ...(sources === undefined ? {} : { sources }),
+      }
+      const candidates = await extractValidCandidates(extractOptions)
       for (const candidate of candidates) {
         if (options.filter(candidate)) {
           set.add(candidate)
@@ -85,12 +87,13 @@ export async function collectClassesFromTailwindV4(
   else {
     const baseForCss = resolvedConfiguredBase ?? resolvedDefaultBase
     const sources = resolveSources(baseForCss)
-    const candidates = await extractValidCandidates({
+    const extractOptions = {
       cwd: options.projectRoot,
       base: baseForCss,
-      css: v4Options.css,
-      sources,
-    })
+      ...(v4Options.css === undefined ? {} : { css: v4Options.css }),
+      ...(sources === undefined ? {} : { sources }),
+    }
+    const candidates = await extractValidCandidates(extractOptions)
     for (const candidate of candidates) {
       if (options.filter(candidate)) {
         set.add(candidate)

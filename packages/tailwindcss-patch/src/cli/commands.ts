@@ -133,7 +133,7 @@ function formatGroupedPreview(map: TailwindTokenByFileMap, limit: number = 3) {
   }
 
   const lines = files.slice(0, limit).map((file) => {
-    const tokens = map[file]
+    const tokens = map[file] ?? []
     const sample = tokens.slice(0, 3).map(token => token.rawCandidate).join(', ')
     const suffix = tokens.length > 3 ? ', …' : ''
     return `${file}: ${tokens.length} tokens (${sample}${suffix})`
@@ -372,8 +372,8 @@ async function extractCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
 
   if (args.output || args.format) {
     overrides.output = {
-      file: args.output,
-      format: args.format,
+      ...(args.output === undefined ? {} : { file: args.output }),
+      ...(args.format === undefined ? {} : { format: args.format }),
     }
     hasOverrides = true
   }
@@ -388,7 +388,8 @@ async function extractCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   }
 
   const patcher = await ctx.createPatcher(hasOverrides ? overrides : undefined)
-  const result = await patcher.extract({ write: args.write })
+  const extractOptions = args.write === undefined ? {} : { write: args.write }
+  const result = await patcher.extract(extractOptions)
 
   if (result.filename) {
     logger.success(`Collected ${result.classList.length} classes → ${result.filename}`)

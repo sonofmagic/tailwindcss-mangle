@@ -48,7 +48,7 @@ function updateLengthUnitsArray(content: string, options: NormalizedExtendLength
   })
 
   return {
-    arrayRef,
+    ...(arrayRef === undefined ? {} : { arrayRef }),
     changed,
   }
 }

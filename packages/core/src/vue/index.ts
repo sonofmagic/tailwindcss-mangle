@@ -86,6 +86,9 @@ async function processTemplate(
   while ((match = classAttrRegex.exec(templateContent)) !== null) {
     const fullMatch = match[0]
     const classValue = match[1]
+    if (classValue === undefined) {
+      continue
+    }
     const offset = match.index
 
     const arr = splitCode(classValue, { splitQuote: false })
@@ -133,7 +136,8 @@ async function processScript(
     script.loc.end.offset
   )
 
-  const result = jsHandler(scriptContent, { ctx, id })
+  const jsHandlerOptions = id === undefined ? { ctx } : { ctx, id }
+  const result = jsHandler(scriptContent, jsHandlerOptions)
   if (result.code !== scriptContent) {
     ms.update(
       script.loc.start.offset,
@@ -155,11 +159,10 @@ async function processStyles(
       style.loc.end.offset
     )
 
-    const result = await cssHandler(styleContent, {
-      ctx,
-      id,
-      ignoreVueScoped: style.scoped,
-    })
+    const cssHandlerOptions = id === undefined
+      ? { ctx, ignoreVueScoped: style.scoped }
+      : { ctx, id, ignoreVueScoped: style.scoped }
+    const result = await cssHandler(styleContent, cssHandlerOptions)
 
     if (result.code !== styleContent) {
       ms.update(

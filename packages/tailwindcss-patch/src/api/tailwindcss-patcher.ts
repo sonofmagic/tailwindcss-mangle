@@ -141,12 +141,13 @@ export class TailwindcssPatcher {
   private async runTailwindBuildIfNeeded() {
     if (this.majorVersion === 2 || this.majorVersion === 3) {
       const executionOptions = resolveTailwindExecutionOptions(this.options, this.majorVersion)
-      await runTailwindBuild({
+      const buildOptions = {
         cwd: executionOptions.cwd,
-        config: executionOptions.config,
         majorVersion: this.majorVersion,
-        postcssPlugin: executionOptions.postcssPlugin,
-      })
+        ...(executionOptions.config === undefined ? {} : { config: executionOptions.config }),
+        ...(executionOptions.postcssPlugin === undefined ? {} : { postcssPlugin: executionOptions.postcssPlugin }),
+      }
+      await runTailwindBuild(buildOptions)
     }
   }
 
@@ -276,13 +277,15 @@ export class TailwindcssPatcher {
     key?: TailwindTokenFileKey
     stripAbsolutePaths?: boolean
   }): Promise<TailwindTokenByFileMap> {
-    const report = await this.collectContentTokens({
-      cwd: options?.cwd,
-      sources: options?.sources,
-    })
-    return groupTokensByFile(report, {
-      key: options?.key,
-      stripAbsolutePaths: options?.stripAbsolutePaths,
-    })
+    const collectContentOptions = {
+      ...(options?.cwd === undefined ? {} : { cwd: options.cwd }),
+      ...(options?.sources === undefined ? {} : { sources: options.sources }),
+    }
+    const report = await this.collectContentTokens(collectContentOptions)
+    const groupOptions = {
+      ...(options?.key === undefined ? {} : { key: options.key }),
+      ...(options?.stripAbsolutePaths === undefined ? {} : { stripAbsolutePaths: options.stripAbsolutePaths }),
+    }
+    return groupTokensByFile(report, groupOptions)
   }
 }

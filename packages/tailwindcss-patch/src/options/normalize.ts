@@ -155,8 +155,8 @@ function normalizeTailwindV4Options(
 
   return {
     base,
-    configuredBase,
-    css: v4?.css,
+    ...(configuredBase === undefined ? {} : { configuredBase }),
+    ...(v4?.css === undefined ? {} : { css: v4.css }),
     cssEntries,
     sources,
     hasUserDefinedSources,
@@ -179,13 +179,13 @@ function normalizeTailwindOptions(
 
   return {
     packageName,
-    versionHint,
-    resolve,
     cwd,
-    config,
-    postcssPlugin,
-    v2: tailwind?.v2,
-    v3: tailwind?.v3,
+    ...(versionHint === undefined ? {} : { versionHint }),
+    ...(resolve === undefined ? {} : { resolve }),
+    ...(config === undefined ? {} : { config }),
+    ...(postcssPlugin === undefined ? {} : { postcssPlugin }),
+    ...(tailwind?.v2 === undefined ? {} : { v2: tailwind.v2 }),
+    ...(tailwind?.v3 === undefined ? {} : { v3: tailwind.v3 }),
     v4,
   }
 }

@@ -5,11 +5,9 @@ import { transformSelectorPostcssPlugin } from './plugins'
 export async function cssHandler(rawSource: string, options: ICssHandlerOptions): Promise<IHandlerTransformResult> {
   const acceptedPlugins = [transformSelectorPostcssPlugin(options)]
   const { id } = options
+  const processOptions = id === undefined ? {} : { from: id, to: id }
   try {
-    const { css: code, map } = await postcss(acceptedPlugins).process(rawSource, {
-      from: id,
-      to: id,
-    })
+    const { css: code, map } = await postcss(acceptedPlugins).process(rawSource, processOptions)
     return {
       code,
       // @ts-ignore
