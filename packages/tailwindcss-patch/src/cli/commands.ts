@@ -17,13 +17,14 @@ import fs from 'fs-extra'
 import path from 'pathe'
 
 import { TailwindcssPatcher } from '../api/tailwindcss-patcher'
+import { migrateConfigFiles, type ConfigFileMigrationReport } from './migrate-config'
 import { groupTokensByFile } from '../extraction/candidate-extractor'
 import logger from '../logger'
 import { fromLegacyOptions, fromUnifiedConfig } from '../options/legacy'
 
-export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'status'
+export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'status'
 
-export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'status']
+export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'migrate', 'status']
 
 type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
 type TokenGroupKey = 'relative' | 'absolute'
@@ -61,6 +62,10 @@ interface TokensCommandArgs extends BaseCommandArgs {
   write?: boolean
 }
 interface InitCommandArgs extends BaseCommandArgs {}
+interface MigrateCommandArgs extends BaseCommandArgs {
+  config?: string
+  dryRun?: boolean
+}
 interface StatusCommandArgs extends BaseCommandArgs {
   json?: boolean
 }
@@ -70,6 +75,7 @@ interface TailwindcssPatchCommandArgMap {
   extract: ExtractCommandArgs
   tokens: TokensCommandArgs
   init: InitCommandArgs
+  migrate: MigrateCommandArgs
   status: StatusCommandArgs
 }
 
@@ -78,6 +84,7 @@ interface TailwindcssPatchCommandResultMap {
   extract: ExtractResult
   tokens: TailwindTokenReport
   init: void
+  migrate: ConfigFileMigrationReport
   status: PatchStatusReport
 }
 
@@ -269,6 +276,14 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
     init: {
       description: 'Generate a tailwindcss-patch config file',
       optionDefs: [createCwdOptionDefinition()],
+    },
+    migrate: {
+      description: 'Migrate deprecated config fields to modern options',
+      optionDefs: [
+        createCwdOptionDefinition(),
+        { flags: '--config <file>', description: 'Migrate a specific config file path' },
+        { flags: '--dry-run', description: 'Preview changes without writing files' },
+      ],
     },
     status: {
       description: 'Check which Tailwind patches are applied',
@@ -483,6 +498,42 @@ async function initCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'in
   logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
 }
 
+async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
+  const { args } = ctx
+  const report = await migrateConfigFiles({
+    cwd: ctx.cwd,
+    dryRun: args.dryRun ?? false,
+    ...(args.config ? { files: [args.config] } : {}),
+  })
+
+  if (report.scannedFiles === 0) {
+    logger.warn('No config files found for migration.')
+    return report
+  }
+
+  for (const entry of report.entries) {
+    const fileLabel = entry.file.replace(process.cwd(), '.')
+    if (!entry.changed) {
+      logger.info(`No changes: ${fileLabel}`)
+      continue
+    }
+    if (report.dryRun) {
+      logger.info(`[dry-run] ${fileLabel}`)
+    }
+    else {
+      logger.success(`Migrated: ${fileLabel}`)
+    }
+    for (const change of entry.changes) {
+      logger.info(`  - ${change}`)
+    }
+  }
+
+  logger.info(
+    `Migration summary: scanned=${report.scannedFiles}, changed=${report.changedFiles}, written=${report.writtenFiles}, missing=${report.missingFiles}, unchanged=${report.unchangedFiles}`,
+  )
+  return report
+}
+
 function formatFilesHint(entry: PatchStatusReport['entries'][number]) {
   if (!entry.files.length) {
     return ''
@@ -599,6 +650,22 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
           args,
           options.commandHandlers?.init,
           initCommandDefaultHandler,
+        )
+      })
+      metadata.aliases.forEach(alias => command.alias(alias))
+    },
+    migrate: () => {
+      const metadata = resolveCommandMetadata('migrate', options, prefix, defaultDefinitions)
+      const command = cli.command(metadata.name, metadata.description)
+      applyCommandOptions(command, metadata.optionDefs)
+      command.action(async (args: MigrateCommandArgs) => {
+        return runWithCommandHandler(
+          cli,
+          command,
+          'migrate',
+          args,
+          options.commandHandlers?.migrate,
+          migrateCommandDefaultHandler,
         )
       })
       metadata.aliases.forEach(alias => command.alias(alias))

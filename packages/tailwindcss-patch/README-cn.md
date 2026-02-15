@@ -37,6 +37,9 @@ pnpm dlx tw-patch extract
 
 # 扫描项目，导出包含文件/位置的 Tailwind token
 pnpm dlx tw-patch tokens --format lines
+
+# 迁移已废弃的配置字段（预览模式）
+pnpm dlx tw-patch migrate --dry-run
 ```
 
 ### `extract` 常用参数
@@ -50,6 +53,16 @@ pnpm dlx tw-patch tokens --format lines
 | `--no-write`             | 仅返回结果，不落盘。                   |
 
 CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。旧配置仍可使用，详情请参考 [迁移指南](./MIGRATION.md)。
+
+### `migrate` 常用参数
+
+| 参数              | 说明                                   |
+| ----------------- | -------------------------------------- |
+| `--cwd <dir>`     | 指定扫描配置文件时的工作目录。         |
+| `--config <file>` | 仅迁移指定的配置文件。                 |
+| `--dry-run`       | 仅预览将要变更的内容，不写入磁盘。     |
+
+`tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`，并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
 ### `tokens` 常用参数
 

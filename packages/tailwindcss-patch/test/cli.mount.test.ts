@@ -6,6 +6,27 @@ import { mountTailwindcssPatchCommands } from '../src/cli/commands'
 import logger from '../src/logger'
 
 const patcherInstances: any[] = []
+const { migrateConfigFilesMock } = vi.hoisted(() => {
+  return {
+    migrateConfigFilesMock: vi.fn(async () => ({
+      cwd: '/tmp/project',
+      dryRun: false,
+      scannedFiles: 1,
+      changedFiles: 1,
+      writtenFiles: 1,
+      unchangedFiles: 0,
+      missingFiles: 0,
+      entries: [
+        {
+          file: '/tmp/project/tailwindcss-patch.config.ts',
+          changed: true,
+          written: true,
+          changes: ['registry.output -> registry.extract'],
+        },
+      ],
+    })),
+  }
+})
 
 vi.mock('@tailwindcss-mangle/config', () => {
   return {
@@ -73,6 +94,12 @@ vi.mock('../src/logger', () => {
   }
   return {
     default: logger,
+  }
+})
+
+vi.mock('../src/cli/migrate-config', () => {
+  return {
+    migrateConfigFiles: migrateConfigFilesMock,
   }
 })
 
@@ -221,5 +248,20 @@ describe('mountTailwindcssPatchCommands', () => {
     expect(tokensCommand?.description).toBe('Custom tokens description')
     expect(tokensCommand?.options).toHaveLength(1)
     expect(tokensCommand?.options?.[0].rawName).toBe('--preview')
+  })
+
+  it('runs migrate command with dry-run and custom config path', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--dry-run', '--config', 'custom.config.ts'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(migrateConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      dryRun: true,
+      files: ['custom.config.ts'],
+    })
   })
 })

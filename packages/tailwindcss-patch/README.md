@@ -40,6 +40,9 @@ pnpm dlx tw-patch tokens --format lines
 
 # Check which patches are applied
 pnpm dlx tw-patch status --json
+
+# Migrate deprecated config fields to modern keys
+pnpm dlx tw-patch migrate --dry-run
 ```
 
 ### Embed into another CLI
@@ -107,6 +110,16 @@ Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing b
 | `--no-write`             | Skip writing to disk and only return the collected classes.      |
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Legacy configs continue to work; see the [migration guide](./MIGRATION.md) for hints on the new fields.
+
+### Migrate options
+
+| Flag             | Description                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `--cwd <dir>`    | Working directory used to locate config files.                               |
+| `--config <file>`| Migrate only one specific config file path.                                  |
+| `--dry-run`      | Preview planned changes without writing files.                               |
+
+`tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
 ### Token report options
 
