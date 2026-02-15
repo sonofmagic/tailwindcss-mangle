@@ -3,6 +3,12 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TailwindcssPatcher } from '@/api/tailwindcss-patcher'
+import * as extraction from '@/extraction/candidate-extractor'
+import logger from '@/logger'
+import * as patchRunner from '@/patching/patch-runner'
+import * as patchStatus from '@/patching/status'
+import * as contextRegistry from '@/runtime/context-registry'
+import * as runtimeBuild from '@/runtime/process-tailwindcss'
 
 const fixturesRoot = path.resolve(__dirname, 'fixtures/v4')
 let tempDir: string
@@ -314,4 +320,241 @@ describe('TailwindcssPatcher', () => {
     const syncSet = patcher.getClassSetSync()
     expect(syncSet?.has(tooltipClass)).toBe(true)
   })
+
+  it('throws when getClassSetSync is used in Tailwind CSS v4 mode', () => {
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      tailwind: {
+        version: 4,
+      },
+    })
+
+    expect(() => patcher.getClassSetSync()).toThrow('getClassSetSync is not supported for Tailwind CSS v4 projects.')
+  })
+
+  it('writes extracted classes using lines format', async () => {
+    const outputFile = path.join(tempDir, 'classes.txt')
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: true,
+        file: outputFile,
+        format: 'lines',
+      },
+      tailwind: {
+        version: 4,
+        v4: {
+          base: fixturesRoot,
+          cssEntries: [path.join(fixturesRoot, 'index.css')],
+        },
+      },
+    })
+
+    const result = await patcher.extract({ write: true })
+    const content = await fs.readFile(outputFile, 'utf8')
+    const lines = content.trim().split('\n')
+
+    expect(result.filename).toBe(outputFile)
+    expect(lines.length).toBeGreaterThan(0)
+    expect(lines).toEqual(result.classList)
+  })
+
+  it('returns extraction result without writing when output file is empty', async () => {
+    const writeFileSpy = vi.spyOn(fs, 'writeFile')
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: true,
+        file: '',
+      },
+      tailwind: {
+        version: 4,
+        v4: {
+          base: fixturesRoot,
+          cssEntries: [path.join(fixturesRoot, 'index.css')],
+        },
+      },
+    })
+
+    const result = await patcher.extract({ write: true })
+
+    expect(result.filename).toBeUndefined()
+    expect(result.classList.length).toBeGreaterThan(0)
+    expect(writeFileSpy).not.toHaveBeenCalled()
+  })
+
+  it('logs cache clear summary through the public clearCache API', async () => {
+    const debugSpy = vi.spyOn(logger, 'debug')
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+    })
+
+    const result = await patcher.clearCache()
+
+    expect(result.scope).toBe('current')
+    expect(debugSpy).toHaveBeenCalledWith(expect.stringContaining('[cache] clear scope=current'))
+  })
+
+  it('delegates patch and status methods to runtime helpers', async () => {
+    const patchSpy = vi.spyOn(patchRunner, 'applyTailwindPatches').mockResolvedValue('patched' as any)
+    const statusSpy = vi.spyOn(patchStatus, 'getPatchStatusReport').mockResolvedValue('status' as any)
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+    })
+
+    await expect(patcher.patch()).resolves.toBe('patched')
+    await expect(patcher.getPatchStatus()).resolves.toBe('status')
+    expect(patchSpy).toHaveBeenCalledTimes(1)
+    expect(statusSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('delegates context loading with configured ref property', () => {
+    const loadSpy = vi.spyOn(contextRegistry, 'loadRuntimeContexts').mockReturnValue([])
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+      features: {
+        exposeContext: {
+          refProperty: 'customContextRef',
+        },
+      },
+    })
+
+    const contexts = patcher.getContexts()
+
+    expect(contexts).toEqual([])
+    expect(loadSpy).toHaveBeenCalledWith(patcher.packageInfo, patcher.majorVersion, 'customContextRef')
+  })
+
+  it('uses per-version tailwind execution options when building v2/v3 projects', async () => {
+    const runBuildSpy = vi.spyOn(runtimeBuild, 'runTailwindBuild').mockResolvedValue({ css: '', messages: [] } as any)
+
+    const v2Patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 2,
+        cwd: path.join(tempDir, 'base-v2-cwd'),
+        config: path.join(tempDir, 'base-v2.config.js'),
+        postcssPlugin: 'base-v2-plugin',
+        v2: {
+          cwd: path.join(tempDir, 'v2-cwd'),
+          config: path.join(tempDir, 'v2.config.js'),
+          postcssPlugin: 'v2-plugin',
+        },
+      },
+    })
+    await (v2Patcher as any).runTailwindBuildIfNeeded()
+
+    expect(runBuildSpy).toHaveBeenLastCalledWith({
+      cwd: path.join(tempDir, 'v2-cwd'),
+      majorVersion: 2,
+      config: path.join(tempDir, 'v2.config.js'),
+      postcssPlugin: 'v2-plugin',
+    })
+
+    const v3Patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 3,
+        cwd: path.join(tempDir, 'base-v3-cwd'),
+        config: path.join(tempDir, 'base-v3.config.js'),
+        postcssPlugin: 'base-v3-plugin',
+        v3: {
+          cwd: path.join(tempDir, 'v3-cwd'),
+        },
+      },
+    })
+    await (v3Patcher as any).runTailwindBuildIfNeeded()
+
+    expect(runBuildSpy).toHaveBeenLastCalledWith({
+      cwd: path.join(tempDir, 'v3-cwd'),
+      majorVersion: 3,
+      config: path.join(tempDir, 'base-v3.config.js'),
+      postcssPlugin: 'base-v3-plugin',
+    })
+
+    const v4Patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 4,
+      },
+    })
+    await (v4Patcher as any).runTailwindBuildIfNeeded()
+    expect(runBuildSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('collects content tokens and grouping options with explicit and default arguments', async () => {
+    const report = {
+      entries: [],
+      filesScanned: 1,
+      sources: [],
+      skippedFiles: [],
+    }
+    const extractSpy = vi.spyOn(extraction, 'extractProjectCandidatesWithPositions').mockResolvedValue(report)
+    const grouped = { 'a.html': [] }
+    const groupSpy = vi.spyOn(extraction, 'groupTokensByFile').mockReturnValue(grouped)
+
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 4,
+      },
+    })
+
+    const defaultReport = await patcher.collectContentTokens()
+    expect(defaultReport).toBe(report)
+    expect(extractSpy).toHaveBeenLastCalledWith({
+      cwd: patcher.options.projectRoot,
+      sources: patcher.options.tailwind.v4?.sources ?? [],
+    })
+
+    const explicitSources = [{ base: tempDir, pattern: '**/*', negated: false }]
+    const groupedResult = await patcher.collectContentTokensByFile({
+      cwd: tempDir,
+      sources: explicitSources,
+      key: 'absolute',
+      stripAbsolutePaths: true,
+    })
+
+    expect(groupedResult).toBe(grouped)
+    expect(extractSpy).toHaveBeenLastCalledWith({
+      cwd: tempDir,
+      sources: explicitSources,
+    })
+    expect(groupSpy).toHaveBeenLastCalledWith(report, {
+      key: 'absolute',
+      stripAbsolutePaths: true,
+    })
+  })
+
 })
