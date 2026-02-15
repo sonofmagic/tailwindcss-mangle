@@ -13,7 +13,7 @@
   "dependencies": {
     "core-js": "^3.38.1",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^5.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.11.0",
@@ -23,18 +23,18 @@
     "@vue/cli-plugin-router": "~5.0.8",
     "@vue/cli-plugin-typescript": "~5.0.8",
     "@vue/cli-service": "~5.0.8",
-    "@vue/eslint-config-standard": "^8.0.1",
+    "@vue/eslint-config-standard": "^9.0.1",
     "@vue/eslint-config-typescript": "^14.1.2",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.13.0",
+    "autoprefixer": "^10.4.24",
+    "eslint": "^10.0.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^7.1.0",
-    "eslint-plugin-vue": "^9.29.1",
+    "eslint-plugin-vue": "^10.8.0",
     "postcss": "^8.4.47",
     "sass": "^1.80.3",
     "sass-loader": "^16.0.2",
     "tailwindcss": "^3.4.14",
-    "typescript": "~5.6.3"
+    "typescript": "~5.9.3"
   }
 }

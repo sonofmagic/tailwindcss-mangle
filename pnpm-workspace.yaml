@@ -2,7 +2,9 @@ packages:
   - packages/*
   - scripts/*
   - website
-
+  - apps/*
+  - templates/*
+  - '!**/test/**'
 catalogs:
   tailwindcss2:
     tailwindcss: npm:@tailwindcss/postcss7-compat@^2.2.17
@@ -13,6 +15,8 @@ catalogs:
   tailwindcss4:
     tailwindcss: ^4.1.18
     tailwindcss-4: npm:tailwindcss@^4.1.18
-
 onlyBuiltDependencies:
   - esbuild
+  - '@tailwindcss/oxide'
+  - sharp
+  - workerd
