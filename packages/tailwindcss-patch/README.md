@@ -124,24 +124,26 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 
 const patcher = new TailwindcssPatcher({
-  overwrite: true,
+  projectRoot: process.cwd(),
   cache: {
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
     driver: 'file',
   },
-  output: {
+  extract: {
+    write: true,
     file: '.tw-patch/tw-class-list.json',
     format: 'json',
   },
-  features: {
+  apply: {
+    overwrite: true,
     exposeContext: { refProperty: 'runtimeContexts' },
     extendLengthUnits: {
       units: ['rpx'],
     },
   },
-  tailwind: {
+  tailwindcss: {
     version: 4,
     v4: {
       base: './src',
@@ -162,7 +164,16 @@ const patchStatus = await patcher.getPatchStatus()
 console.log(patchStatus.entries)
 ```
 
-The constructor accepts either the new object shown above or the historical `patch`/`cache` shape. Conversions happen internally so existing configs remain backwards compatible.
+The constructor accepts either the new object shown above or historical shapes. Conversions happen internally so existing configs remain backwards compatible.
+
+Deprecated fields kept temporarily (to be removed in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
+
+Migration mapping:
+- `cwd` -> `projectRoot`
+- `overwrite` -> `apply.overwrite`
+- `tailwind` -> `tailwindcss`
+- `features` -> `apply`
+- `output` -> `extract`
 
 Use cache.driver to switch between the default file-backed cache, an in-memory cache (memory), or a no-op cache (noop) when filesystem permissions are restricted.
 

@@ -40,22 +40,24 @@ const patcher = new TailwindcssPatcher({
 
 ```ts
 const patcher = new TailwindcssPatcher({
-  overwrite: true,
+  projectRoot: process.cwd(),
   cache: {
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
   },
-  output: {
+  extract: {
+    write: true,
     file: '.tw-patch/tw-class-list.json',
     format: 'json',
     removeUniversalSelector: true,
   },
-  features: {
+  apply: {
+    overwrite: true,
     exposeContext: { refProperty: 'runtimeContexts' },
     extendLengthUnits: { units: ['rpx'] },
   },
-  tailwind: {
+  tailwindcss: {
     version: 4,
     v4: {
       base: './src',
@@ -66,6 +68,15 @@ const patcher = new TailwindcssPatcher({
 ```
 
 Both shapes are accepted. When the constructor detects `patch`/`cache` keys it automatically converts them via `fromLegacyOptions()`. This allows step-by-step migrations.
+
+Deprecated fields (planned removal in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
+
+Migration mapping:
+- `cwd` -> `projectRoot`
+- `overwrite` -> `apply.overwrite`
+- `tailwind` -> `tailwindcss`
+- `features` -> `apply`
+- `output` -> `extract`
 
 ## 3. CLI changes
 
@@ -104,15 +115,15 @@ Update imports accordingly when consuming these helpers directly.
 
 ## 6. Configuration advice
 
-`defineConfig` from `tailwindcss-patch` (provided by `@tailwindcss-mangle/config`) still emits the legacy `patch` object. All new fields—`output.format`, extended `tailwindcss.v4` options, `applyPatches.extendLengthUnits` objects—are handled transparently. You may migrate gradually by adding the new keys into the existing `patch` block.
+`defineConfig` from `tailwindcss-patch` (provided by `@tailwindcss-mangle/config`) still emits the legacy `patch` object. The patcher normalizer maps it to the modern runtime shape (`tailwindcss`, `apply`, `extract`) automatically, so migration can be gradual.
 
 If you want the new structure inside application code, prefer creating the patcher manually and pass the modern object as demonstrated above.
 
 ## 7. Feature highlights
 
-- Tailwind v4 is supported without monkey patching. Provide CSS entries and content sources to `tailwind.v4` and call `extract()`.
+- Tailwind v4 is supported without monkey patching. Provide CSS entries and content sources to `tailwindcss.v4` and call `extract()`.
 - Custom length units patching (`extendLengthUnits`) now supports Tailwind v3 and v4 with a single option object.
-- Filters are composed with the `output.removeUniversalSelector` flag so `'*'` can be kept when desired.
+- Filters are composed with the `extract.removeUniversalSelector` flag so `'*'` can be kept when desired.
 
 ## 8. Removal summary
 
@@ -126,7 +137,7 @@ If you want the new structure inside application code, prefer creating the patch
 2. Review custom imports from `tailwindcss-patch/core/*` and switch to the new module paths.
 3. If you instantiate the patcher manually, adopt the new options object (or keep legacy options temporarily).
 4. Refresh CLI usage in scripts (e.g. add `--output` or `--no-write` where appropriate).
-5. For Tailwind v4 projects, configure `tailwind.v4.cssEntries` and `sources` so that `extract()` can discover candidates.
+5. For Tailwind v4 projects, configure `tailwindcss.v4.cssEntries` and `sources` so that `extract()` can discover candidates.
 6. Run your extraction workflow and ensure the generated class list matches expectations.
 
 For any regressions or gaps discovered during migration, please open an issue with reproduction details so we can iterate quickly.

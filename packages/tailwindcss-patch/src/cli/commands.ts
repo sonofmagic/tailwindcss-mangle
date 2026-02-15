@@ -371,7 +371,7 @@ async function extractCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   let hasOverrides = false
 
   if (args.output || args.format) {
-    overrides.output = {
+    overrides.extract = {
       ...(args.output === undefined ? {} : { file: args.output }),
       ...(args.format === undefined ? {} : { format: args.format }),
     }
@@ -379,7 +379,7 @@ async function extractCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   }
 
   if (args.css) {
-    overrides.tailwind = {
+    overrides.tailwindcss = {
       v4: {
         cssEntries: [args.css],
       },

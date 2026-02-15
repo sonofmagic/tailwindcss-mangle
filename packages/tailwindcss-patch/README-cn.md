@@ -67,24 +67,26 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 
 const patcher = new TailwindcssPatcher({
-  overwrite: true,
+  projectRoot: process.cwd(),
   cache: {
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
     driver: 'file',
   },
-  output: {
+  extract: {
+    write: true,
     file: '.tw-patch/tw-class-list.json',
     format: 'json',
   },
-  features: {
+  apply: {
+    overwrite: true,
     exposeContext: { refProperty: 'runtimeContexts' },
     extendLengthUnits: {
       units: ['rpx'],
     },
   },
-  tailwind: {
+  tailwindcss: {
     version: 4,
     v4: {
       base: './src',
@@ -103,7 +105,16 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 // await patcher.collectContentTokensByFile({ key: 'absolute', stripAbsolutePaths: false })
 ```
 
-构造函数既可以接收上述新版对象，也可以传入旧的 `patch`/`cache` 结构；内部会自动完成兼容转换。
+构造函数既可以接收上述新版对象，也可以传入旧结构；内部会自动完成兼容转换。
+
+已标记弃用（下一个大版本移除）的旧字段：`cwd`、`overwrite`、`tailwind`、`features`、`output`。
+
+字段迁移关系：
+- `cwd` -> `projectRoot`
+- `overwrite` -> `apply.overwrite`
+- `tailwind` -> `tailwindcss`
+- `features` -> `apply`
+- `output` -> `extract`
 
 当遇到文件权限受限等情况时，可通过 cache.driver 切换为默认的文件缓存、内存缓存（memory）或无操作模式（noop）。
 

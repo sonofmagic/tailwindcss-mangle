@@ -47,6 +47,36 @@ describe('TailwindcssPatcher', () => {
     expect(await fs.pathExists(outputFile)).toBe(true)
   })
 
+  it('supports streamlined constructor options (projectRoot/tailwindcss/apply/extract)', async () => {
+    const outputFile = path.join(tempDir, 'classes-modern.json')
+
+    const patcher = new TailwindcssPatcher({
+      projectRoot: fixturesRoot,
+      apply: {
+        overwrite: false,
+        exposeContext: { refProperty: 'runtimeContexts' },
+      },
+      cache: false,
+      extract: {
+        write: true,
+        file: outputFile,
+        format: 'json',
+      },
+      tailwindcss: {
+        version: 4,
+        v4: {
+          base: fixturesRoot,
+          cssEntries: [path.join(fixturesRoot, 'index.css')],
+        },
+      },
+    })
+
+    const result = await patcher.extract()
+    expect(result.classList.length).toBeGreaterThan(0)
+    expect(result.filename).toBe(outputFile)
+    expect(await fs.pathExists(outputFile)).toBe(true)
+  })
+
   it('resolves @config relative to the CSS entry directory even when base is set', async () => {
     const workspaceRoot = await fs.mkdtemp(path.join(__dirname, 'tmp-entry-base-'))
     try {

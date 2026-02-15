@@ -16,8 +16,14 @@ describe('normalizeOptions', () => {
 
   it('honours overrides for cache, features, and output', () => {
     const normalized = normalizeOptions({
-      overwrite: false,
-      output: {
+      apply: {
+        overwrite: false,
+        exposeContext: { refProperty: 'runtimeContexts' },
+        extendLengthUnits: {
+          units: ['rpx', 'vh'],
+        },
+      },
+      extract: {
         file: 'classes.json',
         format: 'lines',
         pretty: false,
@@ -30,12 +36,6 @@ describe('normalizeOptions', () => {
         strategy: 'overwrite',
         driver: 'memory',
       },
-      features: {
-        exposeContext: { refProperty: 'runtimeContexts' },
-        extendLengthUnits: {
-          units: ['rpx', 'vh'],
-        },
-      },
     })
 
     expect(normalized.overwrite).toBe(false)
@@ -46,5 +46,41 @@ describe('normalizeOptions', () => {
     expect(normalized.cache.driver).toBe('memory')
     expect(normalized.features.exposeContext.refProperty).toBe('runtimeContexts')
     expect(normalized.features.extendLengthUnits?.units).toContain('vh')
+  })
+
+  it('keeps deprecated fields compatible while preferring the new fields', () => {
+    const normalized = normalizeOptions({
+      cwd: '/tmp/legacy-cwd',
+      projectRoot: '/tmp/new-project-root',
+      overwrite: true,
+      output: {
+        file: 'legacy.json',
+      },
+      features: {
+        exposeContext: false,
+      },
+      tailwind: {
+        packageName: 'tailwindcss-legacy',
+      },
+      apply: {
+        overwrite: false,
+        exposeContext: { refProperty: 'newContextRef' },
+      },
+      extract: {
+        file: 'new.json',
+      },
+      tailwindcss: {
+        packageName: 'tailwindcss-new',
+      },
+    })
+
+    expect(normalized.projectRoot).toBe('/tmp/new-project-root')
+    expect(normalized.overwrite).toBe(false)
+    expect(normalized.output.file).toBe('new.json')
+    expect(normalized.features.exposeContext).toEqual({
+      enabled: true,
+      refProperty: 'newContextRef',
+    })
+    expect(normalized.tailwind.packageName).toBe('tailwindcss-new')
   })
 })

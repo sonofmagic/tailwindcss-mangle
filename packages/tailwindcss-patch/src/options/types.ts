@@ -27,11 +27,11 @@ export interface CacheUserOptions {
 }
 
 /**
- * Controls how extracted class lists are written to disk.
+ * Preferred options for extraction output behavior.
  */
-export interface OutputUserOptions {
+export interface TailwindExtractionUserOptions {
   /** Whether to produce an output file. */
-  enabled?: boolean
+  write?: boolean
   /** Optional absolute or relative path to the output file. */
   file?: string
   /** Output format, defaults to JSON when omitted. */
@@ -39,6 +39,23 @@ export interface OutputUserOptions {
   /** Pretty-print spacing (truthy value enables indentation). */
   pretty?: number | boolean
   /** Whether to strip the universal selector (`*`) from the final list. */
+  removeUniversalSelector?: boolean
+}
+
+/**
+ * @deprecated Use `TailwindExtractionUserOptions`.
+ * Legacy output options kept for backward compatibility and will be removed in the next major version.
+ */
+export interface OutputUserOptions {
+  /** @deprecated Use `extract.write` instead. */
+  enabled?: boolean
+  /** @deprecated Use `extract.file` instead. */
+  file?: string
+  /** @deprecated Use `extract.format` instead. */
+  format?: 'json' | 'lines'
+  /** @deprecated Use `extract.pretty` instead. */
+  pretty?: number | boolean
+  /** @deprecated Use `extract.removeUniversalSelector` instead. */
   removeUniversalSelector?: boolean
 }
 
@@ -59,9 +76,11 @@ export interface ExtendLengthUnitsUserOptions extends Partial<ILengthUnitsPatchO
 }
 
 /**
- * Feature switches that toggle optional Tailwind patch capabilities.
+ * Preferred options for runtime patch behavior.
  */
-export interface FeatureUserOptions {
+export interface PatchApplyUserOptions {
+  /** Whether patched files can be overwritten on disk. */
+  overwrite?: boolean
   /** Whether to expose runtime Tailwind contexts (or configure how they are exposed). */
   exposeContext?: boolean | ExposeContextUserOptions
   /** Extends the length-unit patch or disables it entirely. */
@@ -69,9 +88,20 @@ export interface FeatureUserOptions {
 }
 
 /**
+ * @deprecated Use `PatchApplyUserOptions`.
+ * Legacy nested feature options kept for backward compatibility and will be removed in the next major version.
+ */
+export interface FeatureUserOptions {
+  /** @deprecated Use `apply.exposeContext` instead. */
+  exposeContext?: boolean | ExposeContextUserOptions
+  /** @deprecated Use `apply.extendLengthUnits` instead. */
+  extendLengthUnits?: false | ExtendLengthUnitsUserOptions
+}
+
+/**
  * Shared configuration used for Tailwind v2/v3 patching flows.
  */
-export interface TailwindConfigUserOptions {
+export interface TailwindRuntimeConfigUserOptions {
   /** Path to a Tailwind config file when auto-detection is insufficient. */
   config?: string
   /** Custom working directory used when resolving config-relative paths. */
@@ -81,9 +111,15 @@ export interface TailwindConfigUserOptions {
 }
 
 /**
+ * @deprecated Use `TailwindRuntimeConfigUserOptions`.
+ * Legacy naming kept for backward compatibility and will be removed in the next major version.
+ */
+export interface TailwindConfigUserOptions extends TailwindRuntimeConfigUserOptions {}
+
+/**
  * Additional configuration specific to Tailwind CSS v4 extraction.
  */
-export interface TailwindV4UserOptions {
+export interface TailwindV4RuntimeUserOptions {
   /** Base directory used when resolving v4 content sources and configs. */
   base?: string
   /** Raw CSS passed directly to the v4 design system. */
@@ -95,9 +131,15 @@ export interface TailwindV4UserOptions {
 }
 
 /**
+ * @deprecated Use `TailwindV4RuntimeUserOptions`.
+ * Legacy naming kept for backward compatibility and will be removed in the next major version.
+ */
+export interface TailwindV4UserOptions extends TailwindV4RuntimeUserOptions {}
+
+/**
  * High-level Tailwind patch configuration shared across versions.
  */
-export interface TailwindUserOptions extends TailwindConfigUserOptions {
+export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions {
   /**
    * Optional hint for picking the patch strategy.
    * When omitted we infer from the installed Tailwind CSS package version.
@@ -108,12 +150,18 @@ export interface TailwindUserOptions extends TailwindConfigUserOptions {
   /** Package resolution options forwarded to `local-pkg`. */
   resolve?: PackageResolvingOptions
   /** Overrides applied when patching Tailwind CSS v2. */
-  v2?: TailwindConfigUserOptions
+  v2?: TailwindRuntimeConfigUserOptions
   /** Overrides applied when patching Tailwind CSS v3. */
-  v3?: TailwindConfigUserOptions
+  v3?: TailwindRuntimeConfigUserOptions
   /** Options specific to Tailwind CSS v4 patching. */
-  v4?: TailwindV4UserOptions
+  v4?: TailwindV4RuntimeUserOptions
 }
+
+/**
+ * @deprecated Use `TailwindcssUserOptions`.
+ * Legacy naming kept for backward compatibility and will be removed in the next major version.
+ */
+export interface TailwindUserOptions extends TailwindcssUserOptions {}
 
 /**
  * Root configuration consumed by the Tailwind CSS patch runner.
@@ -123,18 +171,34 @@ export interface TailwindcssPatchOptions {
    * Base directory used when resolving Tailwind resources.
    * Defaults to `process.cwd()`.
    */
-  cwd?: string
-  /** Whether to overwrite generated artifacts (e.g., caches, outputs). */
-  overwrite?: boolean
-  /** Tailwind-specific configuration grouped by major version. */
-  tailwind?: TailwindUserOptions
-  /** Feature toggles for optional helpers. */
-  features?: FeatureUserOptions
+  projectRoot?: string
+  /** Preferred Tailwind runtime configuration. */
+  tailwindcss?: TailwindcssUserOptions
+  /** Preferred patch toggles. */
+  apply?: PatchApplyUserOptions
+  /** Preferred extraction output settings. */
+  extract?: TailwindExtractionUserOptions
   /** Optional function that filters final class names. */
   filter?: (className: string) => boolean
   /** Cache configuration or boolean to enable/disable quickly. */
   cache?: boolean | CacheUserOptions
-  /** Output configuration or boolean to inherits defaults. */
+
+  /**
+   * Base directory used when resolving Tailwind resources.
+   * Defaults to `process.cwd()`.
+   * @deprecated Use `projectRoot` instead.
+   */
+  cwd?: string
+  /**
+   * Whether to overwrite generated artifacts (e.g., caches, outputs).
+   * @deprecated Use `apply.overwrite` instead.
+   */
+  overwrite?: boolean
+  /** @deprecated Use `tailwindcss` instead. */
+  tailwind?: TailwindUserOptions
+  /** @deprecated Use `apply` instead. */
+  features?: FeatureUserOptions
+  /** @deprecated Use `extract` instead. */
   output?: OutputUserOptions
 }
 

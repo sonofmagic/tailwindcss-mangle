@@ -94,14 +94,14 @@ export function fromLegacyOptions(options?: LegacyTailwindcssPatcherOptions): Ta
 
   const tailwindConfigPath = tailwindV3?.config ?? tailwindV2?.config
   const tailwindCwd = tailwindV3?.cwd ?? tailwindV2?.cwd ?? patch?.cwd
-  const normalizedOutput = output
+  const normalizedExtract = output
     ? {
         ...(output.filename === undefined ? {} : { file: output.filename }),
         pretty: output.loose ? 2 : false,
         ...(output.removeUniversalSelector === undefined ? {} : { removeUniversalSelector: output.removeUniversalSelector }),
       }
     : undefined
-  const normalizedTailwind = {
+  const normalizedTailwindcss = {
     ...(patch?.packageName === undefined ? {} : { packageName: patch.packageName }),
     ...(tailwindVersion === undefined ? {} : { version: tailwindVersion }),
     ...(patch?.resolve === undefined ? {} : { resolve: patch.resolve }),
@@ -119,18 +119,19 @@ export function fromLegacyOptions(options?: LegacyTailwindcssPatcherOptions): Ta
           enabled: options.cache.enabled ?? true,
         }
       : undefined
+  const normalizedApply = {
+    ...(patch?.overwrite === undefined ? {} : { overwrite: patch.overwrite }),
+    exposeContext: features.exposeContext,
+    extendLengthUnits: features.extendLengthUnits,
+  }
 
   return {
-    ...(patch?.cwd === undefined ? {} : { cwd: patch.cwd }),
-    ...(patch?.overwrite === undefined ? {} : { overwrite: patch.overwrite }),
+    ...(patch?.cwd === undefined ? {} : { projectRoot: patch.cwd }),
     ...(patch?.filter === undefined ? {} : { filter: patch.filter }),
     ...(normalizedCache === undefined ? {} : { cache: normalizedCache }),
-    ...(normalizedOutput === undefined ? {} : { output: normalizedOutput }),
-    tailwind: normalizedTailwind,
-    features: {
-      exposeContext: features.exposeContext,
-      extendLengthUnits: features.extendLengthUnits,
-    },
+    ...(normalizedExtract === undefined ? {} : { extract: normalizedExtract }),
+    ...(Object.keys(normalizedTailwindcss).length === 0 ? {} : { tailwindcss: normalizedTailwindcss }),
+    apply: normalizedApply,
   }
 }
 
@@ -151,14 +152,14 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
     }
     return output.pretty
   })()
-  const normalizedOutput = output
+  const normalizedExtract = output
     ? {
         ...(output.file === undefined ? {} : { file: output.file }),
         ...(pretty === undefined ? {} : { pretty }),
         ...(output.stripUniversalSelector === undefined ? {} : { removeUniversalSelector: output.stripUniversalSelector }),
       }
     : undefined
-  const normalizedTailwind = tailwind
+  const normalizedTailwindcss = tailwind
     ? {
         ...(tailwind.version === undefined ? {} : { version: tailwind.version }),
         ...(tailwind.package === undefined ? {} : { packageName: tailwind.package }),
@@ -172,7 +173,7 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
     : undefined
 
   return {
-    ...(normalizedOutput === undefined ? {} : { output: normalizedOutput }),
-    ...(normalizedTailwind === undefined ? {} : { tailwind: normalizedTailwind }),
+    ...(normalizedExtract === undefined ? {} : { extract: normalizedExtract }),
+    ...(normalizedTailwindcss === undefined ? {} : { tailwindcss: normalizedTailwindcss }),
   }
 }

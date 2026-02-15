@@ -32,18 +32,18 @@ describe('fromLegacyOptions', () => {
       },
     })
 
-    expect(converted.output?.file).toBe('classes.json')
-    expect(converted.output?.format).toBeUndefined()
-    expect(converted.output?.removeUniversalSelector).toBe(false)
+    expect(converted.extract?.file).toBe('classes.json')
+    expect(converted.extract?.format).toBeUndefined()
+    expect(converted.extract?.removeUniversalSelector).toBe(false)
     expect(converted.cache).toMatchObject({
       enabled: true,
       dir: '.cache',
     })
-    expect(converted.features?.extendLengthUnits).toMatchObject({
+    expect(converted.apply?.extendLengthUnits).toMatchObject({
       units: ['rpx'],
     })
-    expect(converted.tailwind?.version).toBe(3)
-    expect(converted.tailwind?.v3?.cwd).toBe('./fixtures/apps/basic')
+    expect(converted.tailwindcss?.version).toBe(3)
+    expect(converted.tailwindcss?.v3?.cwd).toBe('./fixtures/apps/basic')
   })
 })
 
@@ -67,12 +67,12 @@ describe('fromUnifiedConfig', () => {
       },
     })
 
-    expect(converted.output).toEqual({
+    expect(converted.extract).toEqual({
       file: 'classes.json',
       pretty: false,
       removeUniversalSelector: false,
     })
-    expect(converted.tailwind).toEqual({
+    expect(converted.tailwindcss).toEqual({
       version: 4,
       packageName: 'tailwindcss',
       resolve: {

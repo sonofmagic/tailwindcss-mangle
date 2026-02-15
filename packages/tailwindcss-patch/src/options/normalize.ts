@@ -2,17 +2,17 @@ import type { ILengthUnitsPatchOptions } from '../types'
 import type {
   CacheDriver,
   CacheStrategy,
-  FeatureUserOptions,
   NormalizedCacheOptions,
   NormalizedFeatureOptions,
   NormalizedOutputOptions,
   NormalizedTailwindConfigOptions,
   NormalizedTailwindcssPatchOptions,
   NormalizedTailwindV4Options,
-  OutputUserOptions,
+  PatchApplyUserOptions,
+  TailwindcssUserOptions,
+  TailwindExtractionUserOptions,
   TailwindcssPatchOptions,
-  TailwindUserOptions,
-  TailwindV4UserOptions,
+  TailwindV4RuntimeUserOptions,
 } from './types'
 import process from 'node:process'
 import fs from 'fs-extra'
@@ -29,7 +29,7 @@ function resolveRealpathSafe(value: string) {
   }
 }
 
-function toPrettyValue(value: OutputUserOptions['pretty']): number | false {
+function toPrettyValue(value: TailwindExtractionUserOptions['pretty']): number | false {
   if (typeof value === 'number') {
     return value > 0 ? value : false
   }
@@ -82,8 +82,8 @@ function normalizeCacheOptions(
   }
 }
 
-function normalizeOutputOptions(output: OutputUserOptions | undefined): NormalizedOutputOptions {
-  const enabled = output?.enabled ?? true
+function normalizeOutputOptions(output: TailwindExtractionUserOptions | undefined): NormalizedOutputOptions {
+  const enabled = output?.write ?? true
   const file = output?.file ?? '.tw-patch/tw-class-list.json'
   const format = output?.format ?? 'json'
   const pretty = toPrettyValue(output?.pretty ?? true)
@@ -98,18 +98,18 @@ function normalizeOutputOptions(output: OutputUserOptions | undefined): Normaliz
   }
 }
 
-function normalizeExposeContextOptions(features: FeatureUserOptions | undefined): NormalizedFeatureOptions['exposeContext'] {
-  if (features?.exposeContext === false) {
+function normalizeExposeContextOptions(exposeContext: PatchApplyUserOptions['exposeContext'] | undefined): NormalizedFeatureOptions['exposeContext'] {
+  if (exposeContext === false) {
     return {
       enabled: false,
       refProperty: 'contextRef',
     }
   }
 
-  if (typeof features?.exposeContext === 'object' && features.exposeContext) {
+  if (typeof exposeContext === 'object' && exposeContext) {
     return {
       enabled: true,
-      refProperty: features.exposeContext.refProperty ?? 'contextRef',
+      refProperty: exposeContext.refProperty ?? 'contextRef',
     }
   }
 
@@ -119,8 +119,7 @@ function normalizeExposeContextOptions(features: FeatureUserOptions | undefined)
   }
 }
 
-function normalizeExtendLengthUnitsOptions(features: FeatureUserOptions | undefined): NormalizedFeatureOptions['extendLengthUnits'] {
-  const extend = features?.extendLengthUnits
+function normalizeExtendLengthUnitsOptions(extend: PatchApplyUserOptions['extendLengthUnits'] | undefined): NormalizedFeatureOptions['extendLengthUnits'] {
   if (extend === false || extend === undefined) {
     return null
   }
@@ -144,7 +143,7 @@ function normalizeExtendLengthUnitsOptions(features: FeatureUserOptions | undefi
 }
 
 function normalizeTailwindV4Options(
-  v4: TailwindV4UserOptions | undefined,
+  v4: TailwindV4RuntimeUserOptions | undefined,
   fallbackBase: string,
 ): NormalizedTailwindV4Options {
   const configuredBase = v4?.base ? path.resolve(v4.base) : undefined
@@ -175,7 +174,7 @@ function normalizeTailwindV4Options(
 }
 
 function normalizeTailwindOptions(
-  tailwind: TailwindUserOptions | undefined,
+  tailwind: TailwindcssUserOptions | undefined,
   projectRoot: string,
 ): NormalizedTailwindConfigOptions {
   const packageName = tailwind?.packageName ?? 'tailwindcss'
@@ -201,15 +200,59 @@ function normalizeTailwindOptions(
   }
 }
 
-export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
-  const projectRoot = resolveRealpathSafe(options.cwd ? path.resolve(options.cwd) : process.cwd())
-  const overwrite = options.overwrite ?? true
+interface ResolvedOptionSlices {
+  projectRoot?: string
+  overwrite?: boolean
+  tailwind?: TailwindcssUserOptions
+  extract?: TailwindExtractionUserOptions
+  exposeContext?: PatchApplyUserOptions['exposeContext']
+  extendLengthUnits?: PatchApplyUserOptions['extendLengthUnits']
+}
 
-  const output = normalizeOutputOptions(options.output)
+function resolveOptionSlices(options: TailwindcssPatchOptions): ResolvedOptionSlices {
+  const projectRoot = options.projectRoot ?? options.cwd
+  const overwrite = options.apply?.overwrite ?? options.overwrite
+  const tailwind = options.tailwindcss ?? options.tailwind
+  const exposeContext = options.apply?.exposeContext !== undefined
+    ? options.apply.exposeContext
+    : options.features?.exposeContext
+  const extendLengthUnits = options.apply?.extendLengthUnits !== undefined
+    ? options.apply.extendLengthUnits
+    : options.features?.extendLengthUnits
+
+  const write = options.extract?.write ?? options.output?.enabled
+  const file = options.extract?.file ?? options.output?.file
+  const format = options.extract?.format ?? options.output?.format
+  const pretty = options.extract?.pretty ?? options.output?.pretty
+  const removeUniversalSelector = options.extract?.removeUniversalSelector ?? options.output?.removeUniversalSelector
+  const extract: TailwindExtractionUserOptions = {
+    ...(write === undefined ? {} : { write }),
+    ...(file === undefined ? {} : { file }),
+    ...(format === undefined ? {} : { format }),
+    ...(pretty === undefined ? {} : { pretty }),
+    ...(removeUniversalSelector === undefined ? {} : { removeUniversalSelector }),
+  }
+
+  return {
+    ...(projectRoot === undefined ? {} : { projectRoot }),
+    ...(overwrite === undefined ? {} : { overwrite }),
+    ...(tailwind === undefined ? {} : { tailwind }),
+    ...(Object.keys(extract).length === 0 ? {} : { extract }),
+    ...(exposeContext === undefined ? {} : { exposeContext }),
+    ...(extendLengthUnits === undefined ? {} : { extendLengthUnits }),
+  }
+}
+
+export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
+  const resolved = resolveOptionSlices(options)
+  const projectRoot = resolveRealpathSafe(resolved.projectRoot ? path.resolve(resolved.projectRoot) : process.cwd())
+  const overwrite = resolved.overwrite ?? true
+
+  const output = normalizeOutputOptions(resolved.extract)
   const cache = normalizeCacheOptions(options.cache, projectRoot)
-  const tailwind = normalizeTailwindOptions(options.tailwind, projectRoot)
-  const exposeContext = normalizeExposeContextOptions(options.features)
-  const extendLengthUnits = normalizeExtendLengthUnitsOptions(options.features)
+  const tailwind = normalizeTailwindOptions(resolved.tailwind, projectRoot)
+  const exposeContext = normalizeExposeContextOptions(resolved.exposeContext)
+  const extendLengthUnits = normalizeExtendLengthUnitsOptions(resolved.extendLengthUnits)
 
   const filter = (className: string) => {
     if (output.removeUniversalSelector && className === '*') {
