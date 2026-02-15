@@ -18,6 +18,19 @@ import process from 'node:process'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { pkgName } from '../constants'
+import logger from '../logger'
+
+let hasWarnedDeprecatedOptions = false
+
+const deprecatedOptionMapping = {
+  cwd: 'projectRoot',
+  overwrite: 'apply.overwrite',
+  tailwind: 'tailwindcss',
+  features: 'apply',
+  output: 'extract',
+} as const
+
+type DeprecatedTopLevelOptionKey = keyof typeof deprecatedOptionMapping
 
 function resolveRealpathSafe(value: string) {
   const resolved = path.resolve(value)
@@ -243,7 +256,36 @@ function resolveOptionSlices(options: TailwindcssPatchOptions): ResolvedOptionSl
   }
 }
 
+function findUsedDeprecatedOptions(options: TailwindcssPatchOptions): DeprecatedTopLevelOptionKey[] {
+  const result: DeprecatedTopLevelOptionKey[] = []
+  for (const key of Object.keys(deprecatedOptionMapping) as DeprecatedTopLevelOptionKey[]) {
+    if (options[key] !== undefined) {
+      result.push(key)
+    }
+  }
+  return result
+}
+
+function warnDeprecatedOptionsIfNeeded(options: TailwindcssPatchOptions) {
+  if (hasWarnedDeprecatedOptions) {
+    return
+  }
+
+  const used = findUsedDeprecatedOptions(options)
+  if (used.length === 0) {
+    return
+  }
+
+  hasWarnedDeprecatedOptions = true
+  const mapping = used.map(key => `${key} -> ${deprecatedOptionMapping[key]}`).join(', ')
+  logger.warn(
+    `[deprecated] TailwindcssPatcher options (${used.join(', ')}) are deprecated and will be removed in the next major version. Please migrate to: ${mapping}.`,
+  )
+}
+
 export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
+  warnDeprecatedOptionsIfNeeded(options)
+
   const resolved = resolveOptionSlices(options)
   const projectRoot = resolveRealpathSafe(resolved.projectRoot ? path.resolve(resolved.projectRoot) : process.cwd())
   const overwrite = resolved.overwrite ?? true

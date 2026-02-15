@@ -175,6 +175,8 @@ Migration mapping:
 - `features` -> `apply`
 - `output` -> `extract`
 
+When deprecated fields are detected at runtime, `normalizeOptions` logs a one-time warning to help migration.
+
 Use cache.driver to switch between the default file-backed cache, an in-memory cache (memory), or a no-op cache (noop) when filesystem permissions are restricted.
 
 ### Cache governance (schema v2)

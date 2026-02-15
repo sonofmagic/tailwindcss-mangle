@@ -78,6 +78,8 @@ Migration mapping:
 - `features` -> `apply`
 - `output` -> `extract`
 
+`normalizeOptions` now emits a one-time runtime warning when deprecated fields are detected.
+
 ## 3. CLI changes
 
 - `tw-patch install` still applies the runtime patch, but logging and error handling were refreshed.

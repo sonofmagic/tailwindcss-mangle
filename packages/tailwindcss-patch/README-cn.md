@@ -116,6 +116,8 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 - `features` -> `apply`
 - `output` -> `extract`
 
+当运行时检测到这些旧字段时，`normalizeOptions` 会输出一次性告警，帮助你逐步迁移。
+
 当遇到文件权限受限等情况时，可通过 cache.driver 切换为默认的文件缓存、内存缓存（memory）或无操作模式（noop）。
 
 ### 缓存治理（schema v2）
