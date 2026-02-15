@@ -478,4 +478,68 @@ describe('mountTailwindcssPatchCommands', () => {
       restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
     }, null, 2))
   })
+
+  it('runs validate command in strict mode without writing files', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(
+      ['node', 'embedded', 'validate', '--cwd', '/tmp/project', '--report-file', '.tw-patch/migrate-report.json', '--strict'],
+      { run: false },
+    )
+    await cli.runMatchedCommand()
+
+    expect(restoreConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(restoreConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      reportFile: '.tw-patch/migrate-report.json',
+      dryRun: true,
+      strict: true,
+    })
+  })
+
+  it('prints validate result as json', async () => {
+    restoreConfigFilesMock.mockResolvedValueOnce({
+      cwd: '/tmp/project',
+      reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      reportKind: 'tw-patch-migrate-report',
+      reportSchemaVersion: 1,
+      dryRun: true,
+      strict: false,
+      scannedEntries: 1,
+      restorableEntries: 1,
+      restoredFiles: 1,
+      missingBackups: 0,
+      skippedEntries: 0,
+      restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
+    })
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'validate', '--cwd', '/tmp/project', '--json'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(restoreConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(restoreConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      reportFile: '.tw-patch/migrate-report.json',
+      dryRun: true,
+      strict: false,
+    })
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      cwd: '/tmp/project',
+      reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      reportKind: 'tw-patch-migrate-report',
+      reportSchemaVersion: 1,
+      dryRun: true,
+      strict: false,
+      scannedEntries: 1,
+      restorableEntries: 1,
+      restoredFiles: 1,
+      missingBackups: 0,
+      skippedEntries: 0,
+      restored: ['/tmp/project/tailwindcss-mangle.config.ts'],
+    }, null, 2))
+  })
 })

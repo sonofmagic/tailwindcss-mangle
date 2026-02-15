@@ -43,6 +43,9 @@ pnpm dlx tw-patch migrate --dry-run
 
 # 基于迁移报告中的备份快照恢复配置（预览模式）
 pnpm dlx tw-patch restore --report-file .tw-patch/migrate-report.json --dry-run
+
+# 仅校验迁移报告兼容性（不写回文件）
+pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --json
 ```
 
 ### `extract` 常用参数
@@ -91,6 +94,17 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 `tw-patch restore` 在报告包含元数据时会执行 schema 校验。若 `reportKind` 不匹配或 `schemaVersion` 高于当前支持版本，会拒绝恢复；不包含该元数据的历史报告仍保持兼容。
 使用 `--json` 时，恢复结果会在报告含元数据时附带 `reportKind` / `reportSchemaVersion` 字段。
+
+### `validate` 常用参数
+
+| 参数                   | 说明                                                         |
+| ---------------------- | ------------------------------------------------------------ |
+| `--cwd <dir>`          | 指定校验时使用的工作目录。                                   |
+| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。   |
+| `--strict`             | 报告中的备份文件缺失时直接报错退出。                         |
+| `--json`               | 输出 JSON 格式的校验结果。                                   |
+
+`tw-patch validate` 会以 dry-run 模式执行迁移报告校验，不写回任何恢复文件，同时校验报告 schema 与备份引用状态。
 
 ### `tokens` 常用参数
 

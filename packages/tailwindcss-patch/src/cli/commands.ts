@@ -27,9 +27,9 @@ import { groupTokensByFile } from '../extraction/candidate-extractor'
 import logger from '../logger'
 import { fromLegacyOptions, fromUnifiedConfig } from '../options/legacy'
 
-export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'status'
+export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'validate' | 'status'
 
-export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'migrate', 'restore', 'status']
+export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'migrate', 'restore', 'validate', 'status']
 
 type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
 type TokenGroupKey = 'relative' | 'absolute'
@@ -85,6 +85,11 @@ interface RestoreCommandArgs extends BaseCommandArgs {
   strict?: boolean
   json?: boolean
 }
+interface ValidateCommandArgs extends BaseCommandArgs {
+  reportFile?: string
+  strict?: boolean
+  json?: boolean
+}
 interface StatusCommandArgs extends BaseCommandArgs {
   json?: boolean
 }
@@ -96,6 +101,7 @@ interface TailwindcssPatchCommandArgMap {
   init: InitCommandArgs
   migrate: MigrateCommandArgs
   restore: RestoreCommandArgs
+  validate: ValidateCommandArgs
   status: StatusCommandArgs
 }
 
@@ -106,6 +112,7 @@ interface TailwindcssPatchCommandResultMap {
   init: void
   migrate: ConfigFileMigrationReport
   restore: RestoreConfigFilesResult
+  validate: RestoreConfigFilesResult
   status: PatchStatusReport
 }
 
@@ -322,6 +329,15 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
         { flags: '--dry-run', description: 'Preview restore targets without writing files' },
         { flags: '--strict', description: 'Fail when any backup file is missing' },
         { flags: '--json', description: 'Print the restore result as JSON' },
+      ],
+    },
+    validate: {
+      description: 'Validate migration report compatibility without modifying files',
+      optionDefs: [
+        createCwdOptionDefinition(),
+        { flags: '--report-file <file>', description: 'Migration report file to validate' },
+        { flags: '--strict', description: 'Fail when any backup file is missing' },
+        { flags: '--json', description: 'Print validation result as JSON' },
       ],
     },
     status: {
@@ -655,6 +671,33 @@ async function restoreCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   return result
 }
 
+async function validateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'validate'>) {
+  const { args } = ctx
+  const reportFile = args.reportFile ?? '.tw-patch/migrate-report.json'
+  const result = await restoreConfigFiles({
+    cwd: ctx.cwd,
+    reportFile,
+    dryRun: true,
+    strict: args.strict ?? false,
+  })
+
+  if (args.json) {
+    logger.log(JSON.stringify(result, null, 2))
+    return result
+  }
+
+  logger.success(
+    `Migration report validated: scanned=${result.scannedEntries}, restorable=${result.restorableEntries}, missingBackups=${result.missingBackups}, skipped=${result.skippedEntries}`,
+  )
+
+  if (result.reportKind || result.reportSchemaVersion !== undefined) {
+    const kind = result.reportKind ?? 'unknown'
+    const schema = result.reportSchemaVersion === undefined ? 'unknown' : String(result.reportSchemaVersion)
+    logger.info(`  metadata: kind=${kind}, schema=${schema}`)
+  }
+  return result
+}
+
 function formatFilesHint(entry: PatchStatusReport['entries'][number]) {
   if (!entry.files.length) {
     return ''
@@ -803,6 +846,22 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
           args,
           options.commandHandlers?.restore,
           restoreCommandDefaultHandler,
+        )
+      })
+      metadata.aliases.forEach(alias => command.alias(alias))
+    },
+    validate: () => {
+      const metadata = resolveCommandMetadata('validate', options, prefix, defaultDefinitions)
+      const command = cli.command(metadata.name, metadata.description)
+      applyCommandOptions(command, metadata.optionDefs)
+      command.action(async (args: ValidateCommandArgs) => {
+        return runWithCommandHandler(
+          cli,
+          command,
+          'validate',
+          args,
+          options.commandHandlers?.validate,
+          validateCommandDefaultHandler,
         )
       })
       metadata.aliases.forEach(alias => command.alias(alias))

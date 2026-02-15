@@ -46,6 +46,9 @@ pnpm dlx tw-patch migrate --dry-run
 
 # Restore configs from a migration report backup snapshot
 pnpm dlx tw-patch restore --report-file .tw-patch/migrate-report.json --dry-run
+
+# Validate migration report compatibility without modifying files
+pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --json
 ```
 
 ### Embed into another CLI
@@ -148,6 +151,17 @@ Migration reports now include envelope metadata: `reportKind`, `schemaVersion`, 
 
 `tw-patch restore` validates report schema metadata when available. Reports with unsupported `reportKind` or newer `schemaVersion` are rejected to avoid unsafe restores. Legacy reports without metadata are still supported.
 With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when report metadata is present.
+
+### Validate options
+
+| Flag                  | Description                                                       |
+| --------------------- | ----------------------------------------------------------------- |
+| `--cwd <dir>`         | Working directory used to resolve report paths.                   |
+| `--report-file <file>`| Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
+| `--strict`            | Fail when any backup file in the report is missing.               |
+| `--json`              | Print validation result as JSON.                                  |
+
+`tw-patch validate` performs migration report compatibility checks without writing restored files. It runs report schema validation and scans backup references in dry-run mode.
 
 ### Token report options
 
