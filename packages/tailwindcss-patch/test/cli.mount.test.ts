@@ -280,4 +280,74 @@ describe('mountTailwindcssPatchCommands', () => {
       maxDepth: 3,
     })
   })
+
+  it('fails in migrate check mode when changes are required', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--check'], { run: false })
+    await expect(cli.runMatchedCommand()).rejects.toThrow('Migration check failed')
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(migrateConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      dryRun: true,
+    })
+  })
+
+  it('passes migrate check mode when no changes are required', async () => {
+    migrateConfigFilesMock.mockResolvedValueOnce({
+      cwd: '/tmp/project',
+      dryRun: true,
+      scannedFiles: 1,
+      changedFiles: 0,
+      writtenFiles: 0,
+      unchangedFiles: 1,
+      missingFiles: 0,
+      entries: [
+        {
+          file: '/tmp/project/tailwindcss-patch.config.ts',
+          changed: false,
+          written: false,
+          changes: [],
+        },
+      ],
+    })
+
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--check'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('Migration summary'))
+  })
+
+  it('prints migrate report in JSON mode', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--json'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
+      cwd: '/tmp/project',
+      dryRun: false,
+      scannedFiles: 1,
+      changedFiles: 1,
+      writtenFiles: 1,
+      unchangedFiles: 0,
+      missingFiles: 0,
+      entries: [
+        {
+          file: '/tmp/project/tailwindcss-patch.config.ts',
+          changed: true,
+          written: true,
+          changes: ['registry.output -> registry.extract'],
+        },
+      ],
+    }, null, 2))
+  })
 })

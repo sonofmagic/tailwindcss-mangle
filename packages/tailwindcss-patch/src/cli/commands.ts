@@ -67,6 +67,8 @@ interface MigrateCommandArgs extends BaseCommandArgs {
   dryRun?: boolean
   workspace?: boolean
   maxDepth?: string | number
+  check?: boolean
+  json?: boolean
 }
 interface StatusCommandArgs extends BaseCommandArgs {
   json?: boolean
@@ -286,6 +288,8 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
         { flags: '--config <file>', description: 'Migrate a specific config file path' },
         { flags: '--workspace', description: 'Scan workspace recursively for config files' },
         { flags: '--max-depth <n>', description: 'Maximum recursion depth for --workspace', config: { default: 6 } },
+        { flags: '--check', description: 'Exit with an error when migration changes are required' },
+        { flags: '--json', description: 'Print the migration report as JSON' },
         { flags: '--dry-run', description: 'Preview changes without writing files' },
       ],
     },
@@ -508,16 +512,29 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   const maxDepth = parsedMaxDepth !== undefined && Number.isFinite(parsedMaxDepth) && parsedMaxDepth >= 0
     ? Math.floor(parsedMaxDepth)
     : undefined
+  const checkMode = args.check ?? false
+  const dryRun = args.dryRun ?? checkMode
   if (args.workspace && args.maxDepth !== undefined && maxDepth === undefined) {
     logger.warn(`Invalid --max-depth value "${String(args.maxDepth)}", fallback to default depth.`)
   }
   const report = await migrateConfigFiles({
     cwd: ctx.cwd,
-    dryRun: args.dryRun ?? false,
+    dryRun,
     ...(args.config ? { files: [args.config] } : {}),
     ...(args.workspace ? { workspace: true } : {}),
     ...(args.workspace && maxDepth !== undefined ? { maxDepth } : {}),
   })
+
+  if (args.json) {
+    logger.log(JSON.stringify(report, null, 2))
+    if (checkMode && report.changedFiles > 0) {
+      throw new Error(`Migration check failed: ${report.changedFiles} file(s) still need migration.`)
+    }
+    if (report.scannedFiles === 0) {
+      logger.warn('No config files found for migration.')
+    }
+    return report
+  }
 
   if (report.scannedFiles === 0) {
     logger.warn('No config files found for migration.')
@@ -530,7 +547,7 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
       logger.info(`No changes: ${fileLabel}`)
       continue
     }
-    if (report.dryRun) {
+    if (dryRun) {
       logger.info(`[dry-run] ${fileLabel}`)
     }
     else {
@@ -544,6 +561,10 @@ async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<
   logger.info(
     `Migration summary: scanned=${report.scannedFiles}, changed=${report.changedFiles}, written=${report.writtenFiles}, missing=${report.missingFiles}, unchanged=${report.unchangedFiles}`,
   )
+
+  if (checkMode && report.changedFiles > 0) {
+    throw new Error(`Migration check failed: ${report.changedFiles} file(s) still need migration.`)
+  }
   return report
 }
 
