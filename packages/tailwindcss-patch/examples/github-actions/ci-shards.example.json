@@ -1,0 +1,37 @@
+{
+  "runAllPatterns": [
+    "packages/tailwindcss-patch/**",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "package.json",
+    "turbo.json",
+    ".npmrc",
+    ".nvmrc",
+    ".node-version",
+    ".github/workflows/**"
+  ],
+  "shards": [
+    {
+      "name": "root",
+      "reportFile": ".tw-patch/migrate-report-root.json",
+      "matchPatterns": [
+        "tailwindcss-patch.config.*",
+        "tailwindcss-mangle.config.*"
+      ]
+    },
+    {
+      "name": "apps",
+      "reportFile": ".tw-patch/migrate-report-apps.json",
+      "matchPatterns": [
+        "apps/**"
+      ]
+    },
+    {
+      "name": "packages",
+      "reportFile": ".tw-patch/migrate-report-packages.json",
+      "matchPatterns": [
+        "packages/**"
+      ]
+    }
+  ]
+}

@@ -143,6 +143,9 @@ GitHub Actions 模板：
 - monorepo 矩阵分片（`root/apps/packages`）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
 - monorepo 按变更分片（基于 PR diff）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
 
+对于按变更分片模板，可在仓库中添加 `.tw-patch/ci-shards.json` 自定义分片匹配规则和全量触发规则。
+示例配置见 `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`。
+
 ### `tokens` 常用参数
 
 | 参数                                   | 说明                                                        |
