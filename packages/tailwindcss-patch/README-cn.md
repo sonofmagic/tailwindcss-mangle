@@ -107,6 +107,42 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 
 当遇到文件权限受限等情况时，可通过 cache.driver 切换为默认的文件缓存、内存缓存（memory）或无操作模式（noop）。
 
+### 缓存治理（schema v2）
+
+`tailwindcss-patch` 现在通过 **上下文指纹（context fingerprint）** 做缓存隔离，避免 monorepo 多项目互相污染。
+
+- 缓存文件升级为索引结构（`schemaVersion: 2`），按 context 分区存储。
+- 缓存命中同时要求指纹与 metadata 一致。
+- 旧版数组缓存会被安全读取并按 miss 处理，后续写入时惰性重建。
+- 写入采用“锁文件 + 临时文件原子 rename”，降低并发写坏索引的风险。
+
+指纹组成：
+
+- realpath 规范化后的 `process.cwd()`
+- realpath 规范化后的 project root / cache cwd
+- Tailwind config 绝对路径（若存在）+ mtime
+- Tailwind 包 root + version
+- `tailwindcss-patch` 自身版本
+- 关键 patch options 的稳定序列化哈希（排序键，结果 deterministic）
+
+指纹只在 `TailwindcssPatcher` 构造阶段计算一次，并在后续缓存读写中复用。
+
+### 显式清理缓存
+
+```ts
+// 默认只清理当前 context
+const current = await patcher.clearCache()
+// => { scope: 'current', filesRemoved, entriesRemoved, contextsRemoved }
+
+// 清理索引中的全部 context
+const all = await patcher.clearCache({ scope: 'all' })
+```
+
+调试可观测性：
+
+- 命中日志包含 fingerprint 与 schema 信息
+- 失效日志包含原因和细项（配置/版本/路径/options 变化）
+
 ### 可复用工具
 
 - `normalizeOptions`：归一化用户输入并应用默认值。

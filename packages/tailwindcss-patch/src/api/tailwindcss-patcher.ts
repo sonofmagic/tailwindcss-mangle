@@ -3,6 +3,10 @@ import type { PackageInfo } from 'local-pkg'
 import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
 import type { NormalizedTailwindcssPatchOptions } from '../options/types'
 import type {
+  CacheClearOptions,
+  CacheClearResult,
+  CacheReadMeta,
+  CacheContextMetadata,
   ExtractResult,
   TailwindcssPatchOptions,
   TailwindTokenByFileMap,
@@ -15,6 +19,7 @@ import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
 import { coerce } from 'semver'
 import { CacheStore } from '../cache/store'
+import { createCacheContextDescriptor } from '../cache/context'
 import {
   extractValidCandidates as extractCandidates,
   extractProjectCandidatesWithPositions,
@@ -87,6 +92,10 @@ export class TailwindcssPatcher {
   public readonly packageInfo: PackageInfo
   public readonly majorVersion: TailwindMajorVersion
 
+  private readonly cacheContext: {
+    fingerprint: string
+    metadata: CacheContextMetadata
+  }
   private readonly cacheStore: CacheStore
 
   constructor(options: TailwindcssPatcherInitOptions = {}) {
@@ -111,7 +120,12 @@ export class TailwindcssPatcher {
       this.options.tailwind.versionHint,
     )
 
-    this.cacheStore = new CacheStore(this.options.cache)
+    this.cacheContext = createCacheContextDescriptor(
+      this.options,
+      this.packageInfo,
+      this.majorVersion,
+    )
+    this.cacheStore = new CacheStore(this.options.cache, this.cacheContext)
   }
 
   async patch() {
@@ -160,21 +174,41 @@ export class TailwindcssPatcher {
     return collectClassesFromContexts(contexts, this.options.filter)
   }
 
+  private debugCacheRead(meta: CacheReadMeta) {
+    if (meta.hit) {
+      logger.debug(
+        `[cache] hit fingerprint=${meta.fingerprint?.slice(0, 12) ?? 'n/a'} schema=${meta.schemaVersion ?? 'legacy'} ${meta.details.join('; ')}`,
+      )
+      return
+    }
+
+    logger.debug(
+      `[cache] miss reason=${meta.reason} fingerprint=${meta.fingerprint?.slice(0, 12) ?? 'n/a'} schema=${meta.schemaVersion ?? 'legacy'} ${meta.details.join('; ')}`,
+    )
+  }
+
   private async mergeWithCache(set: Set<string>) {
     if (!this.options.cache.enabled) {
       return set
     }
 
-    const existing = await this.cacheStore.read()
+    const { data: existing, meta } = await this.cacheStore.readWithMeta()
+    this.debugCacheRead(meta)
     if (this.options.cache.strategy === 'merge') {
       for (const value of existing) {
         set.add(value)
       }
-      await this.cacheStore.write(set)
+      const writeTarget = await this.cacheStore.write(set)
+      if (writeTarget) {
+        logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
+      }
     }
     else {
       if (set.size > 0) {
-        await this.cacheStore.write(set)
+        const writeTarget = await this.cacheStore.write(set)
+        if (writeTarget) {
+          logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
+        }
       }
       else {
         return existing
@@ -189,16 +223,23 @@ export class TailwindcssPatcher {
       return set
     }
 
-    const existing = this.cacheStore.readSync()
+    const { data: existing, meta } = this.cacheStore.readWithMetaSync()
+    this.debugCacheRead(meta)
     if (this.options.cache.strategy === 'merge') {
       for (const value of existing) {
         set.add(value)
       }
-      this.cacheStore.writeSync(set)
+      const writeTarget = this.cacheStore.writeSync(set)
+      if (writeTarget) {
+        logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
+      }
     }
     else {
       if (set.size > 0) {
-        this.cacheStore.writeSync(set)
+        const writeTarget = this.cacheStore.writeSync(set)
+        if (writeTarget) {
+          logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
+        }
       }
       else {
         return existing
@@ -259,6 +300,14 @@ export class TailwindcssPatcher {
       ...result,
       filename: target,
     }
+  }
+
+  async clearCache(options?: CacheClearOptions): Promise<CacheClearResult> {
+    const result = await this.cacheStore.clear(options)
+    logger.debug(
+      `[cache] clear scope=${result.scope} contexts=${result.contextsRemoved} entries=${result.entriesRemoved} files=${result.filesRemoved}`,
+    )
+    return result
   }
 
   // Backwards compatibility helper used by tests and API consumers.

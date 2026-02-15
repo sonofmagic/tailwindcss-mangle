@@ -166,6 +166,42 @@ The constructor accepts either the new object shown above or the historical `pat
 
 Use cache.driver to switch between the default file-backed cache, an in-memory cache (memory), or a no-op cache (noop) when filesystem permissions are restricted.
 
+### Cache governance (schema v2)
+
+`tailwindcss-patch` now isolates cache entries by **context fingerprint** to prevent cross-project pollution in monorepos.
+
+- Cache file format uses an indexed schema (`schemaVersion: 2`) with per-context entries.
+- A cache hit requires both fingerprint and metadata consistency.
+- Legacy array caches are read safely and treated as misses, then lazily rebuilt on write.
+- Writes are protected by lock file + atomic temp-file rename to avoid concurrent corruption.
+
+Fingerprint components:
+
+- realpath-normalized `process.cwd()`
+- realpath-normalized project root / cache cwd
+- Tailwind config absolute path (if found) + config mtime
+- Tailwind package root + version
+- `tailwindcss-patch` package version
+- deterministic hash of key patch options (stable key ordering)
+
+The fingerprint is computed once in the patcher constructor and reused during all cache operations.
+
+### Clearing cache explicitly
+
+```ts
+// default: clear current context only
+const current = await patcher.clearCache()
+// => { scope: 'current', filesRemoved, entriesRemoved, contextsRemoved }
+
+// clear all contexts from the cache index
+const all = await patcher.clearCache({ scope: 'all' })
+```
+
+Debug observability:
+
+- cache hit logs include fingerprint + schema
+- cache miss logs include miss reason and mismatch details (config/version/path/options)
+
 ### Helper utilities
 
 - `normalizeOptions` – normalise raw user input to the runtime shape.

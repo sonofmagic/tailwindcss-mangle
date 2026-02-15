@@ -123,3 +123,11 @@ export interface PatchStatusReport {
   majorVersion: 2 | 3 | 4
   entries: PatchStatusEntry[]
 }
+
+export type {
+  CacheClearOptions,
+  CacheClearResult,
+  CacheClearScope,
+  CacheContextMetadata,
+  CacheReadMeta,
+} from './cache/types'

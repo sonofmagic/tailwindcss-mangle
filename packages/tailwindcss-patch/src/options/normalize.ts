@@ -15,8 +15,19 @@ import type {
   TailwindV4UserOptions,
 } from './types'
 import process from 'node:process'
+import fs from 'fs-extra'
 import path from 'pathe'
 import { pkgName } from '../constants'
+
+function resolveRealpathSafe(value: string) {
+  const resolved = path.resolve(value)
+  try {
+    return path.normalize(fs.realpathSync(resolved))
+  }
+  catch {
+    return path.normalize(resolved)
+  }
+}
 
 function toPrettyValue(value: OutputUserOptions['pretty']): number | false {
   if (typeof value === 'number') {
@@ -40,7 +51,7 @@ function normalizeCacheOptions(
   projectRoot: string,
 ): NormalizedCacheOptions {
   let enabled = false
-  let cwd = projectRoot
+  let cwd = resolveRealpathSafe(projectRoot)
   let dir = path.resolve(cwd, 'node_modules/.cache', pkgName)
   let file = 'class-cache.json'
   let strategy: CacheStrategy = 'merge'
@@ -51,7 +62,7 @@ function normalizeCacheOptions(
   }
   else if (typeof cache === 'object' && cache) {
     enabled = cache.enabled ?? true
-    cwd = cache.cwd ?? cwd
+    cwd = cache.cwd ? resolveRealpathSafe(cache.cwd) : cwd
     dir = cache.dir ? path.resolve(cache.dir) : path.resolve(cwd, 'node_modules/.cache', pkgName)
     file = cache.file ?? file
     strategy = cache.strategy ?? strategy
@@ -191,7 +202,7 @@ function normalizeTailwindOptions(
 }
 
 export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
-  const projectRoot = options.cwd ? path.resolve(options.cwd) : process.cwd()
+  const projectRoot = resolveRealpathSafe(options.cwd ? path.resolve(options.cwd) : process.cwd())
   const overwrite = options.overwrite ?? true
 
   const output = normalizeOutputOptions(options.output)

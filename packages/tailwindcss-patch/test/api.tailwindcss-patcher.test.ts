@@ -259,10 +259,12 @@ describe('TailwindcssPatcher', () => {
     expect(result?.has('bar')).toBe(true)
     expect(fs.pathExistsSync(cacheFile)).toBe(true)
     const cacheContent = fs.readJSONSync(cacheFile)
-    expect(cacheContent).toEqual(expect.arrayContaining(['foo', 'bar']))
+    expect(cacheContent?.schemaVersion).toBe(2)
+    const firstEntry = Object.values(cacheContent?.contexts ?? {})[0] as { values?: string[] } | undefined
+    expect(firstEntry?.values).toEqual(expect.arrayContaining(['foo', 'bar']))
   })
 
-  it('falls back to cached classes when runtime contexts are empty', () => {
+  it('treats legacy cache schema as miss to avoid cross-context pollution', () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     fs.writeJSONSync(cacheFile, ['cached-class'])
 
@@ -285,8 +287,7 @@ describe('TailwindcssPatcher', () => {
     const result = patcher.getClassSetSync()
 
     expect(result).toBeDefined()
-    expect(result?.size).toBe(1)
-    expect(result?.has('cached-class')).toBe(true)
+    expect(result?.size).toBe(0)
   })
 
   it('defers synchronous class access until runtime contexts are populated', async () => {

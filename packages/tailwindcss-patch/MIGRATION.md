@@ -85,6 +85,15 @@ const values = await cache.read()
 
 This ensures consistent async behaviour and reliable error recovery (invalid JSON files are removed automatically).
 
+Starting from the cache governance update, the on-disk cache also moved to **schema v2**:
+
+- `index.json` style payload with `schemaVersion` and per-context entries.
+- Context fingerprint includes cwd/config/package/version/options metadata.
+- Legacy array files are still readable, but treated as cache-miss and lazily rebuilt.
+- `TailwindcssPatcher#clearCache()` can clear current-context (default) or all contexts.
+
+This keeps public APIs backward compatible while preventing cross-project cache pollution in monorepos.
+
 ## 5. Exported helpers
 
 - Runtime context access now lives in `runtime/context-registry.ts` (`loadRuntimeContexts`).
