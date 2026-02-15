@@ -96,6 +96,7 @@ export interface RestoreConfigFilesOptions {
 export interface RestoreConfigFilesResult {
   cwd: string
   reportFile: string
+  reportKind?: string
   reportSchemaVersion?: number
   dryRun: boolean
   strict: boolean
@@ -718,6 +719,7 @@ export async function restoreConfigFiles(options: RestoreConfigFilesOptions): Pr
   return {
     cwd,
     reportFile,
+    ...(report.reportKind === undefined ? {} : { reportKind: report.reportKind }),
     ...(report.schemaVersion === undefined ? {} : { reportSchemaVersion: report.schemaVersion }),
     dryRun,
     strict,

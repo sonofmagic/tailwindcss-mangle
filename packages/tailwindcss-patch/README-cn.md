@@ -90,6 +90,7 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 | `--json`               | 输出 JSON 格式的恢复结果。                                   |
 
 `tw-patch restore` 在报告包含元数据时会执行 schema 校验。若 `reportKind` 不匹配或 `schemaVersion` 高于当前支持版本，会拒绝恢复；不包含该元数据的历史报告仍保持兼容。
+使用 `--json` 时，恢复结果会在报告含元数据时附带 `reportKind` / `reportSchemaVersion` 字段。
 
 ### `tokens` 常用参数
 

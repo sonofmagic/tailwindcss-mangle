@@ -147,6 +147,7 @@ Migration reports now include envelope metadata: `reportKind`, `schemaVersion`, 
 | `--json`              | Print restore summary as JSON.                                    |
 
 `tw-patch restore` validates report schema metadata when available. Reports with unsupported `reportKind` or newer `schemaVersion` are rejected to avoid unsafe restores. Legacy reports without metadata are still supported.
+With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when report metadata is present.
 
 ### Token report options
 

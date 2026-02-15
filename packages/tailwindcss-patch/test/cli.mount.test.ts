@@ -32,6 +32,8 @@ const { migrateConfigFilesMock, restoreConfigFilesMock } = vi.hoisted(() => {
     restoreConfigFilesMock: vi.fn(async () => ({
       cwd: '/tmp/project',
       reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      reportKind: 'tw-patch-migrate-report',
+      reportSchemaVersion: 1,
       dryRun: false,
       strict: false,
       scannedEntries: 1,
@@ -464,6 +466,8 @@ describe('mountTailwindcssPatchCommands', () => {
     expect(logger.log).toHaveBeenCalledWith(JSON.stringify({
       cwd: '/tmp/project',
       reportFile: '/tmp/project/.tw-patch/migrate-report.json',
+      reportKind: 'tw-patch-migrate-report',
+      reportSchemaVersion: 1,
       dryRun: false,
       strict: false,
       scannedEntries: 1,

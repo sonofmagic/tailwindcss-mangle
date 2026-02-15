@@ -296,6 +296,8 @@ describe('restoreConfigFiles', () => {
       await fs.outputFile(target, `export default { registry: { extract: { file: 'x.json' } } }\n`, 'utf8')
       await fs.outputFile(backup, `export default { registry: { output: { file: 'x.json' } } }\n`, 'utf8')
       await fs.outputJSON(reportPath, {
+        reportKind: 'tw-patch-migrate-report',
+        schemaVersion: 1,
         entries: [{ file: target, backupFile: backup }],
       }, { spaces: 2 })
 
@@ -304,7 +306,8 @@ describe('restoreConfigFiles', () => {
         reportFile: '.tw-patch/migrate-report.json',
       })
 
-      expect(result.reportSchemaVersion).toBeUndefined()
+      expect(result.reportKind).toBe('tw-patch-migrate-report')
+      expect(result.reportSchemaVersion).toBe(1)
       expect(result.restoredFiles).toBe(1)
       expect(result.missingBackups).toBe(0)
       const restored = await fs.readFile(target, 'utf8')
@@ -338,6 +341,32 @@ describe('restoreConfigFiles', () => {
       expect(result.restoredFiles).toBe(1)
       const after = await fs.readFile(target, 'utf8')
       expect(after).toBe(targetContent)
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('supports legacy restore report without schema metadata', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-restore-legacy-'))
+    const target = path.resolve(cwd, 'tailwindcss-patch.config.ts')
+    const backup = path.resolve(cwd, '.tw-patch/migrate-backups/tailwindcss-patch.config.ts.bak')
+    const reportPath = path.resolve(cwd, '.tw-patch/migrate-report.json')
+    try {
+      await fs.outputFile(target, `export default { registry: { extract: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputFile(backup, `export default { registry: { output: { file: 'x.json' } } }\n`, 'utf8')
+      await fs.outputJSON(reportPath, {
+        entries: [{ file: target, backupFile: backup }],
+      }, { spaces: 2 })
+
+      const result = await restoreConfigFiles({
+        cwd,
+        reportFile: '.tw-patch/migrate-report.json',
+      })
+
+      expect(result.reportKind).toBeUndefined()
+      expect(result.reportSchemaVersion).toBeUndefined()
+      expect(result.restoredFiles).toBe(1)
     }
     finally {
       await fs.remove(cwd)
