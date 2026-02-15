@@ -142,4 +142,60 @@ describe('migrateConfigFiles', () => {
       await fs.remove(cwd)
     }
   })
+
+  it('scans workspace config files recursively when workspace mode is enabled', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-migrate-workspace-'))
+    const appConfig = path.resolve(cwd, 'apps/demo-a/tailwindcss-mangle.config.ts')
+    const packageConfig = path.resolve(cwd, 'packages/demo-b/tailwindcss-patch.config.ts')
+    const ignoredConfig = path.resolve(cwd, 'node_modules/demo/tailwindcss-patch.config.ts')
+    try {
+      await fs.outputFile(appConfig, `export default { registry: { output: { file: 'a.json' } } }\n`, 'utf8')
+      await fs.outputFile(packageConfig, `export default { registry: { output: { file: 'b.json' } } }\n`, 'utf8')
+      await fs.outputFile(ignoredConfig, `export default { registry: { output: { file: 'c.json' } } }\n`, 'utf8')
+
+      const report = await migrateConfigFiles({
+        cwd,
+        workspace: true,
+      })
+
+      expect(report.scannedFiles).toBe(2)
+      expect(report.changedFiles).toBe(2)
+      expect(report.writtenFiles).toBe(2)
+      expect(report.missingFiles).toBe(0)
+
+      const appResult = await fs.readFile(appConfig, 'utf8')
+      const packageResult = await fs.readFile(packageConfig, 'utf8')
+      const ignoredResult = await fs.readFile(ignoredConfig, 'utf8')
+      expect(appResult).toContain('extract')
+      expect(packageResult).toContain('extract')
+      expect(ignoredResult).toContain('output')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
+
+  it('respects workspace max depth', async () => {
+    const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-migrate-depth-'))
+    const deepConfig = path.resolve(cwd, 'apps/demo-a/sub/tailwindcss-mangle.config.ts')
+    try {
+      await fs.outputFile(deepConfig, `export default { registry: { output: { file: 'deep.json' } } }\n`, 'utf8')
+
+      const report = await migrateConfigFiles({
+        cwd,
+        workspace: true,
+        maxDepth: 1,
+      })
+
+      expect(report.scannedFiles).toBe(0)
+      expect(report.changedFiles).toBe(0)
+      expect(report.writtenFiles).toBe(0)
+
+      const result = await fs.readFile(deepConfig, 'utf8')
+      expect(result).toContain('output')
+    }
+    finally {
+      await fs.remove(cwd)
+    }
+  })
 })

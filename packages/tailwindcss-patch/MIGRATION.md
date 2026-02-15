@@ -84,7 +84,7 @@ Migration mapping:
 
 - `tw-patch install` still applies the runtime patch, but logging and error handling were refreshed.
 - `tw-patch extract` gained new flags (`--output`, `--format`, `--no-write`, `--css`).
-- `tw-patch migrate` can rewrite deprecated config keys to modern fields (`--dry-run` for preview).
+- `tw-patch migrate` can rewrite deprecated config keys to modern fields (`--dry-run` for preview, `--workspace` for recursive monorepo scans).
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
 ## 4. Cache handling

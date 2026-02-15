@@ -264,4 +264,20 @@ describe('mountTailwindcssPatchCommands', () => {
       files: ['custom.config.ts'],
     })
   })
+
+  it('passes workspace migration options to migrate runner', async () => {
+    const cli = cac('embedded')
+    mountTailwindcssPatchCommands(cli)
+
+    cli.parse(['node', 'embedded', 'migrate', '--cwd', '/tmp/project', '--workspace', '--max-depth', '3'], { run: false })
+    await cli.runMatchedCommand()
+
+    expect(migrateConfigFilesMock).toHaveBeenCalledTimes(1)
+    expect(migrateConfigFilesMock).toHaveBeenCalledWith({
+      cwd: '/tmp/project',
+      dryRun: false,
+      workspace: true,
+      maxDepth: 3,
+    })
+  })
 })

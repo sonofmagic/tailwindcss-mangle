@@ -65,6 +65,8 @@ interface InitCommandArgs extends BaseCommandArgs {}
 interface MigrateCommandArgs extends BaseCommandArgs {
   config?: string
   dryRun?: boolean
+  workspace?: boolean
+  maxDepth?: string | number
 }
 interface StatusCommandArgs extends BaseCommandArgs {
   json?: boolean
@@ -282,6 +284,8 @@ function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, Tailw
       optionDefs: [
         createCwdOptionDefinition(),
         { flags: '--config <file>', description: 'Migrate a specific config file path' },
+        { flags: '--workspace', description: 'Scan workspace recursively for config files' },
+        { flags: '--max-depth <n>', description: 'Maximum recursion depth for --workspace', config: { default: 6 } },
         { flags: '--dry-run', description: 'Preview changes without writing files' },
       ],
     },
@@ -500,10 +504,19 @@ async function initCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'in
 
 async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
   const { args } = ctx
+  const parsedMaxDepth = args.maxDepth === undefined ? undefined : Number(args.maxDepth)
+  const maxDepth = parsedMaxDepth !== undefined && Number.isFinite(parsedMaxDepth) && parsedMaxDepth >= 0
+    ? Math.floor(parsedMaxDepth)
+    : undefined
+  if (args.workspace && args.maxDepth !== undefined && maxDepth === undefined) {
+    logger.warn(`Invalid --max-depth value "${String(args.maxDepth)}", fallback to default depth.`)
+  }
   const report = await migrateConfigFiles({
     cwd: ctx.cwd,
     dryRun: args.dryRun ?? false,
     ...(args.config ? { files: [args.config] } : {}),
+    ...(args.workspace ? { workspace: true } : {}),
+    ...(args.workspace && maxDepth !== undefined ? { maxDepth } : {}),
   })
 
   if (report.scannedFiles === 0) {

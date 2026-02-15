@@ -117,9 +117,11 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 | ---------------- | ---------------------------------------------------------------------------- |
 | `--cwd <dir>`    | Working directory used to locate config files.                               |
 | `--config <file>`| Migrate only one specific config file path.                                  |
+| `--workspace`    | Recursively scan the workspace for supported config filenames.               |
+| `--max-depth <n>`| Maximum recursion depth for `--workspace` mode (default: `6`).               |
 | `--dry-run`      | Preview planned changes without writing files.                               |
 
-`tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
+`tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
 ### Token report options
 

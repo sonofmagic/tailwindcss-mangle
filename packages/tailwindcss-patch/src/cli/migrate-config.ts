@@ -1,4 +1,5 @@
 import type { ObjectExpression, ObjectMethod, ObjectProperty } from '@babel/types'
+import type { Dirent } from 'node:fs'
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
 import * as t from '@babel/types'
@@ -15,6 +16,20 @@ export const DEFAULT_CONFIG_FILENAMES = [
   'tailwindcss-mangle.config.mjs',
   'tailwindcss-mangle.config.cjs',
 ] as const
+
+const DEFAULT_CONFIG_FILENAME_SET = new Set<string>(DEFAULT_CONFIG_FILENAMES)
+const DEFAULT_WORKSPACE_IGNORED_DIRS = new Set([
+  '.git',
+  '.idea',
+  '.turbo',
+  '.vscode',
+  '.yarn',
+  'coverage',
+  'dist',
+  'node_modules',
+  'tmp',
+])
+const DEFAULT_WORKSPACE_MAX_DEPTH = 6
 
 const ROOT_LEGACY_KEYS = ['cwd', 'overwrite', 'tailwind', 'features', 'output', 'applyPatches'] as const
 
@@ -48,6 +63,8 @@ export interface MigrateConfigFilesOptions {
   cwd: string
   files?: string[]
   dryRun?: boolean
+  workspace?: boolean
+  maxDepth?: number
 }
 
 function getPropertyKeyName(property: ObjectProperty | ObjectMethod): string | undefined {
@@ -362,10 +379,57 @@ function resolveTargetFiles(cwd: string, files?: string[]) {
   return [...resolved]
 }
 
+async function collectWorkspaceConfigFiles(cwd: string, maxDepth: number) {
+  const files = new Set<string>()
+  const queue: Array<{ dir: string, depth: number }> = [{ dir: cwd, depth: 0 }]
+
+  while (queue.length > 0) {
+    const current = queue.shift()
+    if (!current) {
+      continue
+    }
+    const { dir, depth } = current
+    let entries: Dirent[]
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true })
+    }
+    catch {
+      continue
+    }
+
+    for (const entry of entries) {
+      const absolutePath = path.resolve(dir, entry.name)
+
+      if (entry.isFile() && DEFAULT_CONFIG_FILENAME_SET.has(entry.name)) {
+        files.add(absolutePath)
+        continue
+      }
+
+      if (!entry.isDirectory()) {
+        continue
+      }
+      if (DEFAULT_WORKSPACE_IGNORED_DIRS.has(entry.name)) {
+        continue
+      }
+      if (depth >= maxDepth) {
+        continue
+      }
+      queue.push({ dir: absolutePath, depth: depth + 1 })
+    }
+  }
+
+  return [...files].sort((a, b) => a.localeCompare(b))
+}
+
 export async function migrateConfigFiles(options: MigrateConfigFilesOptions): Promise<ConfigFileMigrationReport> {
   const cwd = path.resolve(options.cwd)
   const dryRun = options.dryRun ?? false
-  const targetFiles = resolveTargetFiles(cwd, options.files)
+  const maxDepth = options.maxDepth ?? DEFAULT_WORKSPACE_MAX_DEPTH
+  const targetFiles = options.files && options.files.length > 0
+    ? resolveTargetFiles(cwd, options.files)
+    : options.workspace
+      ? await collectWorkspaceConfigFiles(cwd, maxDepth)
+      : resolveTargetFiles(cwd)
   const entries: ConfigFileMigrationEntry[] = []
 
   let scannedFiles = 0

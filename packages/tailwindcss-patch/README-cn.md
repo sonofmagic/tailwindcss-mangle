@@ -60,9 +60,11 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 | ----------------- | -------------------------------------- |
 | `--cwd <dir>`     | 指定扫描配置文件时的工作目录。         |
 | `--config <file>` | 仅迁移指定的配置文件。                 |
+| `--workspace`     | 递归扫描 workspace 下的配置文件。      |
+| `--max-depth <n>` | `--workspace` 模式下的最大递归深度（默认 `6`）。 |
 | `--dry-run`       | 仅预览将要变更的内容，不写入磁盘。     |
 
-`tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`，并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
+`tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
 ### `tokens` 常用参数
 
