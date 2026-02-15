@@ -195,6 +195,8 @@ case "$status" in
 esac
 ```
 
+GitHub Actions template: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`.
+
 ### Token report options
 
 | Flag                                   | Description                                                                               |

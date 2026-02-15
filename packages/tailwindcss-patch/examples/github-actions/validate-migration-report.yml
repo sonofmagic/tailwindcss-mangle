@@ -1,0 +1,61 @@
+name: Validate Tailwind Patch Migration Report
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-migration-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Ensure migration report is up-to-date
+        run: pnpm dlx tw-patch migrate --workspace --check --report-file .tw-patch/migrate-report.json
+
+      - name: Validate migration report
+        shell: bash
+        run: |
+          mkdir -p .tw-patch
+          set +e
+          pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --strict --json > .tw-patch/validate-result.json
+          status=$?
+          set -e
+
+          if [ "$status" -ne 0 ]; then
+            cat .tw-patch/validate-result.json
+          fi
+
+          case "$status" in
+            0)  echo "validate ok" ;;
+            21) echo "::error::Migration report schema/kind incompatible"; exit 1 ;;
+            22) echo "::error::Missing backups under --strict"; exit 1 ;;
+            23) echo "::error::I/O failure while reading report/backups"; exit 1 ;;
+            *)  echo "::error::Unknown validate failure (exit $status)"; exit "$status" ;;
+          esac
+
+      - name: Upload validate result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tw-patch-validate-result
+          path: .tw-patch/validate-result.json

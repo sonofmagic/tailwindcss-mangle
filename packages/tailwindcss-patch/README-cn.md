@@ -138,6 +138,8 @@ case "$status" in
 esac
 ```
 
+GitHub Actions 模板：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`。
+
 ### `tokens` 常用参数
 
 | 参数                                   | 说明                                                        |
