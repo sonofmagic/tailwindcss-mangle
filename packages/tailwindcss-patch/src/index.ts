@@ -14,6 +14,17 @@ export {
   tailwindcssPatchCommands,
 } from './cli/commands'
 export {
+  MIGRATION_REPORT_KIND,
+  MIGRATION_REPORT_SCHEMA_VERSION,
+  migrateConfigFiles,
+  restoreConfigFiles,
+  type ConfigFileMigrationEntry,
+  type ConfigFileMigrationReport,
+  type MigrateConfigFilesOptions,
+  type RestoreConfigFilesOptions,
+  type RestoreConfigFilesResult,
+} from './cli/migrate-config'
+export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,

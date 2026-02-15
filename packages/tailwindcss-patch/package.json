@@ -24,7 +24,8 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "require": "./src/index.ts"
-    }
+    },
+    "./migration-report.schema.json": "./schema/migration-report.schema.json"
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -35,7 +36,8 @@
   },
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "schema"
   ],
   "scripts": {
     "dev": "tsup --watch --sourcemap",
@@ -58,7 +60,8 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.mjs",
         "require": "./dist/index.js"
-      }
+      },
+      "./migration-report.schema.json": "./schema/migration-report.schema.json"
     },
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

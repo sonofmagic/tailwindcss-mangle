@@ -31,8 +31,8 @@ const DEFAULT_WORKSPACE_IGNORED_DIRS = new Set([
   'tmp',
 ])
 const DEFAULT_WORKSPACE_MAX_DEPTH = 6
-const MIGRATION_REPORT_KIND = 'tw-patch-migrate-report'
-const MIGRATION_REPORT_SCHEMA_VERSION = 1
+export const MIGRATION_REPORT_KIND = 'tw-patch-migrate-report'
+export const MIGRATION_REPORT_SCHEMA_VERSION = 1
 
 const ROOT_LEGACY_KEYS = ['cwd', 'overwrite', 'tailwind', 'features', 'output', 'applyPatches'] as const
 

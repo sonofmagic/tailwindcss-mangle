@@ -93,6 +93,7 @@ Migration mapping:
 - `tw-patch restore` validates report metadata when present, rejects unknown kinds/newer schema versions, and keeps legacy metadata-free reports backward compatible.
 - `tw-patch restore --json` now exposes report metadata fields (`reportKind`, `reportSchemaVersion`) when available for easier diagnostics.
 - `tw-patch validate` can validate migration report compatibility in dry-run mode without restoring files.
+- Migration report tooling now has public exports from package entry (`migrateConfigFiles`, `restoreConfigFiles`, report constants/types) and a published JSON schema subpath: `tailwindcss-patch/migration-report.schema.json`.
 - Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
 
 ## 4. Cache handling
