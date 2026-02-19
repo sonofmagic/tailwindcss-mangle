@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 8.7.1
+
+### Patch Changes
+
+- 🐛 **tailwindcss-patch: add broader unit coverage for @tailwindcss/node@4.2.0 utility families, variants, fallback base loading, and `@source inline()` parsing.** [`db582e3`](https://github.com/sonofmagic/tailwindcss-mangle/commit/db582e309a45965e51090c6c13fab0bf4f8fea41) by @sonofmagic
+
 ## 8.7.0
 
 ### Minor Changes
