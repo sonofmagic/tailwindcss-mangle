@@ -23,12 +23,12 @@
     "nextra-theme-docs": "^4.6.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-intersection-observer": "^10.0.2"
+    "react-intersection-observer": "^10.0.3"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.6",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/postcss": "^4.2.0",
     "@types/react": "19.2.14",
     "pagefind": "^1.4.0",
     "tailwindcss": "catalog:tailwindcss4"

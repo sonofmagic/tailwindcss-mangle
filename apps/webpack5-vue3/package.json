@@ -16,15 +16,15 @@
     "vue-router": "^5.0.2"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "~5.0.8",
     "@vue/cli-plugin-router": "~5.0.8",
     "@vue/cli-plugin-typescript": "~5.0.8",
     "@vue/cli-service": "~5.0.8",
     "@vue/eslint-config-standard": "^9.0.1",
-    "@vue/eslint-config-typescript": "^14.1.2",
+    "@vue/eslint-config-typescript": "^14.7.0",
     "autoprefixer": "^10.4.24",
     "eslint": "^10.0.0",
     "eslint-plugin-import": "^2.31.0",

@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
 import {
@@ -7,8 +8,51 @@ import {
   groupTokensByFile,
 } from '@/extraction/candidate-extractor'
 
+const require = createRequire(import.meta.url)
 const fixturesRoot = path.resolve(__dirname, 'fixtures')
 const tokenFixturesRoot = path.resolve(fixturesRoot, 'token-scan')
+const tailwindNodeBase = path.dirname(require.resolve('@tailwindcss/node'))
+const v42FeaturePattern = 'v4/features-4.2.html'
+
+const v42UtilityCandidates = [
+  'text-shadow-md',
+  'inset-ring-2',
+  'field-sizing-content',
+  'font-stretch-120%',
+  'inline-4',
+  'min-inline-8',
+  'max-inline-12',
+  'block-4',
+  'min-block-8',
+  'max-block-12',
+  'pbs-4',
+  'pbe-6',
+  'inset-bs-2',
+  'inset-be-3',
+  'ms-4',
+  'me-6',
+  'border-s',
+  'border-e',
+  'rounded-s',
+  'rounded-e',
+  'start-4',
+  'end-4',
+  'scheme-dark',
+  'text-wrap',
+  'text-pretty',
+  'text-balance',
+  'mask-none',
+  'mask-linear-45',
+  'mask-radial-at-center',
+]
+
+const v42VariantCandidates = [
+  'inert:opacity-50',
+  'nth-3:bg-red-500',
+  'nth-last-2:bg-blue-500',
+  'nth-of-type-4:text-green-500',
+  'nth-last-of-type-5:underline',
+]
 
 describe('candidate extractor', () => {
   it('returns candidate positions for raw content', async () => {
@@ -52,6 +96,74 @@ describe('candidate extractor', () => {
     expect(result).not.toContain('text/event-stream')
     expect(result).not.toContain('text/plain')
     expect(result).not.toContain('text/html')
+  })
+
+  it('supports Tailwind v4.2 utility families via @tailwindcss/node', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: v42FeaturePattern,
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toEqual(expect.arrayContaining(v42UtilityCandidates))
+    expect(result).not.toContain('definitely-not-a-tailwind-class')
+  })
+
+  it('supports Tailwind v4.2 structural variants via @tailwindcss/node', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: v42FeaturePattern,
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toEqual(expect.arrayContaining(v42VariantCandidates))
+  })
+
+  it('falls back to secondary base directories when loading v4.2 design system', async () => {
+    const result = await extractValidCandidates({
+      base: path.join(fixturesRoot, '__missing-tailwind-base__'),
+      baseFallbacks: [tailwindNodeBase],
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: v42FeaturePattern,
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toEqual(expect.arrayContaining(['text-shadow-md', 'inert:opacity-50']))
+  })
+
+  it('accepts @source inline() syntax with extra whitespace in css option', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      css: [
+        '@import "tailwindcss";',
+        '@source inline(  "text-shadow-md"  );',
+        '@source not inline( "text-shadow-2xs" );',
+      ].join('\n'),
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: v42FeaturePattern,
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toContain('text-shadow-md')
+    expect(result).toContain('text-pretty')
   })
 
   it('scans project files for token metadata', async () => {
