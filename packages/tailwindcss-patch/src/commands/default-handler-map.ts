@@ -8,9 +8,9 @@ import {
 } from './basic-handlers'
 import {
   migrateCommandDefaultHandler,
-  restoreCommandDefaultHandler,
-  validateCommandDefaultHandler,
-} from './migration-handlers'
+} from './migrate-handler'
+import { restoreCommandDefaultHandler } from './restore-handler'
+import { validateCommandDefaultHandler } from './validate-handler'
 import { statusCommandDefaultHandler } from './status-handler'
 
 export const defaultCommandHandlers = {

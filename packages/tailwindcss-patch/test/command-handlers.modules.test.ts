@@ -7,8 +7,10 @@ vi.mock('../src/commands/migrate-config', () => ({
 
 import logger from '../src/logger'
 import { migrateConfigFiles, restoreConfigFiles } from '../src/commands/migrate-config'
-import { migrateCommandDefaultHandler, restoreCommandDefaultHandler, validateCommandDefaultHandler } from '../src/commands/migration-handlers'
+import { migrateCommandDefaultHandler } from '../src/commands/migrate-handler'
+import { restoreCommandDefaultHandler } from '../src/commands/restore-handler'
 import { statusCommandDefaultHandler } from '../src/commands/status-handler'
+import { validateCommandDefaultHandler } from '../src/commands/validate-handler'
 import { VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/commands/validate'
 
 afterEach(() => {
