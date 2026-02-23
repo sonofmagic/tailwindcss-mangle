@@ -6,8 +6,8 @@ vi.mock('../src/commands/migrate-config', () => ({
 }))
 
 import logger from '../src/logger'
-import { restoreConfigFiles } from '../src/commands/migrate-config'
-import { restoreCommandDefaultHandler, validateCommandDefaultHandler } from '../src/commands/migration-handlers'
+import { migrateConfigFiles, restoreConfigFiles } from '../src/commands/migrate-config'
+import { migrateCommandDefaultHandler, restoreCommandDefaultHandler, validateCommandDefaultHandler } from '../src/commands/migration-handlers'
 import { statusCommandDefaultHandler } from '../src/commands/status-handler'
 import { VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/commands/validate'
 
@@ -68,6 +68,78 @@ describe('status handler module', () => {
 })
 
 describe('migration handlers module', () => {
+  it('migrate handler normalizes args and warns for invalid workspace maxDepth', async () => {
+    const migrateMock = vi.mocked(migrateConfigFiles)
+    const report = {
+      scannedFiles: 0,
+      changedFiles: 0,
+      writtenFiles: 0,
+      backupsWritten: 0,
+      unchangedFiles: 0,
+      missingFiles: 0,
+      entries: [],
+    }
+    migrateMock.mockResolvedValueOnce(report as any)
+    const warnSpy = vi.spyOn(logger as any, 'warn').mockImplementation(() => undefined)
+
+    const ctx = {
+      cwd: '/repo',
+      args: {
+        cwd: '/repo',
+        workspace: true,
+        maxDepth: '-2',
+        include: 'apps/**,packages/**',
+        exclude: ['node_modules/**'],
+        json: false,
+      },
+    } as any
+
+    const result = await migrateCommandDefaultHandler(ctx)
+    expect(result).toEqual(report)
+    expect(migrateMock).toHaveBeenCalledWith({
+      cwd: '/repo',
+      dryRun: false,
+      workspace: true,
+      include: ['apps/**', 'packages/**'],
+      exclude: ['node_modules/**'],
+    })
+    expect(warnSpy).toHaveBeenCalledWith('Invalid --max-depth value "-2", fallback to default depth.')
+    expect(warnSpy).toHaveBeenCalledWith('No config files found for migration.')
+  })
+
+  it('migrate handler enables dry-run in check mode and throws when changes are required', async () => {
+    const migrateMock = vi.mocked(migrateConfigFiles)
+    const report = {
+      scannedFiles: 2,
+      changedFiles: 1,
+      writtenFiles: 0,
+      backupsWritten: 0,
+      unchangedFiles: 1,
+      missingFiles: 0,
+      entries: [],
+    }
+    migrateMock.mockResolvedValueOnce(report as any)
+    const logSpy = vi.spyOn(logger as any, 'log').mockImplementation(() => undefined)
+
+    const ctx = {
+      cwd: '/repo',
+      args: {
+        cwd: '/repo',
+        check: true,
+        json: true,
+      },
+    } as any
+
+    await expect(migrateCommandDefaultHandler(ctx)).rejects.toThrow(
+      'Migration check failed: 1 file(s) still need migration.',
+    )
+    expect(migrateMock).toHaveBeenCalledWith({
+      cwd: '/repo',
+      dryRun: true,
+    })
+    expect(logSpy).toHaveBeenCalledWith(JSON.stringify(report, null, 2))
+  })
+
   it('restore handler emits json payload and returns restore result', async () => {
     const restoreResult = {
       cwd: '/repo',
