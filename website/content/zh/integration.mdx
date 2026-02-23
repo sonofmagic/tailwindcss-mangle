@@ -21,7 +21,7 @@ import { Callout } from 'nextra/components'
 | `apps/webpack5-vue3` | `unplugin-tailwindcss-mangle/webpack` | 已验证 |
 
 <Callout type="info">
-新增框架集成时，请同步更新 `packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` 中的用例矩阵。
+新增框架集成时，请同步更新 `e2e/apps.e2e.shared.ts` 中的用例矩阵。
 </Callout>
 
 ## 通用接入流程
@@ -78,3 +78,21 @@ export default defineNuxtConfig({
 ## Monorepo 工作区说明
 
 在 monorepo 本地联调时，`core`、`shared`、`config`、`tailwindcss-patch` 等运行时导出均从 `dist` 入口解析。这样可以保证 Next/Webpack 在配置阶段与构建阶段的运行时加载稳定，避免直接执行 TS 源码带来的不一致问题。
+
+## 包依赖边界校验
+
+仓库新增了可执行的包边界检查：
+
+```sh
+pnpm check:boundaries
+```
+
+当前边界策略：
+
+- `@tailwindcss-mangle/shared`：不允许依赖其他 workspace 包，且不允许引入 Node I/O 模块（如 `fs`、`path`、`fs-extra`）。
+- `@tailwindcss-mangle/config`：仅允许依赖 `shared`。
+- `@tailwindcss-mangle/core`：仅允许依赖 `config` 和 `shared`。
+- `unplugin-tailwindcss-mangle`：仅允许依赖 `core`、`config`、`shared`。
+- `tailwindcss-patch`：允许依赖 `config/shared`，但不允许依赖 `core` 与插件适配层内部实现。
+
+CI 会在构建和测试前执行该检查，跨包依赖方向违规会在 PR 阶段直接失败。

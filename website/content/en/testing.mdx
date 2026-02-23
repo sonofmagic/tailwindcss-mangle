@@ -13,7 +13,7 @@ pnpm test:e2e
 This delegates to:
 
 ```sh
-pnpm --filter unplugin-tailwindcss-mangle test:e2e
+pnpm run test:e2e:apps
 ```
 
 Inside package scope:
@@ -23,9 +23,15 @@ pnpm --filter unplugin-tailwindcss-mangle test
 pnpm --filter unplugin-tailwindcss-mangle test:e2e
 ```
 
+Playwright browser validation:
+
+```sh
+pnpm run test:e2e:apps:pw
+```
+
 ## Current E2E coverage
 
-`packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` runs production builds for these fixtures:
+`e2e/apps.e2e.test.ts` runs production builds for these fixtures:
 
 - `vite-vue`
 - `vite-react`
@@ -57,7 +63,7 @@ When introducing a new fixture under `apps/`:
 
 1. Ensure build script succeeds in production mode.
 2. Ensure the fixture has extractable Tailwind classes.
-3. Add a new case in `apps.e2e.test.ts` with:
+3. Add a new case in `e2e/apps.e2e.shared.ts` with:
    - `appDir`
    - `expectedOriginalClass`
    - optional environment overrides

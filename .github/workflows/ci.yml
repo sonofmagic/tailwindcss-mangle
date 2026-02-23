@@ -50,6 +50,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Check package boundaries
+        run: pnpm check:boundaries
+
       - name: Build
         run: pnpm build
 

@@ -19,7 +19,7 @@ export {
   type ValidateFailureSummary,
   type ValidateJsonFailurePayload,
   type ValidateJsonSuccessPayload,
-} from './cli/commands'
+} from './commands/cli'
 export {
   type ConfigFileMigrationEntry,
   type ConfigFileMigrationReport,
@@ -30,7 +30,9 @@ export {
   restoreConfigFiles,
   type RestoreConfigFilesOptions,
   type RestoreConfigFilesResult,
-} from './cli/migrate-config'
+} from './commands/migrate-config'
+export { normalizeOptions } from './config'
+export type { LegacyTailwindcssPatcherOptions, TailwindcssPatchOptions } from './config'
 export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
@@ -38,11 +40,13 @@ export {
   extractValidCandidates,
   groupTokensByFile,
 } from './extraction/candidate-extractor'
+export {
+  collectClassesFromContexts,
+  collectClassesFromTailwindV4,
+  getPatchStatusReport,
+  loadRuntimeContexts,
+  runTailwindBuild,
+} from './install'
 export { default as logger } from './logger'
-export { normalizeOptions } from './options/normalize'
-export { getPatchStatusReport } from './patching/status'
-export { collectClassesFromContexts, collectClassesFromTailwindV4 } from './runtime/class-collector'
-export { loadRuntimeContexts } from './runtime/context-registry'
-export { runTailwindBuild } from './runtime/process-tailwindcss'
 export * from './types'
 export { defineConfig } from '@tailwindcss-mangle/config'

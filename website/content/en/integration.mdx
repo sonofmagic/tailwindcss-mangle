@@ -21,7 +21,7 @@ The repository maintains real app fixtures under `apps/` and validates them in e
 | `apps/webpack5-vue3` | `unplugin-tailwindcss-mangle/webpack` | Verified |
 
 <Callout type="info">
-If you add a new framework fixture, update the E2E matrix in `packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts`.
+If you add a new framework fixture, update the E2E matrix in `e2e/apps.e2e.shared.ts`.
 </Callout>
 
 ## Shared setup flow
@@ -78,3 +78,21 @@ Use `unplugin-tailwindcss-mangle/webpack`, and restrict `sources.include` to rea
 ## Monorepo workspace note
 
 In workspace development, runtime package exports (`core`, `shared`, `config`, `tailwindcss-patch`) are resolved from `dist` entries. This keeps Next/Webpack runtime imports stable and avoids TS-source execution mismatches in config/build phases.
+
+## Package boundary guardrail
+
+The monorepo now enforces package boundaries with a static check:
+
+```sh
+pnpm check:boundaries
+```
+
+Current boundary policy:
+
+- `@tailwindcss-mangle/shared`: no cross-workspace package dependency, and no Node I/O imports (`fs`, `path`, `fs-extra`, etc.).
+- `@tailwindcss-mangle/config`: can depend on `shared` only.
+- `@tailwindcss-mangle/core`: can depend on `config` and `shared` only.
+- `unplugin-tailwindcss-mangle`: can depend on `core`, `config`, and `shared` only.
+- `tailwindcss-patch`: can depend on `config`/`shared`, and cannot depend on `core` or plugin adapter internals.
+
+CI runs this check before build and test, so invalid package edges fail fast during pull requests.

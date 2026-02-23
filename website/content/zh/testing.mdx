@@ -13,7 +13,7 @@ pnpm test:e2e
 其实际会调用：
 
 ```sh
-pnpm --filter unplugin-tailwindcss-mangle test:e2e
+pnpm run test:e2e:apps
 ```
 
 在包级别也可以单独运行：
@@ -23,9 +23,15 @@ pnpm --filter unplugin-tailwindcss-mangle test
 pnpm --filter unplugin-tailwindcss-mangle test:e2e
 ```
 
+Playwright 浏览器验证命令：
+
+```sh
+pnpm run test:e2e:apps:pw
+```
+
 ## 当前 E2E 覆盖矩阵
 
-`packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` 会对以下示例执行生产构建并校验结果：
+`e2e/apps.e2e.test.ts` 会对以下示例执行生产构建并校验结果：
 
 - `vite-vue`
 - `vite-react`
@@ -57,7 +63,7 @@ pnpm --filter unplugin-tailwindcss-mangle test:e2e
 
 1. 先确保该示例在生产模式下可构建。
 2. 确保示例中存在可提取的 Tailwind 类名。
-3. 在 `apps.e2e.test.ts` 里新增用例并配置：
+3. 在 `e2e/apps.e2e.shared.ts` 里新增用例并配置：
    - `appDir`
    - `expectedOriginalClass`
    - 可选环境变量

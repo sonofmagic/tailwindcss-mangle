@@ -1,7 +1,6 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageInfo } from 'local-pkg'
-import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
-import type { NormalizedTailwindcssPatchOptions } from '../options/types'
+import type { LegacyTailwindcssPatcherOptions, NormalizedTailwindcssPatchOptions } from '../config'
 import type {
   CacheClearOptions,
   CacheClearResult,
@@ -20,19 +19,18 @@ import path from 'pathe'
 import { coerce } from 'semver'
 import { createCacheContextDescriptor } from '../cache/context'
 import { CacheStore } from '../cache/store'
+import { fromLegacyOptions, normalizeOptions } from '../config'
 import {
   extractValidCandidates as extractCandidates,
   extractProjectCandidatesWithPositions,
   groupTokensByFile,
 } from '../extraction/candidate-extractor'
+import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../install/class-collector'
+import { loadRuntimeContexts } from '../install/context-registry'
+import { applyTailwindPatches } from '../install/patch-runner'
+import { runTailwindBuild } from '../install/process-tailwindcss'
+import { getPatchStatusReport } from '../install/status'
 import logger from '../logger'
-import { fromLegacyOptions } from '../options/legacy'
-import { normalizeOptions } from '../options/normalize'
-import { applyTailwindPatches } from '../patching/patch-runner'
-import { getPatchStatusReport } from '../patching/status'
-import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../runtime/class-collector'
-import { loadRuntimeContexts } from '../runtime/context-registry'
-import { runTailwindBuild } from '../runtime/process-tailwindcss'
 
 type TailwindMajorVersion = 2 | 3 | 4
 
