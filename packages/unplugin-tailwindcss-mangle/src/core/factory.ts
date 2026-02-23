@@ -8,10 +8,98 @@ import { getGroupedEntries } from '@/utils'
 import { pluginName } from '../constants'
 
 const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.cjs' : './loader.cjs')
+const JS_LIKE_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.jsx', '.tsx'])
+const HTML_LIKE_EXTENSIONS = new Set(['.html', '.htm'])
+const CSS_LIKE_LANGS = new Set(['css', 'less', 'sass', 'scss', 'styl', 'stylus', 'pcss', 'postcss', 'sss'])
+const JS_LIKE_LANGS = new Set(['js', 'cjs', 'mjs', 'ts', 'cts', 'mts', 'jsx', 'tsx'])
+const HTML_LIKE_LANGS = new Set(['html', 'htm'])
+type TransformKind = 'js' | 'vue' | 'svelte' | 'css' | 'html'
+
+function normalizeLang(rawLang: string | null) {
+  if (!rawLang) {
+    return ''
+  }
+  return rawLang.toLowerCase().replace(/^\./, '')
+}
+
+function isLikelyMarkup(code: string) {
+  return /<([a-zA-Z][\w:-]*)(?:\s|>)/.test(code)
+}
+
+function isHtmlFileRequest(id: string) {
+  const cleanId = id.split('?')[0] ?? id
+  const ext = path.extname(cleanId).toLowerCase()
+  return HTML_LIKE_EXTENSIONS.has(ext)
+}
+
+function resolveTransformKind(id: string, code: string): TransformKind {
+  if (isCSSRequest(id)) {
+    return 'css'
+  }
+
+  const cleanId = id.split('?')[0] ?? id
+  const ext = path.extname(cleanId).toLowerCase()
+  const query = id.includes('?') ? id.slice(id.indexOf('?') + 1) : ''
+  const params = new URLSearchParams(query)
+  const type = params.get('type')?.toLowerCase()
+  const lang = normalizeLang(params.get('lang'))
+
+  if (type === 'style') {
+    return 'css'
+  }
+  if (type === 'script') {
+    return 'js'
+  }
+  if (type === 'template') {
+    if (lang && JS_LIKE_LANGS.has(lang)) {
+      return 'js'
+    }
+    if (lang && HTML_LIKE_LANGS.has(lang)) {
+      return 'html'
+    }
+    return isLikelyMarkup(code) ? 'html' : 'js'
+  }
+
+  if (lang) {
+    if (CSS_LIKE_LANGS.has(lang)) {
+      return 'css'
+    }
+    if (JS_LIKE_LANGS.has(lang)) {
+      return 'js'
+    }
+    if (HTML_LIKE_LANGS.has(lang)) {
+      return 'html'
+    }
+    if (lang === 'vue') {
+      return 'vue'
+    }
+    if (lang === 'svelte') {
+      return 'svelte'
+    }
+  }
+
+  if (ext === '.vue') {
+    return 'vue'
+  }
+  if (ext === '.svelte') {
+    return 'svelte'
+  }
+  if (HTML_LIKE_EXTENSIONS.has(ext)) {
+    return 'html'
+  }
+  if (JS_LIKE_EXTENSIONS.has(ext)) {
+    return 'js'
+  }
+
+  // For included sources without explicit type, prefer markup parsing when source looks like HTML-ish content.
+  return isLikelyMarkup(code) ? 'html' : 'js'
+}
 
 const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
   const ctx = new Context()
-  let filter = (_id: string) => true
+  // webpack/rspack may evaluate transform filters before buildStart,
+  // so we need a usable filter immediately from inline options.
+  let filter = createFilter(options?.sources?.include, options?.sources?.exclude)
   return [
     {
       name: `${pluginName}:pre`,
@@ -25,37 +113,38 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
     {
       name: `${pluginName}`,
       transformInclude(id) {
-        return filter(id)
+        const cleanId = id.split('?')[0] ?? id
+        if (isHtmlFileRequest(cleanId)) {
+          return false
+        }
+        return filter(cleanId)
       },
       async transform(code, id) {
         const opts = {
           ctx,
           id,
         }
-        if (/\.[cm]?[jt]sx?(?:$|\?)/.test(id)) {
-          return jsHandler(code, opts)
+        const kind = resolveTransformKind(id, code)
+        const framework = this.getNativeBuildContext?.().framework
+
+        // webpack/rspack transform loader must return JS for html modules.
+        // Keep html handling in post hooks / framework-native html pipelines.
+        if ((framework === 'webpack' || framework === 'rspack') && kind === 'html' && isHtmlFileRequest(id)) {
+          return null
         }
-        else if (/\.vue(?:$|\?)/.test(id)) {
-          if (isCSSRequest(id)) {
+
+        switch (kind) {
+          case 'css':
             return await cssHandler(code, opts)
-          }
-          else {
+          case 'vue':
             return await vueHandler(code, opts)
-          }
-        }
-        else if (/\.svelte(?:$|\?)/.test(id)) {
-          if (isCSSRequest(id)) {
-            return await cssHandler(code, opts)
-          }
-          else {
+          case 'svelte':
             return await svelteHandler(code, opts)
-          }
-        }
-        else if (isCSSRequest(id)) {
-          return await cssHandler(code, opts)
-        }
-        else if (/\.html?/.test(id)) {
-          return htmlHandler(code, opts)
+          case 'html':
+            return htmlHandler(code, opts)
+          case 'js':
+          default:
+            return jsHandler(code, opts)
         }
       },
       webpack(compiler) {

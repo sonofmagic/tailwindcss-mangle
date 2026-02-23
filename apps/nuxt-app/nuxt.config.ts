@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-// import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
+import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
 
 export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
@@ -14,13 +14,13 @@ export default defineNuxtConfig({
     inlineSSRStyles: false,
   },
   modules: [
-    // [
-    //   nuxtPlugin,
-    //   {
-    //     registry: {
-    //       mapping: true,
-    //     },
-    //   },
-    // ],
+    [
+      nuxtPlugin,
+      {
+        registry: {
+          mapping: true,
+        },
+      },
+    ],
   ],
 })

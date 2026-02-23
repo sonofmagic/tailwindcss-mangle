@@ -48,6 +48,11 @@
       "import": "./dist/esbuild.js",
       "require": "./dist/esbuild.cjs"
     },
+    "./nuxt": {
+      "types": "./dist/nuxt.d.ts",
+      "import": "./dist/nuxt.js",
+      "require": "./dist/nuxt.cjs"
+    },
     "./*": "./*"
   },
   "main": "./dist/index.cjs",
@@ -68,7 +73,8 @@
     "dev": "tsup --watch --sourcemap",
     "build": "tsup",
     "test": "vitest run --coverage.enabled",
-    "test:dev": "vitest"
+    "test:dev": "vitest",
+    "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts"
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.3.0",
