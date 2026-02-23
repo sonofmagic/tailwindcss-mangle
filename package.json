@@ -24,6 +24,7 @@
     "publish-packages": "pnpm run build && pnpm run test && changeset version && changeset publish",
     "-------": "-----------",
     "release": "changeset",
+    "release:verify": "pnpm check:boundaries && pnpm build && pnpm test && pnpm test:e2e",
     "pr": "changeset pre enter alpha",
     "pr:beta": "changeset pre enter beta",
     "pr:rc": "changeset pre enter rc",

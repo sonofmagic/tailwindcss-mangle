@@ -36,6 +36,12 @@ Run from repository root before `changeset publish`:
 5. Optional but recommended for browser/runtime parity: `pnpm run test:e2e:apps:pw`
 6. `pnpm changeset status`
 
+You can run the required non-browser checks via:
+
+```sh
+pnpm run release:verify
+```
+
 ## Compatibility Checklist
 
 Before finalizing a release PR:
