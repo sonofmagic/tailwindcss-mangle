@@ -11,7 +11,7 @@ import {
   VALIDATE_FAILURE_REASONS,
   ValidateCommandError,
 } from './validate'
-import { buildDefaultCommandDefinitions } from './metadata'
+import { buildDefaultCommandDefinitions } from './command-definitions'
 import { registerTailwindcssPatchCommand } from './command-registrar'
 import { tailwindcssPatchCommands } from './types'
 

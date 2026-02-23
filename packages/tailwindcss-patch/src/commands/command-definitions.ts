@@ -1,18 +1,14 @@
-import type { Command } from 'cac'
-import type {
-  TailwindcssPatchCliMountOptions,
-  TailwindcssPatchCommand,
-  TailwindcssPatchCommandOptionDefinition,
-  TailwindcssPatchCommandOptions,
-} from './types'
+import type { TailwindcssPatchCommand, TailwindcssPatchCommandOptionDefinition } from './types'
 
 import process from 'node:process'
 import { DEFAULT_TOKEN_REPORT } from './token-output'
 
-interface TailwindcssPatchCommandDefinition {
+export interface TailwindcssPatchCommandDefinition {
   description: string
   optionDefs: TailwindcssPatchCommandOptionDefinition[]
 }
+
+export type TailwindcssPatchCommandDefinitions = Record<TailwindcssPatchCommand, TailwindcssPatchCommandDefinition>
 
 function createCwdOptionDefinition(description: string = 'Working directory'): TailwindcssPatchCommandOptionDefinition {
   return {
@@ -22,7 +18,7 @@ function createCwdOptionDefinition(description: string = 'Working directory'): T
   }
 }
 
-export function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand, TailwindcssPatchCommandDefinition> {
+export function buildDefaultCommandDefinitions(): TailwindcssPatchCommandDefinitions {
   return {
     install: {
       description: 'Apply Tailwind CSS runtime patches',
@@ -102,65 +98,5 @@ export function buildDefaultCommandDefinitions(): Record<TailwindcssPatchCommand
         { flags: '--json', description: 'Print a JSON report of patch status' },
       ],
     },
-  }
-}
-
-function addPrefixIfMissing(value: string, prefix: string) {
-  if (!prefix || value.startsWith(prefix)) {
-    return value
-  }
-  return `${prefix}${value}`
-}
-
-function resolveCommandNames(
-  command: TailwindcssPatchCommand,
-  mountOptions: TailwindcssPatchCliMountOptions,
-  prefix: string,
-) {
-  const override = mountOptions.commandOptions?.[command]
-  const baseName = override?.name ?? command
-  const name = addPrefixIfMissing(baseName, prefix)
-  const aliases = (override?.aliases ?? []).map(alias => addPrefixIfMissing(alias, prefix))
-  return { name, aliases }
-}
-
-function resolveOptionDefinitions(
-  defaults: TailwindcssPatchCommandOptionDefinition[],
-  override?: TailwindcssPatchCommandOptions,
-) {
-  if (!override) {
-    return defaults
-  }
-
-  const appendDefaults = override.appendDefaultOptions ?? true
-  const customDefs = override.optionDefs ?? []
-  if (!appendDefaults) {
-    return customDefs
-  }
-
-  if (customDefs.length === 0) {
-    return defaults
-  }
-
-  return [...defaults, ...customDefs]
-}
-
-export function resolveCommandMetadata(
-  command: TailwindcssPatchCommand,
-  mountOptions: TailwindcssPatchCliMountOptions,
-  prefix: string,
-  defaults: Record<TailwindcssPatchCommand, TailwindcssPatchCommandDefinition>,
-) {
-  const names = resolveCommandNames(command, mountOptions, prefix)
-  const definition = defaults[command]
-  const override = mountOptions.commandOptions?.[command]
-  const description = override?.description ?? definition.description
-  const optionDefs = resolveOptionDefinitions(definition.optionDefs, override)
-  return { ...names, description, optionDefs }
-}
-
-export function applyCommandOptions(command: Command, optionDefs: TailwindcssPatchCommandOptionDefinition[]) {
-  for (const option of optionDefs) {
-    command.option(option.flags, option.description ?? '', option.config)
   }
 }

@@ -13,7 +13,7 @@ const {
   installDefaultHandlerMock: vi.fn(),
 }))
 
-vi.mock('../src/commands/metadata', () => {
+vi.mock('../src/commands/command-metadata', () => {
   return {
     applyCommandOptions: applyCommandOptionsMock,
     resolveCommandMetadata: resolveCommandMetadataMock,
