@@ -36,3 +36,4 @@ dist
 vite.config.ts.timestamp-*.mjs
 config.ts.timestamp-*.mjs
 .vite-inspect
+apps/astro-app/.astro
