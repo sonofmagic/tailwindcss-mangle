@@ -23,7 +23,7 @@ function normalizeLang(rawLang: string | null) {
 }
 
 function isLikelyMarkup(code: string) {
-  return /<([a-z][\w:-]*)(?:\s|>)/i.test(code)
+  return /<[a-z][\w:-]*(?:\s|>)/i.test(code)
 }
 
 function isHtmlFileRequest(id: string) {
@@ -149,22 +149,19 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
       },
       webpack(compiler) {
         const { NormalModule } = compiler.webpack
-        const isExisted = true
         compiler.hooks.compilation.tap(pluginName, (compilation) => {
           NormalModule.getCompilationHooks(compilation).loader.tap(pluginName, (_loaderContext, module) => {
-            if (isExisted) {
-              const idx = module.loaders.findIndex(x => x.loader.includes('postcss-loader'))
+            const idx = module.loaders.findIndex(x => x.loader.includes('postcss-loader'))
 
-              if (idx > -1) {
-                module.loaders.splice(idx, 0, {
-                  loader: WEBPACK_LOADER,
-                  ident: null,
-                  options: {
-                    ctx,
-                  },
-                  type: null,
-                })
-              }
+            if (idx > -1) {
+              module.loaders.splice(idx, 0, {
+                loader: WEBPACK_LOADER,
+                ident: null,
+                options: {
+                  ctx,
+                },
+                type: null,
+              })
             }
           })
         })
@@ -178,23 +175,6 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
           const { code } = htmlHandler(html, { ctx })
           return code
         },
-        // generateBundle: {
-        //   async handler(options, bundle) {
-        //     const groupedEntries = getGroupedEntries(Object.entries(bundle))
-
-        //     if (Array.isArray(groupedEntries.css) && groupedEntries.css.length > 0) {
-        //       for (let i = 0; i < groupedEntries.css.length; i++) {
-        //         const [id, cssSource] = groupedEntries.css[i] as [string, OutputAsset]
-
-        //         const { code } = await cssHandler(cssSource.source.toString(), {
-        //           id,
-        //           ctx,
-        //         })
-        //         cssSource.source = code
-        //       }
-        //     }
-        //   },
-        // },
       },
       webpack(compiler) {
         const { Compilation, sources } = compiler.webpack
@@ -209,50 +189,16 @@ const factory: UnpluginFactory<TransformerOptions | undefined> = (options) => {
             async (assets) => {
               const groupedEntries = getGroupedEntries(Object.entries(assets))
 
-              // if (groupedEntries.js.length > 0) {
-              //   for (let i = 0; i < groupedEntries.js.length; i++) {
-              //     const [file, chunk] = groupedEntries.js[i]
+              for (const [id, cssSource] of groupedEntries.css) {
+                const { code } = await cssHandler(cssSource.source().toString(), {
+                  id,
+                  ctx,
+                })
 
-              //     const code = jsHandler(chunk.source().toString(), {
-              //       ctx,
-              //     }).code
-              //     if (code) {
-              //       const source = new ConcatSource(code)
-              //       compilation.updateAsset(file, source)
-              //     }
-              //   }
-              // }
+                const source = new ConcatSource(code)
 
-              if (groupedEntries.css.length > 0) {
-                for (let i = 0; i < groupedEntries.css.length; i++) {
-                  const entry = groupedEntries.css[i]
-                  if (!entry) {
-                    continue
-                  }
-                  const [id, cssSource] = entry
-
-                  const { code } = await cssHandler(cssSource.source().toString(), {
-                    id,
-                    ctx,
-                  })
-
-                  const source = new ConcatSource(code)
-
-                  compilation.updateAsset(id, source)
-                }
+                compilation.updateAsset(id, source)
               }
-
-              // if (groupedEntries.html.length > 0) {
-              //   for (let i = 0; i < groupedEntries.html.length; i++) {
-              //     const [file, asset] = groupedEntries.html[i]
-
-              //     const { code } = htmlHandler(asset.source().toString(), {
-              //       ctx,
-              //     })
-              //     const source = new ConcatSource(code)
-              //     compilation.updateAsset(file, source)
-              //   }
-              // }
             },
           )
         })
