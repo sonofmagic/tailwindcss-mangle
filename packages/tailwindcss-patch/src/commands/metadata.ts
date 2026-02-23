@@ -4,7 +4,7 @@ import type {
   TailwindcssPatchCommand,
   TailwindcssPatchCommandOptionDefinition,
   TailwindcssPatchCommandOptions,
-} from './cli'
+} from './types'
 
 import process from 'node:process'
 import { DEFAULT_TOKEN_REPORT } from './token-output'

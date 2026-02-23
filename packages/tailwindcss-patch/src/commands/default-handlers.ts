@@ -1,5 +1,5 @@
 import type { PatchStatusReport, TailwindcssPatchOptions } from '../types'
-import type { TailwindcssPatchCommandContext } from './cli'
+import type { TailwindcssPatchCommandContext } from './types'
 import type { TokenGroupKey, TokenOutputFormat } from './token-output'
 import type { ValidateJsonFailurePayload, ValidateJsonSuccessPayload } from './validate'
 
