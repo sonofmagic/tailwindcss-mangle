@@ -19,12 +19,14 @@ import {
   extractCommandDefaultHandler,
   initCommandDefaultHandler,
   installCommandDefaultHandler,
+  tokensCommandDefaultHandler,
+} from './basic-handlers'
+import {
   migrateCommandDefaultHandler,
   restoreCommandDefaultHandler,
-  statusCommandDefaultHandler,
-  tokensCommandDefaultHandler,
   validateCommandDefaultHandler,
-} from './default-handlers'
+} from './migration-handlers'
+import { statusCommandDefaultHandler } from './status-handler'
 import {
   applyCommandOptions,
   buildDefaultCommandDefinitions,
