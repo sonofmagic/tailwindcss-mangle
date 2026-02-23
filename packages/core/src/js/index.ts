@@ -80,9 +80,7 @@ export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOp
             (p.parentPath.parentPath.isTaggedTemplateExpression()
               && p.parentPath.parentPath.get('tag').isIdentifier({
                 name: ignoreIdentifier,
-              })
-            )
-          ) {
+              }))) {
             const { splitQuote = true } = options
             const array = splitCode(n.value.raw, {
               splitQuote,

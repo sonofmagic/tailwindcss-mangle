@@ -62,19 +62,19 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 ### `migrate` 常用参数
 
-| 参数              | 说明                                   |
-| ----------------- | -------------------------------------- |
-| `--cwd <dir>`     | 指定扫描配置文件时的工作目录。         |
-| `--config <file>` | 仅迁移指定的配置文件。                 |
-| `--workspace`     | 递归扫描 workspace 下的配置文件。      |
-| `--max-depth <n>` | `--workspace` 模式下的最大递归深度（默认 `6`）。 |
-| `--include <glob>` | 仅迁移匹配该 glob 的文件（可重复传参）。 |
-| `--exclude <glob>` | 跳过匹配该 glob 的文件（可重复传参）。 |
-| `--report-file <file>` | 把迁移报告写入 JSON 文件。         |
-| `--backup-dir <dir>` | 把迁移前的原始文件备份到指定目录。   |
-| `--check`         | CI 检查模式，若仍有文件需要迁移则报错退出。 |
-| `--json`          | 输出 JSON 格式的迁移报告。             |
-| `--dry-run`       | 仅预览将要变更的内容，不写入磁盘。     |
+| 参数                   | 说明                                             |
+| ---------------------- | ------------------------------------------------ |
+| `--cwd <dir>`          | 指定扫描配置文件时的工作目录。                   |
+| `--config <file>`      | 仅迁移指定的配置文件。                           |
+| `--workspace`          | 递归扫描 workspace 下的配置文件。                |
+| `--max-depth <n>`      | `--workspace` 模式下的最大递归深度（默认 `6`）。 |
+| `--include <glob>`     | 仅迁移匹配该 glob 的文件（可重复传参）。         |
+| `--exclude <glob>`     | 跳过匹配该 glob 的文件（可重复传参）。           |
+| `--report-file <file>` | 把迁移报告写入 JSON 文件。                       |
+| `--backup-dir <dir>`   | 把迁移前的原始文件备份到指定目录。               |
+| `--check`              | CI 检查模式，若仍有文件需要迁移则报错退出。      |
+| `--json`               | 输出 JSON 格式的迁移报告。                       |
+| `--dry-run`            | 仅预览将要变更的内容，不写入磁盘。               |
 
 `tw-patch migrate` 会扫描目标目录下的 `tailwindcss-patch.config.*` 和 `tailwindcss-mangle.config.*`。开启 `--workspace` 后会递归扫描子项目（会跳过 `node_modules`、`.git`、`dist` 等目录），可通过 `--include` / `--exclude` 控制扫描范围，并把已废弃字段改写为现代字段（例如 `registry.output` -> `registry.extract`、`registry.tailwind` -> `registry.tailwindcss`），同时输出逐文件摘要。
 
@@ -84,25 +84,25 @@ CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`�
 
 ### `restore` 常用参数
 
-| 参数                   | 说明                                                         |
-| ---------------------- | ------------------------------------------------------------ |
-| `--cwd <dir>`          | 指定恢复时使用的工作目录。                                   |
-| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。   |
-| `--dry-run`            | 仅预览恢复目标，不执行写入。                                 |
-| `--strict`             | 报告中的备份文件缺失时直接报错退出。                         |
-| `--json`               | 输出 JSON 格式的恢复结果。                                   |
+| 参数                   | 说明                                                       |
+| ---------------------- | ---------------------------------------------------------- |
+| `--cwd <dir>`          | 指定恢复时使用的工作目录。                                 |
+| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。 |
+| `--dry-run`            | 仅预览恢复目标，不执行写入。                               |
+| `--strict`             | 报告中的备份文件缺失时直接报错退出。                       |
+| `--json`               | 输出 JSON 格式的恢复结果。                                 |
 
 `tw-patch restore` 在报告包含元数据时会执行 schema 校验。若 `reportKind` 不匹配或 `schemaVersion` 高于当前支持版本，会拒绝恢复；不包含该元数据的历史报告仍保持兼容。
 使用 `--json` 时，恢复结果会在报告含元数据时附带 `reportKind` / `reportSchemaVersion` 字段。
 
 ### `validate` 常用参数
 
-| 参数                   | 说明                                                         |
-| ---------------------- | ------------------------------------------------------------ |
-| `--cwd <dir>`          | 指定校验时使用的工作目录。                                   |
-| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。   |
-| `--strict`             | 报告中的备份文件缺失时直接报错退出。                         |
-| `--json`               | 输出 JSON 格式的校验结果。                                   |
+| 参数                   | 说明                                                       |
+| ---------------------- | ---------------------------------------------------------- |
+| `--cwd <dir>`          | 指定校验时使用的工作目录。                                 |
+| `--report-file <file>` | 指定迁移报告路径（默认 `.tw-patch/migrate-report.json`）。 |
+| `--strict`             | 报告中的备份文件缺失时直接报错退出。                       |
+| `--json`               | 输出 JSON 格式的校验结果。                                 |
 
 `tw-patch validate` 会以 dry-run 模式执行迁移报告校验，不写回任何恢复文件，同时校验报告 schema 与备份引用状态。
 校验失败时提供分层退出码，便于 CI 判定：
@@ -139,6 +139,7 @@ esac
 ```
 
 GitHub Actions 模板：
+
 - 单任务版本：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
 - monorepo 矩阵分片（`root/apps/packages`）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
 - monorepo 按变更分片（基于 PR diff）：`packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
@@ -157,32 +158,32 @@ GitHub Actions 模板：
 ### CI 复制清单
 
 1. 根据仓库形态选择一个 workflow 模板：
-`validate-migration-report.yml`（单任务）、
-`validate-migration-report-matrix.yml`（固定分片）、
-`validate-migration-report-affected.yml`（按 PR diff 分片）。
+   `validate-migration-report.yml`（单任务）、
+   `validate-migration-report-matrix.yml`（固定分片）、
+   `validate-migration-report-affected.yml`（按 PR diff 分片）。
 2. 必须同时复制共享 composite action：
-`packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`。
+   `packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`。
 3. 如果使用 affected 模板，还需要额外复制：
-`packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`、
-`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`、
-`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`。
+   `packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`、
+   `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`、
+   `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`。
 4. 如果你的 monorepo 目录结构与默认不同，请新增 `.tw-patch/ci-shards.json`（可基于 `ci-shards.example.json`）并调整分片匹配与报告路径。
 5. 核对 composite action 输入是否符合当前 Runner 策略：
-由 action 安装（`setup-pnpm/setup-node/install-deps`）或由 workflow 预装（传 `false` 并自定义安装命令）。
+   由 action 安装（`setup-pnpm/setup-node/install-deps`）或由 workflow 预装（传 `false` 并自定义安装命令）。
 6. 保留 `permissions.contents: read`，并确保 `cache-dependency-path` 与实际 lockfile 路径一致。
 
 ### CI 常见问题排查
 
 - 报错 `uses: ./.../validate-migration-report` 找不到：
-workflow 使用的是本地 action 路径，需要连同 action 目录一起复制。
+  workflow 使用的是本地 action 路径，需要连同 action 目录一起复制。
 - PR 中显示 `No affected shards for migration report validation.`：
-通常是变更文件不匹配当前分片规则，或 diff 基线为空；请检查 `.tw-patch/ci-shards.json` 与 PR base 分支配置。
+  通常是变更文件不匹配当前分片规则，或 diff 基线为空；请检查 `.tw-patch/ci-shards.json` 与 PR base 分支配置。
 - composite action 报 `Unknown scope`：
-当前仅支持 `all`、`root`、`apps`、`packages`，自定义 scope 需要同步调整 action 逻辑。
+  当前仅支持 `all`、`root`、`apps`、`packages`，自定义 scope 需要同步调整 action 逻辑。
 - `validate` 退出码 `21/22/23`：
-`21` 报告 schema/kind 不兼容，`22` `--strict` 下缺失备份，`23` 读取报告或备份时 I/O 失败。
+  `21` 报告 schema/kind 不兼容，`22` `--strict` 下缺失备份，`23` 读取报告或备份时 I/O 失败。
 - `workflow-lint` 的 resolver 快照 diff 失败：
-说明你调整了解析协议；需同时更新 schema、snapshot 与测试用例。
+  说明你调整了解析协议；需同时更新 schema、snapshot 与测试用例。
 
 ### `tokens` 常用参数
 
@@ -243,6 +244,7 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 已标记弃用（下一个大版本移除）的旧字段：`cwd`、`overwrite`、`tailwind`、`features`、`output`。
 
 字段迁移关系：
+
 - `cwd` -> `projectRoot`
 - `overwrite` -> `apply.overwrite`
 - `tailwind` -> `tailwindcss`

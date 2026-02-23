@@ -1,6 +1,6 @@
 import { createFilter } from '@rollup/pluginutils'
 import { omit } from 'lodash-es'
-import { getDefaultTransformerConfig, getDefaultRegistryConfig, getDefaultUserConfig } from '@/defaults'
+import { getDefaultRegistryConfig, getDefaultTransformerConfig, getDefaultUserConfig } from '@/defaults'
 
 function omitCwdPath(o: any) {
   return omit(o, ['registry.tailwind.cwd'])
@@ -26,10 +26,13 @@ describe('defaults', () => {
 
   it('exposes default pipeline include/exclude patterns', () => {
     const transformer = getDefaultTransformerConfig()
+    const include = transformer.sources?.include
+    const includePatterns = (Array.isArray(include) ? include : include ? [include] : [])
+      .filter((item): item is RegExp => item instanceof RegExp)
 
-    expect(transformer.sources.include.some(re => re.test('index.html'))).toBe(true)
-    expect(transformer.sources.include.some(re => re.test('styles.css'))).toBe(true)
-    expect(transformer.sources.exclude).toEqual([])
+    expect(includePatterns.some(re => re.test('index.html'))).toBe(true)
+    expect(includePatterns.some(re => re.test('styles.css'))).toBe(true)
+    expect(transformer.sources?.exclude).toEqual([])
   })
 
   it('getDefaultUserConfig', () => {
@@ -37,7 +40,7 @@ describe('defaults', () => {
   })
 
   it('getDefaultTransformerConfig reflects NODE_ENV', () => {
-    const originalEnv = process.env.NODE_ENV
+    const originalEnv = process.env['NODE_ENV']
 
     vi.stubEnv('NODE_ENV', 'development')
     expect(getDefaultTransformerConfig().disabled).toBe(true)
@@ -48,10 +51,10 @@ describe('defaults', () => {
     vi.unstubAllEnvs()
 
     if (originalEnv !== undefined) {
-      process.env.NODE_ENV = originalEnv
+      process.env['NODE_ENV'] = originalEnv
     }
     else {
-      delete process.env.NODE_ENV
+      delete process.env['NODE_ENV']
     }
   })
 })

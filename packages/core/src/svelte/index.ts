@@ -1,15 +1,15 @@
 import type { IHandlerTransformResult, IJsHandlerOptions } from '../types'
-import { jsHandler } from '../js'
-import { cssHandler } from '../css'
-import { parse } from 'svelte/compiler'
 import MagicString from 'magic-string'
+import { parse } from 'svelte/compiler'
+import { cssHandler } from '../css'
+import { jsHandler } from '../js'
 import { makeRegex, splitCode } from '../shared'
 
 interface ISvelteHandlerOptions extends IJsHandlerOptions {}
 
 export async function svelteHandler(
   rawSource: string,
-  options: ISvelteHandlerOptions
+  options: ISvelteHandlerOptions,
 ): Promise<IHandlerTransformResult> {
   const { ctx, id } = options
   const ms = new MagicString(rawSource)
@@ -39,14 +39,14 @@ async function processSvelteAst(
   ast: any,
   ms: MagicString,
   ctx: any,
-  id?: string
+  id?: string,
 ): Promise<void> {
   const { replaceMap, classGenerator } = ctx
   const stylePromises: Promise<void>[] = []
 
   // Walk the AST and process class-related nodes
   async function walk(node: any) {
-    if (!node) return
+    if (!node) { return }
 
     // Handle regular class attributes
     if (node.type === 'Attribute' && node.name === 'class') {

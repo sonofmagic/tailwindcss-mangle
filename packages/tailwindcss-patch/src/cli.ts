@@ -1,6 +1,6 @@
 import process from 'node:process'
-import logger from './logger'
 import { createTailwindcssPatchCli, ValidateCommandError } from './cli/commands'
+import logger from './logger'
 
 async function main() {
   const cli = createTailwindcssPatchCli()

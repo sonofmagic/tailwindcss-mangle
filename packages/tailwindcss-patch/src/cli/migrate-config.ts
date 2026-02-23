@@ -1,7 +1,7 @@
 import type { ObjectExpression, ObjectMethod, ObjectProperty } from '@babel/types'
 import type { Dirent } from 'node:fs'
-import { parse } from '@babel/parser'
 import generate from '@babel/generator'
+import { parse } from '@babel/parser'
 import * as t from '@babel/types'
 import fs from 'fs-extra'
 import path from 'pathe'

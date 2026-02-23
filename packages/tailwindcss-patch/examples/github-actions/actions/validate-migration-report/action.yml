@@ -5,15 +5,15 @@ inputs:
   setup-pnpm:
     description: Whether to setup pnpm in this action.
     required: false
-    default: "false"
+    default: 'false'
   setup-node:
     description: Whether to setup Node.js in this action.
     required: false
-    default: "false"
+    default: 'false'
   node-version:
     description: Node.js version used when setup-node is enabled.
     required: false
-    default: "20"
+    default: '20'
   cache-dependency-path:
     description: Cache dependency path for actions/setup-node.
     required: false
@@ -21,7 +21,7 @@ inputs:
   install-deps:
     description: Whether to run dependency installation in this action.
     required: false
-    default: "false"
+    default: 'false'
   install-command:
     description: Dependency install command.
     required: false
@@ -39,11 +39,11 @@ inputs:
   shard-name:
     description: Optional shard label for logs.
     required: false
-    default: ""
+    default: ''
   strict:
     description: Whether to pass --strict to tw-patch validate.
     required: false
-    default: "true"
+    default: 'true'
 
 runs:
   using: composite

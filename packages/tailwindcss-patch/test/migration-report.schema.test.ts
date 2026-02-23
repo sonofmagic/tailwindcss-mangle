@@ -2,12 +2,12 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
 import {
+  migrateConfigFiles,
   MIGRATION_REPORT_KIND,
   MIGRATION_REPORT_SCHEMA_VERSION,
+  restoreConfigFiles,
   VALIDATE_EXIT_CODES,
   VALIDATE_FAILURE_REASONS,
-  migrateConfigFiles,
-  restoreConfigFiles,
 } from '../src'
 
 describe('migration report public exports', () => {

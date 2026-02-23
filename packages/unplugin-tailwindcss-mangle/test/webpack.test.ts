@@ -1,5 +1,7 @@
 import type { Mock } from 'vitest'
-import { describe, expect, it, beforeEach, vi } from 'vitest'
+import { Context } from '@tailwindcss-mangle/core'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import factory from '@/core/factory'
 
 const { mockCtx, mockCssHandler, mockHtmlHandler, mockJsHandler } = vi.hoisted(() => {
@@ -26,7 +28,7 @@ const { mockCtx, mockCssHandler, mockHtmlHandler, mockJsHandler } = vi.hoisted((
 })
 
 vi.mock('@tailwindcss-mangle/core', () => {
-  const Context = vi.fn(function ContextMock() {
+  const Context = vi.fn(() => {
     return mockCtx
   })
   return {
@@ -36,8 +38,6 @@ vi.mock('@tailwindcss-mangle/core', () => {
     jsHandler: mockJsHandler,
   }
 })
-
-import { Context } from '@tailwindcss-mangle/core'
 
 function getLatestCtx() {
   return (Context as unknown as Mock).mock.results.at(-1)?.value ?? mockCtx
@@ -105,9 +105,11 @@ function createFakeCompiler() {
           constructor(code: string) {
             this.code = code
           }
+
           toString() {
             return this.code
           }
+
           source() {
             return this.code
           }

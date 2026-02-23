@@ -1,6 +1,6 @@
-import path from 'pathe'
-import fs from 'fs-extra'
 import { pathToFileURL } from 'node:url'
+import fs from 'fs-extra'
+import path from 'pathe'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 let mod: any

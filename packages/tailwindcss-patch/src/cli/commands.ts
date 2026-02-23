@@ -8,24 +8,25 @@ import type {
   TailwindTokenLocation,
   TailwindTokenReport,
 } from '../types'
-import process from 'node:process'
+import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
 
+import process from 'node:process'
 import { CONFIG_NAME, getConfig, initConfig } from '@tailwindcss-mangle/config'
 import { defu } from '@tailwindcss-mangle/shared'
 import cac from 'cac'
 import fs from 'fs-extra'
-import path from 'pathe'
 
+import path from 'pathe'
 import { TailwindcssPatcher } from '../api/tailwindcss-patcher'
-import {
-  migrateConfigFiles,
-  restoreConfigFiles,
-  type ConfigFileMigrationReport,
-  type RestoreConfigFilesResult,
-} from './migrate-config'
 import { groupTokensByFile } from '../extraction/candidate-extractor'
 import logger from '../logger'
 import { fromLegacyOptions, fromUnifiedConfig } from '../options/legacy'
+import {
+
+  migrateConfigFiles,
+  restoreConfigFiles,
+
+} from './migrate-config'
 
 export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'validate' | 'status'
 

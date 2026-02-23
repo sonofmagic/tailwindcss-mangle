@@ -119,19 +119,19 @@ The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Le
 
 ### Migrate options
 
-| Flag             | Description                                                                  |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `--cwd <dir>`    | Working directory used to locate config files.                               |
-| `--config <file>`| Migrate only one specific config file path.                                  |
-| `--workspace`    | Recursively scan the workspace for supported config filenames.               |
-| `--max-depth <n>`| Maximum recursion depth for `--workspace` mode (default: `6`).               |
-| `--include <glob>` | Only migrate files matching this glob pattern (repeatable).                |
-| `--exclude <glob>` | Skip files matching this glob pattern (repeatable).                        |
+| Flag                   | Description                                                           |
+| ---------------------- | --------------------------------------------------------------------- |
+| `--cwd <dir>`          | Working directory used to locate config files.                        |
+| `--config <file>`      | Migrate only one specific config file path.                           |
+| `--workspace`          | Recursively scan the workspace for supported config filenames.        |
+| `--max-depth <n>`      | Maximum recursion depth for `--workspace` mode (default: `6`).        |
+| `--include <glob>`     | Only migrate files matching this glob pattern (repeatable).           |
+| `--exclude <glob>`     | Skip files matching this glob pattern (repeatable).                   |
 | `--report-file <file>` | Write the migration report JSON to this file.                         |
-| `--backup-dir <dir>` | Store pre-migration file backups in this directory.                     |
-| `--check`        | Check mode for CI. Exits with an error if files still need migration.        |
-| `--json`         | Print the migration report as JSON.                                           |
-| `--dry-run`      | Preview planned changes without writing files.                               |
+| `--backup-dir <dir>`   | Store pre-migration file backups in this directory.                   |
+| `--check`              | Check mode for CI. Exits with an error if files still need migration. |
+| `--json`               | Print the migration report as JSON.                                   |
+| `--dry-run`            | Preview planned changes without writing files.                        |
 
 `tw-patch migrate` scans `tailwindcss-patch.config.*` and `tailwindcss-mangle.config.*` in the target directory. With `--workspace`, it recursively scans sub-projects (excluding folders like `node_modules`, `.git`, and `dist`). Use `--include` / `--exclude` to control monorepo scanning ranges. It rewrites deprecated keys (for example `registry.output` -> `registry.extract`, `registry.tailwind` -> `registry.tailwindcss`) and prints a per-file change summary.
 
@@ -141,25 +141,25 @@ Migration reports now include envelope metadata: `reportKind`, `schemaVersion`, 
 
 ### Restore options
 
-| Flag                  | Description                                                       |
-| --------------------- | ----------------------------------------------------------------- |
-| `--cwd <dir>`         | Working directory used to resolve report and target paths.        |
-| `--report-file <file>`| Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
-| `--dry-run`           | Preview restore targets without writing files.                    |
-| `--strict`            | Fail when any backup file in the report is missing.               |
-| `--json`              | Print restore summary as JSON.                                    |
+| Flag                   | Description                                                               |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `--cwd <dir>`          | Working directory used to resolve report and target paths.                |
+| `--report-file <file>` | Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
+| `--dry-run`            | Preview restore targets without writing files.                            |
+| `--strict`             | Fail when any backup file in the report is missing.                       |
+| `--json`               | Print restore summary as JSON.                                            |
 
 `tw-patch restore` validates report schema metadata when available. Reports with unsupported `reportKind` or newer `schemaVersion` are rejected to avoid unsafe restores. Legacy reports without metadata are still supported.
 With `--json`, restore output includes `reportKind` / `reportSchemaVersion` when report metadata is present.
 
 ### Validate options
 
-| Flag                  | Description                                                       |
-| --------------------- | ----------------------------------------------------------------- |
-| `--cwd <dir>`         | Working directory used to resolve report paths.                   |
-| `--report-file <file>`| Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
-| `--strict`            | Fail when any backup file in the report is missing.               |
-| `--json`              | Print validation result as JSON.                                  |
+| Flag                   | Description                                                               |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `--cwd <dir>`          | Working directory used to resolve report paths.                           |
+| `--report-file <file>` | Migration report file path (defaults to `.tw-patch/migrate-report.json`). |
+| `--strict`             | Fail when any backup file in the report is missing.                       |
+| `--json`               | Print validation result as JSON.                                          |
 
 `tw-patch validate` performs migration report compatibility checks without writing restored files. It runs report schema validation and scans backup references in dry-run mode.
 On failure, validate uses dedicated exit codes for CI:
@@ -196,6 +196,7 @@ esac
 ```
 
 GitHub Actions templates:
+
 - single job: `packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml`
 - monorepo matrix shards (`root/apps/packages`): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml`
 - monorepo affected shards (PR diff-aware): `packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml`
@@ -214,30 +215,30 @@ This lets you choose between action-managed setup or workflow-managed setup depe
 ### CI copy checklist
 
 1. Pick one workflow template based on your repository shape:
-`validate-migration-report.yml` (single job), `validate-migration-report-matrix.yml` (fixed shards), or `validate-migration-report-affected.yml` (PR diff-aware shards).
+   `validate-migration-report.yml` (single job), `validate-migration-report-matrix.yml` (fixed shards), or `validate-migration-report-affected.yml` (PR diff-aware shards).
 2. Always copy the shared composite action:
-`packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`.
+   `packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml`.
 3. If you use the affected-shards template, also copy:
-`packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`,
-`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`,
-`packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`.
+   `packages/tailwindcss-patch/examples/github-actions/scripts/resolve-shards.mjs`,
+   `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.schema.json`,
+   `packages/tailwindcss-patch/examples/github-actions/resolve-shards-result.dispatch.snapshot.json`.
 4. If your workspace paths differ from defaults, add `.tw-patch/ci-shards.json` (based on `ci-shards.example.json`) and adjust shard patterns/report files.
 5. Confirm the composite action inputs match your runner setup:
-action-managed setup (`setup-pnpm/setup-node/install-deps`) or pre-provisioned setup (`false` + custom install command).
+   action-managed setup (`setup-pnpm/setup-node/install-deps`) or pre-provisioned setup (`false` + custom install command).
 6. Keep `permissions.contents: read` and ensure `pnpm-lock.yaml` path matches `cache-dependency-path`.
 
 ### CI troubleshooting
 
 - `uses: ./.../validate-migration-report` not found:
-the workflow references a local action path; copy the action directory with the workflow file.
+  the workflow references a local action path; copy the action directory with the workflow file.
 - `No affected shards for migration report validation.` in PR:
-either files are outside configured shard patterns or base diff resolution returned empty; verify `.tw-patch/ci-shards.json` and PR base branch.
+  either files are outside configured shard patterns or base diff resolution returned empty; verify `.tw-patch/ci-shards.json` and PR base branch.
 - `Unknown scope` in composite action:
-`scope` currently accepts only `all`, `root`, `apps`, `packages` unless you customize action logic.
+  `scope` currently accepts only `all`, `root`, `apps`, `packages` unless you customize action logic.
 - `validate` exits `21/22/23`:
-`21` incompatible report schema/kind, `22` missing backups under `--strict`, `23` report/backup I/O failure.
+  `21` incompatible report schema/kind, `22` missing backups under `--strict`, `23` report/backup I/O failure.
 - Resolver snapshot diff failure in `workflow-lint`:
-you changed resolver contract behavior; update both schema/snapshot fixtures and corresponding tests in one commit.
+  you changed resolver contract behavior; update both schema/snapshot fixtures and corresponding tests in one commit.
 
 ### Token report options
 
@@ -300,6 +301,7 @@ The constructor accepts either the new object shown above or historical shapes. 
 Deprecated fields kept temporarily (to be removed in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
 
 Migration mapping:
+
 - `cwd` -> `projectRoot`
 - `overwrite` -> `apply.overwrite`
 - `tailwind` -> `tailwindcss`

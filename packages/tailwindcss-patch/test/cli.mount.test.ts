@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
-import { mountTailwindcssPatchCommands, ValidateCommandError, VALIDATE_EXIT_CODES } from '../src/cli/commands'
+import { mountTailwindcssPatchCommands, VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/cli/commands'
 import logger from '../src/logger'
 
 const patcherInstances: any[] = []

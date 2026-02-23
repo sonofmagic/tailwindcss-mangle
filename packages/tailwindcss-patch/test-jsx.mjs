@@ -6,7 +6,8 @@ console.log('Testing without jsx plugin:')
 try {
   const ast1 = parse(code, { sourceType: 'module' })
   console.log('✓ Parsed without jsx plugin')
-} catch (e) {
+}
+catch (e) {
   console.log('✗ Failed:', e.code || e.message.split('\n')[0])
 }
 
@@ -15,6 +16,7 @@ try {
   const ast2 = parse(code, { sourceType: 'module', plugins: ['jsx'] })
   console.log('✓ Parsed with jsx plugin')
   console.log('AST type:', ast2.program.body[0].type)
-} catch (e) {
+}
+catch (e) {
   console.log('✗ Failed:', e.code || e.message.split('\n')[0])
 }

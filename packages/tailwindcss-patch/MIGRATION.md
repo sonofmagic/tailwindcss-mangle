@@ -72,6 +72,7 @@ Both shapes are accepted. When the constructor detects `patch`/`cache` keys it a
 Deprecated fields (planned removal in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
 
 Migration mapping:
+
 - `cwd` -> `projectRoot`
 - `overwrite` -> `apply.overwrite`
 - `tailwind` -> `tailwindcss`

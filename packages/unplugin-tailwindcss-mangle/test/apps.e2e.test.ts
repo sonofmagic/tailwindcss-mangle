@@ -17,7 +17,7 @@ interface AppE2ECase {
 }
 
 const repoRoot = path.resolve(__dirname, '../../..')
-const runAppsE2E = process.env['TWM_APPS_E2E'] === '1'
+const runAppsE2E = process.env.TWM_APPS_E2E === '1'
 const cases: AppE2ECase[] = [
   {
     name: 'vite-vue',

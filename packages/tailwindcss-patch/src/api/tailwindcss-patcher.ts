@@ -5,8 +5,8 @@ import type { NormalizedTailwindcssPatchOptions } from '../options/types'
 import type {
   CacheClearOptions,
   CacheClearResult,
-  CacheReadMeta,
   CacheContextMetadata,
+  CacheReadMeta,
   ExtractResult,
   TailwindcssPatchOptions,
   TailwindTokenByFileMap,
@@ -18,8 +18,8 @@ import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
 import path from 'pathe'
 import { coerce } from 'semver'
-import { CacheStore } from '../cache/store'
 import { createCacheContextDescriptor } from '../cache/context'
+import { CacheStore } from '../cache/store'
 import {
   extractValidCandidates as extractCandidates,
   extractProjectCandidatesWithPositions,
@@ -96,6 +96,7 @@ export class TailwindcssPatcher {
     fingerprint: string
     metadata: CacheContextMetadata
   }
+
   private readonly cacheStore: CacheStore
 
   constructor(options: TailwindcssPatcherInitOptions = {}) {

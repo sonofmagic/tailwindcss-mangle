@@ -17,10 +17,10 @@ export interface TransformerMappingEntry {
   usedBy: string[]
 }
 
-export type TransformerMappingOption =
-  | boolean
-  | TransformerMappingConfig
-  | ((entries: TransformerMappingEntry[]) => void)
+export type TransformerMappingOption
+  = | boolean
+    | TransformerMappingConfig
+    | ((entries: TransformerMappingEntry[]) => void)
 
 export interface TransformerRegistryOptions {
   file?: string

@@ -1,12 +1,13 @@
 import fs from 'node:fs'
 import path from 'pathe'
+
 export function getTestCase(caseName: string) {
   return fs.readFileSync(path.resolve(__dirname, '../fixtures', caseName), 'utf8')
 }
 type RawSource = string | { raw: string, extension?: string }
 
 function escapeClassName(value: string) {
-  return value.replace(/([^a-zA-Z0-9_-])/g, '\\$1')
+  return value.replace(/([^\w-])/g, '\\$1')
 }
 
 function extractClassTokens(source: string) {

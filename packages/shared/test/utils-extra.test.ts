@@ -40,8 +40,8 @@ describe('shared utils', () => {
   it('groups items and validates input types', () => {
     const grouped = groupBy(['a', 'b', 'aa'], value => String(value.length))
     expect(grouped).toEqual({
-      '1': ['a', 'b'],
-      '2': ['aa'],
+      1: ['a', 'b'],
+      2: ['aa'],
     })
 
     expect(() => groupBy('nope' as unknown as string[], () => 'x')).toThrowError(TypeError)

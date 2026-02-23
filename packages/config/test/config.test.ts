@@ -1,5 +1,5 @@
-import fs from 'fs-extra'
 import os from 'node:os'
+import fs from 'fs-extra'
 import path from 'pathe'
 import { defineConfig, getConfig, initConfig } from '@/config'
 import { getDefaultUserConfig } from '@/defaults'

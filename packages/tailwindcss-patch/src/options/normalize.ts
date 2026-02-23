@@ -9,9 +9,9 @@ import type {
   NormalizedTailwindcssPatchOptions,
   NormalizedTailwindV4Options,
   PatchApplyUserOptions,
+  TailwindcssPatchOptions,
   TailwindcssUserOptions,
   TailwindExtractionUserOptions,
-  TailwindcssPatchOptions,
   TailwindV4RuntimeUserOptions,
 } from './types'
 import process from 'node:process'

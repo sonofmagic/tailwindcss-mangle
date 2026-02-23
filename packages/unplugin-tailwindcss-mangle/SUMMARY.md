@@ -32,15 +32,15 @@ src/
 
 ## 核心依赖
 
-| 依赖包 | 用途 |
-|--------|------|
-| `@tailwindcss-mangle/core` | 提供 `cssHandler`、`jsHandler`、`htmlHandler` 转换引擎和 `Context` 类 |
-| `@tailwindcss-mangle/config` | 配置管理 |
-| `@tailwindcss-mangle/shared` | 共享工具和默认过滤器 |
-| `unplugin` | 跨构建工具插件框架 |
-| `@rollup/pluginutils` | Rollup 插件工具（文件过滤） |
-| `magic-string` | 字符串操作工具 |
-| `is-css-request` | CSS 请求检测 |
+| 依赖包                       | 用途                                                                  |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `@tailwindcss-mangle/core`   | 提供 `cssHandler`、`jsHandler`、`htmlHandler` 转换引擎和 `Context` 类 |
+| `@tailwindcss-mangle/config` | 配置管理                                                              |
+| `@tailwindcss-mangle/shared` | 共享工具和默认过滤器                                                  |
+| `unplugin`                   | 跨构建工具插件框架                                                    |
+| `@rollup/pluginutils`        | Rollup 插件工具（文件过滤）                                           |
+| `magic-string`               | 字符串操作工具                                                        |
+| `is-css-request`             | CSS 请求检测                                                          |
 
 ## 文件处理流程
 
@@ -55,13 +55,13 @@ src/
 
 ## 各构建工具集成特点
 
-| 工具 | 集成方式 |
-|------|----------|
-| **Vite** | `transformInclude` + `transform` + `transformIndexHtml` |
+| 工具        | 集成方式                                                     |
+| ----------- | ------------------------------------------------------------ |
+| **Vite**    | `transformInclude` + `transform` + `transformIndexHtml`      |
 | **Webpack** | 注入自定义 loader（在 postcss-loader 之前）+ `processAssets` |
-| **Rollup** | unplugin 自动适配 |
-| **ESBuild** | unplugin 自动适配 |
-| **Nuxt** | 作为模块集成，需设置 `experimental.inlineSSRStyles: false` |
+| **Rollup**  | unplugin 自动适配                                            |
+| **ESBuild** | unplugin 自动适配                                            |
+| **Nuxt**    | 作为模块集成，需设置 `experimental.inlineSSRStyles: false`   |
 
 ## 关键设计特点
 
@@ -76,12 +76,12 @@ src/
 
 ```json
 {
-  ".": "./dist/index.js",           // 主入口
-  "./vite": "./dist/vite.js",       // Vite 专用入口
+  ".": "./dist/index.js", // 主入口
+  "./vite": "./dist/vite.js", // Vite 专用入口
   "./webpack": "./dist/webpack.js", // Webpack 专用入口
-  "./rollup": "./dist/rollup.js",   // Rollup 专用入口
+  "./rollup": "./dist/rollup.js", // Rollup 专用入口
   "./esbuild": "./dist/esbuild.js", // ESBuild 专用入口
-  "./nuxt": "./dist/nuxt.js"        // Nuxt 专用入口
+  "./nuxt": "./dist/nuxt.js" // Nuxt 专用入口
 }
 ```
 

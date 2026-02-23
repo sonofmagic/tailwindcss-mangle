@@ -586,5 +586,4 @@ describe('TailwindcssPatcher', () => {
       stripAbsolutePaths: true,
     })
   })
-
 })

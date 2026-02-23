@@ -99,7 +99,7 @@ export class Context {
     const { config, cwd: configCwd } = await getConfig(cwd)
     this.configRoot = configCwd ?? cwd ?? process.cwd()
 
-    let normalizedTransformer = transformerOptions
+    const normalizedTransformer = transformerOptions
       ? { ...transformerOptions, registry: { ...transformerOptions.registry } }
       : undefined
 

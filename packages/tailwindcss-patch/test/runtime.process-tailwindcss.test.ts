@@ -3,6 +3,8 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { runTailwindBuild } from '@/runtime/process-tailwindcss'
+
 const { loadConfigMock } = vi.hoisted(() => ({
   loadConfigMock: vi.fn(),
 }))
@@ -12,8 +14,6 @@ vi.mock('tailwindcss-config', () => {
     loadConfig: loadConfigMock,
   }
 })
-
-import { runTailwindBuild } from '@/runtime/process-tailwindcss'
 
 let tempDir: string
 let pluginPath: string

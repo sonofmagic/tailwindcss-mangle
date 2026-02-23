@@ -1,7 +1,7 @@
 import type { TransformerOptions } from '@tailwindcss-mangle/config'
 import type { UnpluginFactory } from 'unplugin'
 import { createFilter } from '@rollup/pluginutils'
-import { Context, cssHandler, htmlHandler, jsHandler, vueHandler, svelteHandler } from '@tailwindcss-mangle/core'
+import { Context, cssHandler, htmlHandler, jsHandler, svelteHandler, vueHandler } from '@tailwindcss-mangle/core'
 import { isCSSRequest } from 'is-css-request'
 import path from 'pathe'
 import { getGroupedEntries } from '@/utils'
@@ -23,7 +23,7 @@ function normalizeLang(rawLang: string | null) {
 }
 
 function isLikelyMarkup(code: string) {
-  return /<([a-zA-Z][\w:-]*)(?:\s|>)/.test(code)
+  return /<([a-z][\w:-]*)(?:\s|>)/i.test(code)
 }
 
 function isHtmlFileRequest(id: string) {

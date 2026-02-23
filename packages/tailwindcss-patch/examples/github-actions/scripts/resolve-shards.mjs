@@ -1,5 +1,5 @@
-import fs from 'node:fs'
 import { execFileSync } from 'node:child_process'
+import fs from 'node:fs'
 import { pathToFileURL } from 'node:url'
 
 export const RESOLVE_SHARDS_RESULT_SCHEMA_VERSION = 1
@@ -46,20 +46,20 @@ export function normalizeShardConfig(value) {
   }
 
   const runAllPatterns = Array.isArray(value.runAllPatterns)
-    ? value.runAllPatterns.filter((p) => typeof p === 'string' && p.length > 0)
+    ? value.runAllPatterns.filter(p => typeof p === 'string' && p.length > 0)
     : fallback.runAllPatterns
 
   const shards = Array.isArray(value.shards)
     ? value.shards
-        .filter((s) => s && typeof s === 'object')
-        .map((s) => ({
+        .filter(s => s && typeof s === 'object')
+        .map(s => ({
           name: typeof s.name === 'string' ? s.name : '',
           reportFile: typeof s.reportFile === 'string' ? s.reportFile : '',
           matchPatterns: Array.isArray(s.matchPatterns)
-            ? s.matchPatterns.filter((p) => typeof p === 'string' && p.length > 0)
+            ? s.matchPatterns.filter(p => typeof p === 'string' && p.length > 0)
             : [],
         }))
-        .filter((s) => s.name && s.reportFile && s.matchPatterns.length > 0)
+        .filter(s => s.name && s.reportFile && s.matchPatterns.length > 0)
     : fallback.shards
 
   if (shards.length === 0) {
@@ -80,7 +80,8 @@ export function loadShardConfig(configPath, io = fs, logger = console) {
     const parsed = JSON.parse(io.readFileSync(configPath, 'utf8'))
     logger.log(`::notice::Loaded shard config from ${configPath}`)
     return normalizeShardConfig(parsed)
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     logger.log(`::warning::Invalid ${configPath}, fallback to defaults: ${message}`)
     return cloneDefaultConfig()
@@ -98,14 +99,14 @@ export function globToRegExp(pattern) {
 }
 
 export function matchesAny(filePath, patterns) {
-  return patterns.some((pattern) => globToRegExp(pattern).test(filePath))
+  return patterns.some(pattern => globToRegExp(pattern).test(filePath))
 }
 
 function toMatrix(config, names) {
   const selected = new Set(names)
   return config.shards
-    .filter((shard) => selected.has(shard.name))
-    .map((shard) => ({ name: shard.name, report_file: shard.reportFile }))
+    .filter(shard => selected.has(shard.name))
+    .map(shard => ({ name: shard.name, report_file: shard.reportFile }))
 }
 
 function payload(config, names, hasChanges) {
@@ -117,19 +118,19 @@ function payload(config, names, hasChanges) {
 }
 
 export function computeShardSelection(changedFiles, config) {
-  const files = changedFiles.map((file) => file.trim()).filter(Boolean)
+  const files = changedFiles.map(file => file.trim()).filter(Boolean)
   if (files.length === 0) {
     return payload(config, [], false)
   }
 
-  const allNames = config.shards.map((s) => s.name)
-  if (files.some((file) => matchesAny(file, config.runAllPatterns))) {
+  const allNames = config.shards.map(s => s.name)
+  if (files.some(file => matchesAny(file, config.runAllPatterns))) {
     return payload(config, allNames, true)
   }
 
   const matchedNames = config.shards
-    .filter((shard) => files.some((file) => matchesAny(file, shard.matchPatterns)))
-    .map((shard) => shard.name)
+    .filter(shard => files.some(file => matchesAny(file, shard.matchPatterns)))
+    .map(shard => shard.name)
 
   if (matchedNames.length === 0) {
     return payload(config, [], false)
@@ -150,7 +151,7 @@ export function resolveShardsFromGit(params) {
     logger = console,
   } = params
 
-  const allNames = config.shards.map((s) => s.name)
+  const allNames = config.shards.map(s => s.name)
   if (eventName === 'workflow_dispatch') {
     logger.log('::notice::workflow_dispatch => run all shards')
     return payload(config, allNames, true)
@@ -161,7 +162,8 @@ export function resolveShardsFromGit(params) {
     try {
       base = runGit(['merge-base', 'HEAD', `origin/${baseRef}`])
       logger.log(`::notice::Fallback base resolved by merge-base: ${base}`)
-    } catch {
+    }
+    catch {
       logger.log('::warning::Unable to resolve PR base by merge-base, run all shards')
       return payload(config, allNames, true)
     }
@@ -176,9 +178,10 @@ export function resolveShardsFromGit(params) {
   try {
     changedFiles = runGit(['diff', '--name-only', base, headSha])
       .split('\n')
-      .map((line) => line.trim())
+      .map(line => line.trim())
       .filter(Boolean)
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     logger.log(`::warning::git diff failed (${message}), run all shards`)
     return payload(config, allNames, true)
@@ -221,7 +224,8 @@ function defaultHasCommit(sha) {
   try {
     execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], { stdio: 'ignore' })
     return true
-  } catch {
+  }
+  catch {
     return false
   }
 }
@@ -253,7 +257,8 @@ export function main(env = process.env, io = fs, logger = console) {
   const lines = toGithubOutputLines(result)
   if (env.GITHUB_OUTPUT) {
     io.appendFileSync(env.GITHUB_OUTPUT, `${lines}\n`)
-  } else {
+  }
+  else {
     logger.log(lines)
   }
   return result
@@ -262,7 +267,8 @@ export function main(env = process.env, io = fs, logger = console) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     main()
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.stack || error.message : String(error)
     console.error(`::error::resolve-shards failed: ${message}`)
     process.exit(1)

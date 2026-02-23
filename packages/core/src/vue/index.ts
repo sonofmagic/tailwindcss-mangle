@@ -1,8 +1,8 @@
 import type { IHandlerTransformResult, IJsHandlerOptions } from '../types'
-import { jsHandler } from '../js'
-import { cssHandler } from '../css'
 import { compileTemplate, parse } from '@vue/compiler-sfc'
 import MagicString from 'magic-string'
+import { cssHandler } from '../css'
+import { jsHandler } from '../js'
 import { makeRegex, splitCode } from '../shared'
 
 interface IVueHandlerOptions extends IJsHandlerOptions {
@@ -11,7 +11,7 @@ interface IVueHandlerOptions extends IJsHandlerOptions {
 
 export async function vueHandler(
   rawSource: string,
-  options: IVueHandlerOptions
+  options: IVueHandlerOptions,
 ): Promise<IHandlerTransformResult> {
   const { ctx, id } = options
   const ms = new MagicString(rawSource)
@@ -53,7 +53,7 @@ async function processTemplate(
   template: any,
   ms: MagicString,
   ctx: any,
-  id?: string
+  id?: string,
 ): Promise<void> {
   const { replaceMap, classGenerator } = ctx
 
@@ -62,7 +62,7 @@ async function processTemplate(
       const compiled = compileTemplate({
         source: template.content,
         filename: id || 'unknown.vue',
-        id: (id || 'unknown') + '?template',
+        id: `${id || 'unknown'}?template`,
       })
       // If compilation succeeds, process the original template content
       // using a string-based approach for class attributes
@@ -126,14 +126,14 @@ async function processScript(
   descriptor: any,
   ms: MagicString,
   ctx: any,
-  id?: string
+  id?: string,
 ): Promise<void> {
   const script = descriptor.scriptSetup || descriptor.script
-  if (!script) return
+  if (!script) { return }
 
   const scriptContent = ms.original.slice(
     script.loc.start.offset,
-    script.loc.end.offset
+    script.loc.end.offset,
   )
 
   const jsHandlerOptions = id === undefined ? { ctx } : { ctx, id }
@@ -142,7 +142,7 @@ async function processScript(
     ms.update(
       script.loc.start.offset,
       script.loc.end.offset,
-      result.code
+      result.code,
     )
   }
 }
@@ -151,12 +151,12 @@ async function processStyles(
   styles: any[],
   ms: MagicString,
   ctx: any,
-  id?: string
+  id?: string,
 ): Promise<void> {
   for (const style of styles) {
     const styleContent = ms.original.slice(
       style.loc.start.offset,
-      style.loc.end.offset
+      style.loc.end.offset,
     )
 
     const cssHandlerOptions = id === undefined
@@ -168,7 +168,7 @@ async function processStyles(
       ms.update(
         style.loc.start.offset,
         style.loc.end.offset,
-        result.code
+        result.code,
       )
     }
   }
