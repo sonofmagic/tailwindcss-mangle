@@ -2,7 +2,7 @@ import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it, vi } from 'vitest'
-import { migrateConfigFiles, migrateConfigSource, restoreConfigFiles } from '../src/cli/migrate-config'
+import { migrateConfigFiles, migrateConfigSource, restoreConfigFiles } from '../src/commands/migrate-config'
 
 describe('migrateConfigSource', () => {
   it('migrates registry legacy keys to modern shape', () => {

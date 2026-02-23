@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TailwindcssPatcher } from '../src/api/tailwindcss-patcher'
-import { mountTailwindcssPatchCommands, VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/cli/commands'
+import { mountTailwindcssPatchCommands, VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/commands/cli'
 import logger from '../src/logger'
 
 const patcherInstances: any[] = []
@@ -116,7 +116,7 @@ vi.mock('../src/logger', () => {
   }
 })
 
-vi.mock('../src/cli/migrate-config', () => {
+vi.mock('../src/commands/migrate-config', () => {
   return {
     migrateConfigFiles: migrateConfigFilesMock,
     restoreConfigFiles: restoreConfigFilesMock,

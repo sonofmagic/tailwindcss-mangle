@@ -1,5 +1,5 @@
 import type { CAC, Command } from 'cac'
-import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from '../cli/migrate-config'
+import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
 import type { TailwindcssConfigResult } from '../config/workspace'
 import type {
   ExtractResult,
@@ -16,15 +16,13 @@ import fs from 'fs-extra'
 
 import path from 'pathe'
 import { TailwindcssPatcher } from '../api/tailwindcss-patcher'
-import {
-
-  migrateConfigFiles,
-  restoreConfigFiles,
-
-} from '../cli/migrate-config'
 import { loadPatchOptionsForWorkspace, loadWorkspaceConfigModule } from '../config/workspace'
 import { groupTokensByFile } from '../extraction/candidate-extractor'
 import logger from '../logger'
+import {
+  migrateConfigFiles,
+  restoreConfigFiles,
+} from './migrate-config'
 
 export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'validate' | 'status'
 
