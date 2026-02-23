@@ -109,6 +109,12 @@ export interface TailwindcssPatchCommandContext<TCommand extends TailwindcssPatc
   createPatcher: (overrides?: TailwindcssPatchOptions) => Promise<import('../api/tailwindcss-patcher').TailwindcssPatcher>
 }
 
+export type TailwindcssPatchCommandDefaultHandlerMap = {
+  [K in TailwindcssPatchCommand]: (
+    context: TailwindcssPatchCommandContext<K>,
+  ) => Promise<TailwindcssPatchCommandResultMap[K]>
+}
+
 export type TailwindcssPatchCommandHandler<TCommand extends TailwindcssPatchCommand> = (
   context: TailwindcssPatchCommandContext<TCommand>,
   next: () => Promise<TailwindcssPatchCommandResultMap[TCommand]>,

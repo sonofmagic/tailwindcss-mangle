@@ -1,4 +1,4 @@
-import type { TailwindcssPatchCommand, TailwindcssPatchCommandContext, TailwindcssPatchCommandResultMap } from './types'
+import type { TailwindcssPatchCommandDefaultHandlerMap } from './types'
 
 import {
   extractCommandDefaultHandler,
@@ -13,11 +13,7 @@ import {
 } from './migration-handlers'
 import { statusCommandDefaultHandler } from './status-handler'
 
-export const defaultCommandHandlers: {
-  [K in TailwindcssPatchCommand]: (
-    context: TailwindcssPatchCommandContext<K>,
-  ) => Promise<TailwindcssPatchCommandResultMap[K]>
-} = {
+export const defaultCommandHandlers = {
   install: installCommandDefaultHandler,
   extract: extractCommandDefaultHandler,
   tokens: tokensCommandDefaultHandler,
@@ -26,4 +22,4 @@ export const defaultCommandHandlers: {
   restore: restoreCommandDefaultHandler,
   validate: validateCommandDefaultHandler,
   status: statusCommandDefaultHandler,
-}
+} satisfies TailwindcssPatchCommandDefaultHandlerMap
