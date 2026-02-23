@@ -1,9 +1,9 @@
 import type { createDefineConfig, ResolvedConfig } from 'c12'
-import type { TailwindcssMangleConfig } from './types.ts'
+import type { TailwindcssMangleConfig } from './types'
 import fs from 'fs-extra'
 import path from 'pathe'
-import { CONFIG_NAME } from './constants.ts'
-import { getDefaultUserConfig } from './defaults.ts'
+import { CONFIG_NAME } from './constants'
+import { getDefaultUserConfig } from './defaults'
 
 type DefineConfig = ReturnType<typeof createDefineConfig<TailwindcssMangleConfig>>
 

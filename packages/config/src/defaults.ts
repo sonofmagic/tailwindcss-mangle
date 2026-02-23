@@ -1,4 +1,4 @@
-import type { RegistryOptions, TailwindcssMangleConfig, TransformerOptions } from './types.ts'
+import type { RegistryOptions, TailwindcssMangleConfig, TransformerOptions } from './types'
 import process from 'node:process'
 import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
 import { CSS_LANGS_RE } from 'is-css-request'

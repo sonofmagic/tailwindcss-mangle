@@ -1,6 +1,6 @@
-import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOptions } from './types.ts'
+import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOptions } from './types'
 
-import { acceptChars, regExpTest, stripEscapeSequence } from './utils.ts'
+import { acceptChars, regExpTest, stripEscapeSequence } from './utils'
 
 export class ClassGenerator implements IClassGenerator {
   public newClassMap: Record<string, IClassGeneratorContextItem>
