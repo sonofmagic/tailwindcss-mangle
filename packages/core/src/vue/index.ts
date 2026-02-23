@@ -9,46 +9,6 @@ interface IVueHandlerOptions extends IJsHandlerOptions {
   preserveScoped?: boolean
 }
 
-export async function vueHandler(
-  rawSource: string,
-  options: IVueHandlerOptions,
-): Promise<IHandlerTransformResult> {
-  const { ctx, id } = options
-  const ms = new MagicString(rawSource)
-
-  try {
-    const { descriptor } = parse(rawSource, {
-      filename: id || 'unknown.vue',
-    })
-
-    // Process template section
-    if (descriptor.template) {
-      await processTemplate(descriptor.template, ms, ctx, id)
-    }
-
-    // Process script section
-    if (descriptor.script || descriptor.scriptSetup) {
-      await processScript(descriptor, ms, ctx, id)
-    }
-
-    // Process style sections
-    if (descriptor.styles && descriptor.styles.length > 0) {
-      await processStyles(descriptor.styles, ms, ctx, id)
-    }
-
-    return {
-      code: ms.toString(),
-      get map() {
-        return ms.generateMap()
-      },
-    }
-  }
-  catch (error) {
-    // Fallback to jsHandler if Vue parsing fails
-    return jsHandler(rawSource, options)
-  }
-}
-
 async function processTemplate(
   template: any,
   ms: MagicString,
@@ -59,7 +19,7 @@ async function processTemplate(
 
   if (!template.ast) {
     try {
-      const compiled = compileTemplate({
+      compileTemplate({
         source: template.content,
         filename: id || 'unknown.vue',
         id: `${id || 'unknown'}?template`,
@@ -74,7 +34,6 @@ async function processTemplate(
 
   // Process static class attributes in template
   const classAttrRegex = /\sclass\s*=\s*["']([^"']+)["']/g
-  let match
 
   // We need to search within the template section
   const templateStart = template.loc.start.offset
@@ -83,7 +42,7 @@ async function processTemplate(
 
   const replacements: Array<{ start: number, end: number, value: string }> = []
 
-  while ((match = classAttrRegex.exec(templateContent)) !== null) {
+  for (const match of templateContent.matchAll(classAttrRegex)) {
     const fullMatch = match[0]
     const classValue = match[1]
     if (classValue === undefined) {
@@ -129,7 +88,9 @@ async function processScript(
   id?: string,
 ): Promise<void> {
   const script = descriptor.scriptSetup || descriptor.script
-  if (!script) { return }
+  if (!script) {
+    return
+  }
 
   const scriptContent = ms.original.slice(
     script.loc.start.offset,
@@ -171,5 +132,45 @@ async function processStyles(
         result.code,
       )
     }
+  }
+}
+
+export async function vueHandler(
+  rawSource: string,
+  options: IVueHandlerOptions,
+): Promise<IHandlerTransformResult> {
+  const { ctx, id } = options
+  const ms = new MagicString(rawSource)
+
+  try {
+    const { descriptor } = parse(rawSource, {
+      filename: id || 'unknown.vue',
+    })
+
+    // Process template section
+    if (descriptor.template) {
+      await processTemplate(descriptor.template, ms, ctx, id)
+    }
+
+    // Process script section
+    if (descriptor.script || descriptor.scriptSetup) {
+      await processScript(descriptor, ms, ctx, id)
+    }
+
+    // Process style sections
+    if (descriptor.styles && descriptor.styles.length > 0) {
+      await processStyles(descriptor.styles, ms, ctx, id)
+    }
+
+    return {
+      code: ms.toString(),
+      get map() {
+        return ms.generateMap()
+      },
+    }
+  }
+  catch {
+    // Fallback to jsHandler if Vue parsing fails
+    return jsHandler(rawSource, options)
   }
 }

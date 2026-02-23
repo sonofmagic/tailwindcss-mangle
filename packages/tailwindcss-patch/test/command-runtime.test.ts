@@ -1,6 +1,8 @@
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { runWithCommandHandler } from '../src/commands/command-runtime'
+
 const {
   loadPatchOptionsForWorkspaceMock,
   loadWorkspaceConfigModuleMock,
@@ -31,8 +33,6 @@ vi.mock('../src/api/tailwindcss-patcher', () => {
     TailwindcssPatcher: tailwindcssPatcherCtorMock as any,
   }
 })
-
-import { runWithCommandHandler } from '../src/commands/command-runtime'
 
 describe('command runtime', () => {
   beforeEach(() => {

@@ -52,13 +52,17 @@ export function vueToTsx(code: string) {
     // recursion-free traversal
     while (stack.length > 0) {
       const node = stack.pop()
-      if (!node) { continue }
+      if (!node) {
+        continue
+      }
 
       if (node.type === NodeTypes.ELEMENT) {
         node.props.forEach((element) => {
           rewriteProp(element)
         })
-        for (const child of node.children) { stack.push(child) }
+        for (const child of node.children) {
+          stack.push(child)
+        }
       }
     }
 

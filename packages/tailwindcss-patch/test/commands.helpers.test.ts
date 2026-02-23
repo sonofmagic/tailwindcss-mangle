@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import type { TailwindTokenByFileMap, TailwindTokenLocation } from '../src/types'
+import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_TOKEN_REPORT,
   formatGroupedPreview,

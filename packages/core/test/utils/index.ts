@@ -13,17 +13,15 @@ function escapeClassName(value: string) {
 function extractClassTokens(source: string) {
   const tokens = new Set<string>()
   const attrPattern = /(class|className)=(["'`])([^"'`]+)\2/g
-  let match: RegExpExecArray | null
-  while ((match = attrPattern.exec(source))) {
+  for (const match of source.matchAll(attrPattern)) {
     match[3].split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
   }
 
   const classListPattern = /classList\.add\(([^)]+)\)/g
-  while ((match = classListPattern.exec(source))) {
+  for (const match of source.matchAll(classListPattern)) {
     const inner = match[1]
     const stringPattern = /(["'`])([^"'`]+)\1/g
-    let strMatch: RegExpExecArray | null
-    while ((strMatch = stringPattern.exec(inner))) {
+    for (const strMatch of inner.matchAll(stringPattern)) {
       strMatch[2].split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
     }
   }

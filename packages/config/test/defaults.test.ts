@@ -40,7 +40,7 @@ describe('defaults', () => {
   })
 
   it('getDefaultTransformerConfig reflects NODE_ENV', () => {
-    const originalEnv = process.env['NODE_ENV']
+    const originalEnv = process.env.NODE_ENV
 
     vi.stubEnv('NODE_ENV', 'development')
     expect(getDefaultTransformerConfig().disabled).toBe(true)
@@ -51,10 +51,10 @@ describe('defaults', () => {
     vi.unstubAllEnvs()
 
     if (originalEnv !== undefined) {
-      process.env['NODE_ENV'] = originalEnv
+      process.env.NODE_ENV = originalEnv
     }
     else {
-      delete process.env['NODE_ENV']
+      delete process.env.NODE_ENV
     }
   })
 })

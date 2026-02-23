@@ -1,6 +1,6 @@
 import type { TailwindcssPatchOptions } from '../types'
-import type { TailwindcssPatchCommandContext } from './types'
 import type { TokenGroupKey, TokenOutputFormat } from './token-output'
+import type { TailwindcssPatchCommandContext } from './types'
 
 import process from 'node:process'
 import fs from 'fs-extra'

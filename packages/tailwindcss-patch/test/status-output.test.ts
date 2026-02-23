@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { logStatusReportAsJson, logStatusReportSummary } from '../src/commands/status-output'
+import logger from '../src/logger'
+
 vi.mock('../src/logger', () => {
   return {
     default: {
@@ -11,9 +14,6 @@ vi.mock('../src/logger', () => {
     },
   }
 })
-
-import logger from '../src/logger'
-import { logStatusReportAsJson, logStatusReportSummary } from '../src/commands/status-output'
 
 describe('status output helpers', () => {
   beforeEach(() => {

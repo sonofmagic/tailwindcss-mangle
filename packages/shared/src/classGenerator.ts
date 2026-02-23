@@ -1,5 +1,6 @@
 import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOptions } from './types'
 
+import process from 'node:process'
 import { acceptChars, regExpTest, stripEscapeSequence } from './utils'
 
 export class ClassGenerator implements IClassGenerator {
@@ -84,13 +85,13 @@ export class ClassGenerator implements IClassGenerator {
 
     if (opts.reserveClassName && regExpTest(opts.reserveClassName, newClassName)) {
       if (opts.log) {
-        console.log(`The class name has been reserved. ${newClassName}`)
+        process.stdout.write(`The class name has been reserved. ${newClassName}\n`)
       }
       this.newClassSize++
       return this.generateClassName(original)
     }
     if (opts.log) {
-      console.log(`Minify class name from ${original} to ${newClassName}`)
+      process.stdout.write(`Minify class name from ${original} to ${newClassName}\n`)
     }
     const newClass: IClassGeneratorContextItem = {
       name: newClassName,

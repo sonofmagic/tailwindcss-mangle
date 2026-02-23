@@ -1,5 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import {
+  createMigrationCheckFailureError,
+  logMigrationEntries,
+  logRestoreSummary,
+  logValidateSuccessSummary,
+  writeMigrationReportFile,
+} from '../src/commands/migration-output'
+import logger from '../src/logger'
+
 const { ensureDirMock, writeJSONMock } = vi.hoisted(() => ({
   ensureDirMock: vi.fn(async () => undefined),
   writeJSONMock: vi.fn(async () => undefined),
@@ -25,15 +34,6 @@ vi.mock('../src/logger', () => {
     },
   }
 })
-
-import logger from '../src/logger'
-import {
-  createMigrationCheckFailureError,
-  logMigrationEntries,
-  logRestoreSummary,
-  logValidateSuccessSummary,
-  writeMigrationReportFile,
-} from '../src/commands/migration-output'
 
 describe('migration output helpers', () => {
   beforeEach(() => {

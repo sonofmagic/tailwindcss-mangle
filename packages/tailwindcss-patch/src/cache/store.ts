@@ -308,12 +308,12 @@ export class CacheStore {
       return undefined
     }
 
-    const values = toStringArray(record['values'])
+    const values = toStringArray(record.values)
     if (values.length === 0) {
       return undefined
     }
 
-    const contextRecord = asObject(record['context'])
+    const contextRecord = asObject(record.context)
     if (!contextRecord) {
       return undefined
     }
@@ -361,7 +361,7 @@ export class CacheStore {
         optionsHash,
       },
       values,
-      updatedAt: typeof record['updatedAt'] === 'string' ? record['updatedAt'] : new Date(0).toISOString(),
+      updatedAt: typeof record.updatedAt === 'string' ? record.updatedAt : new Date(0).toISOString(),
     }
 
     return normalized
@@ -380,11 +380,11 @@ export class CacheStore {
       return { kind: 'invalid' }
     }
 
-    if (record['schemaVersion'] !== CACHE_SCHEMA_VERSION) {
+    if (record.schemaVersion !== CACHE_SCHEMA_VERSION) {
       return { kind: 'invalid' }
     }
 
-    const contextsRecord = asObject(record['contexts'])
+    const contextsRecord = asObject(record.contexts)
     if (!contextsRecord) {
       return { kind: 'invalid' }
     }
@@ -406,7 +406,7 @@ export class CacheStore {
       kind: 'v2',
       data: {
         schemaVersion: CACHE_SCHEMA_VERSION,
-        updatedAt: typeof record['updatedAt'] === 'string' ? record['updatedAt'] : new Date(0).toISOString(),
+        updatedAt: typeof record.updatedAt === 'string' ? record.updatedAt : new Date(0).toISOString(),
         contexts,
       },
     }

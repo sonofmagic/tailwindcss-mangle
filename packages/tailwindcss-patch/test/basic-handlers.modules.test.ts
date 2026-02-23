@@ -1,12 +1,12 @@
 import path from 'pathe'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import logger from '../src/logger'
 import {
   extractCommandDefaultHandler,
   initCommandDefaultHandler,
   installCommandDefaultHandler,
   tokensCommandDefaultHandler,
 } from '../src/commands/basic-handlers'
+import logger from '../src/logger'
 
 const {
   patchMock,

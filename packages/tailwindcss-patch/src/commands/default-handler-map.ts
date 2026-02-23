@@ -10,8 +10,8 @@ import {
   migrateCommandDefaultHandler,
 } from './migrate-handler'
 import { restoreCommandDefaultHandler } from './restore-handler'
-import { validateCommandDefaultHandler } from './validate-handler'
 import { statusCommandDefaultHandler } from './status-handler'
+import { validateCommandDefaultHandler } from './validate-handler'
 
 export const defaultCommandHandlers = {
   install: installCommandDefaultHandler,

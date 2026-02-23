@@ -7,34 +7,6 @@ import { makeRegex, splitCode } from '../shared'
 
 interface ISvelteHandlerOptions extends IJsHandlerOptions {}
 
-export async function svelteHandler(
-  rawSource: string,
-  options: ISvelteHandlerOptions,
-): Promise<IHandlerTransformResult> {
-  const { ctx, id } = options
-  const ms = new MagicString(rawSource)
-
-  try {
-    const ast = parse(rawSource, {
-      filename: id || 'unknown.svelte',
-    })
-
-    // Process the AST for class attributes and directives
-    await processSvelteAst(ast, ms, ctx, id)
-
-    return {
-      code: ms.toString(),
-      get map() {
-        return ms.generateMap()
-      },
-    }
-  }
-  catch (error) {
-    // Fallback to jsHandler if Svelte parsing fails
-    return jsHandler(rawSource, options)
-  }
-}
-
 async function processSvelteAst(
   ast: any,
   ms: MagicString,
@@ -46,7 +18,9 @@ async function processSvelteAst(
 
   // Walk the AST and process class-related nodes
   async function walk(node: any) {
-    if (!node) { return }
+    if (!node) {
+      return
+    }
 
     // Handle regular class attributes
     if (node.type === 'Attribute' && node.name === 'class') {
@@ -133,4 +107,32 @@ async function processSvelteAst(
 
   // Wait for all style transformations to complete
   await Promise.all(stylePromises)
+}
+
+export async function svelteHandler(
+  rawSource: string,
+  options: ISvelteHandlerOptions,
+): Promise<IHandlerTransformResult> {
+  const { ctx, id } = options
+  const ms = new MagicString(rawSource)
+
+  try {
+    const ast = parse(rawSource, {
+      filename: id || 'unknown.svelte',
+    })
+
+    // Process the AST for class attributes and directives
+    await processSvelteAst(ast, ms, ctx, id)
+
+    return {
+      code: ms.toString(),
+      get map() {
+        return ms.generateMap()
+      },
+    }
+  }
+  catch {
+    // Fallback to jsHandler if Svelte parsing fails
+    return jsHandler(rawSource, options)
+  }
 }

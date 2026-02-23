@@ -28,7 +28,7 @@ const { mockCtx, mockCssHandler, mockHtmlHandler, mockJsHandler } = vi.hoisted((
 })
 
 vi.mock('@tailwindcss-mangle/core', () => {
-  const Context = vi.fn(function MockContext() {
+  const Context = vi.fn(() => {
     return mockCtx
   })
   return {

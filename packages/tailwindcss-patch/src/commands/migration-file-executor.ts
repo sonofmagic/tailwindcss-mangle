@@ -1,9 +1,9 @@
+import type { ConfigFileMigrationEntry } from './migration-types'
 import fs from 'fs-extra'
-import path from 'pathe'
 
+import path from 'pathe'
 import { migrateConfigSource } from './migration-source'
 import { resolveBackupRelativePath } from './migration-target-files'
-import type { ConfigFileMigrationEntry } from './migration-types'
 
 export type MigrationExecutionEntry = ConfigFileMigrationEntry
 
@@ -22,8 +22,8 @@ export interface ExecuteMigrationFileOptions {
   wroteEntries: MigrationWrittenEntry[]
 }
 
-export type ExecuteMigrationFileResult =
-  | {
+export type ExecuteMigrationFileResult
+  = | {
     missing: true
     changed: false
     wrote: false

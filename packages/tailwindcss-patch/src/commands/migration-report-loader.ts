@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
-
-import { assertMigrationReportCompatibility } from './migration-report'
 import type { RestoreReportEntry } from './migration-file-executor'
+
+import fs from 'fs-extra'
+import { assertMigrationReportCompatibility } from './migration-report'
 
 export interface LoadedMigrationReportForRestore {
   reportKind?: string

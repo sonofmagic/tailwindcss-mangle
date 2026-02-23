@@ -1,10 +1,10 @@
-import os from 'node:os'
+import type { MigrationWrittenEntry } from '../src/commands/migration-file-executor'
 
+import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it, vi } from 'vitest'
 import { executeMigrationFile, restoreConfigEntries } from '../src/commands/migration-file-executor'
-import type { MigrationWrittenEntry } from '../src/commands/migration-file-executor'
 
 describe('executeMigrationFile', () => {
   it('returns changed entry in dry-run mode without writing files', async () => {

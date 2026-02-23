@@ -2,18 +2,17 @@ import type { CAC } from 'cac'
 import type {
   TailwindcssPatchCliMountOptions,
   TailwindcssPatchCliOptions,
-  TailwindcssPatchCommandContext,
 } from './types'
 
 import cac from 'cac'
+import { buildDefaultCommandDefinitions } from './command-definitions'
+import { registerTailwindcssPatchCommand } from './command-registrar'
+import { tailwindcssPatchCommands } from './types'
 import {
   VALIDATE_EXIT_CODES,
   VALIDATE_FAILURE_REASONS,
   ValidateCommandError,
 } from './validate'
-import { buildDefaultCommandDefinitions } from './command-definitions'
-import { registerTailwindcssPatchCommand } from './command-registrar'
-import { tailwindcssPatchCommands } from './types'
 
 export {
   tailwindcssPatchCommands,

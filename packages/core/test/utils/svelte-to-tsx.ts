@@ -1,32 +1,52 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+function extractTagContentsAndRemove(source: string, tagName: string) {
+  const openToken = `<${tagName}`
+  const closeToken = `</${tagName}>`
+  const contents: string[] = []
+  let output = ''
+  let cursor = 0
 
-import MagicString from 'magic-string'
+  while (cursor < source.length) {
+    const openIndex = source.indexOf(openToken, cursor)
+    if (openIndex < 0) {
+      output += source.slice(cursor)
+      break
+    }
 
-/** @see https://github.com/sveltejs/svelte/blob/d3297e2a2595db08c85356d65fd5f953b04a681f/packages/svelte/src/compiler/preprocess/index.js#L255C1-L255C85 */
-const regex_style_tags = /<!--[\s\S]*?-->|<style(\s[\s\S]*?)?(?:>([\s\S]*?)<\/style>|\/>)/gi
+    output += source.slice(cursor, openIndex)
+    const tagEndIndex = source.indexOf('>', openIndex)
+    if (tagEndIndex < 0) {
+      output += source.slice(openIndex)
+      break
+    }
 
-/** @see https://github.com/sveltejs/svelte/blob/d3297e2a2595db08c85356d65fd5f953b04a681f/packages/svelte/src/compiler/preprocess/index.js#L256C1-L256C88 */
-const regex_script_tags = /<!--[\s\S]*?-->|<script(\s[\s\S]*?)?(?:>([\s\S]*?)<\/script>|\/>)/gi
+    const isSelfClosing = source[tagEndIndex - 1] === '/'
+    if (isSelfClosing) {
+      cursor = tagEndIndex + 1
+      continue
+    }
+
+    const closeIndex = source.indexOf(closeToken, tagEndIndex + 1)
+    if (closeIndex < 0) {
+      output += source.slice(openIndex)
+      break
+    }
+
+    contents.push(source.slice(tagEndIndex + 1, closeIndex))
+    cursor = closeIndex + closeToken.length
+  }
+
+  return { contents, source: output }
+}
+
+function removeTagBlocks(source: string, tagName: string) {
+  return extractTagContentsAndRemove(source, tagName).source
+}
 
 export function svelteToTsx(code: string) {
   try {
-    const scripts = []
-    const original = new MagicString(code)
-
-    // Remove script tags & extract script content
-    let match: RegExpExecArray | null
-    while ((match = regex_script_tags.exec(code)) != null) {
-      const [fullMatch, _attributesStr, scriptContent] = match
-      if (scriptContent) {
-        scripts.push(scriptContent)
-        original.remove(match.index, match.index + fullMatch.length)
-      }
-    }
-
-    const templateContent = original.toString().trimStart().replaceAll(regex_style_tags, '').replaceAll(regex_style_tags, '')
-    const transformed = `${scripts.join('')}\nconst render = <div>${templateContent}</div>`
-
-    return transformed.toString().trim()
+    const { contents: scripts, source: withoutScripts } = extractTagContentsAndRemove(code, 'script')
+    const templateContent = removeTagBlocks(withoutScripts, 'style').trimStart()
+    return `${scripts.join('')}\nconst render = <div>${templateContent}</div>`.trim()
   }
   catch {
     return ''

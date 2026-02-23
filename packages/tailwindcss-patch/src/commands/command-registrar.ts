@@ -1,13 +1,13 @@
 import type { CAC } from 'cac'
-import type { TailwindcssPatchCliMountOptions, TailwindcssPatchCommand, TailwindcssPatchCommandArgMap } from './types'
 import type { TailwindcssPatchCommandDefinitions } from './command-definitions'
+import type { TailwindcssPatchCliMountOptions, TailwindcssPatchCommand, TailwindcssPatchCommandArgMap } from './types'
 
-import { runWithCommandHandler } from './command-runtime'
-import { defaultCommandHandlers } from './default-handler-map'
 import {
   applyCommandOptions,
   resolveCommandMetadata,
 } from './command-metadata'
+import { runWithCommandHandler } from './command-runtime'
+import { defaultCommandHandlers } from './default-handler-map'
 
 export function registerTailwindcssPatchCommand<TCommand extends TailwindcssPatchCommand>(
   cli: CAC,

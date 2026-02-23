@@ -174,7 +174,7 @@ export class Context {
       }
     }
     catch (error) {
-      console.error(`[tailwindcss-mangle]: ${error}`)
+      process.stderr.write(`[tailwindcss-mangle]: ${String(error)}\n`)
     }
   }
 }

@@ -1,11 +1,11 @@
 import type { Command } from 'cac'
+import type { TailwindcssPatchCommandDefinitions } from './command-definitions'
 import type {
   TailwindcssPatchCliMountOptions,
   TailwindcssPatchCommand,
   TailwindcssPatchCommandOptionDefinition,
   TailwindcssPatchCommandOptions,
 } from './types'
-import type { TailwindcssPatchCommandDefinitions } from './command-definitions'
 
 function addPrefixIfMissing(value: string, prefix: string) {
   if (!prefix || value.startsWith(prefix)) {

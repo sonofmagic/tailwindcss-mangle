@@ -1,17 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../src/commands/migrate-config', () => ({
-  migrateConfigFiles: vi.fn(),
-  restoreConfigFiles: vi.fn(),
-}))
-
-import logger from '../src/logger'
 import { migrateConfigFiles, restoreConfigFiles } from '../src/commands/migrate-config'
 import { migrateCommandDefaultHandler } from '../src/commands/migrate-handler'
 import { restoreCommandDefaultHandler } from '../src/commands/restore-handler'
 import { statusCommandDefaultHandler } from '../src/commands/status-handler'
-import { validateCommandDefaultHandler } from '../src/commands/validate-handler'
 import { VALIDATE_EXIT_CODES, ValidateCommandError } from '../src/commands/validate'
+import { validateCommandDefaultHandler } from '../src/commands/validate-handler'
+import logger from '../src/logger'
+
+vi.mock('../src/commands/migrate-config', () => ({
+  migrateConfigFiles: vi.fn(),
+  restoreConfigFiles: vi.fn(),
+}))
 
 afterEach(() => {
   vi.restoreAllMocks()

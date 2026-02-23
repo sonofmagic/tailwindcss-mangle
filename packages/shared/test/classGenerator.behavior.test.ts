@@ -44,7 +44,7 @@ describe('ClassGenerator behaviour', () => {
 
     const first = generator.generateClassName('foo')
     expect(first.name).toBe('foo-1')
-    expect(generator.context['foo']).toBe(1)
+    expect(generator.context.foo).toBe(1)
 
     const again = generator.generateClassName('foo')
     expect(again).toBe(first)
