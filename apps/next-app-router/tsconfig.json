@@ -9,6 +9,7 @@
     ],
     "module": "esnext",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": [
         "./*"

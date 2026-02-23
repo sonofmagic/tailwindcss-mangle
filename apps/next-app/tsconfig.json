@@ -9,7 +9,8 @@
       "esnext"
     ],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": [
         "./*"
@@ -22,7 +23,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
