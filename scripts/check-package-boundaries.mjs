@@ -19,7 +19,8 @@ const SOURCE_EXTENSIONS = new Set([
   '.svelte',
 ])
 
-const STATIC_SPECIFIER_RE = /\b(?:import|export)\s+(?:type\s+)?(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g
+const FROM_SPECIFIER_RE = /\bfrom\s*['"]([^'"]+)['"]/g
+const BARE_IMPORT_SPECIFIER_RE = /\bimport\s*['"]([^'"]+)['"]/g
 const DYNAMIC_SPECIFIER_RE = /\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/g
 const REQUIRE_SPECIFIER_RE = /\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g
 const VUE_OR_SVELTE_EXTENSIONS = new Set(['.vue', '.svelte'])
@@ -108,7 +109,7 @@ function isSharedNodeIoSpecifier(specifier) {
 }
 
 function matchesDisallowedSpecifier(specifier, disallowedSpecifiers) {
-  return disallowedSpecifiers.some(disallowed => {
+  return disallowedSpecifiers.some((disallowed) => {
     if (disallowed.endsWith('/')) {
       return specifier.startsWith(disallowed)
     }
@@ -127,16 +128,18 @@ function resolveInternalPackage(specifier, internalPackageNames) {
 
 function extractSpecifiersWithRegex(code) {
   const specifiers = []
-  for (const regex of [STATIC_SPECIFIER_RE, DYNAMIC_SPECIFIER_RE, REQUIRE_SPECIFIER_RE]) {
+  for (const regex of [FROM_SPECIFIER_RE, BARE_IMPORT_SPECIFIER_RE, DYNAMIC_SPECIFIER_RE, REQUIRE_SPECIFIER_RE]) {
     regex.lastIndex = 0
-    let match
-    while ((match = regex.exec(code)) !== null) {
+    let match = regex.exec(code)
+    while (match !== null) {
       const specifier = normalizeSpecifier(match[1] ?? '')
       if (!specifier) {
+        match = regex.exec(code)
         continue
       }
       const line = code.slice(0, match.index).split('\n').length
       specifiers.push({ line, specifier })
+      match = regex.exec(code)
     }
   }
   return specifiers
