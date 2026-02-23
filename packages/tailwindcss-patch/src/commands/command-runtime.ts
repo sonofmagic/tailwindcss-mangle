@@ -32,10 +32,6 @@ function createDefaultRunner<TResult>(factory: () => Promise<TResult>) {
   }
 }
 
-async function loadPatchOptionsForCwd(cwd: string, overrides?: TailwindcssPatchOptions) {
-  return loadPatchOptionsForWorkspace(cwd, overrides)
-}
-
 function createCommandContext<TCommand extends TailwindcssPatchCommand>(
   cli: CAC,
   command: Command,
@@ -43,29 +39,30 @@ function createCommandContext<TCommand extends TailwindcssPatchCommand>(
   args: TailwindcssPatchCommandArgMap[TCommand],
   cwd: string,
 ): TailwindcssPatchCommandContext<TCommand> {
-  let cachedOptions: Promise<TailwindcssPatchOptions> | undefined
-  let cachedPatcher: Promise<TailwindcssPatcher> | undefined
-  let cachedConfig: Promise<TailwindcssConfigResult> | undefined
+  const loadCachedConfig = createDefaultRunner<TailwindcssConfigResult>(() =>
+    loadWorkspaceConfigModule().then(mod => mod.getConfig(cwd)),
+  )
+  const loadCachedPatchOptions = createDefaultRunner<TailwindcssPatchOptions>(() =>
+    loadPatchOptionsForWorkspace(cwd),
+  )
+  const createCachedPatcher = createDefaultRunner<TailwindcssPatcher>(async () => {
+    const patchOptions = await loadCachedPatchOptions()
+    return new TailwindcssPatcher(patchOptions)
+  })
 
   const loadPatchOptionsForContext = (overrides?: TailwindcssPatchOptions) => {
     if (overrides) {
-      return loadPatchOptionsForCwd(cwd, overrides)
+      return loadPatchOptionsForWorkspace(cwd, overrides)
     }
-    if (!cachedOptions) {
-      cachedOptions = loadPatchOptionsForCwd(cwd)
-    }
-    return cachedOptions
+    return loadCachedPatchOptions()
   }
 
   const createPatcherForContext = async (overrides?: TailwindcssPatchOptions) => {
     if (overrides) {
-      const patchOptions = await loadPatchOptionsForCwd(cwd, overrides)
+      const patchOptions = await loadPatchOptionsForWorkspace(cwd, overrides)
       return new TailwindcssPatcher(patchOptions)
     }
-    if (!cachedPatcher) {
-      cachedPatcher = loadPatchOptionsForContext().then(options => new TailwindcssPatcher(options))
-    }
-    return cachedPatcher
+    return createCachedPatcher()
   }
 
   return {
@@ -75,12 +72,7 @@ function createCommandContext<TCommand extends TailwindcssPatchCommand>(
     args,
     cwd,
     logger,
-    loadConfig: () => {
-      if (!cachedConfig) {
-        cachedConfig = loadWorkspaceConfigModule().then(mod => mod.getConfig(cwd))
-      }
-      return cachedConfig
-    },
+    loadConfig: loadCachedConfig,
     loadPatchOptions: loadPatchOptionsForContext,
     createPatcher: createPatcherForContext,
   }
