@@ -192,6 +192,7 @@ Stabilize package boundaries and runtime behavior across workspace install, CI, 
   - Added `src/install/*` bridge modules to consolidate runtime patch/apply/status entrypoints.
   - Updated internal imports to use the new `commands/config/install` layers while keeping public API stable.
   - Validation passed with `pnpm --filter tailwindcss-patch test`, `pnpm check:boundaries`, and `pnpm build`.
+  - Follow-up cleanup: removed source-level `src/cli/*` shim modules after tests and call sites fully migrated to `src/commands/*`.
 - [x] PR4 implemented:
   - Promoted cross-app E2E suites to top-level `e2e/`:
     - `e2e/apps.e2e.shared.ts`
