@@ -34,7 +34,7 @@ const {
 })
 
 vi.mock('@tailwindcss-mangle/core', () => {
-  const Context = vi.fn(() => {
+  const Context = vi.fn(function MockContext() {
     return mockCtx
   })
   return {

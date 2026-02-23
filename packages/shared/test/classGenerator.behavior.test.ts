@@ -1,4 +1,5 @@
 import { ClassGenerator } from '@/classGenerator'
+import process from 'node:process'
 
 describe('ClassGenerator behaviour', () => {
   it('respects include/exclude filters and ignore rules', () => {
@@ -51,7 +52,7 @@ describe('ClassGenerator behaviour', () => {
   })
 
   it('skips logging when reserved name is encountered without log flag', () => {
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+    const writeSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     const generator = new ClassGenerator({
       reserveClassName: [/^tw-a$/u],
     })
@@ -59,13 +60,13 @@ describe('ClassGenerator behaviour', () => {
     const result = generator.generateClassName('foo')
     expect(result.name).toBe('tw-b')
     expect(generator.newClassSize).toBe(2)
-    expect(logSpy).not.toHaveBeenCalled()
+    expect(writeSpy).not.toHaveBeenCalled()
 
-    logSpy.mockRestore()
+    writeSpy.mockRestore()
   })
 
   it('falls back to default generator and skips reserved results', () => {
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+    const writeSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     const generator = new ClassGenerator({
       reserveClassName: [/^tw-a$/u],
       log: true,
@@ -74,8 +75,8 @@ describe('ClassGenerator behaviour', () => {
     const result = generator.generateClassName('foo')
     expect(result.name).toBe('tw-b')
     expect(generator.newClassSize).toBe(2)
-    expect(logSpy).toHaveBeenCalledWith('The class name has been reserved. tw-a')
+    expect(writeSpy).toHaveBeenCalledWith('The class name has been reserved. tw-a\n')
 
-    logSpy.mockRestore()
+    writeSpy.mockRestore()
   })
 })
