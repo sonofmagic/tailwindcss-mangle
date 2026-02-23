@@ -1,126 +1,108 @@
 import fs from 'node:fs/promises'
-import { execa } from 'execa'
 import path from 'pathe'
+import { buildApp, cases, ensureClassList, readMappingFile, resolveMapFile, resolveOutputRoots, resolveUsageRoots } from './apps.e2e.shared'
 
-interface MappingEntry {
-  original: string
-  mangled: string
-  usedBy: string[]
-}
-
-interface AppE2ECase {
-  name: string
-  appDir: string
-  expectedOriginalClass: string
-  classListSeed?: string[]
-  env?: Record<string, string>
-}
-
-const repoRoot = path.resolve(__dirname, '../../..')
 const runAppsE2E = process.env.TWM_APPS_E2E === '1'
-const cases: AppE2ECase[] = [
-  {
-    name: 'vite-vue',
-    appDir: path.resolve(repoRoot, 'apps/vite-vue'),
-    expectedOriginalClass: 'bg-red-200',
-  },
-  {
-    name: 'vite-react',
-    appDir: path.resolve(repoRoot, 'apps/vite-react'),
-    expectedOriginalClass: 'hover:bg-red-800',
-  },
-  {
-    name: 'vite-svelte',
-    appDir: path.resolve(repoRoot, 'apps/vite-svelte'),
-    expectedOriginalClass: 'text-[40px]',
-  },
-  {
-    name: 'vite-vanilla',
-    appDir: path.resolve(repoRoot, 'apps/vite-vanilla'),
-    expectedOriginalClass: 'dark:bg-zinc-800/30',
-  },
-  {
-    name: 'nuxt-app',
-    appDir: path.resolve(repoRoot, 'apps/nuxt-app'),
-    expectedOriginalClass: 'dark:bg-zinc-800/30',
-  },
-  {
-    name: 'astro-app',
-    appDir: path.resolve(repoRoot, 'apps/astro-app'),
-    expectedOriginalClass: 'bg-red-500',
-    env: {
-      ASTRO_TELEMETRY_DISABLED: '1',
-      NODE_OPTIONS: '--import tsx',
-    },
-  },
-  {
-    name: 'next-app',
-    appDir: path.resolve(repoRoot, 'apps/next-app'),
-    expectedOriginalClass: 'dark:bg-zinc-800/30',
-    env: {
-      NEXT_TELEMETRY_DISABLED: '1',
-    },
-  },
-  {
-    name: 'next-app-router',
-    appDir: path.resolve(repoRoot, 'apps/next-app-router'),
-    expectedOriginalClass: 'dark:bg-zinc-800/30',
-    classListSeed: ['dark:bg-zinc-800/30'],
-    env: {
-      NEXT_TELEMETRY_DISABLED: '1',
-    },
-  },
-  {
-    name: 'webpack5-vue3',
-    appDir: path.resolve(repoRoot, 'apps/webpack5-vue3'),
-    expectedOriginalClass: 'dark:bg-zinc-800/30',
-  },
-]
 
-async function readMappingFile(appDir: string) {
-  const mapFile = path.resolve(appDir, '.tw-patch/tw-map-list.json')
-  const raw = await fs.readFile(mapFile, 'utf8')
-  return JSON.parse(raw) as MappingEntry[]
+const usageExt = new Set([
+  '.html',
+  '.js',
+  '.mjs',
+  '.cjs',
+  '.json',
+  '.txt',
+])
+
+function escapeRegExp(input: string) {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-async function ensureClassList(app: AppE2ECase) {
-  if (!app.classListSeed || app.classListSeed.length === 0) {
-    return
+function hasClassUsage(content: string, className: string) {
+  const escaped = escapeRegExp(className)
+  return new RegExp(`(^|[^A-Za-z0-9_-])${escaped}(?=[^A-Za-z0-9_-]|$)`).test(content)
+}
+
+function hasCssSelector(css: string, className: string) {
+  const escaped = escapeRegExp(className)
+  return new RegExp(`\\.${escaped}(?=[^A-Za-z0-9_-]|$)`).test(css)
+}
+
+function extractInlineStyles(html: string) {
+  let css = ''
+  const styleRegex = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
+  let match: RegExpExecArray | null
+  while ((match = styleRegex.exec(html)) !== null) {
+    css += `\n${match[1]}`
   }
+  return css
+}
 
-  const classListFile = path.resolve(app.appDir, '.tw-patch/tw-class-list.json')
+async function listFilesRecursive(rootDir: string): Promise<string[]> {
+  const entries = await fs.readdir(rootDir, { withFileTypes: true })
+  const files: string[] = []
+  for (const entry of entries) {
+    const fullPath = path.resolve(rootDir, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...await listFilesRecursive(fullPath))
+      continue
+    }
+    files.push(fullPath)
+  }
+  return files
+}
 
-  try {
-    const raw = await fs.readFile(classListFile, 'utf8')
-    const parsed = JSON.parse(raw)
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return
+async function collectUsageText(usageRoots: string[]) {
+  let usageText = ''
+
+  for (const root of usageRoots) {
+    const files = await listFilesRecursive(root)
+    for (const file of files) {
+      if (file.endsWith('.map')) {
+        continue
+      }
+      const ext = path.extname(file)
+      if (!usageExt.has(ext)) {
+        continue
+      }
+      usageText += `\n${await fs.readFile(file, 'utf8')}`
     }
   }
-  catch {
-    // no-op, we'll seed it below.
+
+  return usageText
+}
+
+async function collectCssText(outputRoots: string[]) {
+  let cssText = ''
+
+  for (const root of outputRoots) {
+    const files = await listFilesRecursive(root)
+    for (const file of files) {
+      if (file.endsWith('.map')) {
+        continue
+      }
+      if (file.endsWith('.css')) {
+        cssText += `\n${await fs.readFile(file, 'utf8')}`
+        continue
+      }
+      if (file.endsWith('.html')) {
+        const html = await fs.readFile(file, 'utf8')
+        cssText += extractInlineStyles(html)
+      }
+    }
   }
 
-  await fs.mkdir(path.dirname(classListFile), { recursive: true })
-  await fs.writeFile(classListFile, `${JSON.stringify(app.classListSeed, null, 2)}\n`, 'utf8')
+  return cssText
 }
 
 describe.runIf(runAppsE2E)('apps integration e2e', () => {
   for (const app of cases) {
-    it(`builds ${app.name} and emits mapping`, async () => {
-      const mapFile = path.resolve(app.appDir, '.tw-patch/tw-map-list.json')
+    it(`builds ${app.name} and validates mangled css coverage`, async () => {
+      const mapFile = resolveMapFile(app.appDir)
 
       await ensureClassList(app)
       await fs.rm(mapFile, { force: true })
 
-      await execa('pnpm', ['--dir', app.appDir, 'build'], {
-        cwd: repoRoot,
-        env: {
-          ...process.env,
-          NODE_ENV: 'production',
-          ...app.env,
-        },
-      })
+      await buildApp(app)
 
       const mappings = await readMappingFile(app.appDir)
       expect(mappings.length).toBeGreaterThan(0)
@@ -129,6 +111,26 @@ describe.runIf(runAppsE2E)('apps integration e2e', () => {
       expect(expected).toBeDefined()
       expect(expected?.mangled.startsWith('tw-')).toBe(true)
       expect(Array.isArray(expected?.usedBy)).toBe(true)
+
+      const outputRoots = await resolveOutputRoots(app)
+      expect(outputRoots.length).toBeGreaterThan(0)
+      const usageRoots = await resolveUsageRoots(app)
+      expect(usageRoots.length).toBeGreaterThan(0)
+
+      const usageText = await collectUsageText(usageRoots)
+      const cssText = await collectCssText(outputRoots)
+      const usedMappings = mappings.filter(item => hasClassUsage(usageText, item.mangled))
+      const mappingsForCoverage = usedMappings.length > 0 ? usedMappings : mappings
+      expect(mappingsForCoverage.length).toBeGreaterThan(0)
+
+      const missing = mappingsForCoverage.filter(item => !hasCssSelector(cssText, item.mangled))
+      expect(
+        missing,
+        `Missing css selectors for ${app.name}: ${missing
+          .slice(0, 15)
+          .map(item => `${item.original}->${item.mangled}`)
+          .join(', ')}`,
+      ).toEqual([])
     }, 300_000)
   }
 })

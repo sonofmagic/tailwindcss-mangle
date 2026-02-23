@@ -74,7 +74,8 @@
     "build": "tsup",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts"
+    "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts",
+    "test:e2e:pw": "TWM_APPS_E2E_PLAYWRIGHT=1 vitest run test/apps.playwright.e2e.test.ts"
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.3.0",

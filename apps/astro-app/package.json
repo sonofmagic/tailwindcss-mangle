@@ -15,5 +15,10 @@
   },
   "dependencies": {
     "astro": "^5.17.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
   }
 }
