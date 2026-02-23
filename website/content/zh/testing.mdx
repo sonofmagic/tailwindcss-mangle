@@ -74,3 +74,23 @@ pnpm run test:e2e:apps:pw
 - 映射文件为空通常表示构建阶段没有拿到有效类名清单。
 - Next 16 + webpack 适配器建议使用 `next build --webpack`。
 - Webpack 类流水线建议收敛 `sources.include`，避免误处理无关资源。
+
+## 发布治理
+
+核心包现在按发布组策略协同发布：
+
+- `@tailwindcss-mangle/shared`
+- `@tailwindcss-mangle/config`
+- `@tailwindcss-mangle/core`
+- `tailwindcss-patch`
+- `unplugin-tailwindcss-mangle`
+
+发布前建议执行：
+
+1. `pnpm check:boundaries`
+2. `pnpm build`
+3. `pnpm test`
+4. `pnpm test:e2e`
+5. 可选浏览器一致性校验：`pnpm run test:e2e:apps:pw`
+
+仓库参考文档：`docs/release/release-group-policy.md`。

@@ -74,3 +74,23 @@ When introducing a new fixture under `apps/`:
 - Empty map file usually means the fixture has no valid class inventory at build time.
 - For Next 16 + webpack adapter, prefer `next build --webpack` in fixture scripts.
 - For webpack-like pipelines, keep `sources.include` focused to avoid unrelated resource transforms.
+
+## Release governance
+
+Core package releases now follow a grouped policy for:
+
+- `@tailwindcss-mangle/shared`
+- `@tailwindcss-mangle/config`
+- `@tailwindcss-mangle/core`
+- `tailwindcss-patch`
+- `unplugin-tailwindcss-mangle`
+
+Before publishing, run:
+
+1. `pnpm check:boundaries`
+2. `pnpm build`
+3. `pnpm test`
+4. `pnpm test:e2e`
+5. optional browser parity: `pnpm run test:e2e:apps:pw`
+
+Repository reference: `docs/release/release-group-policy.md`.
