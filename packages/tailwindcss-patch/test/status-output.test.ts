@@ -67,4 +67,21 @@ describe('status output helpers', () => {
 
     expect(logger.success).toHaveBeenCalledWith('All applicable patches are applied.')
   })
+
+  it('uses fallback labels and handles pending/skipped entries without reasons', () => {
+    const report = {
+      package: {},
+      majorVersion: 4,
+      entries: [
+        { name: 'a', status: 'not-applied', files: [] },
+        { name: 'b', status: 'skipped', files: [] },
+      ],
+    } as any
+
+    logStatusReportSummary(report)
+
+    expect(logger.info).toHaveBeenCalledWith('Patch status for tailwindcss@unknown (v4)')
+    expect(logger.warn).toHaveBeenCalledWith('  • a')
+    expect(logger.info).toHaveBeenCalledWith('  • b')
+  })
 })

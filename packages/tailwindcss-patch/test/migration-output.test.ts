@@ -29,6 +29,7 @@ vi.mock('../src/logger', () => {
 import logger from '../src/logger'
 import {
   createMigrationCheckFailureError,
+  logMigrationEntries,
   logRestoreSummary,
   logValidateSuccessSummary,
   writeMigrationReportFile,
@@ -108,5 +109,36 @@ describe('migration output helpers', () => {
       'Migration report validated: scanned=2, restorable=2, missingBackups=0, skipped=0',
     )
     expect(logger.info).toHaveBeenCalledWith('  metadata: kind=tw-patch-migrate-report, schema=1')
+  })
+
+  it('logs migration entry backups when backupFile is present', () => {
+    logMigrationEntries({
+      reportKind: 'tw-patch-migrate-report',
+      schemaVersion: 1,
+      generatedAt: new Date(0).toISOString(),
+      tool: { name: 'tailwindcss-patch', version: '0.0.0' },
+      cwd: '/repo',
+      dryRun: false,
+      rollbackOnError: true,
+      scannedFiles: 1,
+      changedFiles: 1,
+      writtenFiles: 1,
+      backupsWritten: 1,
+      unchangedFiles: 0,
+      missingFiles: 0,
+      entries: [
+        {
+          file: '/repo/a.ts',
+          changed: true,
+          written: true,
+          rolledBack: false,
+          backupFile: '/repo/.backups/a.ts.bak',
+          changes: ['root.cwd -> root.projectRoot'],
+        },
+      ],
+    }, false)
+
+    expect(logger.success).toHaveBeenCalledWith('Migrated: /repo/a.ts')
+    expect(logger.info).toHaveBeenCalledWith('  - backup: /repo/.backups/a.ts.bak')
   })
 })
