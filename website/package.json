@@ -17,7 +17,7 @@
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
-    "markdown-to-jsx": "^9.7.4",
+    "markdown-to-jsx": "^9.7.6",
     "next": "^16.1.6",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.6",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.2.0",
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/react": "19.2.14",
     "pagefind": "^1.4.0",
     "tailwindcss": "catalog:tailwindcss4"
