@@ -12,9 +12,13 @@ import {
   resolveBackupRelativePath,
   resolveTargetFiles,
 } from './migration-target-files'
+import {
+  assertMigrationReportCompatibility,
+  MIGRATION_REPORT_KIND,
+  MIGRATION_REPORT_SCHEMA_VERSION,
+} from './migration-report'
 export { DEFAULT_CONFIG_FILENAMES } from './migration-target-files'
-export const MIGRATION_REPORT_KIND = 'tw-patch-migrate-report'
-export const MIGRATION_REPORT_SCHEMA_VERSION = 1
+export { MIGRATION_REPORT_KIND, MIGRATION_REPORT_SCHEMA_VERSION } from './migration-report'
 
 const ROOT_LEGACY_KEYS = ['cwd', 'overwrite', 'tailwind', 'features', 'output', 'applyPatches'] as const
 
@@ -514,17 +518,7 @@ export async function restoreConfigFiles(options: RestoreConfigFilesOptions): Pr
     schemaVersion?: number
     entries?: Array<{ file?: string, backupFile?: string }>
   }
-  if (report.reportKind !== undefined && report.reportKind !== MIGRATION_REPORT_KIND) {
-    throw new Error(`Unsupported report kind "${report.reportKind}" in ${reportFile}.`)
-  }
-  if (
-    report.schemaVersion !== undefined
-    && (!Number.isInteger(report.schemaVersion) || report.schemaVersion > MIGRATION_REPORT_SCHEMA_VERSION)
-  ) {
-    throw new Error(
-      `Unsupported report schema version "${String(report.schemaVersion)}" in ${reportFile}. Current supported version is ${MIGRATION_REPORT_SCHEMA_VERSION}.`,
-    )
-  }
+  assertMigrationReportCompatibility(report, reportFile)
   const entries = Array.isArray(report.entries) ? report.entries : []
 
   let scannedEntries = 0
