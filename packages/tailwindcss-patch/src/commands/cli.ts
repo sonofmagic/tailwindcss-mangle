@@ -2,10 +2,7 @@ import type { CAC } from 'cac'
 import type {
   TailwindcssPatchCliMountOptions,
   TailwindcssPatchCliOptions,
-  TailwindcssPatchCommand,
-  TailwindcssPatchCommandArgMap,
   TailwindcssPatchCommandContext,
-  TailwindcssPatchCommandResultMap,
 } from './types'
 
 import cac from 'cac'
@@ -14,13 +11,8 @@ import {
   VALIDATE_FAILURE_REASONS,
   ValidateCommandError,
 } from './validate'
-import {
-  applyCommandOptions,
-  buildDefaultCommandDefinitions,
-  resolveCommandMetadata,
-} from './metadata'
-import { runWithCommandHandler } from './command-runtime'
-import { defaultCommandHandlers } from './default-handler-map'
+import { buildDefaultCommandDefinitions } from './metadata'
+import { registerTailwindcssPatchCommand } from './command-registrar'
 import { tailwindcssPatchCommands } from './types'
 
 export {
@@ -51,25 +43,8 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
   const selectedCommands = options.commands ?? tailwindcssPatchCommands
   const defaultDefinitions = buildDefaultCommandDefinitions()
 
-  const registerCommand = <TCommand extends TailwindcssPatchCommand>(commandName: TCommand) => {
-    const metadata = resolveCommandMetadata(commandName, options, prefix, defaultDefinitions)
-    const command = cli.command(metadata.name, metadata.description)
-    applyCommandOptions(command, metadata.optionDefs)
-    command.action(async (args: TailwindcssPatchCommandArgMap[TCommand]) => {
-      return runWithCommandHandler(
-        cli,
-        command,
-        commandName,
-        args,
-        options.commandHandlers?.[commandName],
-        defaultCommandHandlers[commandName],
-      )
-    })
-    metadata.aliases.forEach(alias => command.alias(alias))
-  }
-
   for (const name of selectedCommands) {
-    registerCommand(name)
+    registerTailwindcssPatchCommand(cli, name, options, prefix, defaultDefinitions)
   }
 
   return cli
