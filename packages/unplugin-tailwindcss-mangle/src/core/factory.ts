@@ -4,7 +4,7 @@ import { createFilter } from '@rollup/pluginutils'
 import { Context, cssHandler, htmlHandler, jsHandler, svelteHandler, vueHandler } from '@tailwindcss-mangle/core'
 import { isCSSRequest } from 'is-css-request'
 import path from 'pathe'
-import { getGroupedEntries } from '@/utils'
+import { getGroupedEntries } from '../utils'
 import { pluginName } from '../constants'
 
 const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.cjs' : './loader.cjs')
