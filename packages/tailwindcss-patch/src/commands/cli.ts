@@ -5,7 +5,6 @@ import type {
   TailwindcssPatchCommand,
   TailwindcssPatchCommandArgMap,
   TailwindcssPatchCommandContext,
-  TailwindcssPatchCommandHandler,
   TailwindcssPatchCommandResultMap,
 } from './types'
 
@@ -62,7 +61,7 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
         command,
         commandName,
         args,
-        options.commandHandlers?.[commandName] as TailwindcssPatchCommandHandler<TCommand> | undefined,
+        options.commandHandlers?.[commandName],
         defaultCommandHandlers[commandName],
       )
     })
