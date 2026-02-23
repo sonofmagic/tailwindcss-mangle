@@ -266,142 +266,40 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
   const selectedCommands = options.commands ?? tailwindcssPatchCommands
   const defaultDefinitions = buildDefaultCommandDefinitions()
 
-  const registrars: Record<TailwindcssPatchCommand, () => void> = {
-    install: () => {
-      const metadata = resolveCommandMetadata('install', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: InstallCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'install',
-          args,
-          options.commandHandlers?.install,
-          installCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    extract: () => {
-      const metadata = resolveCommandMetadata('extract', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: ExtractCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'extract',
-          args,
-          options.commandHandlers?.extract,
-          extractCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    tokens: () => {
-      const metadata = resolveCommandMetadata('tokens', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: TokensCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'tokens',
-          args,
-          options.commandHandlers?.tokens,
-          tokensCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    init: () => {
-      const metadata = resolveCommandMetadata('init', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: InitCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'init',
-          args,
-          options.commandHandlers?.init,
-          initCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    migrate: () => {
-      const metadata = resolveCommandMetadata('migrate', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: MigrateCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'migrate',
-          args,
-          options.commandHandlers?.migrate,
-          migrateCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    restore: () => {
-      const metadata = resolveCommandMetadata('restore', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: RestoreCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'restore',
-          args,
-          options.commandHandlers?.restore,
-          restoreCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    validate: () => {
-      const metadata = resolveCommandMetadata('validate', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: ValidateCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'validate',
-          args,
-          options.commandHandlers?.validate,
-          validateCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
-    status: () => {
-      const metadata = resolveCommandMetadata('status', options, prefix, defaultDefinitions)
-      const command = cli.command(metadata.name, metadata.description)
-      applyCommandOptions(command, metadata.optionDefs)
-      command.action(async (args: StatusCommandArgs) => {
-        return runWithCommandHandler(
-          cli,
-          command,
-          'status',
-          args,
-          options.commandHandlers?.status,
-          statusCommandDefaultHandler,
-        )
-      })
-      metadata.aliases.forEach(alias => command.alias(alias))
-    },
+  const defaultHandlers: {
+    [K in TailwindcssPatchCommand]: (
+      context: TailwindcssPatchCommandContext<K>,
+    ) => Promise<TailwindcssPatchCommandResultMap[K]>
+  } = {
+    install: installCommandDefaultHandler,
+    extract: extractCommandDefaultHandler,
+    tokens: tokensCommandDefaultHandler,
+    init: initCommandDefaultHandler,
+    migrate: migrateCommandDefaultHandler,
+    restore: restoreCommandDefaultHandler,
+    validate: validateCommandDefaultHandler,
+    status: statusCommandDefaultHandler,
+  }
+
+  const registerCommand = <TCommand extends TailwindcssPatchCommand>(commandName: TCommand) => {
+    const metadata = resolveCommandMetadata(commandName, options, prefix, defaultDefinitions)
+    const command = cli.command(metadata.name, metadata.description)
+    applyCommandOptions(command, metadata.optionDefs)
+    command.action(async (args: TailwindcssPatchCommandArgMap[TCommand]) => {
+      return runWithCommandHandler(
+        cli,
+        command,
+        commandName,
+        args,
+        options.commandHandlers?.[commandName] as TailwindcssPatchCommandHandler<TCommand> | undefined,
+        defaultHandlers[commandName],
+      )
+    })
+    metadata.aliases.forEach(alias => command.alias(alias))
   }
 
   for (const name of selectedCommands) {
-    const register = registrars[name]
-    if (register) {
-      register()
-    }
+    registerCommand(name)
   }
 
   return cli
