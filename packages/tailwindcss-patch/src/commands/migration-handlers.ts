@@ -6,31 +6,21 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import logger from '../logger'
 import { migrateConfigFiles, restoreConfigFiles } from './migrate-config'
+import { resolveMigrateCommandArgs } from './migration-args'
 import { classifyValidateError, ValidateCommandError } from './validate'
-
-function normalizePatternArgs(value?: string | string[]) {
-  if (!value) {
-    return undefined
-  }
-  const raw = Array.isArray(value) ? value : [value]
-  const values = raw
-    .flatMap(item => item.split(','))
-    .map(item => item.trim())
-    .filter(Boolean)
-  return values.length > 0 ? values : undefined
-}
 
 export async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
   const { args } = ctx
-  const include = normalizePatternArgs(args.include)
-  const exclude = normalizePatternArgs(args.exclude)
-  const parsedMaxDepth = args.maxDepth === undefined ? undefined : Number(args.maxDepth)
-  const maxDepth = parsedMaxDepth !== undefined && Number.isFinite(parsedMaxDepth) && parsedMaxDepth >= 0
-    ? Math.floor(parsedMaxDepth)
-    : undefined
-  const checkMode = args.check ?? false
-  const dryRun = args.dryRun ?? checkMode
-  if (args.workspace && args.maxDepth !== undefined && maxDepth === undefined) {
+  const {
+    include,
+    exclude,
+    maxDepth,
+    checkMode,
+    dryRun,
+    hasInvalidMaxDepth,
+  } = resolveMigrateCommandArgs(args)
+
+  if (args.workspace && hasInvalidMaxDepth) {
     logger.warn(`Invalid --max-depth value "${String(args.maxDepth)}", fallback to default depth.`)
   }
   const report = await migrateConfigFiles({
