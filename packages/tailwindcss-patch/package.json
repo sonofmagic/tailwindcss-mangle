@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-patch",
-  "version": "8.7.2",
+  "version": "8.7.3",
   "description": "patch tailwindcss for exposing context and extract classes",
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",

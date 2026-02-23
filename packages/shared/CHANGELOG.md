@@ -1,5 +1,14 @@
 # @tailwindcss-mangle/shared
 
+## 4.1.3
+
+### Patch Changes
+
+- 🐛 **Fix workspace install and e2e stability when package dist artifacts are unavailable during lifecycle scripts.** [`84dcb16`](https://github.com/sonofmagic/tailwindcss-mangle/commit/84dcb1667cbe360c67744f3fd1f53d5c8c45eaae) by @sonofmagic
+  - Keep published entry fields for config/shared/tailwindcss-patch pointing to `dist` outputs.
+  - Make `tw-patch install` resilient in monorepo installs by avoiding eager config loading and lazily resolving config/shared modules with source fallbacks.
+  - Prevent CI install failures caused by module resolution during app `prepare`/`postinstall` hooks.
+
 ## 4.1.2
 
 ### Patch Changes
