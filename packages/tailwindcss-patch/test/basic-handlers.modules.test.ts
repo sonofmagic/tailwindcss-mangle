@@ -124,6 +124,27 @@ describe('basic command handlers module', () => {
     expect(extractMock).toHaveBeenCalledWith({ write: false })
   })
 
+  it('extract handler uses defaults when no overrides are provided', async () => {
+    const extractMock = vi.fn(async () => ({
+      classList: ['x'],
+    }))
+    const createPatcherMock = vi.fn(async () => ({
+      extract: extractMock,
+    }))
+
+    const ctx = {
+      args: {
+        cwd: '/tmp/project',
+      },
+      createPatcher: createPatcherMock,
+    } as any
+
+    await extractCommandDefaultHandler(ctx)
+
+    expect(createPatcherMock).toHaveBeenCalledWith(undefined)
+    expect(extractMock).toHaveBeenCalledWith({})
+  })
+
   it('tokens handler writes grouped json output when format is grouped-json', async () => {
     const report = {
       entries: [
@@ -171,6 +192,49 @@ describe('basic command handlers module', () => {
       stripAbsolutePaths: true,
     })
     expect(writeJSONMock).toHaveBeenCalledWith(target, grouped, { spaces: 2 })
+  })
+
+  it('tokens handler prints lines preview when write is disabled', async () => {
+    const entries = Array.from({ length: 6 }).map((_, index) => ({
+      rawCandidate: `text-${index}`,
+      file: `/tmp/project/src/${index}.ts`,
+      relativeFile: `src/${index}.ts`,
+      extension: '.ts',
+      start: index,
+      end: index + 1,
+      length: 1,
+      line: index + 1,
+      column: 1,
+      lineText: `text-${index}`,
+    }))
+    const report = {
+      entries,
+      filesScanned: 6,
+      skippedFiles: [],
+      sources: [],
+    }
+    const infoSpy = vi.spyOn(logger as any, 'info')
+    const logSpy = vi.spyOn(logger as any, 'log')
+
+    const ctx = {
+      args: {
+        cwd: '/tmp/project',
+        format: 'lines',
+        write: false,
+      },
+      createPatcher: async () => ({
+        collectContentTokens: async () => report,
+      }),
+    } as any
+
+    await tokensCommandDefaultHandler(ctx)
+
+    expect(ensureDirMock).not.toHaveBeenCalled()
+    expect(writeJSONMock).not.toHaveBeenCalled()
+    expect(writeFileMock).not.toHaveBeenCalled()
+    expect(logSpy).toHaveBeenCalledWith('')
+    expect(infoSpy).toHaveBeenCalledWith(expect.stringContaining('src/0.ts:1:1 text-0'))
+    expect(infoSpy).toHaveBeenCalledWith('…and 1 more.')
   })
 
   it('init handler loads workspace config module and initializes default config file', async () => {
