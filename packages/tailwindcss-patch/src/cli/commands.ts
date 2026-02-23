@@ -11,8 +11,7 @@ import type {
 import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
 
 import process from 'node:process'
-import { CONFIG_NAME, getConfig, initConfig } from '@tailwindcss-mangle/config'
-import { defu } from '@tailwindcss-mangle/shared'
+import { pathToFileURL } from 'node:url'
 import cac from 'cac'
 import fs from 'fs-extra'
 
@@ -67,9 +66,68 @@ export interface ValidateJsonFailurePayload {
 }
 
 const IO_ERROR_CODES = new Set(['ENOENT', 'EACCES', 'EPERM', 'EISDIR', 'ENOTDIR', 'EMFILE', 'ENFILE'])
+const DEFAULT_CONFIG_NAME = 'tailwindcss-mangle'
+
+interface TailwindcssConfigModule {
+  CONFIG_NAME: string
+  getConfig: (cwd?: string) => Promise<{ config?: { registry?: unknown, patch?: LegacyTailwindcssPatcherOptions['patch'] } }>
+  initConfig: (cwd: string) => Promise<unknown>
+}
+
+type TailwindcssConfigResult = Awaited<ReturnType<TailwindcssConfigModule['getConfig']>>
+type DefuFn = (...objects: any[]) => any
+
+let configModulePromise: Promise<TailwindcssConfigModule> | undefined
+let defuPromise: Promise<DefuFn> | undefined
 
 function isNodeError(error: unknown): error is NodeJS.ErrnoException {
   return !!error && typeof error === 'object' && ('code' in error || 'message' in error)
+}
+
+function isMissingConfigModuleError(error: unknown) {
+  if (!isNodeError(error) || error.code !== 'MODULE_NOT_FOUND') {
+    return false
+  }
+  const message = error.message ?? ''
+  return message.includes('@tailwindcss-mangle/config')
+}
+
+async function loadConfigModule() {
+  if (!configModulePromise) {
+    configModulePromise = (import('@tailwindcss-mangle/config') as Promise<TailwindcssConfigModule>)
+      .catch(async (error) => {
+        if (!isMissingConfigModuleError(error)) {
+          throw error
+        }
+        const fallback = path.resolve(__dirname, '../../../config/src/index.ts')
+        return import(pathToFileURL(fallback).href) as Promise<TailwindcssConfigModule>
+      })
+  }
+  return configModulePromise
+}
+
+function isMissingSharedModuleError(error: unknown) {
+  if (!isNodeError(error) || error.code !== 'MODULE_NOT_FOUND') {
+    return false
+  }
+  const message = error.message ?? ''
+  return message.includes('@tailwindcss-mangle/shared')
+}
+
+async function loadDefu() {
+  if (!defuPromise) {
+    defuPromise = (import('@tailwindcss-mangle/shared') as Promise<{ defu: DefuFn }>)
+      .then(mod => mod.defu)
+      .catch(async (error) => {
+        if (!isMissingSharedModuleError(error)) {
+          throw error
+        }
+        const fallback = path.resolve(__dirname, '../../../shared/src/utils.ts')
+        const mod = await import(pathToFileURL(fallback).href) as { defu: DefuFn }
+        return mod.defu
+      })
+  }
+  return defuPromise
 }
 
 function classifyValidateError(error: unknown): ValidateFailureSummary {
@@ -206,7 +264,7 @@ export interface TailwindcssPatchCommandContext<TCommand extends TailwindcssPatc
   args: TailwindcssPatchCommandArgMap[TCommand]
   cwd: string
   logger: typeof logger
-  loadConfig: () => ReturnType<typeof getConfig>
+  loadConfig: () => Promise<TailwindcssConfigResult>
   loadPatchOptions: (overrides?: TailwindcssPatchOptions) => Promise<TailwindcssPatchOptions>
   createPatcher: (overrides?: TailwindcssPatchOptions) => Promise<TailwindcssPatcher>
 }
@@ -281,14 +339,16 @@ function createDefaultRunner<TResult>(factory: () => Promise<TResult>) {
 }
 
 async function loadPatchOptionsForCwd(cwd: string, overrides?: TailwindcssPatchOptions) {
-  const { config } = await getConfig(cwd)
+  const merge = await loadDefu()
+  const configModule = await loadConfigModule()
+  const { config } = await configModule.getConfig(cwd)
   const legacyConfig = config as (typeof config) & { patch?: LegacyTailwindcssPatcherOptions['patch'] }
   const base = config?.registry
     ? fromUnifiedConfig(config.registry)
     : legacyConfig?.patch
       ? fromLegacyOptions({ patch: legacyConfig.patch })
       : {}
-  const merged = defu<TailwindcssPatchOptions, TailwindcssPatchOptions[]>(overrides ?? {}, base)
+  const merged = merge(overrides ?? {}, base) as TailwindcssPatchOptions
   return merged
 }
 
@@ -301,7 +361,7 @@ function createCommandContext<TCommand extends TailwindcssPatchCommand>(
 ): TailwindcssPatchCommandContext<TCommand> {
   let cachedOptions: Promise<TailwindcssPatchOptions> | undefined
   let cachedPatcher: Promise<TailwindcssPatcher> | undefined
-  let cachedConfig: ReturnType<typeof getConfig> | undefined
+  let cachedConfig: Promise<TailwindcssConfigResult> | undefined
 
   const loadPatchOptionsForContext = (overrides?: TailwindcssPatchOptions) => {
     if (overrides) {
@@ -333,7 +393,7 @@ function createCommandContext<TCommand extends TailwindcssPatchCommand>(
     logger,
     loadConfig: () => {
       if (!cachedConfig) {
-        cachedConfig = getConfig(cwd)
+        cachedConfig = loadConfigModule().then(mod => mod.getConfig(cwd))
       }
       return cachedConfig
     },
@@ -513,7 +573,7 @@ function resolveCommandMetadata(
 }
 
 async function installCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'install'>) {
-  const patcher = await ctx.createPatcher()
+  const patcher = new TailwindcssPatcher()
   await patcher.patch()
   logger.success('Tailwind CSS runtime patched successfully.')
 }
@@ -632,8 +692,10 @@ async function tokensCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'
 }
 
 async function initCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'init'>) {
-  await initConfig(ctx.cwd)
-  logger.success(`✨ ${CONFIG_NAME}.config.ts initialized!`)
+  const configModule = await loadConfigModule()
+  await configModule.initConfig(ctx.cwd)
+  const configName = configModule.CONFIG_NAME || DEFAULT_CONFIG_NAME
+  logger.success(`✨ ${configName}.config.ts initialized!`)
 }
 
 async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
