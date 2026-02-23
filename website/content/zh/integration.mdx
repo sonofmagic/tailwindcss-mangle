@@ -1,0 +1,80 @@
+import { Callout } from 'nextra/components'
+
+# 4.集成实战
+
+本章节汇总当前代码仓库中已经落地并验证通过的集成状态，并给出可直接复用的接入模式。
+
+## 当前已验证的集成矩阵
+
+仓库通过 `apps/` 下的真实示例应用，并在 E2E 测试中统一校验。
+
+| 示例应用 | 集成入口 | 状态 |
+| --- | --- | --- |
+| `apps/vite-vue` | `unplugin-tailwindcss-mangle/vite` | 已验证 |
+| `apps/vite-react` | `unplugin-tailwindcss-mangle/vite` | 已验证 |
+| `apps/vite-svelte` | `unplugin-tailwindcss-mangle/vite` | 已验证 |
+| `apps/vite-vanilla` | `unplugin-tailwindcss-mangle/vite` | 已验证 |
+| `apps/nuxt-app` | `unplugin-tailwindcss-mangle/nuxt` | 已验证 |
+| `apps/astro-app` | Astro 配置内使用 `unplugin-tailwindcss-mangle/vite` | 已验证 |
+| `apps/next-app` | `unplugin-tailwindcss-mangle/webpack` | 已验证 |
+| `apps/next-app-router` | `unplugin-tailwindcss-mangle/webpack` | 已验证 |
+| `apps/webpack5-vue3` | `unplugin-tailwindcss-mangle/webpack` | 已验证 |
+
+<Callout type="info">
+新增框架集成时，请同步更新 `packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` 中的用例矩阵。
+</Callout>
+
+## 通用接入流程
+
+在任意构建工具中启用插件前，先执行：
+
+```sh npm2yarn
+npx tw-patch install
+npx tw-patch extract
+```
+
+并在项目脚本中保留 `prepare: tw-patch install`，插件 `registry.file` 指向 `.tw-patch/tw-class-list.json`。
+
+## 各框架注意点
+
+### Vite 系列（Vue/React/Svelte/Vanilla）
+
+使用 `unplugin-tailwindcss-mangle/vite`，建议直接复用 `config.transformer`，避免配置漂移。
+
+### Nuxt 3
+
+使用 Nuxt 模块入口：
+
+```ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/nuxt'
+
+export default defineNuxtConfig({
+  modules: [[tailwindcssMangle, { registry: { mapping: true } }]],
+})
+```
+
+### Astro
+
+在 `astro.config.*` 中注册 Vite 插件入口，并确保 Astro 应用根目录可正确解析 mangle 配置文件。
+
+### Next.js 16+
+
+当前示例使用 webpack 适配器，并显式使用 `--webpack` 构建：
+
+```json
+{
+  "scripts": {
+    "build": "next build --webpack"
+  }
+}
+```
+
+这样可以避免 Next 16 默认 Turbopack 与自定义 webpack 配置冲突。
+
+### Webpack（含 Vue CLI）
+
+使用 `unplugin-tailwindcss-mangle/webpack`，并将 `sources.include` 收敛到真实转换目标（`js/ts/vue/css`），避免误处理中间 HTML 子编译资源。
+
+## Monorepo 工作区说明
+
+在 monorepo 本地联调时，`core`、`shared`、`config`、`tailwindcss-patch` 等运行时导出均从 `dist` 入口解析。这样可以保证 Next/Webpack 在配置阶段与构建阶段的运行时加载稳定，避免直接执行 TS 源码带来的不一致问题。

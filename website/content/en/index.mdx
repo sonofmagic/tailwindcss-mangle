@@ -46,3 +46,12 @@ Then register the plugin for your bundler (e.g. `unplugin-tailwindcss-mangle/vit
 - `unplugin-tailwindcss-mangle` – rewrites class usage across bundlers by consuming the generated inventory.
 - `@tailwindcss-mangle/config` – shared configuration loader that normalises both legacy and modern option shapes.
 - `@tailwindcss-mangle/shared` – helpers for class generation, filtering, and shared regex utilities.
+
+## Current implementation status
+
+- Compiler-aware transform dispatch is enabled in `unplugin-tailwindcss-mangle`: files are routed to JS/Vue/Svelte/CSS/HTML handlers using extension + query hints (`type`, `lang`) and source heuristics.
+- Webpack HTML child-compilation conflicts are guarded by scoped include logic and HTML request bypass rules.
+- Mapping output (`.tw-patch/tw-map-list.json`) is validated against real application builds in the repository E2E suite.
+- Workspace runtime package resolution uses `dist` entries for stable consumption in Next/Webpack build phases.
+
+See [Integrations](./integration) for framework-specific setup and [Testing & E2E](./testing) for validation details.

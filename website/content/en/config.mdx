@@ -124,6 +124,22 @@ The transformer block is consumed by both the core runtime and `unplugin-tailwin
 - `preserve.functions` – helper names (e.g. `twIgnore`) that mark template literals as safe from mangling.
 - `disabled` – when `true`, skips rewriting (defaults to `process.env.NODE_ENV === 'development'`).
 
+### Recommended `sources` presets by integration type
+
+Vite/Nuxt/Astro can usually keep broad defaults. For webpack-like pipelines, prefer narrower include rules to avoid unrelated resource transforms:
+
+```ts
+sources: {
+  include: [
+    /\\.[cm]?[jt]sx?(?:$|\\?)/,
+    /\\.vue(?:$|\\?)/,
+    /\\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\\?)/,
+  ],
+}
+```
+
+Use this as a starting point for Webpack and Vue CLI projects, then expand only when needed.
+
 <Callout type="info">
 Existing configs that expose `patch` / `mangle` still load. The loader converts them to the new shape internally so you can migrate incrementally.
 </Callout>

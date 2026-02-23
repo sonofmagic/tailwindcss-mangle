@@ -56,10 +56,10 @@ By default `extract` writes `.tw-patch/tw-class-list.json`. Customise the destin
 
 | Flag | Description |
 | --- | --- |
-| `--cwd <dir>` | Resolve configuration from another working directory. |
-| `--output <file>` | Override the target file written by `extract`. |
-| `--format <json|lines>` | Emit JSON (default) or newline-delimited text. |
-| `--css <file>` | Provide CSS entry files used by Tailwind v4 builds. Repeat for multiple files. |
+| `--cwd &lt;dir&gt;` | Resolve configuration from another working directory. |
+| `--output &lt;file&gt;` | Override the target file written by `extract`. |
+| `--format &lt;json|lines&gt;` | Emit JSON (default) or newline-delimited text. |
+| `--css &lt;file&gt;` | Provide CSS entry files used by Tailwind v4 builds. Repeat for multiple files. |
 | `--no-write` | Skip writing to disk and return the class list to the caller. |
 
 The CLI reads `tailwindcss-patch.config.ts` (or legacy `tailwindcss-mangle.config.ts`) through `@tailwindcss-mangle/config`, so existing configs remain valid.

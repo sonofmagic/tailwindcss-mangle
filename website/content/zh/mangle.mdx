@@ -149,6 +149,29 @@ await build({
 - `preserve.functions` —— 声明包装函数（如 `twIgnore`），用于标记需要保留的模板字面量。
 - `disabled` —— 设为 `true` 时跳过混淆（默认在开发环境关闭）。
 
+## 编译器感知的 AST 转换流程
+
+当前实现会将命中的文件路由到最合适的处理器：
+
+- `jsHandler`：用于 JS/TS/JSX/TSX 与脚本子请求。
+- `vueHandler`：用于完整 `.vue` SFC 文件。
+- `svelteHandler`：用于完整 `.svelte` 文件。
+- `cssHandler`：用于 CSS 请求与样式子请求。
+- `htmlHandler`：用于 HTML 文件及“模板形态”的标记内容。
+
+分流依据是组合策略，而不是单一后缀：
+
+- 文件扩展名（如 `.vue`、`.svelte`、`.html`、JS 系列后缀）；
+- 查询参数（`type=script|style|template`、`lang=...`）；
+- 对未知文件内容进行源码形态判断（例如是否是 markup-like 模板）。
+
+这比仅按后缀判断更精确，特别适合多阶段构建流水线。
+
+### Webpack 防护策略
+
+- 对 HTML 文件请求在 transform loader 层做排除，避免 child compilation 被当作 JS 解析。
+- CSS 链路仍围绕 `postcss-loader` 进行插入与产物后处理，减少对非目标资源的干扰。
+
 ## 框架快速映射
 
 | 框架 | 使用方式 | 备注 |

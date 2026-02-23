@@ -56,10 +56,10 @@ npx tw-patch extract
 
 | 参数 | 说明 |
 | --- | --- |
-| `--cwd <dir>` | 从指定目录解析配置。 |
-| `--output <file>` | 覆盖 `extract` 写入的目标文件。 |
-| `--format <json|lines>` | 选择 JSON（默认）或按行输出文本。 |
-| `--css <file>` | 为 Tailwind v4 提供 CSS 入口文件；可重复使用多个参数。 |
+| `--cwd &lt;dir&gt;` | 从指定目录解析配置。 |
+| `--output &lt;file&gt;` | 覆盖 `extract` 写入的目标文件。 |
+| `--format &lt;json|lines&gt;` | 选择 JSON（默认）或按行输出文本。 |
+| `--css &lt;file&gt;` | 为 Tailwind v4 提供 CSS 入口文件；可重复使用多个参数。 |
 | `--no-write` | 跳过写入磁盘，仅在调用者中返回类名列表。 |
 
 CLI 会通过 `@tailwindcss-mangle/config` 读取 `tailwindcss-patch.config.ts`（兼容旧的 `tailwindcss-mangle.config.ts`），因此现有配置仍然可用。

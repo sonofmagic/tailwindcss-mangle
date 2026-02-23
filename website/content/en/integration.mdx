@@ -1,0 +1,80 @@
+import { Callout } from 'nextra/components'
+
+# 4.Integrations
+
+This chapter summarizes the integration status of the current codebase and provides copy-ready setup patterns.
+
+## Verified integration matrix
+
+The repository maintains real app fixtures under `apps/` and validates them in end-to-end tests.
+
+| App fixture | Integration entry | Status |
+| --- | --- | --- |
+| `apps/vite-vue` | `unplugin-tailwindcss-mangle/vite` | Verified |
+| `apps/vite-react` | `unplugin-tailwindcss-mangle/vite` | Verified |
+| `apps/vite-svelte` | `unplugin-tailwindcss-mangle/vite` | Verified |
+| `apps/vite-vanilla` | `unplugin-tailwindcss-mangle/vite` | Verified |
+| `apps/nuxt-app` | `unplugin-tailwindcss-mangle/nuxt` | Verified |
+| `apps/astro-app` | `unplugin-tailwindcss-mangle/vite` (inside Astro config) | Verified |
+| `apps/next-app` | `unplugin-tailwindcss-mangle/webpack` | Verified |
+| `apps/next-app-router` | `unplugin-tailwindcss-mangle/webpack` | Verified |
+| `apps/webpack5-vue3` | `unplugin-tailwindcss-mangle/webpack` | Verified |
+
+<Callout type="info">
+If you add a new framework fixture, update the E2E matrix in `packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts`.
+</Callout>
+
+## Shared setup flow
+
+Before enabling the plugin in any bundler:
+
+```sh npm2yarn
+npx tw-patch install
+npx tw-patch extract
+```
+
+Then keep `prepare: tw-patch install` in your app scripts and point plugin `registry.file` to `.tw-patch/tw-class-list.json`.
+
+## Framework-specific notes
+
+### Vite family (Vue/React/Svelte/Vanilla)
+
+Use `unplugin-tailwindcss-mangle/vite` and reuse `config.transformer` from your shared config.
+
+### Nuxt 3
+
+Use the Nuxt module entry:
+
+```ts
+import tailwindcssMangle from 'unplugin-tailwindcss-mangle/nuxt'
+
+export default defineNuxtConfig({
+  modules: [[tailwindcssMangle, { registry: { mapping: true } }]],
+})
+```
+
+### Astro
+
+Register the Vite entry in `astro.config.*` and ensure the mangle config file is resolvable from the Astro app root.
+
+### Next.js 16+
+
+Current fixtures use the webpack adapter and run build with `--webpack`:
+
+```json
+{
+  "scripts": {
+    "build": "next build --webpack"
+  }
+}
+```
+
+This avoids Turbopack custom-webpack conflicts when using the webpack plugin entry.
+
+### Webpack (including Vue CLI)
+
+Use `unplugin-tailwindcss-mangle/webpack`, and restrict `sources.include` to real transform targets (`js/ts/vue/css`) to avoid HTML template child-compilation interference.
+
+## Monorepo workspace note
+
+In workspace development, runtime package exports (`core`, `shared`, `config`, `tailwindcss-patch`) are resolved from `dist` entries. This keeps Next/Webpack runtime imports stable and avoids TS-source execution mismatches in config/build phases.

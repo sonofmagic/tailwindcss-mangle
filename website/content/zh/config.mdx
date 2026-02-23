@@ -124,6 +124,22 @@ export default defineConfig({
 - `preserve.functions` – 指定 helper 名称（如 `twIgnore`），在模板字符串中保留原始内容。
 - `disabled` – 为 `true` 时跳过混淆（默认只在 `NODE_ENV=development` 时禁用）。
 
+### 按集成类型推荐的 `sources` 规则
+
+Vite/Nuxt/Astro 通常可以沿用较宽松的默认扫描范围。对于 webpack 类流水线，建议先使用收敛规则，避免误处理无关资源：
+
+```ts
+sources: {
+  include: [
+    /\\.[cm]?[jt]sx?(?:$|\\?)/,
+    /\\.vue(?:$|\\?)/,
+    /\\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\\?)/,
+  ],
+}
+```
+
+这个配置适合作为 Webpack / Vue CLI 的起点，再按实际项目逐步放开范围。
+
 <Callout type="info">
 旧结构（`patch` / `mangle`）依旧兼容，加载时会自动转换成新的字段，迁移可以循序渐进完成。
 </Callout>

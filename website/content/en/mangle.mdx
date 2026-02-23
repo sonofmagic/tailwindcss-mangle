@@ -159,6 +159,29 @@ Configure the plugin inline or through the shared config file.
 - `preserve.functions` – mark helper functions (such as `twIgnore`) that should keep template literals untouched.
 - `disabled` – skip mangling entirely (auto-disabled in development by default).
 
+## Compiler-aware AST transform flow
+
+Current implementation dispatches each matched file to the most accurate handler:
+
+- `jsHandler` for JS/TS/JSX/TSX and script sub-requests.
+- `vueHandler` for full `.vue` SFC transforms.
+- `svelteHandler` for full `.svelte` transforms.
+- `cssHandler` for CSS requests and style sub-requests.
+- `htmlHandler` for HTML files and markup-like template payloads.
+
+Routing combines:
+
+- file extension (`.vue`, `.svelte`, `.html`, JS-like extensions),
+- query hints (`type=script|style|template`, `lang=...`),
+- source-shape heuristics for unknown included files.
+
+This improves precision over extension-only matching, especially in multi-stage bundler pipelines.
+
+### Webpack-specific guardrails
+
+- HTML file requests are excluded from transform loader matching to avoid child-compiler parse conflicts.
+- CSS pipeline injection remains scoped around `postcss-loader` and post-process asset rewriting.
+
 ## Ignoring and preserving
 
 Use `preserveFunction` to wrap strings you want to keep verbatim. The default config ships with `twIgnore`, which works with template literals:

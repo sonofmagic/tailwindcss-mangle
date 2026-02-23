@@ -46,3 +46,12 @@ npx tw-patch extract
 - `unplugin-tailwindcss-mangle` —— 读取类名清单，在打包阶段重写匹配的类名。
 - `@tailwindcss-mangle/config` —— 统一加载并标准化旧版与新版配置。
 - `@tailwindcss-mangle/shared` —— 内置类名生成、过滤及通用正则等辅助方法。
+
+## 当前实现状态
+
+- `unplugin-tailwindcss-mangle` 已启用“编译器感知”的转换分流：基于扩展名、查询参数（`type`、`lang`）和源码特征，将文件精确路由到 JS/Vue/Svelte/CSS/HTML 对应处理器。
+- Webpack 下对 HTML 子编译资源增加了防护策略，避免误进入 JS 转换链路。
+- 映射文件输出（`.tw-patch/tw-map-list.json`）已通过仓库内真实应用构建的 E2E 测试验证。
+- 在 monorepo 联调场景下，运行时包优先通过 `dist` 入口解析，保证 Next/Webpack 配置阶段加载稳定。
+
+可继续查看 [集成实战](./integration) 获取框架接入细节，以及 [测试与 E2E](./testing) 了解完整验证链路。

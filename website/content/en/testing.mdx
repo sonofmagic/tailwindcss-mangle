@@ -1,0 +1,70 @@
+# 5.Testing & E2E
+
+This page documents how the repository validates real-world integrations and what checks are currently enforced.
+
+## Commands
+
+From repository root:
+
+```sh
+pnpm test:e2e
+```
+
+This delegates to:
+
+```sh
+pnpm --filter unplugin-tailwindcss-mangle test:e2e
+```
+
+Inside package scope:
+
+```sh
+pnpm --filter unplugin-tailwindcss-mangle test
+pnpm --filter unplugin-tailwindcss-mangle test:e2e
+```
+
+## Current E2E coverage
+
+`packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` runs production builds for these fixtures:
+
+- `vite-vue`
+- `vite-react`
+- `vite-svelte`
+- `vite-vanilla`
+- `nuxt-app`
+- `astro-app`
+- `next-app`
+- `next-app-router`
+- `webpack5-vue3`
+
+## What each E2E case asserts
+
+For every app case, the test:
+
+1. Removes stale `.tw-patch/tw-map-list.json`.
+2. Runs `pnpm --dir &lt;appDir&gt; build` with production env.
+3. Reads `.tw-patch/tw-map-list.json`.
+4. Asserts mapping is non-empty.
+5. Asserts an expected original class exists.
+6. Asserts mangled class starts with `tw-`.
+7. Asserts `usedBy` is present and array-shaped.
+
+This verifies that class extraction + transform + mapping output are connected end-to-end for each framework.
+
+## Adding a new app integration to E2E
+
+When introducing a new fixture under `apps/`:
+
+1. Ensure build script succeeds in production mode.
+2. Ensure the fixture has extractable Tailwind classes.
+3. Add a new case in `apps.e2e.test.ts` with:
+   - `appDir`
+   - `expectedOriginalClass`
+   - optional environment overrides
+4. Run `pnpm test:e2e` locally.
+
+## Debug tips
+
+- Empty map file usually means the fixture has no valid class inventory at build time.
+- For Next 16 + webpack adapter, prefer `next build --webpack` in fixture scripts.
+- For webpack-like pipelines, keep `sources.include` focused to avoid unrelated resource transforms.

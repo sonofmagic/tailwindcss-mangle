@@ -1,0 +1,70 @@
+# 5.测试与 E2E
+
+本页说明仓库当前如何验证真实框架集成，以及 E2E 目前覆盖的能力边界。
+
+## 执行命令
+
+在仓库根目录执行：
+
+```sh
+pnpm test:e2e
+```
+
+其实际会调用：
+
+```sh
+pnpm --filter unplugin-tailwindcss-mangle test:e2e
+```
+
+在包级别也可以单独运行：
+
+```sh
+pnpm --filter unplugin-tailwindcss-mangle test
+pnpm --filter unplugin-tailwindcss-mangle test:e2e
+```
+
+## 当前 E2E 覆盖矩阵
+
+`packages/unplugin-tailwindcss-mangle/test/apps.e2e.test.ts` 会对以下示例执行生产构建并校验结果：
+
+- `vite-vue`
+- `vite-react`
+- `vite-svelte`
+- `vite-vanilla`
+- `nuxt-app`
+- `astro-app`
+- `next-app`
+- `next-app-router`
+- `webpack5-vue3`
+
+## 每个 E2E 用例会校验什么
+
+每个应用用例都执行以下步骤：
+
+1. 删除旧的 `.tw-patch/tw-map-list.json`。
+2. 以生产环境执行 `pnpm --dir &lt;appDir&gt; build`。
+3. 读取构建后的 `.tw-patch/tw-map-list.json`。
+4. 断言映射文件非空。
+5. 断言存在预期原始类名。
+6. 断言混淆后类名前缀为 `tw-`。
+7. 断言 `usedBy` 字段存在且为数组。
+
+这保证了“类名提取 + 代码转换 + 映射输出”在各框架下都是端到端可用的。
+
+## 新增框架集成时的接入流程
+
+当你新增一个 `apps/` 示例时：
+
+1. 先确保该示例在生产模式下可构建。
+2. 确保示例中存在可提取的 Tailwind 类名。
+3. 在 `apps.e2e.test.ts` 里新增用例并配置：
+   - `appDir`
+   - `expectedOriginalClass`
+   - 可选环境变量
+4. 本地执行 `pnpm test:e2e` 验证。
+
+## 排障建议
+
+- 映射文件为空通常表示构建阶段没有拿到有效类名清单。
+- Next 16 + webpack 适配器建议使用 `next build --webpack`。
+- Webpack 类流水线建议收敛 `sources.include`，避免误处理无关资源。
