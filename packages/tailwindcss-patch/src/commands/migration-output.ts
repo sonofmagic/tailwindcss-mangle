@@ -1,4 +1,4 @@
-import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
+import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migration-types'
 import type { ValidateFailureSummary, ValidateJsonFailurePayload, ValidateJsonSuccessPayload } from './validate'
 
 import process from 'node:process'

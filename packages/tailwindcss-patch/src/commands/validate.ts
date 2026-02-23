@@ -1,4 +1,4 @@
-import type { RestoreConfigFilesResult } from './migrate-config'
+import type { RestoreConfigFilesResult } from './migration-types'
 
 export const VALIDATE_EXIT_CODES = {
   OK: 0,

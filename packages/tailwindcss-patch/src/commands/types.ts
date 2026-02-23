@@ -7,7 +7,7 @@ import type {
   TailwindcssPatchOptions,
   TailwindTokenReport,
 } from '../types'
-import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
+import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migration-types'
 import type { TokenGroupKey, TokenOutputFormat } from './token-output'
 
 export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'validate' | 'status'
