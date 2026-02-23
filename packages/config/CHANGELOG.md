@@ -1,5 +1,17 @@
 # @tailwindcss-mangle/config
 
+## 6.1.2
+
+### Patch Changes
+
+- 🐛 **use compiler-aware transforms and stabilize workspace runtime exports** [`a64c0da`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a64c0dae16d0b1d18f6bc88338abe2103b204c4d) by @sonofmagic
+  - route included source files to the correct AST handler by file/query language hints
+  - avoid webpack html child-compilation transform conflicts and improve filter behavior
+  - add app integration e2e coverage for vite/nuxt/astro/next/webpack examples
+  - expose workspace package runtime entries from dist for stable next/webpack consumption
+- 📦 **Dependencies** [`a64c0da`](https://github.com/sonofmagic/tailwindcss-mangle/commit/a64c0dae16d0b1d18f6bc88338abe2103b204c4d)
+  → `@tailwindcss-mangle/shared@4.1.2`
+
 ## 6.1.1
 
 ### Patch Changes
