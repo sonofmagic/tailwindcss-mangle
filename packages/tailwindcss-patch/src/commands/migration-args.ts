@@ -9,6 +9,17 @@ export interface ResolvedMigrateCommandArgs {
   hasInvalidMaxDepth: boolean
 }
 
+export interface ResolvedRestoreCommandArgs {
+  reportFile: string
+  dryRun: boolean
+  strict: boolean
+}
+
+export interface ResolvedValidateCommandArgs {
+  reportFile: string
+  strict: boolean
+}
+
 export function normalizePatternArgs(value?: string | string[]) {
   if (!value) {
     return undefined
@@ -55,5 +66,20 @@ export function resolveMigrateCommandArgs(args: TailwindcssPatchCommandArgMap['m
     checkMode,
     dryRun,
     hasInvalidMaxDepth,
+  }
+}
+
+export function resolveRestoreCommandArgs(args: TailwindcssPatchCommandArgMap['restore']): ResolvedRestoreCommandArgs {
+  return {
+    reportFile: args.reportFile ?? '.tw-patch/migrate-report.json',
+    dryRun: args.dryRun ?? false,
+    strict: args.strict ?? false,
+  }
+}
+
+export function resolveValidateCommandArgs(args: TailwindcssPatchCommandArgMap['validate']): ResolvedValidateCommandArgs {
+  return {
+    reportFile: args.reportFile ?? '.tw-patch/migrate-report.json',
+    strict: args.strict ?? false,
   }
 }

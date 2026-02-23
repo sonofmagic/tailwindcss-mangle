@@ -6,7 +6,11 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import logger from '../logger'
 import { migrateConfigFiles, restoreConfigFiles } from './migrate-config'
-import { resolveMigrateCommandArgs } from './migration-args'
+import {
+  resolveMigrateCommandArgs,
+  resolveRestoreCommandArgs,
+  resolveValidateCommandArgs,
+} from './migration-args'
 import { classifyValidateError, ValidateCommandError } from './validate'
 
 export async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'migrate'>) {
@@ -89,12 +93,12 @@ export async function migrateCommandDefaultHandler(ctx: TailwindcssPatchCommandC
 
 export async function restoreCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'restore'>) {
   const { args } = ctx
-  const reportFile = args.reportFile ?? '.tw-patch/migrate-report.json'
+  const restoreArgs = resolveRestoreCommandArgs(args)
   const result = await restoreConfigFiles({
     cwd: ctx.cwd,
-    reportFile,
-    dryRun: args.dryRun ?? false,
-    strict: args.strict ?? false,
+    reportFile: restoreArgs.reportFile,
+    dryRun: restoreArgs.dryRun,
+    strict: restoreArgs.strict,
   })
 
   if (args.json) {
@@ -119,13 +123,13 @@ export async function restoreCommandDefaultHandler(ctx: TailwindcssPatchCommandC
 
 export async function validateCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'validate'>) {
   const { args } = ctx
-  const reportFile = args.reportFile ?? '.tw-patch/migrate-report.json'
+  const validateArgs = resolveValidateCommandArgs(args)
   try {
     const result = await restoreConfigFiles({
       cwd: ctx.cwd,
-      reportFile,
+      reportFile: validateArgs.reportFile,
       dryRun: true,
-      strict: args.strict ?? false,
+      strict: validateArgs.strict,
     })
 
     if (args.json) {

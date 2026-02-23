@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { normalizePatternArgs, resolveMigrateCommandArgs } from '../src/commands/migration-args'
+import {
+  normalizePatternArgs,
+  resolveMigrateCommandArgs,
+  resolveRestoreCommandArgs,
+  resolveValidateCommandArgs,
+} from '../src/commands/migration-args'
 
 describe('migration args', () => {
   it('normalizes include and exclude pattern arguments', () => {
@@ -43,6 +48,45 @@ describe('migration args', () => {
     })).toMatchObject({
       maxDepth: undefined,
       hasInvalidMaxDepth: true,
+    })
+  })
+
+  it('resolves restore command defaults', () => {
+    expect(resolveRestoreCommandArgs({
+      cwd: '/repo',
+    })).toEqual({
+      reportFile: '.tw-patch/migrate-report.json',
+      dryRun: false,
+      strict: false,
+    })
+
+    expect(resolveRestoreCommandArgs({
+      cwd: '/repo',
+      reportFile: 'custom.json',
+      dryRun: true,
+      strict: true,
+    })).toEqual({
+      reportFile: 'custom.json',
+      dryRun: true,
+      strict: true,
+    })
+  })
+
+  it('resolves validate command defaults', () => {
+    expect(resolveValidateCommandArgs({
+      cwd: '/repo',
+    })).toEqual({
+      reportFile: '.tw-patch/migrate-report.json',
+      strict: false,
+    })
+
+    expect(resolveValidateCommandArgs({
+      cwd: '/repo',
+      reportFile: 'custom.json',
+      strict: true,
+    })).toEqual({
+      reportFile: 'custom.json',
+      strict: true,
     })
   })
 })
