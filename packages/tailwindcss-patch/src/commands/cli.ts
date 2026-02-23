@@ -16,23 +16,12 @@ import {
   ValidateCommandError,
 } from './validate'
 import {
-  extractCommandDefaultHandler,
-  initCommandDefaultHandler,
-  installCommandDefaultHandler,
-  tokensCommandDefaultHandler,
-} from './basic-handlers'
-import {
-  migrateCommandDefaultHandler,
-  restoreCommandDefaultHandler,
-  validateCommandDefaultHandler,
-} from './migration-handlers'
-import { statusCommandDefaultHandler } from './status-handler'
-import {
   applyCommandOptions,
   buildDefaultCommandDefinitions,
   resolveCommandMetadata,
 } from './metadata'
 import { runWithCommandHandler } from './command-runtime'
+import { defaultCommandHandlers } from './default-handler-map'
 import { tailwindcssPatchCommands } from './types'
 
 export {
@@ -63,21 +52,6 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
   const selectedCommands = options.commands ?? tailwindcssPatchCommands
   const defaultDefinitions = buildDefaultCommandDefinitions()
 
-  const defaultHandlers: {
-    [K in TailwindcssPatchCommand]: (
-      context: TailwindcssPatchCommandContext<K>,
-    ) => Promise<TailwindcssPatchCommandResultMap[K]>
-  } = {
-    install: installCommandDefaultHandler,
-    extract: extractCommandDefaultHandler,
-    tokens: tokensCommandDefaultHandler,
-    init: initCommandDefaultHandler,
-    migrate: migrateCommandDefaultHandler,
-    restore: restoreCommandDefaultHandler,
-    validate: validateCommandDefaultHandler,
-    status: statusCommandDefaultHandler,
-  }
-
   const registerCommand = <TCommand extends TailwindcssPatchCommand>(commandName: TCommand) => {
     const metadata = resolveCommandMetadata(commandName, options, prefix, defaultDefinitions)
     const command = cli.command(metadata.name, metadata.description)
@@ -89,7 +63,7 @@ export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatc
         commandName,
         args,
         options.commandHandlers?.[commandName] as TailwindcssPatchCommandHandler<TCommand> | undefined,
-        defaultHandlers[commandName],
+        defaultCommandHandlers[commandName],
       )
     })
     metadata.aliases.forEach(alias => command.alias(alias))
