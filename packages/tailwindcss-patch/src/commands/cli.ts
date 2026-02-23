@@ -1,14 +1,20 @@
 import type { CAC, Command } from 'cac'
-import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
 import type { TailwindcssConfigResult } from '../config/workspace'
 import type {
   ExtractResult,
   PatchStatusReport,
   TailwindcssPatchOptions,
-  TailwindTokenByFileMap,
-  TailwindTokenLocation,
   TailwindTokenReport,
 } from '../types'
+import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migrate-config'
+import type {
+  TokenGroupKey,
+  TokenOutputFormat,
+} from './token-output'
+import type {
+  ValidateJsonFailurePayload,
+  ValidateJsonSuccessPayload,
+} from './validate'
 
 import process from 'node:process'
 import cac from 'cac'
@@ -23,96 +29,35 @@ import {
   migrateConfigFiles,
   restoreConfigFiles,
 } from './migrate-config'
+import {
+  DEFAULT_TOKEN_REPORT,
+  formatGroupedPreview,
+  formatTokenLine,
+  TOKEN_FORMATS,
+} from './token-output'
+import {
+  classifyValidateError,
+  VALIDATE_EXIT_CODES,
+  VALIDATE_FAILURE_REASONS,
+  ValidateCommandError,
+} from './validate'
 
 export type TailwindcssPatchCommand = 'install' | 'extract' | 'tokens' | 'init' | 'migrate' | 'restore' | 'validate' | 'status'
 
 export const tailwindcssPatchCommands: TailwindcssPatchCommand[] = ['install', 'extract', 'tokens', 'init', 'migrate', 'restore', 'validate', 'status']
-
-export const VALIDATE_EXIT_CODES = {
-  OK: 0,
-  REPORT_INCOMPATIBLE: 21,
-  MISSING_BACKUPS: 22,
-  IO_ERROR: 23,
-  UNKNOWN_ERROR: 24,
-} as const
-
-export const VALIDATE_FAILURE_REASONS = [
-  'report-incompatible',
-  'missing-backups',
-  'io-error',
-  'unknown-error',
-] as const
-
-export type ValidateFailureReason = (typeof VALIDATE_FAILURE_REASONS)[number]
-
-export interface ValidateFailureSummary {
-  reason: ValidateFailureReason
-  exitCode: number
-  message: string
+export {
+  VALIDATE_EXIT_CODES,
+  VALIDATE_FAILURE_REASONS,
+  ValidateCommandError,
 }
-
-export interface ValidateJsonSuccessPayload extends RestoreConfigFilesResult {
-  ok: true
-}
-
-export interface ValidateJsonFailurePayload {
-  ok: false
-  reason: ValidateFailureReason
-  exitCode: number
-  message: string
-}
-
-const IO_ERROR_CODES = new Set(['ENOENT', 'EACCES', 'EPERM', 'EISDIR', 'ENOTDIR', 'EMFILE', 'ENFILE'])
+export type {
+  ValidateFailureReason,
+  ValidateFailureSummary,
+  ValidateJsonFailurePayload,
+  ValidateJsonSuccessPayload,
+} from './validate'
 const DEFAULT_CONFIG_NAME = 'tailwindcss-mangle'
 
-function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return !!error && typeof error === 'object' && ('code' in error || 'message' in error)
-}
-
-function classifyValidateError(error: unknown): ValidateFailureSummary {
-  const message = error instanceof Error ? error.message : String(error)
-  if (message.startsWith('Unsupported report kind') || message.startsWith('Unsupported report schema version')) {
-    return {
-      reason: 'report-incompatible',
-      exitCode: VALIDATE_EXIT_CODES.REPORT_INCOMPATIBLE,
-      message,
-    }
-  }
-  if (message.startsWith('Restore failed:')) {
-    return {
-      reason: 'missing-backups',
-      exitCode: VALIDATE_EXIT_CODES.MISSING_BACKUPS,
-      message,
-    }
-  }
-  if (isNodeError(error) && typeof error.code === 'string' && IO_ERROR_CODES.has(error.code)) {
-    return {
-      reason: 'io-error',
-      exitCode: VALIDATE_EXIT_CODES.IO_ERROR,
-      message,
-    }
-  }
-  return {
-    reason: 'unknown-error',
-    exitCode: VALIDATE_EXIT_CODES.UNKNOWN_ERROR,
-    message,
-  }
-}
-
-export class ValidateCommandError extends Error {
-  reason: ValidateFailureReason
-  exitCode: number
-
-  constructor(summary: ValidateFailureSummary, options?: ErrorOptions) {
-    super(summary.message, options)
-    this.name = 'ValidateCommandError'
-    this.reason = summary.reason
-    this.exitCode = summary.exitCode
-  }
-}
-
-type TokenOutputFormat = 'json' | 'lines' | 'grouped-json'
-type TokenGroupKey = 'relative' | 'absolute'
 type CacOptionConfig = Parameters<Command['option']>[2]
 
 export interface TailwindcssPatchCommandOptionDefinition {
@@ -232,32 +177,6 @@ export interface TailwindcssPatchCliOptions {
 interface TailwindcssPatchCommandDefinition {
   description: string
   optionDefs: TailwindcssPatchCommandOptionDefinition[]
-}
-
-const TOKEN_FORMATS: TokenOutputFormat[] = ['json', 'lines', 'grouped-json']
-const DEFAULT_TOKEN_REPORT = '.tw-patch/tw-token-report.json'
-
-function formatTokenLine(entry: TailwindTokenLocation) {
-  return `${entry.relativeFile}:${entry.line}:${entry.column} ${entry.rawCandidate} (${entry.start}-${entry.end})`
-}
-
-function formatGroupedPreview(map: TailwindTokenByFileMap, limit: number = 3) {
-  const files = Object.keys(map)
-  if (!files.length) {
-    return { preview: '', moreFiles: 0 }
-  }
-
-  const lines = files.slice(0, limit).map((file) => {
-    const tokens = map[file] ?? []
-    const sample = tokens.slice(0, 3).map(token => token.rawCandidate).join(', ')
-    const suffix = tokens.length > 3 ? ', …' : ''
-    return `${file}: ${tokens.length} tokens (${sample}${suffix})`
-  })
-
-  return {
-    preview: lines.join('\n'),
-    moreFiles: Math.max(0, files.length - limit),
-  }
 }
 
 function resolveCwd(rawCwd?: string) {
