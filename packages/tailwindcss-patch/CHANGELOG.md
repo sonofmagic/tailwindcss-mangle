@@ -1,5 +1,26 @@
 # tailwindcss-patch
 
+## 8.7.3
+
+### Patch Changes
+
+- 🐛 **Fix workspace install and e2e stability when package dist artifacts are unavailable during lifecycle scripts.** [`84dcb16`](https://github.com/sonofmagic/tailwindcss-mangle/commit/84dcb1667cbe360c67744f3fd1f53d5c8c45eaae) by @sonofmagic
+  - Keep published entry fields for config/shared/tailwindcss-patch pointing to `dist` outputs.
+  - Make `tw-patch install` resilient in monorepo installs by avoiding eager config loading and lazily resolving config/shared modules with source fallbacks.
+  - Prevent CI install failures caused by module resolution during app `prepare`/`postinstall` hooks.
+
+- 🐛 **Refactor command-layer internals for clearer module boundaries while preserving CLI behavior.** [`3930935`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3930935d910ff9a2bcd502cb241973b79c06ab59) by @sonofmagic
+  - Split command internals into focused modules for context creation, metadata/definition resolution, migration argument parsing, and migration/status output rendering.
+  - Strengthen module-level coverage for CLI factory wiring, command metadata/definitions, runtime/context memoization, default handler maps, migration argument normalization, and output rendering.
+  - Keep public command names, options, and runtime behavior unchanged while reducing internal coupling for future maintenance.
+
+- 🐛 **Remove legacy source-level CLI compatibility shims and standardize internal imports on `src/commands/*`.** [`fdd0cf3`](https://github.com/sonofmagic/tailwindcss-mangle/commit/fdd0cf39e985d3a2cbd2b3096f4914add47300c8) by @sonofmagic
+  - Remove `src/cli/commands.ts` and `src/cli/migrate-config.ts` compatibility shim files.
+  - Update internal tests and command wiring to import directly from `src/commands/*`.
+  - Keep public package API and CLI behavior unchanged.
+- 📦 **Dependencies** [`84dcb16`](https://github.com/sonofmagic/tailwindcss-mangle/commit/84dcb1667cbe360c67744f3fd1f53d5c8c45eaae)
+  → `@tailwindcss-mangle/config@6.1.3`
+
 ## 8.7.2
 
 ### Patch Changes
