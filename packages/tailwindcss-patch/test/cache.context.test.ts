@@ -90,6 +90,52 @@ describe('cache context fingerprint', () => {
     expect(descriptorA.fingerprint).not.toBe(descriptorB.fingerprint)
   })
 
+  it('changes fingerprint when Tailwind v4 cssEntries change', async () => {
+    const projectRoot = path.join(tempDir, 'project')
+    const packageRoot = path.join(tempDir, 'tailwind-pkg')
+    await fs.ensureDir(projectRoot)
+    await fs.ensureDir(packageRoot)
+
+    const normalizedA = normalizeOptions({
+      cwd: projectRoot,
+      cache: {
+        enabled: true,
+        dir: path.join(tempDir, '.cache'),
+      },
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 4,
+        v4: {
+          cssEntries: [path.join(projectRoot, 'a.css')],
+        },
+      },
+    })
+
+    const normalizedB = normalizeOptions({
+      cwd: projectRoot,
+      cache: {
+        enabled: true,
+        dir: path.join(tempDir, '.cache'),
+      },
+      output: {
+        enabled: false,
+      },
+      tailwind: {
+        version: 4,
+        v4: {
+          cssEntries: [path.join(projectRoot, 'b.css')],
+        },
+      },
+    })
+
+    const descriptorA = createCacheContextDescriptor(normalizedA, toPackageInfo(packageRoot, '4.1.0'), 4)
+    const descriptorB = createCacheContextDescriptor(normalizedB, toPackageInfo(packageRoot, '4.1.0'), 4)
+
+    expect(descriptorA.fingerprint).not.toBe(descriptorB.fingerprint)
+  })
+
   it('explains mismatch reasons and returns empty for identical metadata', () => {
     const base = {
       fingerprintVersion: 1 as const,

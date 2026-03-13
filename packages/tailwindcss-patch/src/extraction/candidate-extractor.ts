@@ -9,6 +9,11 @@ import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
 
+let nodeImportPromise: ReturnType<typeof importNode> | undefined
+let oxideImportPromise: ReturnType<typeof importOxide> | undefined
+const designSystemPromiseCache = new Map<string, Promise<any>>()
+const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
+
 async function importNode() {
   return import('@tailwindcss/node')
 }
@@ -17,28 +22,62 @@ async function importOxide() {
   return import('@tailwindcss/oxide')
 }
 
+function getNodeModule() {
+  nodeImportPromise ??= importNode()
+  return nodeImportPromise
+}
+
+function getOxideModule() {
+  oxideImportPromise ??= importOxide()
+  return oxideImportPromise
+}
+
+function createDesignSystemCacheKey(css: string, bases: string[]) {
+  return JSON.stringify({
+    css,
+    bases: Array.from(new Set(bases.filter(Boolean))),
+  })
+}
+
 async function loadDesignSystem(css: string, bases: string[]) {
   const uniqueBases = Array.from(new Set(bases.filter(Boolean)))
   if (uniqueBases.length === 0) {
     throw new Error('No base directories provided for Tailwind CSS design system.')
   }
 
-  const { __unstable__loadDesignSystem } = await importNode()
-  let lastError: unknown
-
-  for (const base of uniqueBases) {
-    try {
-      return await __unstable__loadDesignSystem(css, { base })
-    }
-    catch (error) {
-      lastError = error
-    }
+  const cacheKey = createDesignSystemCacheKey(css, uniqueBases)
+  const cached = designSystemPromiseCache.get(cacheKey)
+  if (cached) {
+    return cached
   }
 
-  if (lastError instanceof Error) {
-    throw lastError
-  }
-  throw new Error('Failed to load Tailwind CSS design system.')
+  const promise = (async () => {
+    const { __unstable__loadDesignSystem } = await getNodeModule()
+    let lastError: unknown
+
+    for (const base of uniqueBases) {
+      try {
+        return await __unstable__loadDesignSystem(css, { base })
+      }
+      catch (error) {
+        lastError = error
+      }
+    }
+
+    if (lastError instanceof Error) {
+      throw lastError
+    }
+    throw new Error('Failed to load Tailwind CSS design system.')
+  })()
+
+  designSystemPromiseCache.set(cacheKey, promise)
+  promise.catch(() => {
+    if (designSystemPromiseCache.get(cacheKey) === promise) {
+      designSystemPromiseCache.delete(cacheKey)
+      designSystemCandidateCache.delete(cacheKey)
+    }
+  })
+  return promise
 }
 
 export interface ExtractValidCandidatesOption {
@@ -53,7 +92,7 @@ export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
 ): Promise<{ rawCandidate: string, start: number, end: number }[]> {
-  const { Scanner } = await importOxide()
+  const { Scanner } = await getOxideModule()
   const scanner = new Scanner({})
   const result = scanner.getCandidatesWithPositions({ content, extension })
 
@@ -67,7 +106,7 @@ export async function extractRawCandidatesWithPositions(
 export async function extractRawCandidates(
   sources?: SourceEntry[],
 ): Promise<string[]> {
-  const { Scanner } = await importOxide()
+  const { Scanner } = await getOxideModule()
   const scanner = new Scanner(sources === undefined ? {} : { sources })
 
   return scanner.scan()
@@ -92,28 +131,52 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     negated: source.negated,
   }))
 
+  const designSystemKey = createDesignSystemCacheKey(css, [base, ...baseFallbacks])
   const designSystem = await loadDesignSystem(css, [base, ...baseFallbacks])
+  const candidateCache = designSystemCandidateCache.get(designSystemKey) ?? new Map<string, boolean>()
+  designSystemCandidateCache.set(designSystemKey, candidateCache)
 
   const candidates = await extractRawCandidates(sources)
-  const parsedCandidates = candidates.filter(
-    rawCandidate => designSystem.parseCandidate(rawCandidate).length > 0,
-  )
-  if (parsedCandidates.length === 0) {
-    return parsedCandidates
+  const validCandidates: string[] = []
+  const uncachedCandidates: string[] = []
+
+  for (const rawCandidate of candidates) {
+    const cached = candidateCache.get(rawCandidate)
+    if (cached === true) {
+      validCandidates.push(rawCandidate)
+      continue
+    }
+
+    if (cached === false) {
+      continue
+    }
+
+    if (designSystem.parseCandidate(rawCandidate).length > 0) {
+      uncachedCandidates.push(rawCandidate)
+      continue
+    }
+
+    candidateCache.set(rawCandidate, false)
   }
 
-  const cssByCandidate = designSystem.candidatesToCss(parsedCandidates)
-  const validCandidates: string[] = []
+  if (uncachedCandidates.length === 0) {
+    return validCandidates
+  }
 
-  for (let index = 0; index < parsedCandidates.length; index++) {
-    const candidate = parsedCandidates[index]
+  const cssByCandidate = designSystem.candidatesToCss(uncachedCandidates)
+
+  for (let index = 0; index < uncachedCandidates.length; index++) {
+    const candidate = uncachedCandidates[index]
     if (candidate === undefined) {
       continue
     }
-    const css = cssByCandidate[index]
-    if (typeof css === 'string' && css.trim().length > 0) {
-      validCandidates.push(candidate)
+    const candidateCss = cssByCandidate[index]
+    const isValid = typeof candidateCss === 'string' && candidateCss.trim().length > 0
+    candidateCache.set(candidate, isValid)
+    if (!isValid) {
+      continue
     }
+    validCandidates.push(candidate)
   }
 
   return validCandidates
@@ -208,7 +271,7 @@ export async function extractProjectCandidatesWithPositions(
 ): Promise<TailwindTokenReport> {
   const cwd = options?.cwd ? path.resolve(options.cwd) : process.cwd()
   const normalizedSources = normalizeSources(options?.sources, cwd)
-  const { Scanner } = await importOxide()
+  const { Scanner } = await getOxideModule()
   const scanner = new Scanner({
     sources: normalizedSources,
   })

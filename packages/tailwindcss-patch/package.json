@@ -46,6 +46,7 @@
     "build": "tsup",
     "test": "vitest run",
     "test:dev": "vitest",
+    "bench:cold-start": "node --import tsx bench/cold-start.ts",
     "patch": "tsx dev/bin.ts install",
     "r0": "tsx dev/bin.ts extract",
     "r1": "tsx dev/bin.ts extract --css index.css"
@@ -86,12 +87,12 @@
     "@babel/types": "^7.29.0",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss/node": "^4.2.1",
-    "cac": "^6.7.14",
+    "cac": "^7.0.0",
     "consola": "^3.4.2",
-    "fs-extra": "^11.3.3",
+    "fs-extra": "^11.3.4",
     "local-pkg": "^1.1.2",
     "pathe": "^2.0.3",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.8",
     "semver": "^7.7.4",
     "tailwindcss-config": "^1.1.4"
   },

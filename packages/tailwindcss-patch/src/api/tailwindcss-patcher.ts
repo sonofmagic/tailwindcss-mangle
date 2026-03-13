@@ -33,6 +33,12 @@ import { getPatchStatusReport } from '../install/status'
 import logger from '../logger'
 
 type TailwindMajorVersion = 2 | 3 | 4
+type PatchResult = ReturnType<typeof applyTailwindPatches>
+
+interface PatchMemo {
+  result: PatchResult
+  snapshot: string
+}
 
 function resolveMajorVersion(version?: string | null, hint?: 2 | 3 | 4): TailwindMajorVersion {
   if (hint && [2, 3, 4].includes(hint)) {
@@ -96,6 +102,8 @@ export class TailwindcssPatcher {
   }
 
   private readonly cacheStore: CacheStore
+  private patchMemo?: PatchMemo
+  private inFlightBuild?: Promise<void>
 
   constructor(options: TailwindcssPatcherInitOptions = {}) {
     const resolvedOptions: TailwindcssPatchOptions
@@ -128,11 +136,21 @@ export class TailwindcssPatcher {
   }
 
   async patch() {
-    return applyTailwindPatches({
+    const snapshot = this.createPatchSnapshot()
+    if (this.patchMemo && this.patchMemo.snapshot === snapshot) {
+      return this.patchMemo.result
+    }
+
+    const result = applyTailwindPatches({
       packageInfo: this.packageInfo,
       options: this.options,
       majorVersion: this.majorVersion,
     })
+    this.patchMemo = {
+      result,
+      snapshot: this.createPatchSnapshot(),
+    }
+    return result
   }
 
   async getPatchStatus() {
@@ -153,6 +171,10 @@ export class TailwindcssPatcher {
 
   private async runTailwindBuildIfNeeded() {
     if (this.majorVersion === 2 || this.majorVersion === 3) {
+      if (this.inFlightBuild) {
+        return this.inFlightBuild
+      }
+
       const executionOptions = resolveTailwindExecutionOptions(this.options, this.majorVersion)
       const buildOptions = {
         cwd: executionOptions.cwd,
@@ -160,8 +182,66 @@ export class TailwindcssPatcher {
         ...(executionOptions.config === undefined ? {} : { config: executionOptions.config }),
         ...(executionOptions.postcssPlugin === undefined ? {} : { postcssPlugin: executionOptions.postcssPlugin }),
       }
-      await runTailwindBuild(buildOptions)
+      this.inFlightBuild = runTailwindBuild(buildOptions).then(() => undefined)
+      try {
+        await this.inFlightBuild
+      }
+      finally {
+        this.inFlightBuild = undefined
+      }
     }
+  }
+
+  private createPatchSnapshot() {
+    const entries: string[] = []
+    const pushSnapshot = (filePath: string) => {
+      if (!fs.pathExistsSync(filePath)) {
+        entries.push(`${filePath}:missing`)
+        return
+      }
+
+      const stat = fs.statSync(filePath)
+      entries.push(`${filePath}:${stat.size}:${Math.trunc(stat.mtimeMs)}`)
+    }
+
+    if (this.options.features.exposeContext.enabled && (this.majorVersion === 2 || this.majorVersion === 3)) {
+      if (this.majorVersion === 2) {
+        pushSnapshot(path.resolve(this.packageInfo.rootPath, 'lib/jit/processTailwindFeatures.js'))
+        pushSnapshot(path.resolve(this.packageInfo.rootPath, 'lib/jit/index.js'))
+      }
+      else {
+        pushSnapshot(path.resolve(this.packageInfo.rootPath, 'lib/processTailwindFeatures.js'))
+        const pluginPath = ['lib/plugin.js', 'lib/index.js']
+          .map(file => path.resolve(this.packageInfo.rootPath, file))
+          .find(file => fs.pathExistsSync(file))
+        if (pluginPath) {
+          pushSnapshot(pluginPath)
+        }
+      }
+    }
+
+    if (this.options.features.extendLengthUnits?.enabled) {
+      if (this.majorVersion === 3) {
+        const target = this.options.features.extendLengthUnits.lengthUnitsFilePath ?? 'lib/util/dataTypes.js'
+        pushSnapshot(path.resolve(this.packageInfo.rootPath, target))
+      }
+      else if (this.majorVersion === 4) {
+        const distDir = path.resolve(this.packageInfo.rootPath, 'dist')
+        if (fs.pathExistsSync(distDir)) {
+          const chunkNames = fs.readdirSync(distDir)
+            .filter(entry => entry.endsWith('.js') || entry.endsWith('.mjs'))
+            .sort()
+          for (const chunkName of chunkNames) {
+            pushSnapshot(path.join(distDir, chunkName))
+          }
+        }
+        else {
+          entries.push(`${distDir}:missing`)
+        }
+      }
+    }
+
+    return entries.join('|')
   }
 
   private async collectClassSet(): Promise<Set<string>> {
@@ -197,14 +277,18 @@ export class TailwindcssPatcher {
       for (const value of existing) {
         set.add(value)
       }
-      const writeTarget = await this.cacheStore.write(set)
+      const writeTarget = this.areSetsEqual(existing, set)
+        ? undefined
+        : await this.cacheStore.write(set)
       if (writeTarget) {
         logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
       }
     }
     else {
       if (set.size > 0) {
-        const writeTarget = await this.cacheStore.write(set)
+        const writeTarget = this.areSetsEqual(existing, set)
+          ? undefined
+          : await this.cacheStore.write(set)
         if (writeTarget) {
           logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
         }
@@ -228,14 +312,18 @@ export class TailwindcssPatcher {
       for (const value of existing) {
         set.add(value)
       }
-      const writeTarget = this.cacheStore.writeSync(set)
+      const writeTarget = this.areSetsEqual(existing, set)
+        ? undefined
+        : this.cacheStore.writeSync(set)
       if (writeTarget) {
         logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
       }
     }
     else {
       if (set.size > 0) {
-        const writeTarget = this.cacheStore.writeSync(set)
+        const writeTarget = this.areSetsEqual(existing, set)
+          ? undefined
+          : this.cacheStore.writeSync(set)
         if (writeTarget) {
           logger.debug(`[cache] stored ${set.size} classes -> ${writeTarget}`)
         }
@@ -246,6 +334,20 @@ export class TailwindcssPatcher {
     }
 
     return set
+  }
+
+  private areSetsEqual(a: Set<string>, b: Set<string>) {
+    if (a.size !== b.size) {
+      return false
+    }
+
+    for (const value of a) {
+      if (!b.has(value)) {
+        return false
+      }
+    }
+
+    return true
   }
 
   async getClassSet() {

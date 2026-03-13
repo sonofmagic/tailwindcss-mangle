@@ -449,6 +449,68 @@ describe('TailwindcssPatcher', () => {
     expect(statusSpy).toHaveBeenCalledTimes(1)
   })
 
+  it('skips repeated patch work when patch targets are unchanged', async () => {
+    const patchSpy = vi.spyOn(patchRunner, 'applyTailwindPatches').mockReturnValue({ ok: true } as any)
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: false,
+      output: {
+        enabled: false,
+      },
+    })
+
+    await patcher.patch()
+    await patcher.patch()
+
+    expect(patchSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('re-runs patch when tracked patch targets change', async () => {
+    const rootDir = await fs.mkdtemp(path.join(tempDir, 'patch-targets-'))
+    try {
+      const packageRoot = path.join(rootDir, 'node_modules', 'tailwindcss')
+      await fs.ensureDir(path.dirname(packageRoot))
+      await fs.copy(path.resolve(__dirname, 'fixtures/versions/3.3.1'), packageRoot)
+
+      const patcher = new TailwindcssPatcher({
+        cwd: rootDir,
+        overwrite: false,
+        cache: false,
+        output: {
+          enabled: false,
+        },
+        tailwind: {
+          version: 3,
+          resolve: {
+            paths: [rootDir],
+          },
+        },
+        features: {
+          extendLengthUnits: {
+            enabled: true,
+            units: ['rpx'],
+          },
+        },
+      })
+
+      const patchSpy = vi.spyOn(patchRunner, 'applyTailwindPatches')
+
+      await patcher.patch()
+      await patcher.patch()
+
+      const targetFile = path.join(packageRoot, 'lib/util/dataTypes.js')
+      await new Promise(resolve => setTimeout(resolve, 5))
+      await fs.appendFile(targetFile, '\n// touch\n', 'utf8')
+
+      await patcher.patch()
+
+      expect(patchSpy).toHaveBeenCalledTimes(2)
+    }
+    finally {
+      await fs.remove(rootDir)
+    }
+  })
+
   it('delegates context loading with configured ref property', () => {
     const loadSpy = vi.spyOn(contextRegistry, 'loadRuntimeContexts').mockReturnValue([])
     const patcher = new TailwindcssPatcher({
@@ -585,5 +647,95 @@ describe('TailwindcssPatcher', () => {
       key: 'absolute',
       stripAbsolutePaths: true,
     })
+  })
+
+  it('does not rewrite cache when repeated getClassSetSync returns the same class set', async () => {
+    const cacheFile = path.join(tempDir, 'cache.json')
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: {
+        enabled: true,
+        dir: tempDir,
+        file: 'cache.json',
+      },
+    })
+
+    vi.spyOn(patcher, 'getContexts').mockReturnValue([
+      {
+        classCache: new Map([
+          ['foo', []],
+          ['bar', []],
+        ]),
+      } as any,
+    ])
+
+    const first = patcher.getClassSetSync()
+    expect(first?.has('foo')).toBe(true)
+    const initialStat = await fs.stat(cacheFile)
+
+    await new Promise(resolve => setTimeout(resolve, 5))
+    const second = patcher.getClassSetSync()
+    const nextStat = await fs.stat(cacheFile)
+
+    expect(second?.has('bar')).toBe(true)
+    expect(nextStat.mtimeMs).toBe(initialStat.mtimeMs)
+  })
+
+  it('does not cache an empty class set as a successful result', () => {
+    const cacheFile = path.join(tempDir, 'cache.json')
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: {
+        enabled: true,
+        dir: tempDir,
+        file: 'cache.json',
+        strategy: 'overwrite',
+      },
+    })
+
+    vi.spyOn(patcher, 'getContexts').mockReturnValue([
+      {
+        classCache: new Map<string, any>(),
+      } as any,
+    ])
+
+    const result = patcher.getClassSetSync()
+
+    expect(result).toBeDefined()
+    expect(result?.size).toBe(0)
+    expect(fs.pathExistsSync(cacheFile)).toBe(false)
+  })
+
+  it('recollects classes after clearCache removes the current context entry', async () => {
+    const patcher = new TailwindcssPatcher({
+      overwrite: false,
+      cache: {
+        enabled: true,
+        dir: tempDir,
+        file: 'cache.json',
+      },
+    })
+
+    const getContextsSpy = vi.spyOn(patcher, 'getContexts')
+    getContextsSpy.mockReturnValue([
+      {
+        classCache: new Map([['first-pass', []]]),
+      } as any,
+    ])
+
+    const first = patcher.getClassSetSync()
+    expect(first?.has('first-pass')).toBe(true)
+
+    await patcher.clearCache()
+
+    getContextsSpy.mockReturnValue([
+      {
+        classCache: new Map([['second-pass', []]]),
+      } as any,
+    ])
+
+    const second = patcher.getClassSetSync()
+    expect(second?.has('second-pass')).toBe(true)
+    expect(second?.has('first-pass')).toBe(false)
   })
 })
