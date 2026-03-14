@@ -91,7 +91,7 @@
     "html-webpack-plugin": "^5.6.6",
     "husky": "^9.1.7",
     "klaw": "^4.1.0",
-    "lint-staged": "^16.3.3",
+    "lint-staged": "^16.4.0",
     "local-pkg": "^1.1.2",
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
