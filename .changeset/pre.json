@@ -23,8 +23,13 @@
     "@tailwindcss-mangle/website": "1.1.2"
   },
   "changesets": [
+    "cold-cobras-smash",
     "few-rice-rhyme",
+    "flat-snails-burn",
+    "green-swans-smile",
+    "real-otters-boil",
     "short-buckets-cheer",
-    "tall-rabbits-bathe"
+    "tall-rabbits-bathe",
+    "tidy-planes-wave"
   ]
 }

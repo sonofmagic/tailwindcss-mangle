@@ -1,5 +1,12 @@
 # postcss7-compat
 
+## 0.0.20-alpha.1
+
+### Patch Changes
+
+- 📦 **Dependencies** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c)
+  → `tailwindcss-patch@9.0.0-alpha.1`
+
 ## 0.0.20-alpha.0
 
 ### Patch Changes

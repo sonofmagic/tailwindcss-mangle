@@ -1,5 +1,29 @@
 # tailwindcss-patch
 
+## 9.0.0-alpha.1
+
+### Major Changes
+
+- 🚀 **Require modern `tailwindcss-patch` options and an explicit `tailwindcss.version`, removing support for legacy constructor aliases like `cwd`, `tailwind`, `features`, `output`, `overwrite`, and `patch`.** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c) by @sonofmagic
+  - Workspace registry loading now rejects deprecated `registry.output`, `registry.tailwind`, and `registry.patch` fields. Use `registry.extract`, `registry.tailwindcss`, and `registry.apply` instead.
+  - The default generated config now includes `registry.tailwindcss.version = 4`.
+  - `@tailwindcss-mangle/config` now types only the modern `registry` shape. Deprecated aliases like `registry.output`, `registry.tailwind`, `tailwindcss.package`, `tailwindcss.legacy`, `tailwindcss.classic`, and `tailwindcss.next` are no longer part of the public type surface.
+
+- 🚀 **Finalize the v9 `tailwindcss-patch` upgrade:** [`2a7f8b6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/2a7f8b6c7c40c0f8c806c9efda2cd2760b1d882e) by @sonofmagic
+  - require the modern `TailwindcssPatcher` option shape and reject legacy constructor aliases
+  - require explicit `tailwindcss.version` and validate it against the resolved Tailwind package version
+  - reject legacy workspace registry aliases such as `registry.output`, `registry.tailwind`, and `registry.patch`
+  - default generated config to `registry.tailwindcss.version = 4`
+  - document the v8 -> v9 migration path and modern-only configuration model
+
+### Patch Changes
+
+- 🐛 **Restore automatic Tailwind CSS major version detection when `registry.tailwindcss.version` is omitted, while keeping strict validation for explicitly configured versions. This also removes the default config value that forced version `4` during install-time prepare scripts in Tailwind v3 demo apps.** [`c87c9ab`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c87c9ab86dfa083f0f85d688f953d94834b2e293) by @sonofmagic
+
+- 🐛 **Fix workspace installs for monorepo consumers by making the local `tailwindcss-patch` entrypoint usable before `dist` is built. This keeps app-level `prepare` scripts working during fresh installs while preserving published package outputs via `publishConfig`.** [`1549b55`](https://github.com/sonofmagic/tailwindcss-mangle/commit/1549b55a1c6b9dbc462ea8cac83660a43e6a29b4) by @sonofmagic
+- 📦 **Dependencies** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c)
+  → `@tailwindcss-mangle/config@7.0.0-alpha.1`
+
 ## 8.7.4-alpha.0
 
 ### Patch Changes

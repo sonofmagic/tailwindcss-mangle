@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/shared
 
+## 4.1.4-alpha.0
+
+### Patch Changes
+
+- 🐛 **Align workspace package metadata with built `dist` outputs and fix config consumption to use the modern `registry.extract.file` fallback. Demo apps now declare the workspace packages they execute or import so Turbo can derive internal build dependencies correctly.** [`b42175f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b42175f33ab8751c4591c04160261e708c90689c) by @sonofmagic
+
 ## 4.1.3
 
 ### Patch Changes

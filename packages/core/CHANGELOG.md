@@ -1,5 +1,13 @@
 # @tailwindcss-mangle/core
 
+## 5.1.2-alpha.1
+
+### Patch Changes
+
+- 🐛 **Align workspace package metadata with built `dist` outputs and fix config consumption to use the modern `registry.extract.file` fallback. Demo apps now declare the workspace packages they execute or import so Turbo can derive internal build dependencies correctly.** [`b42175f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b42175f33ab8751c4591c04160261e708c90689c) by @sonofmagic
+- 📦 **Dependencies** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c)
+  → `@tailwindcss-mangle/config@7.0.0-alpha.1`, `@tailwindcss-mangle/shared@4.1.4-alpha.0`
+
 ## 5.1.2-alpha.0
 
 ### Patch Changes
