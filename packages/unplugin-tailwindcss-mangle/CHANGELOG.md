@@ -1,5 +1,12 @@
 # unplugin-tailwindcss-mangle
 
+## 5.1.2-alpha.0
+
+### Patch Changes
+
+- 📦 **Dependencies** [`8937b29`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8937b296f995888d39e4c6714f35e83a9a260fa0)
+  → `@tailwindcss-mangle/config@6.1.4-alpha.0`, `@tailwindcss-mangle/core@5.1.2-alpha.0`
+
 ## 5.1.1
 
 ### Patch Changes
