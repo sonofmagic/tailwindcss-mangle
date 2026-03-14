@@ -149,7 +149,7 @@ export default defineConfig({
       file: '.tw-patch/tw-class-list.json',
     },
     tailwindcss: {
-      version: 4,
+      version: 3,
       packageName: 'tailwindcss',
       v3: {
         cwd: 'apps/web',
