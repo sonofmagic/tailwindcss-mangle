@@ -2,17 +2,17 @@ import type { ILengthUnitsPatchOptions } from '../types'
 import type {
   CacheDriver,
   CacheStrategy,
+  ApplyOptions,
+  ExtractOptions,
   NormalizedCacheOptions,
+  NormalizedTailwindCssPatchOptions,
   NormalizedFeatureOptions,
   NormalizedOutputOptions,
   NormalizedTailwindConfigOptions,
-  NormalizedTailwindcssPatchOptions,
   NormalizedTailwindV4Options,
-  PatchApplyUserOptions,
-  TailwindcssPatchOptions,
-  TailwindcssUserOptions,
-  TailwindExtractionUserOptions,
-  TailwindV4RuntimeUserOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV4Options,
 } from './types'
 import process from 'node:process'
 import fs from 'fs-extra'
@@ -29,7 +29,7 @@ function resolveRealpathSafe(value: string) {
   }
 }
 
-function toPrettyValue(value: TailwindExtractionUserOptions['pretty']): number | false {
+function toPrettyValue(value: ExtractOptions['pretty']): number | false {
   if (typeof value === 'number') {
     return value > 0 ? value : false
   }
@@ -47,7 +47,7 @@ function normalizeCacheDriver(driver: CacheDriver | undefined): CacheDriver {
 }
 
 function normalizeCacheOptions(
-  cache: TailwindcssPatchOptions['cache'],
+  cache: TailwindCssPatchOptions['cache'],
   projectRoot: string,
 ): NormalizedCacheOptions {
   let enabled = false
@@ -82,7 +82,7 @@ function normalizeCacheOptions(
   }
 }
 
-function normalizeOutputOptions(output: TailwindExtractionUserOptions | undefined): NormalizedOutputOptions {
+function normalizeOutputOptions(output: ExtractOptions | undefined): NormalizedOutputOptions {
   const enabled = output?.write ?? true
   const file = output?.file ?? '.tw-patch/tw-class-list.json'
   const format = output?.format ?? 'json'
@@ -98,7 +98,7 @@ function normalizeOutputOptions(output: TailwindExtractionUserOptions | undefine
   }
 }
 
-function normalizeExposeContextOptions(exposeContext: PatchApplyUserOptions['exposeContext'] | undefined): NormalizedFeatureOptions['exposeContext'] {
+function normalizeExposeContextOptions(exposeContext: ApplyOptions['exposeContext'] | undefined): NormalizedFeatureOptions['exposeContext'] {
   if (exposeContext === false) {
     return {
       enabled: false,
@@ -119,7 +119,7 @@ function normalizeExposeContextOptions(exposeContext: PatchApplyUserOptions['exp
   }
 }
 
-function normalizeExtendLengthUnitsOptions(extend: PatchApplyUserOptions['extendLengthUnits'] | undefined): NormalizedFeatureOptions['extendLengthUnits'] {
+function normalizeExtendLengthUnitsOptions(extend: ApplyOptions['extendLengthUnits'] | undefined): NormalizedFeatureOptions['extendLengthUnits'] {
   if (extend === false || extend === undefined) {
     return null
   }
@@ -143,7 +143,7 @@ function normalizeExtendLengthUnitsOptions(extend: PatchApplyUserOptions['extend
 }
 
 function normalizeTailwindV4Options(
-  v4: TailwindV4RuntimeUserOptions | undefined,
+  v4: TailwindV4Options | undefined,
   fallbackBase: string,
 ): NormalizedTailwindV4Options {
   const configuredBase = v4?.base ? path.resolve(v4.base) : undefined
@@ -174,7 +174,7 @@ function normalizeTailwindV4Options(
 }
 
 function normalizeTailwindOptions(
-  tailwind: TailwindcssUserOptions | undefined,
+  tailwind: TailwindCssOptions | undefined,
   projectRoot: string,
 ): NormalizedTailwindConfigOptions {
   const packageName = tailwind?.packageName ?? 'tailwindcss'
@@ -210,7 +210,7 @@ const deprecatedOptionMapping = {
 
 type DeprecatedTopLevelOptionKey = keyof typeof deprecatedOptionMapping
 
-function assertNoDeprecatedOptions(options: TailwindcssPatchOptions) {
+function assertNoDeprecatedOptions(options: TailwindCssPatchOptions) {
   const used = (Object.keys(deprecatedOptionMapping) as DeprecatedTopLevelOptionKey[])
     .filter(key => Object.prototype.hasOwnProperty.call(options, key))
 
@@ -224,7 +224,7 @@ function assertNoDeprecatedOptions(options: TailwindcssPatchOptions) {
   )
 }
 
-export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
+export function normalizeOptions(options: TailwindCssPatchOptions = {}): NormalizedTailwindCssPatchOptions {
   assertNoDeprecatedOptions(options)
 
   const projectRoot = resolveRealpathSafe(options.projectRoot ? path.resolve(options.projectRoot) : process.cwd())

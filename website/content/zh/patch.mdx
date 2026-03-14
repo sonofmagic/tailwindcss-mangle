@@ -104,7 +104,7 @@ export default defineConfig({
 })
 ```
 
-v9 中的 `defineConfig` 只描述现代 `registry` 结构。`registry.output`、`registry.tailwind` 等旧 alias 需要在升级前完成迁移。
+v9 中的 `defineConfig` 只描述现代 `registry` 结构。`registry.output`、`registry.tailwind` 等旧 alias 需要在升级前完成迁移；公开 options 类型名也只保留现代命名，例如 `TailwindCssPatchOptions`、`TailwindCssOptions`。
 
 ## 编程接口
 

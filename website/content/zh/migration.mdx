@@ -5,7 +5,7 @@ import { Callout } from 'nextra/components'
 9.0 版本重新整理了整套配置。原先的 `patch`/`mangle` 被更直观的 `registry`/`transformer` 所取代，`tailwindcss-patch` 与 `unplugin-tailwindcss-mangle` 读取的是同一份数据。下面是从 v8.x 升级的步骤。
 
 <Callout type="info">
-旧版配置仍然有效，`@tailwindcss-mangle/config` 会在加载时自动转换，因此可以按模块逐步迁移。
+这篇页面只覆盖共享工具链的结构迁移（`patch` / `mangle` -> `registry` / `transformer`）。如果你在升级更严格的 `tailwindcss-patch` v9 alpha，请优先看专门的 patch 迁移指南。
 </Callout>
 
 ## 1. 升级依赖
@@ -23,10 +23,10 @@ npm i -D tailwindcss-patch@^9 unplugin-tailwindcss-mangle@latest @tailwindcss-ma
 | 旧字段 | 新字段 | 说明 |
 | --- | --- | --- |
 | `patch` | `registry` | 负责提取、Tailwind 集成、缓存与功能开关。 |
-| `patch.output` | `registry.output` | `filename` → `file`，`removeUniversalSelector` → `stripUniversalSelector`。 |
-| `patch.tailwindcss` | `registry.tailwind` | `v4` 重命名为 `next`，`v3` → `classic`，`v2` → `legacy`。 |
-| `patch.applyPatches` | `registry.features` | `exportContext`、`extendLengthUnits` 调整到此处。 |
-| `cache` / `overwrite` | `registry.cache` / `registry.overwrite` | 缓存相关配置统一放在 registry 内。 |
+| `patch.output` | `registry.extract` | `filename` → `file`，`removeUniversalSelector` 保持为 `removeUniversalSelector`。 |
+| `patch.tailwindcss` | `registry.tailwindcss` | `package` → `packageName`，`v4` / `v3` / `v2` 保持同名。 |
+| `patch.applyPatches` | `registry.apply` | `exportContext` 改为 `exposeContext`，`extendLengthUnits` 仍在 `apply` 下。 |
+| `cache` / `overwrite` | `registry.cache` / `registry.apply.overwrite` | 缓存相关配置统一放在 registry 内，overwrite 挪到 `apply`。 |
 | `mangle` | `transformer` | 控制扫描、生成器、映射输出与保留规则。 |
 | `mangle.classListPath` | `transformer.registry.file` | 指向提取出的类名清单。 |
 | `mangle.classMapOutput` | `transformer.registry.mapping` | 参数一致，`true` 仍表示启用默认写盘。 |
@@ -64,13 +64,13 @@ export default defineConfig({
 ```ts
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
-      stripUniversalSelector: true,
+      removeUniversalSelector: true,
     },
-    tailwind: {
+    tailwindcss: {
       version: 4,
-      next: {
+      v4: {
         cssEntries: ['dist/tailwind.css'],
       },
     },
@@ -92,7 +92,7 @@ export default defineConfig({
 
 ## 3. CLI 行为
 
-`tw-patch install` 与 `tw-patch extract` 会自动读取新结构，参数保持不变。若脚本中读取 `patch.output.filename`，记得改为 `registry.output.file`。
+`tw-patch install` 与 `tw-patch extract` 会自动读取新结构，参数保持不变。若脚本中读取 `patch.output.filename`，记得改为 `registry.extract.file`。
 
 ## 4. 构建插件对齐
 

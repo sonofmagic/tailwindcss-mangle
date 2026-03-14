@@ -8,7 +8,7 @@ export type CacheDriver = 'file' | 'memory' | 'noop'
 /**
  * Configures how the Tailwind class cache is stored and where it lives on disk.
  */
-export interface CacheUserOptions {
+export interface CacheOptions {
   /** Whether caching is enabled. */
   enabled?: boolean
   /** Working directory used when resolving cache paths. */
@@ -29,7 +29,7 @@ export interface CacheUserOptions {
 /**
  * Preferred options for extraction output behavior.
  */
-export interface TailwindExtractionUserOptions {
+export interface ExtractOptions {
   /** Whether to produce an output file. */
   write?: boolean
   /** Optional absolute or relative path to the output file. */
@@ -45,7 +45,7 @@ export interface TailwindExtractionUserOptions {
 /**
  * Options controlling how Tailwind contexts are exposed during runtime patching.
  */
-export interface ExposeContextUserOptions {
+export interface ExposeContextOptions {
   /** Name of the property used to reference an exposed context. */
   refProperty?: string
 }
@@ -53,7 +53,7 @@ export interface ExposeContextUserOptions {
 /**
  * Extends the built-in length-unit patch with custom defaults.
  */
-export interface ExtendLengthUnitsUserOptions extends Partial<ILengthUnitsPatchOptions> {
+export interface ExtendLengthUnitsOptions extends Partial<ILengthUnitsPatchOptions> {
   /** Enables or disables the length-unit patch. */
   enabled?: boolean
 }
@@ -61,19 +61,19 @@ export interface ExtendLengthUnitsUserOptions extends Partial<ILengthUnitsPatchO
 /**
  * Preferred options for runtime patch behavior.
  */
-export interface PatchApplyUserOptions {
+export interface ApplyOptions {
   /** Whether patched files can be overwritten on disk. */
   overwrite?: boolean
   /** Whether to expose runtime Tailwind contexts (or configure how they are exposed). */
-  exposeContext?: boolean | ExposeContextUserOptions
+  exposeContext?: boolean | ExposeContextOptions
   /** Extends the length-unit patch or disables it entirely. */
-  extendLengthUnits?: false | ExtendLengthUnitsUserOptions
+  extendLengthUnits?: false | ExtendLengthUnitsOptions
 }
 
 /**
  * Shared configuration used for Tailwind v2/v3 patching flows.
  */
-export interface TailwindRuntimeConfigUserOptions {
+export interface TailwindV2V3Options {
   /** Path to a Tailwind config file when auto-detection is insufficient. */
   config?: string
   /** Custom working directory used when resolving config-relative paths. */
@@ -85,7 +85,7 @@ export interface TailwindRuntimeConfigUserOptions {
 /**
  * Additional configuration specific to Tailwind CSS v4 extraction.
  */
-export interface TailwindV4RuntimeUserOptions {
+export interface TailwindV4Options {
   /** Base directory used when resolving v4 content sources and configs. */
   base?: string
   /** Raw CSS passed directly to the v4 design system. */
@@ -99,7 +99,7 @@ export interface TailwindV4RuntimeUserOptions {
 /**
  * High-level Tailwind patch configuration shared across versions.
  */
-export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions {
+export interface TailwindCssOptions extends TailwindV2V3Options {
   /** Explicit Tailwind CSS major version used by the current project. When omitted, the installed package version is inferred. */
   version?: 2 | 3 | 4
   /** Tailwind package name if the project uses a fork. */
@@ -107,32 +107,32 @@ export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions
   /** Package resolution options forwarded to `local-pkg`. */
   resolve?: PackageResolvingOptions
   /** Overrides applied when patching Tailwind CSS v2. */
-  v2?: TailwindRuntimeConfigUserOptions
+  v2?: TailwindV2V3Options
   /** Overrides applied when patching Tailwind CSS v3. */
-  v3?: TailwindRuntimeConfigUserOptions
+  v3?: TailwindV2V3Options
   /** Options specific to Tailwind CSS v4 patching. */
-  v4?: TailwindV4RuntimeUserOptions
+  v4?: TailwindV4Options
 }
 
 /**
  * Root configuration consumed by the Tailwind CSS patch runner.
  */
-export interface TailwindcssPatchOptions {
+export interface TailwindCssPatchOptions {
   /**
    * Base directory used when resolving Tailwind resources.
    * Defaults to `process.cwd()`.
    */
   projectRoot?: string
   /** Preferred Tailwind runtime configuration. */
-  tailwindcss?: TailwindcssUserOptions
+  tailwindcss?: TailwindCssOptions
   /** Preferred patch toggles. */
-  apply?: PatchApplyUserOptions
+  apply?: ApplyOptions
   /** Preferred extraction output settings. */
-  extract?: TailwindExtractionUserOptions
+  extract?: ExtractOptions
   /** Optional function that filters final class names. */
   filter?: (className: string) => boolean
   /** Cache configuration or boolean to enable/disable quickly. */
-  cache?: boolean | CacheUserOptions
+  cache?: boolean | CacheOptions
 }
 
 /**
@@ -183,12 +183,12 @@ export interface NormalizedTailwindV4Options {
 /**
  * Tailwind configuration ready for consumption by the runtime after normalization.
  */
-export interface NormalizedTailwindConfigOptions extends TailwindRuntimeConfigUserOptions {
+export interface NormalizedTailwindConfigOptions extends TailwindV2V3Options {
   packageName: string
   versionHint?: 2 | 3 | 4
   resolve?: PackageResolvingOptions
-  v2?: TailwindRuntimeConfigUserOptions
-  v3?: TailwindRuntimeConfigUserOptions
+  v2?: TailwindV2V3Options
+  v3?: TailwindV2V3Options
   v4?: NormalizedTailwindV4Options
 }
 
@@ -199,7 +199,7 @@ export interface NormalizedFeatureOptions {
 }
 
 /** Final normalized shape consumed throughout the patch runtime. */
-export interface NormalizedTailwindcssPatchOptions {
+export interface NormalizedTailwindCssPatchOptions {
   projectRoot: string
   overwrite: boolean
   tailwind: NormalizedTailwindConfigOptions

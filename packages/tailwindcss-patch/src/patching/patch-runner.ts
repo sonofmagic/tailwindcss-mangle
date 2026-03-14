@@ -1,11 +1,11 @@
 import type { PackageInfo } from 'local-pkg'
-import type { NormalizedTailwindcssPatchOptions } from '../options/types'
+import type { NormalizedTailwindCssPatchOptions } from '../options/types'
 import { applyExposeContextPatch } from './operations/export-context'
 import { applyExtendLengthUnitsPatchV3, applyExtendLengthUnitsPatchV4 } from './operations/extend-length-units'
 
 export interface PatchRunnerContext {
   packageInfo: PackageInfo
-  options: NormalizedTailwindcssPatchOptions
+  options: NormalizedTailwindCssPatchOptions
   majorVersion: 2 | 3 | 4
 }
 

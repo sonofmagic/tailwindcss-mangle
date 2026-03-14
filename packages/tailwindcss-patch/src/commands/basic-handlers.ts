@@ -1,4 +1,4 @@
-import type { TailwindcssPatchOptions } from '../types'
+import type { TailwindCssPatchOptions } from '../types'
 import type { TokenGroupKey, TokenOutputFormat } from './token-output'
 import type { TailwindcssPatchCommandContext } from './types'
 
@@ -26,7 +26,7 @@ export async function installCommandDefaultHandler(_ctx: TailwindcssPatchCommand
 
 export async function extractCommandDefaultHandler(ctx: TailwindcssPatchCommandContext<'extract'>) {
   const { args } = ctx
-  const overrides: TailwindcssPatchOptions = {}
+  const overrides: TailwindCssPatchOptions = {}
   let hasOverrides = false
 
   if (args.output || args.format) {

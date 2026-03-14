@@ -5,7 +5,7 @@ import { Callout } from 'nextra/components'
 Version 9 introduces a new configuration layout for the entire toolchain. The `patch`/`mangle` blocks have been replaced by a clearer `registry`/`transformer` split, and both `tailwindcss-patch` and `unplugin-tailwindcss-mangle` read the same structure. This guide walks you through updating existing projects.
 
 <Callout type="info">
-Legacy configs keep working. `@tailwindcss-mangle/config` converts older shapes on load, so you can migrate file by file when convenient.
+Use this page only for the shared toolchain layout change (`patch` / `mangle` -> `registry` / `transformer`). For the stricter `tailwindcss-patch` v9 alpha rules, follow the dedicated patch migration guide.
 </Callout>
 
 ## 1. Update dependencies
@@ -23,10 +23,10 @@ npm i -D tailwindcss-patch@^9 unplugin-tailwindcss-mangle@latest @tailwindcss-ma
 | Legacy | New name | Notes |
 | --- | --- | --- |
 | `patch` | `registry` | Everything related to extraction, Tailwind integration, cache, and feature flags. |
-| `patch.output` | `registry.output` | `filename` → `file`, `removeUniversalSelector` → `stripUniversalSelector`. |
-| `patch.tailwindcss` | `registry.tailwind` | `v4` becomes `next`, `v3` → `classic`, `v2` → `legacy`. |
-| `patch.applyPatches` | `registry.features` | `exportContext` and `extendLengthUnits` move here. |
-| `cache` / `overwrite` | `registry.cache` / `registry.overwrite` | Cache options now live under the registry block. |
+| `patch.output` | `registry.extract` | `filename` → `file`, `removeUniversalSelector` → `removeUniversalSelector`. |
+| `patch.tailwindcss` | `registry.tailwindcss` | `package` → `packageName`, `v4` stays `v4`, `v3` stays `v3`, `v2` stays `v2`. |
+| `patch.applyPatches` | `registry.apply` | `exportContext` becomes `exposeContext`, `extendLengthUnits` stays under `apply`. |
+| `cache` / `overwrite` | `registry.cache` / `registry.apply.overwrite` | Cache options now live under the registry block; overwrite is nested under `apply`. |
 | `mangle` | `transformer` | Controls inclusion patterns, generators, registry mapping, and preservation rules. |
 | `mangle.classListPath` | `transformer.registry.file` | The class list path moves under the `registry` sub-object. |
 | `mangle.classMapOutput` | `transformer.registry.mapping` | Keep the same options; set to `true` to reuse defaults. |
@@ -64,13 +64,13 @@ export default defineConfig({
 ```ts
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
-      stripUniversalSelector: true,
+      removeUniversalSelector: true,
     },
-    tailwind: {
+    tailwindcss: {
       version: 4,
-      next: {
+      v4: {
         cssEntries: ['dist/tailwind.css'],
       },
     },
@@ -92,7 +92,7 @@ export default defineConfig({
 
 ## 3. CLI behaviour
 
-`tw-patch install` and `tw-patch extract` automatically read the new structure. No flags change in v9, and the CLI still respects `--output`, `--format`, `--css`, and `--no-write`. If you rely on JSON editing in pipelines, adjust any scripts that wrote to `patch.output.filename` to look at `registry.output.file` instead.
+`tw-patch install` and `tw-patch extract` automatically read the new structure. No flags change in v9, and the CLI still respects `--output`, `--format`, `--css`, and `--no-write`. If you rely on JSON editing in pipelines, adjust any scripts that wrote to `patch.output.filename` to look at `registry.extract.file` instead.
 
 ## 4. Bundler plugin alignment
 

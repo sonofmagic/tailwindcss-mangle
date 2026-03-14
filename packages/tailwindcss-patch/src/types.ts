@@ -1,7 +1,19 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { Node, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
-import type { CacheStrategy, NormalizedTailwindcssPatchOptions, TailwindcssPatchOptions } from './options/types'
+import type {
+  ApplyOptions,
+  CacheOptions,
+  CacheStrategy,
+  ExposeContextOptions,
+  ExtendLengthUnitsOptions,
+  ExtractOptions,
+  NormalizedTailwindCssPatchOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV2V3Options,
+  TailwindV4Options,
+} from './options/types'
 
 type TailwindcssClassCacheEntry = Rule | {
   layer: string
@@ -89,11 +101,23 @@ export interface TailwindTokenReport {
 export type TailwindTokenByFileMap = Record<string, TailwindTokenLocation[]>
 
 export interface TailwindPatchRuntime {
-  options: NormalizedTailwindcssPatchOptions
+  options: NormalizedTailwindCssPatchOptions
   majorVersion: 2 | 3 | 4
 }
 
-export type { CacheStrategy, NormalizedTailwindcssPatchOptions, TailwindcssPatchOptions }
+export type {
+  ApplyOptions,
+  CacheOptions,
+  CacheStrategy,
+  ExposeContextOptions,
+  ExtendLengthUnitsOptions,
+  ExtractOptions,
+  NormalizedTailwindCssPatchOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV2V3Options,
+  TailwindV4Options,
+}
 
 export interface ILengthUnitsPatchOptions {
   units: string[]

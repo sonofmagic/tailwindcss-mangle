@@ -1,4 +1,4 @@
-import type { TailwindcssPatchOptions } from '../types'
+import type { TailwindCssPatchOptions } from '../types'
 import { pathToFileURL } from 'node:url'
 import path from 'pathe'
 import { fromUnifiedConfig } from '../options/legacy'
@@ -71,7 +71,7 @@ export async function loadWorkspaceDefu() {
   return defuPromise
 }
 
-export async function loadPatchOptionsForWorkspace(cwd: string, overrides?: TailwindcssPatchOptions) {
+export async function loadPatchOptionsForWorkspace(cwd: string, overrides?: TailwindCssPatchOptions) {
   const merge = await loadWorkspaceDefu()
   const configModule = await loadWorkspaceConfigModule()
   const { config } = await configModule.getConfig(cwd)
@@ -82,6 +82,6 @@ export async function loadPatchOptionsForWorkspace(cwd: string, overrides?: Tail
   const base = config?.registry
     ? fromUnifiedConfig(config.registry)
     : {}
-  const merged = merge(overrides ?? {}, base) as TailwindcssPatchOptions
+  const merged = merge(overrides ?? {}, base) as TailwindCssPatchOptions
   return merged
 }

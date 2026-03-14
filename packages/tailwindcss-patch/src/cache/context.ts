@@ -1,5 +1,5 @@
 import type { PackageInfo } from 'local-pkg'
-import type { NormalizedTailwindcssPatchOptions } from '../options/types'
+import type { NormalizedTailwindCssPatchOptions } from '../options/types'
 import type { CacheContextDescriptor, CacheContextMetadata } from './types'
 import { createHash } from 'node:crypto'
 import process from 'node:process'
@@ -49,7 +49,7 @@ function resolveFileMtimeMsSync(value: string | undefined): number | undefined {
 }
 
 function resolveTailwindConfigPath(
-  options: NormalizedTailwindcssPatchOptions,
+  options: NormalizedTailwindCssPatchOptions,
   majorVersion: 2 | 3 | 4,
 ): string | undefined {
   const tailwind = options.tailwind
@@ -114,7 +114,7 @@ function hash(input: string): string {
   return createHash('sha256').update(input).digest('hex')
 }
 
-function toFingerprintOptions(normalized: NormalizedTailwindcssPatchOptions) {
+function toFingerprintOptions(normalized: NormalizedTailwindCssPatchOptions) {
   return {
     overwrite: normalized.overwrite,
     output: {
@@ -136,7 +136,7 @@ function toFingerprintOptions(normalized: NormalizedTailwindcssPatchOptions) {
 }
 
 export function createCacheContextDescriptor(
-  options: NormalizedTailwindcssPatchOptions,
+  options: NormalizedTailwindCssPatchOptions,
   packageInfo: PackageInfo,
   majorVersion: 2 | 3 | 4,
 ): CacheContextDescriptor {

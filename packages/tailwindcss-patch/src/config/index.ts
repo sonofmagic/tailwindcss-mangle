@@ -1,12 +1,19 @@
 export { fromUnifiedConfig } from '../options/legacy'
 export { normalizeOptions } from '../options/normalize'
 export type {
+  ApplyOptions,
+  CacheOptions,
   CacheStrategy,
-  ExtendLengthUnitsUserOptions,
+  ExposeContextOptions,
+  ExtendLengthUnitsOptions,
+  ExtractOptions,
+  NormalizedTailwindCssPatchOptions,
   NormalizedCacheOptions,
   NormalizedExtendLengthUnitsOptions,
-  NormalizedTailwindcssPatchOptions,
-  TailwindcssPatchOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV2V3Options,
+  TailwindV4Options,
 } from '../options/types'
 export {
   loadPatchOptionsForWorkspace,

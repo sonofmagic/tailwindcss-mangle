@@ -1,4 +1,4 @@
-import type { NormalizedTailwindcssPatchOptions } from '../options/types'
+import type { NormalizedTailwindCssPatchOptions } from '../options/types'
 import type { TailwindcssRuntimeContext } from '../types'
 import process from 'node:process'
 import fs from 'fs-extra'
@@ -27,7 +27,7 @@ export function collectClassesFromContexts(
 }
 
 export async function collectClassesFromTailwindV4(
-  options: NormalizedTailwindcssPatchOptions,
+  options: NormalizedTailwindCssPatchOptions,
 ) {
   const set = new Set<string>()
   const v4Options = options.tailwind.v4

@@ -341,16 +341,14 @@ export function groupTokensByFile(
 
   return report.entries.reduce<TailwindTokenByFileMap>((acc, entry) => {
     const bucketKey = key === 'absolute' ? entry.file : entry.relativeFile
-    if (!acc[bucketKey]) {
-      acc[bucketKey] = []
-    }
+    const bucket = acc[bucketKey] ?? (acc[bucketKey] = [])
     const value = stripAbsolute
       ? {
           ...entry,
           file: entry.relativeFile,
         }
       : entry
-    acc[bucketKey].push(value)
+    bucket.push(value)
     return acc
   }, {})
 }

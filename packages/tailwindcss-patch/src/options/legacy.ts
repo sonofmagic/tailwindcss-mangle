@@ -1,5 +1,5 @@
 import type { RegistryOptions } from '@tailwindcss-mangle/config'
-import type { TailwindcssPatchOptions } from './types'
+import type { TailwindCssPatchOptions } from './types'
 
 const deprecatedRegistryMapping = {
   output: 'extract',
@@ -44,7 +44,7 @@ function assertNoDeprecatedRegistryOptions(registry: RegistryOptions) {
   }
 }
 
-export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchOptions {
+export function fromUnifiedConfig(registry?: RegistryOptions): TailwindCssPatchOptions {
   if (!registry) {
     return {}
   }

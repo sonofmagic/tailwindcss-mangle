@@ -7,7 +7,7 @@ The toolchain now exposes a single configuration surface through `@tailwindcss-m
 - `registry` drives class discovery and Tailwind patching.
 - `transformer` controls how the collected classes are rewritten in application code.
 
-Legacy files that still export `patch` / `mangle` continue to load, but new projects should adopt the updated shape for clarity and better tooling.
+Legacy `patch` / `mangle` examples in older projects should be migrated. New projects should use the modern shape directly for clearer typing and better tooling.
 
 ## Generate a starter file
 
@@ -34,23 +34,23 @@ import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      stripUniversalSelector: true,
+      removeUniversalSelector: true,
     },
-    tailwind: {
+    tailwindcss: {
       version: 4,
-      next: {
+      v4: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{astro,tsx,mdx}', negated: false },
         ],
       },
     },
-    features: {
-      exportContext: true,
+    apply: {
+      exposeContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
@@ -86,24 +86,25 @@ export default defineConfig({
 
 ## Registry options
 
-### `output`
+### `extract`
 
 - `file` – destination for the extracted inventory (default `.tw-patch/tw-class-list.json`).
 - `format` – either `json` or `lines`; the CLI uses JSON by default.
 - `pretty` – `false`, a boolean, or a number of spaces when writing JSON.
-- `stripUniversalSelector` – skip `*` from the generated list when `true`.
+- `removeUniversalSelector` – skip `*` from the generated list when `true`.
 
-### `tailwind`
+### `tailwindcss`
 
-- `version` – optional hint (`2`, `3`, or `4`) when multiple versions are installed.
-- `legacy` / `classic` – configure Tailwind v2/v3 instances living in workspace packages (`cwd`, `config`).
-- `next.cssEntries` – CSS entry files used by the Oxide scanner. Repeat for multi-bundle setups.
-- `next.sources` – custom content sources for v4 projects (defaults to `**/*` under `base`).
+- `version` – Tailwind major version (`2`, `3`, or `4`).
+- `v2` / `v3` – configure Tailwind v2/v3 instances living in workspace packages (`cwd`, `config`, `postcssPlugin`).
+- `v4.cssEntries` – CSS entry files used by the Oxide scanner. Repeat for multi-bundle setups.
+- `v4.sources` – custom content sources for v4 projects (defaults to `**/*` under `base`).
 
-### `features`
+### `apply`
 
-- `exportContext` – expose Tailwind contexts at runtime so the API can read them back later.
-- `extendLengthUnits` – customise the built-in length-unit patching; accepts `false`, `true`, or an option object (`units`, `overwrite`, etc.).
+- `overwrite` – allow the patch operation to rewrite the target Tailwind files.
+- `exposeContext` – expose Tailwind contexts at runtime so the API can read them back later.
+- `extendLengthUnits` – customise the built-in length-unit patching; accepts `false` or an option object (`units`, `overwrite`, etc.).
 
 ### `cache`
 

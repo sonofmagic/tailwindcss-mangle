@@ -60,6 +60,25 @@ pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --json
 
 CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。v9 仅接受现代 `registry` 结构；如果项目里仍有旧字段，请先执行 `tw-patch migrate`，详情见 [迁移指南](./MIGRATION.md)。
 
+### 公开类型名
+
+当前 alpha 只导出新的 options 类型名：
+
+```ts
+import type {
+  ApplyOptions,
+  CacheOptions,
+  ExtractOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV2V3Options,
+  TailwindV4Options,
+  NormalizedTailwindCssPatchOptions,
+} from 'tailwindcss-patch'
+```
+
+像 `TailwindcssPatchOptions`、`TailwindLocatorOptions`、`TailwindTargetOptions` 这样的旧别名已经不再导出。
+
 ### v9 升级步骤
 
 1. 先执行 `pnpm dlx tw-patch migrate --dry-run`，确认有哪些配置需要改写。

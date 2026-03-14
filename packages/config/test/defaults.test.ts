@@ -3,7 +3,7 @@ import { omit } from 'lodash-es'
 import { getDefaultRegistryConfig, getDefaultTransformerConfig, getDefaultUserConfig } from '@/defaults'
 
 function omitCwdPath(o: any) {
-  return omit(o, ['registry.tailwind.cwd'])
+  return omit(o, ['registry.tailwindcss.cwd'])
 }
 
 function normaliseRegex(value: any): any {

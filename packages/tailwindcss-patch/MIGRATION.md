@@ -69,6 +69,33 @@ const patcher = new TailwindcssPatcher({
 
 Legacy constructor aliases are no longer accepted in v9.
 
+### Type names
+
+The alpha line now only exposes the modern public option type names. Historical aliases were removed instead of being kept with `@deprecated`.
+
+Use these names in user code:
+
+- `TailwindCssPatchOptions`
+- `TailwindCssOptions`
+- `TailwindV2V3Options`
+- `TailwindV4Options`
+- `ApplyOptions`
+- `ExtractOptions`
+- `CacheOptions`
+- `ExposeContextOptions`
+- `ExtendLengthUnitsOptions`
+- `NormalizedTailwindCssPatchOptions`
+
+Removed type names:
+
+- `TailwindcssPatchOptions`
+- `NormalizedTailwindcssPatchOptions`
+- `TailwindLocatorOptions`
+- `TailwindNextOptions`
+- `TailwindTargetOptions`
+
+If your code imported the removed names, switch imports to the modern names before adopting the current alpha builds.
+
 Migration mapping:
 
 - `cwd` -> `projectRoot`

@@ -1,6 +1,11 @@
 import type { CAC } from 'cac'
 import type { TailwindcssPatchCommandDefinitions } from './command-definitions'
-import type { TailwindcssPatchCliMountOptions, TailwindcssPatchCommand, TailwindcssPatchCommandArgMap } from './types'
+import type {
+  TailwindcssPatchCliMountOptions,
+  TailwindcssPatchCommand,
+  TailwindcssPatchCommandArgMap,
+  TailwindcssPatchCommandDefaultHandlerMap,
+} from './types'
 
 import {
   applyCommandOptions,
@@ -20,13 +25,14 @@ export function registerTailwindcssPatchCommand<TCommand extends TailwindcssPatc
   const command = cli.command(metadata.name, metadata.description)
   applyCommandOptions(command, metadata.optionDefs)
   command.action(async (args: TailwindcssPatchCommandArgMap[TCommand]) => {
+    const defaultHandler = defaultCommandHandlers[commandName] as TailwindcssPatchCommandDefaultHandlerMap[TCommand]
     return runWithCommandHandler(
       cli,
       command,
       commandName,
       args,
       options.commandHandlers?.[commandName],
-      defaultCommandHandlers[commandName],
+      defaultHandler,
     )
   })
   metadata.aliases.forEach(alias => command.alias(alias))

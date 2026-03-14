@@ -46,12 +46,12 @@ export interface TransformerOptions {
   preserve?: TransformerPreserveOptions
 }
 
-export interface TailwindLocatorOptions {
+export interface TailwindV2V3Options {
   cwd?: string
   config?: string
 }
 
-export interface TailwindNextOptions {
+export interface TailwindV4Options {
   sources?: SourceEntry[]
   base?: string
   css?: string
@@ -94,20 +94,20 @@ export interface RegistryCacheOptions {
   driver?: 'file' | 'memory' | 'noop'
 }
 
-export interface TailwindTargetOptions {
+export interface TailwindCssOptions {
   version?: 2 | 3 | 4
   packageName?: string
   resolve?: PackageResolvingOptions
-  v2?: TailwindLocatorOptions
-  v3?: TailwindLocatorOptions
-  v4?: TailwindNextOptions
+  v2?: TailwindV2V3Options
+  v3?: TailwindV2V3Options
+  v4?: TailwindV4Options
   cwd?: string
   config?: string
 }
 
 export interface RegistryOptions {
   projectRoot?: string
-  tailwindcss?: TailwindTargetOptions
+  tailwindcss?: TailwindCssOptions
   apply?: RegistryApplyOptions
   extract?: RegistryExtractOptions
   cache?: RegistryCacheOptions

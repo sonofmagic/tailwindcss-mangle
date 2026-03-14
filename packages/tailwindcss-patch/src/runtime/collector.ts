@@ -1,5 +1,5 @@
 import type { PackageInfo } from 'local-pkg'
-import type { NormalizedTailwindcssPatchOptions } from '../config'
+import type { NormalizedTailwindCssPatchOptions } from '../config'
 import type { PatchStatusReport, TailwindcssRuntimeContext } from '../types'
 import type { applyTailwindPatches } from '../install/patch-runner'
 import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../install/class-collector'
@@ -21,7 +21,7 @@ export interface TailwindCollector {
 }
 
 function resolveTailwindExecutionOptions(
-  normalized: NormalizedTailwindcssPatchOptions,
+  normalized: NormalizedTailwindCssPatchOptions,
   majorVersion: 2 | 3,
 ) {
   const base = normalized.tailwind
@@ -51,7 +51,7 @@ function resolveTailwindExecutionOptions(
 abstract class BaseCollector implements TailwindCollector {
   constructor(
     protected readonly packageInfo: PackageInfo,
-    protected readonly options: NormalizedTailwindcssPatchOptions,
+    protected readonly options: NormalizedTailwindCssPatchOptions,
     protected readonly majorVersion: TailwindMajorVersion,
   ) {}
 
@@ -88,7 +88,7 @@ export class RuntimeCollector extends BaseCollector {
 
   constructor(
     packageInfo: PackageInfo,
-    options: NormalizedTailwindcssPatchOptions,
+    options: NormalizedTailwindCssPatchOptions,
     majorVersion: 2 | 3,
     private readonly snapshotFactory: () => string,
   ) {
@@ -129,7 +129,7 @@ export class RuntimeCollector extends BaseCollector {
 export class TailwindV4Collector extends BaseCollector {
   constructor(
     packageInfo: PackageInfo,
-    options: NormalizedTailwindcssPatchOptions,
+    options: NormalizedTailwindCssPatchOptions,
     snapshotFactory: () => string,
   ) {
     super(packageInfo, options, 4)

@@ -1,13 +1,13 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageInfo } from 'local-pkg'
-import type { NormalizedTailwindcssPatchOptions } from '../config'
+import type { NormalizedTailwindCssPatchOptions } from '../config'
 import type {
   CacheClearOptions,
   CacheClearResult,
   CacheContextMetadata,
   CacheReadMeta,
   ExtractResult,
-  TailwindcssPatchOptions,
+  TailwindCssPatchOptions,
   TailwindTokenByFileMap,
   TailwindTokenFileKey,
   TailwindTokenReport,
@@ -92,7 +92,7 @@ function resolveMajorVersionOrThrow(
 
 function createCollector(
   packageInfo: PackageInfo,
-  options: NormalizedTailwindcssPatchOptions,
+  options: NormalizedTailwindCssPatchOptions,
   majorVersion: TailwindMajorVersion,
   snapshotFactory: () => string,
 ): TailwindCollector {
@@ -104,7 +104,7 @@ function createCollector(
 }
 
 export class TailwindcssPatcher {
-  public readonly options: NormalizedTailwindcssPatchOptions
+  public readonly options: NormalizedTailwindCssPatchOptions
   public readonly packageInfo: PackageInfo
   public readonly majorVersion: TailwindMajorVersion
 
@@ -117,7 +117,7 @@ export class TailwindcssPatcher {
   private readonly collector: TailwindCollector
   private patchMemo: PatchMemo | undefined
 
-  constructor(options: TailwindcssPatchOptions = {}) {
+  constructor(options: TailwindCssPatchOptions = {}) {
     this.options = normalizeOptions(options)
     const packageInfo = getPackageInfoSync(
       this.options.tailwind.packageName,

@@ -4,7 +4,7 @@ import type logger from '../logger'
 import type {
   ExtractResult,
   PatchStatusReport,
-  TailwindcssPatchOptions,
+  TailwindCssPatchOptions,
   TailwindTokenReport,
 } from '../types'
 import type { ConfigFileMigrationReport, RestoreConfigFilesResult } from './migration-types'
@@ -105,8 +105,8 @@ export interface TailwindcssPatchCommandContext<TCommand extends TailwindcssPatc
   cwd: string
   logger: typeof logger
   loadConfig: () => Promise<TailwindcssConfigResult>
-  loadPatchOptions: (overrides?: TailwindcssPatchOptions) => Promise<TailwindcssPatchOptions>
-  createPatcher: (overrides?: TailwindcssPatchOptions) => Promise<import('../api/tailwindcss-patcher').TailwindcssPatcher>
+  loadPatchOptions: (overrides?: TailwindCssPatchOptions) => Promise<TailwindCssPatchOptions>
+  createPatcher: (overrides?: TailwindCssPatchOptions) => Promise<import('../api/tailwindcss-patcher').TailwindcssPatcher>
 }
 
 export type TailwindcssPatchCommandDefaultHandlerMap = {

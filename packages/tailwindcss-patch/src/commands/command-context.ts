@@ -1,6 +1,6 @@
 import type { CAC, Command } from 'cac'
 import type { TailwindcssConfigResult } from '../config/workspace'
-import type { TailwindcssPatchOptions } from '../types'
+import type { TailwindCssPatchOptions } from '../types'
 import type {
   TailwindcssPatchCommand,
   TailwindcssPatchCommandArgMap,
@@ -40,7 +40,7 @@ export function createTailwindcssPatchCommandContext<TCommand extends Tailwindcs
   const loadCachedConfig = createMemoizedPromiseRunner<TailwindcssConfigResult>(() =>
     loadWorkspaceConfigModule().then(mod => mod.getConfig(cwd)),
   )
-  const loadCachedPatchOptions = createMemoizedPromiseRunner<TailwindcssPatchOptions>(() =>
+  const loadCachedPatchOptions = createMemoizedPromiseRunner<TailwindCssPatchOptions>(() =>
     loadPatchOptionsForWorkspace(cwd),
   )
   const createCachedPatcher = createMemoizedPromiseRunner<TailwindcssPatcher>(async () => {
@@ -48,14 +48,14 @@ export function createTailwindcssPatchCommandContext<TCommand extends Tailwindcs
     return new TailwindcssPatcher(patchOptions)
   })
 
-  const loadPatchOptionsForContext = (overrides?: TailwindcssPatchOptions) => {
+  const loadPatchOptionsForContext = (overrides?: TailwindCssPatchOptions) => {
     if (overrides) {
       return loadPatchOptionsForWorkspace(cwd, overrides)
     }
     return loadCachedPatchOptions()
   }
 
-  const createPatcherForContext = async (overrides?: TailwindcssPatchOptions) => {
+  const createPatcherForContext = async (overrides?: TailwindCssPatchOptions) => {
     if (overrides) {
       const patchOptions = await loadPatchOptionsForWorkspace(cwd, overrides)
       return new TailwindcssPatcher(patchOptions)

@@ -1,9 +1,9 @@
 import type { TailwindcssPatchCommandArgMap } from './types'
 
 export interface ResolvedMigrateCommandArgs {
-  include?: string[]
-  exclude?: string[]
-  maxDepth?: number
+  include: string[] | undefined
+  exclude: string[] | undefined
+  maxDepth: number | undefined
   checkMode: boolean
   dryRun: boolean
   hasInvalidMaxDepth: boolean

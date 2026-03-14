@@ -101,8 +101,14 @@ export function transformPostcssPlugin(content: string, { refProperty }: ExposeC
         previousStatement
         && t.isVariableDeclaration(previousStatement)
         && previousStatement.declarations.length === 1
-        && t.isIdentifier(previousStatement.declarations[0].id)
-        && previousStatement.declarations[0].id.name === refIdentifier.name,
+        && (() => {
+          const declaration = previousStatement.declarations[0]
+          return Boolean(
+            declaration
+            && t.isIdentifier(declaration.id)
+            && declaration.id.name === refIdentifier.name,
+          )
+        })(),
       )
 
       const alreadyAssignsModuleExports = Boolean(

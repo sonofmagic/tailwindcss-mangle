@@ -91,8 +91,14 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
         previous
         && t.isVariableDeclaration(previous)
         && previous.declarations.length === 1
-        && t.isIdentifier(previous.declarations[0].id)
-        && previous.declarations[0].id.name === refIdentifier.name,
+        && (() => {
+          const declaration = previous.declarations[0]
+          return Boolean(
+            declaration
+            && t.isIdentifier(declaration.id)
+            && declaration.id.name === refIdentifier.name,
+          )
+        })(),
       )
 
       const alreadyAssignsExports = Boolean(

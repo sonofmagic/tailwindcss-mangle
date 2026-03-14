@@ -1,7 +1,7 @@
 import type { PackageInfo } from 'local-pkg'
 import type {
   NormalizedExtendLengthUnitsOptions,
-  NormalizedTailwindcssPatchOptions,
+  NormalizedTailwindCssPatchOptions,
 } from '../options/types'
 import type { PatchStatusEntry, PatchStatusReport } from '../types'
 import * as t from '@babel/types'
@@ -15,7 +15,7 @@ import { applyExtendLengthUnitsPatchV4 } from './operations/extend-length-units'
 
 interface PatchStatusContext {
   packageInfo: PackageInfo
-  options: NormalizedTailwindcssPatchOptions
+  options: NormalizedTailwindCssPatchOptions
   majorVersion: 2 | 3 | 4
 }
 

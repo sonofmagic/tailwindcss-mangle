@@ -1,3 +1,5 @@
+import type { TailwindcssMangleConfig } from '@tailwindcss-mangle/config'
+
 export { TailwindcssPatcher } from './api/tailwindcss-patcher'
 export { CacheStore } from './cache/store'
 export {
@@ -32,7 +34,7 @@ export {
   type RestoreConfigFilesResult,
 } from './commands/migrate-config'
 export { normalizeOptions } from './config'
-export type { TailwindcssPatchOptions } from './config'
+export type { TailwindCssPatchOptions } from './config'
 export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
@@ -50,6 +52,6 @@ export {
 export { default as logger } from './logger'
 export * from './types'
 
-export function defineConfig<T>(config: T): T {
+export function defineConfig<T extends TailwindcssMangleConfig>(config: T): T {
   return config
 }

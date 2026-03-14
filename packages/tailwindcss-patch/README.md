@@ -117,6 +117,25 @@ Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing b
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. v9 expects the modern `registry` shape; use `tw-patch migrate` before upgrading if your config still uses deprecated keys.
 
+### Public Type Names
+
+The current alpha exports the modern option type names only:
+
+```ts
+import type {
+  ApplyOptions,
+  CacheOptions,
+  ExtractOptions,
+  TailwindCssOptions,
+  TailwindCssPatchOptions,
+  TailwindV2V3Options,
+  TailwindV4Options,
+  NormalizedTailwindCssPatchOptions,
+} from 'tailwindcss-patch'
+```
+
+Older aliases such as `TailwindcssPatchOptions`, `TailwindLocatorOptions`, and `TailwindTargetOptions` are intentionally removed in the alpha line.
+
 ### v9 upgrade flow
 
 1. Run `pnpm dlx tw-patch migrate --dry-run` to preview required config rewrites.

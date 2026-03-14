@@ -14,7 +14,8 @@ export interface StringChange {
  */
 export function spliceChangesIntoString(str: string, changes: StringChange[]) {
   // If there are no changes, return the original string
-  if (!changes[0]) {
+  const firstChange = changes[0]
+  if (!firstChange) {
     return str
   }
 
@@ -27,13 +28,16 @@ export function spliceChangesIntoString(str: string, changes: StringChange[]) {
   // This is sort of a String Builder pattern, thus creating less memory pressure
   let result = ''
 
-  let previous = changes[0]
+  let previous = firstChange
 
   result += str.slice(0, previous.start)
   result += previous.replacement
 
   for (let i = 1; i < changes.length; ++i) {
     const change = changes[i]
+    if (!change) {
+      continue
+    }
 
     result += str.slice(previous.end, change.start)
     result += change.replacement
