@@ -1,5 +1,16 @@
 # tailwindcss-patch
 
+## 9.0.0-alpha.2
+
+### Minor Changes
+
+- ✨ **Remove legacy public option type aliases from the v9 alpha line and keep only the modern option names such as `TailwindCssPatchOptions`, `TailwindCssOptions`, `TailwindV2Options`, `TailwindV3Options`, and `TailwindV4Options`.** [`3e1c464`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3e1c464318266eec37ee33b63aebed7a54cbae86) by @sonofmagic
+
+### Patch Changes
+
+- 📦 **Dependencies** [`3e1c464`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3e1c464318266eec37ee33b63aebed7a54cbae86)
+  → `@tailwindcss-mangle/config@7.0.0-alpha.2`
+
 ## 9.0.0-alpha.1
 
 ### Major Changes
