@@ -14,9 +14,6 @@ exports[`config > 2.transformer-options 1`] = `
     "tailwind": {
       "cwd": "aaa/bbb/cc",
     },
-    "tailwindcss": {
-      "version": 4,
-    },
   },
   "transformer": {
     "disabled": false,

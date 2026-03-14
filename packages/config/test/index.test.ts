@@ -47,9 +47,6 @@ describe('config', () => {
           pretty: false,
           stripUniversalSelector: false,
         },
-        tailwindcss: {
-          version: 4,
-        },
         tailwind: {
           cwd: 'aaa/bbb/cc',
         },

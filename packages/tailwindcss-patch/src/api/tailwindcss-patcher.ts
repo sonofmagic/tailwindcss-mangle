@@ -70,6 +70,26 @@ function validateInstalledVersion(packageVersion: string | undefined, expectedMa
   }
 }
 
+function resolveMajorVersionOrThrow(
+  configuredMajor: TailwindMajorVersion | undefined,
+  packageVersion: string | undefined,
+  packageName: string,
+): TailwindMajorVersion {
+  if (configuredMajor !== undefined) {
+    validateInstalledVersion(packageVersion, configuredMajor, packageName)
+    return configuredMajor
+  }
+
+  const installedMajor = resolveInstalledMajorVersion(packageVersion)
+  if (installedMajor !== undefined) {
+    return installedMajor
+  }
+
+  throw new Error(
+    `Unable to infer Tailwind CSS major version from resolved package "${packageName}" (${packageVersion ?? 'unknown'}). Set "tailwindcss.version" to 2, 3, or 4 explicitly.`,
+  )
+}
+
 function createCollector(
   packageInfo: PackageInfo,
   options: NormalizedTailwindcssPatchOptions,
@@ -109,8 +129,11 @@ export class TailwindcssPatcher {
     }
 
     this.packageInfo = packageInfo as PackageInfo
-    this.majorVersion = this.options.tailwind.versionHint
-    validateInstalledVersion(this.packageInfo.version, this.majorVersion, this.options.tailwind.packageName)
+    this.majorVersion = resolveMajorVersionOrThrow(
+      this.options.tailwind.versionHint,
+      this.packageInfo.version,
+      this.options.tailwind.packageName,
+    )
 
     this.cacheContext = createCacheContextDescriptor(
       this.options,

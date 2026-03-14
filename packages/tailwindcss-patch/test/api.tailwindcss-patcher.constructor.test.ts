@@ -49,15 +49,28 @@ describe('TailwindcssPatcher constructor branches', () => {
     })).toThrow('Unable to locate Tailwind CSS package')
   })
 
-  it('requires an explicit tailwindcss.version', async () => {
+  it('infers the version from the resolved package when tailwindcss.version is omitted', async () => {
     const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('3.4.19'))
+    const patcher = new TailwindcssPatcher({
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {} as any,
+    })
+
+    expect(patcher.majorVersion).toBe(3)
+  })
+
+  it('requires an explicit tailwindcss.version when the resolved package version is not inferable', async () => {
+    const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('canary'))
     expect(() => new TailwindcssPatcher({
       cache: false,
       extract: {
         write: false,
       },
       tailwindcss: {} as any,
-    })).toThrow('Missing required "tailwindcss.version"')
+    })).toThrow('Unable to infer Tailwind CSS major version')
   })
 
   it('uses the explicit version hint when the installed package version is not semver', async () => {

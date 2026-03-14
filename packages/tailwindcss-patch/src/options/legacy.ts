@@ -33,11 +33,6 @@ function assertNoDeprecatedRegistryOptions(registry: RegistryOptions) {
     return
   }
 
-  const { version } = tailwind
-  if (version === undefined) {
-    throw new Error('Missing required "registry.tailwindcss.version". Set it to 2, 3, or 4.')
-  }
-
   const usedTailwindKeys = (Object.keys(deprecatedTailwindMapping) as DeprecatedTailwindKey[])
     .filter(key => Object.prototype.hasOwnProperty.call(tailwind, key))
 
@@ -68,7 +63,7 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
 
   const tailwindcss = registry.tailwindcss
     ? {
-        version: registry.tailwindcss.version!,
+        ...(registry.tailwindcss.version === undefined ? {} : { version: registry.tailwindcss.version }),
         ...(registry.tailwindcss.packageName === undefined ? {} : { packageName: registry.tailwindcss.packageName }),
         ...(registry.tailwindcss.resolve === undefined ? {} : { resolve: registry.tailwindcss.resolve }),
         ...(registry.tailwindcss.config === undefined ? {} : { config: registry.tailwindcss.config }),

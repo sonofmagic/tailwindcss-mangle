@@ -5,9 +5,6 @@ exports[`defaults > getDefaultRegistryConfig 1`] = `
   "extract": {
     "file": ".tw-patch/tw-class-list.json",
   },
-  "tailwindcss": {
-    "version": 4,
-  },
 }
 `;
 
@@ -16,9 +13,6 @@ exports[`defaults > getDefaultUserConfig 1`] = `
   "registry": {
     "extract": {
       "file": ".tw-patch/tw-class-list.json",
-    },
-    "tailwindcss": {
-      "version": 4,
     },
   },
   "transformer": {

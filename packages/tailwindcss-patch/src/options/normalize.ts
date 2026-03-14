@@ -177,16 +177,8 @@ function normalizeTailwindOptions(
   tailwind: TailwindcssUserOptions | undefined,
   projectRoot: string,
 ): NormalizedTailwindConfigOptions {
-  if (!tailwind) {
-    throw new Error('Missing required "tailwindcss" options. Provide "tailwindcss.version" with an explicit Tailwind CSS major version.')
-  }
-
-  if (tailwind.version === undefined) {
-    throw new Error('Missing required "tailwindcss.version". Set it to 2, 3, or 4.')
-  }
-
   const packageName = tailwind?.packageName ?? 'tailwindcss'
-  const versionHint = tailwind.version
+  const versionHint = tailwind?.version
   const resolve = tailwind?.resolve
 
   const cwd = tailwind?.cwd ?? projectRoot
@@ -198,7 +190,7 @@ function normalizeTailwindOptions(
   return {
     packageName,
     cwd,
-    versionHint,
+    ...(versionHint === undefined ? {} : { versionHint }),
     ...(resolve === undefined ? {} : { resolve }),
     ...(config === undefined ? {} : { config }),
     ...(postcssPlugin === undefined ? {} : { postcssPlugin }),

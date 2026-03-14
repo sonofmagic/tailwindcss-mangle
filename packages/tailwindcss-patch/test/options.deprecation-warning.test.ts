@@ -14,11 +14,14 @@ describe('normalizeOptions modern-only validation', () => {
     } as any)).toThrow('tailwind -> tailwindcss')
   })
 
-  it('requires tailwindcss.version', () => {
-    expect(() => normalizeOptions({
+  it('allows tailwindcss.version to be inferred later', () => {
+    const normalized = normalizeOptions({
       projectRoot: '/tmp/project',
       tailwindcss: {} as any,
-    })).toThrow('Missing required "tailwindcss.version"')
+    })
+
+    expect(normalized.tailwind.packageName).toBe('tailwindcss')
+    expect(normalized.tailwind.versionHint).toBeUndefined()
   })
 
   it('accepts modern options only', () => {

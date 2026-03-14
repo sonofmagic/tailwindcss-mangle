@@ -100,8 +100,8 @@ export interface TailwindV4RuntimeUserOptions {
  * High-level Tailwind patch configuration shared across versions.
  */
 export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions {
-  /** Explicit Tailwind CSS major version used by the current project. */
-  version: 2 | 3 | 4
+  /** Explicit Tailwind CSS major version used by the current project. When omitted, the installed package version is inferred. */
+  version?: 2 | 3 | 4
   /** Tailwind package name if the project uses a fork. */
   packageName?: string
   /** Package resolution options forwarded to `local-pkg`. */
@@ -185,7 +185,7 @@ export interface NormalizedTailwindV4Options {
  */
 export interface NormalizedTailwindConfigOptions extends TailwindRuntimeConfigUserOptions {
   packageName: string
-  versionHint: 2 | 3 | 4
+  versionHint?: 2 | 3 | 4
   resolve?: PackageResolvingOptions
   v2?: TailwindRuntimeConfigUserOptions
   v3?: TailwindRuntimeConfigUserOptions
