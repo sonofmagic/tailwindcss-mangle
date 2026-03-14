@@ -45,17 +45,17 @@ function createStore(
   packageRoot: string,
 ): CacheStore {
   const normalized = normalizeOptions({
-    cwd: projectRoot,
+    projectRoot,
     cache: {
       enabled: true,
       dir: cacheDir,
       file: 'cache.json',
       strategy: 'overwrite',
     },
-    output: {
-      enabled: false,
+    extract: {
+      write: false,
     },
-    tailwind: {
+    tailwindcss: {
       version: 3,
       config: 'tailwind.config.js',
     },
@@ -162,26 +162,32 @@ describe('cache governance', () => {
     const projectB = await createProject('project-b')
 
     const patcherA = new TailwindcssPatcher({
-      cwd: projectA.projectRoot,
+      projectRoot: projectA.projectRoot,
       cache: {
         enabled: true,
         dir: sharedCacheDir,
         file: 'cache.json',
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 3,
       },
     })
 
     const patcherB = new TailwindcssPatcher({
-      cwd: projectB.projectRoot,
+      projectRoot: projectB.projectRoot,
       cache: {
         enabled: true,
         dir: sharedCacheDir,
         file: 'cache.json',
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 3,
       },
     })
 

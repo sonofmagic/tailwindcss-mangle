@@ -15,13 +15,9 @@ export function getDefaultRegistryConfig(): RegistryOptions {
     extract: {
       file: '.tw-patch/tw-class-list.json',
     },
-    output: {
-      file: '.tw-patch/tw-class-list.json',
-      stripUniversalSelector: true,
-      pretty: true,
+    tailwindcss: {
+      version: 3,
     },
-    tailwindcss: {},
-    tailwind: {},
   }
 }
 

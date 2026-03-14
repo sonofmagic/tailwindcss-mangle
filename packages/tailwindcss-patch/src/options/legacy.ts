@@ -1,137 +1,51 @@
-import type {
-  RegistryOptions,
-  TailwindLocatorOptions,
-  TailwindNextOptions,
-} from '@tailwindcss-mangle/config'
-import type { PackageResolvingOptions } from 'local-pkg'
-import type { ILengthUnitsPatchOptions } from '../types'
-import type { ExtendLengthUnitsUserOptions, TailwindcssPatchOptions } from './types'
+import type { RegistryOptions } from '@tailwindcss-mangle/config'
+import type { TailwindcssPatchOptions } from './types'
 
-export interface LegacyCacheOptions {
-  dir?: string
-  cwd?: string
-  file?: string
-  strategy?: 'merge' | 'overwrite'
-  enabled?: boolean
-}
+const deprecatedRegistryMapping = {
+  output: 'extract',
+  tailwind: 'tailwindcss',
+} as const
 
-export interface LegacyOutputOptions {
-  filename?: string
-  loose?: boolean
-  removeUniversalSelector?: boolean
-}
+type DeprecatedRegistryKey = keyof typeof deprecatedRegistryMapping
 
-export interface LegacyTailwindcssOptions {
-  version?: 2 | 3 | 4
-  v2?: TailwindLocatorOptions
-  v3?: TailwindLocatorOptions
-  v4?: TailwindNextOptions
-  config?: string
-  cwd?: string
-}
+const deprecatedTailwindMapping = {
+  package: 'packageName',
+  legacy: 'v2',
+  classic: 'v3',
+  next: 'v4',
+} as const
 
-export interface LegacyPatchOptions {
-  packageName?: string
-  output?: LegacyOutputOptions
-  tailwindcss?: LegacyTailwindcssOptions
-  overwrite?: boolean
-  applyPatches?: {
-    exportContext?: boolean
-    extendLengthUnits?: boolean | ILengthUnitsPatchOptions
-  }
-  filter?: (className: string) => boolean
-  cwd?: string
-  resolve?: PackageResolvingOptions
-}
+type DeprecatedTailwindKey = keyof typeof deprecatedTailwindMapping
 
-export interface LegacyTailwindcssPatcherOptions {
-  cache?: LegacyCacheOptions | boolean
-  patch?: LegacyPatchOptions
-}
+function assertNoDeprecatedRegistryOptions(registry: RegistryOptions) {
+  const usedRegistryKeys = (Object.keys(deprecatedRegistryMapping) as DeprecatedRegistryKey[])
+    .filter(key => Object.prototype.hasOwnProperty.call(registry, key))
 
-function normalizeLegacyFeatures(patch: LegacyPatchOptions | undefined): {
-  exposeContext: boolean
-  extendLengthUnits: false | ExtendLengthUnitsUserOptions
-} {
-  const apply = patch?.applyPatches
-  const extend = apply?.extendLengthUnits
-  let extendOption: false | ExtendLengthUnitsUserOptions = false
-
-  if (extend && typeof extend === 'object') {
-    extendOption = {
-      ...extend,
-      enabled: true,
-    }
-  }
-  else if (extend === true) {
-    extendOption = {
-      enabled: true,
-      units: ['rpx'],
-      ...(patch?.overwrite === undefined ? {} : { overwrite: patch.overwrite }),
-    }
+  if (usedRegistryKeys.length > 0) {
+    const mapping = usedRegistryKeys.map(key => `${key} -> ${deprecatedRegistryMapping[key]}`).join(', ')
+    throw new Error(
+      `Legacy registry fields are no longer supported: ${usedRegistryKeys.join(', ')}. Use the modern fields instead: ${mapping}.`,
+    )
   }
 
-  return {
-    exposeContext: apply?.exportContext ?? true,
-    extendLengthUnits: extendOption,
-  }
-}
-
-export function fromLegacyOptions(options?: LegacyTailwindcssPatcherOptions): TailwindcssPatchOptions {
-  if (!options) {
-    return {}
+  const tailwind = registry.tailwindcss
+  if (!tailwind) {
+    return
   }
 
-  const patch = options.patch
-  const features = normalizeLegacyFeatures(patch)
-  const output = patch?.output
-
-  const tailwindConfig = patch?.tailwindcss
-  const tailwindVersion = tailwindConfig?.version as 2 | 3 | 4 | undefined
-  const tailwindV2 = tailwindConfig?.v2
-  const tailwindV3 = tailwindConfig?.v3
-  const tailwindV4 = tailwindConfig?.v4
-
-  const tailwindConfigPath = tailwindV3?.config ?? tailwindV2?.config
-  const tailwindCwd = tailwindV3?.cwd ?? tailwindV2?.cwd ?? patch?.cwd
-  const normalizedExtract = output
-    ? {
-        ...(output.filename === undefined ? {} : { file: output.filename }),
-        pretty: output.loose ? 2 : false,
-        ...(output.removeUniversalSelector === undefined ? {} : { removeUniversalSelector: output.removeUniversalSelector }),
-      }
-    : undefined
-  const normalizedTailwindcss = {
-    ...(patch?.packageName === undefined ? {} : { packageName: patch.packageName }),
-    ...(tailwindVersion === undefined ? {} : { version: tailwindVersion }),
-    ...(patch?.resolve === undefined ? {} : { resolve: patch.resolve }),
-    ...(tailwindConfigPath === undefined ? {} : { config: tailwindConfigPath }),
-    ...(tailwindCwd === undefined ? {} : { cwd: tailwindCwd }),
-    ...(tailwindV2 === undefined ? {} : { v2: tailwindV2 }),
-    ...(tailwindV3 === undefined ? {} : { v3: tailwindV3 }),
-    ...(tailwindV4 === undefined ? {} : { v4: tailwindV4 }),
-  }
-  const normalizedCache = typeof options.cache === 'boolean'
-    ? options.cache
-    : options.cache
-      ? {
-          ...options.cache,
-          enabled: options.cache.enabled ?? true,
-        }
-      : undefined
-  const normalizedApply = {
-    ...(patch?.overwrite === undefined ? {} : { overwrite: patch.overwrite }),
-    exposeContext: features.exposeContext,
-    extendLengthUnits: features.extendLengthUnits,
+  const { version } = tailwind
+  if (version === undefined) {
+    throw new Error('Missing required "registry.tailwindcss.version". Set it to 2, 3, or 4.')
   }
 
-  return {
-    ...(patch?.cwd === undefined ? {} : { projectRoot: patch.cwd }),
-    ...(patch?.filter === undefined ? {} : { filter: patch.filter }),
-    ...(normalizedCache === undefined ? {} : { cache: normalizedCache }),
-    ...(normalizedExtract === undefined ? {} : { extract: normalizedExtract }),
-    ...(Object.keys(normalizedTailwindcss).length === 0 ? {} : { tailwindcss: normalizedTailwindcss }),
-    apply: normalizedApply,
+  const usedTailwindKeys = (Object.keys(deprecatedTailwindMapping) as DeprecatedTailwindKey[])
+    .filter(key => Object.prototype.hasOwnProperty.call(tailwind, key))
+
+  if (usedTailwindKeys.length > 0) {
+    const mapping = usedTailwindKeys.map(key => `${key} -> tailwindcss.${deprecatedTailwindMapping[key]}`).join(', ')
+    throw new Error(
+      `Legacy "registry.tailwindcss" fields are no longer supported: ${usedTailwindKeys.join(', ')}. Use the modern fields instead: ${mapping}.`,
+    )
   }
 }
 
@@ -140,69 +54,32 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
     return {}
   }
 
-  const tailwind = registry.tailwindcss ?? registry.tailwind
-  const modernExtract = registry.extract
-  const legacyOutput = registry.output
+  assertNoDeprecatedRegistryOptions(registry)
 
-  const pretty = (() => {
-    const value = modernExtract?.pretty ?? legacyOutput?.pretty
-    if (value === undefined) {
-      return undefined
-    }
-    if (typeof value === 'boolean') {
-      return value ? 2 : false
-    }
-    return value
-  })()
-  const removeUniversalSelector = modernExtract?.removeUniversalSelector ?? legacyOutput?.stripUniversalSelector
-  const outputFile = modernExtract?.file ?? legacyOutput?.file
-  const normalizedExtract = modernExtract || legacyOutput
+  const extract = registry.extract
     ? {
-        ...(modernExtract?.write === undefined ? {} : { write: modernExtract.write }),
-        ...(outputFile === undefined ? {} : { file: outputFile }),
-        ...(pretty === undefined ? {} : { pretty }),
-        ...(removeUniversalSelector === undefined ? {} : { removeUniversalSelector }),
-        ...(modernExtract?.format === undefined ? {} : { format: modernExtract.format }),
-      }
-    : undefined
-  const normalizedTailwindcss = tailwind
-    ? {
-        ...(tailwind.version === undefined ? {} : { version: tailwind.version }),
-        ...(
-          tailwind.packageName === undefined
-            ? tailwind.package === undefined
-              ? {}
-              : { packageName: tailwind.package }
-            : { packageName: tailwind.packageName }
-        ),
-        ...(tailwind.resolve === undefined ? {} : { resolve: tailwind.resolve }),
-        ...(tailwind.config === undefined ? {} : { config: tailwind.config }),
-        ...(tailwind.cwd === undefined ? {} : { cwd: tailwind.cwd }),
-        ...(
-          tailwind.v2 === undefined
-            ? tailwind.legacy === undefined
-              ? {}
-              : { v2: tailwind.legacy }
-            : { v2: tailwind.v2 }
-        ),
-        ...(
-          tailwind.v3 === undefined
-            ? tailwind.classic === undefined
-              ? {}
-              : { v3: tailwind.classic }
-            : { v3: tailwind.v3 }
-        ),
-        ...(
-          tailwind.v4 === undefined
-            ? tailwind.next === undefined
-              ? {}
-              : { v4: tailwind.next }
-            : { v4: tailwind.v4 }
-        ),
+        ...(registry.extract.write === undefined ? {} : { write: registry.extract.write }),
+        ...(registry.extract.file === undefined ? {} : { file: registry.extract.file }),
+        ...(registry.extract.format === undefined ? {} : { format: registry.extract.format }),
+        ...(registry.extract.pretty === undefined ? {} : { pretty: registry.extract.pretty }),
+        ...(registry.extract.removeUniversalSelector === undefined ? {} : { removeUniversalSelector: registry.extract.removeUniversalSelector }),
       }
     : undefined
 
-  const normalizedApply = registry.apply
+  const tailwindcss = registry.tailwindcss
+    ? {
+        version: registry.tailwindcss.version!,
+        ...(registry.tailwindcss.packageName === undefined ? {} : { packageName: registry.tailwindcss.packageName }),
+        ...(registry.tailwindcss.resolve === undefined ? {} : { resolve: registry.tailwindcss.resolve }),
+        ...(registry.tailwindcss.config === undefined ? {} : { config: registry.tailwindcss.config }),
+        ...(registry.tailwindcss.cwd === undefined ? {} : { cwd: registry.tailwindcss.cwd }),
+        ...(registry.tailwindcss.v2 === undefined ? {} : { v2: registry.tailwindcss.v2 }),
+        ...(registry.tailwindcss.v3 === undefined ? {} : { v3: registry.tailwindcss.v3 }),
+        ...(registry.tailwindcss.v4 === undefined ? {} : { v4: registry.tailwindcss.v4 }),
+      }
+    : undefined
+
+  const apply = registry.apply
     ? {
         ...(registry.apply.overwrite === undefined ? {} : { overwrite: registry.apply.overwrite }),
         ...(registry.apply.exposeContext === undefined ? {} : { exposeContext: registry.apply.exposeContext }),
@@ -212,10 +89,10 @@ export function fromUnifiedConfig(registry?: RegistryOptions): TailwindcssPatchO
 
   return {
     ...(registry.projectRoot === undefined ? {} : { projectRoot: registry.projectRoot }),
-    ...(normalizedApply === undefined ? {} : { apply: normalizedApply }),
+    ...(apply === undefined ? {} : { apply }),
     ...(registry.cache === undefined ? {} : { cache: registry.cache }),
     ...(registry.filter === undefined ? {} : { filter: registry.filter }),
-    ...(normalizedExtract === undefined ? {} : { extract: normalizedExtract }),
-    ...(normalizedTailwindcss === undefined ? {} : { tailwindcss: normalizedTailwindcss }),
+    ...(extract === undefined ? {} : { extract }),
+    ...(tailwindcss === undefined ? {} : { tailwindcss }),
   }
 }

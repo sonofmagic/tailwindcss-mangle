@@ -32,7 +32,7 @@ export {
   type RestoreConfigFilesResult,
 } from './commands/migrate-config'
 export { normalizeOptions } from './config'
-export type { LegacyTailwindcssPatcherOptions, TailwindcssPatchOptions } from './config'
+export type { TailwindcssPatchOptions } from './config'
 export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,

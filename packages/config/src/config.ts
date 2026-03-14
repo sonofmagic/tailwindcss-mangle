@@ -39,7 +39,9 @@ export default defineConfig({
     extract: {
       file: '.tw-patch/tw-class-list.json',
     },
-    tailwindcss: {},
+    tailwindcss: {
+      version: 3,
+    },
   },
   transformer: {
     registry: {

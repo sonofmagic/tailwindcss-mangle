@@ -19,7 +19,7 @@ import {
 const DEFAULT_CONFIG_NAME = 'tailwindcss-mangle'
 
 export async function installCommandDefaultHandler(_ctx: TailwindcssPatchCommandContext<'install'>) {
-  const patcher = new TailwindcssPatcher()
+  const patcher = await _ctx.createPatcher()
   await patcher.patch()
   logger.success('Tailwind CSS runtime patched successfully.')
 }

@@ -42,43 +42,48 @@ describe('TailwindcssPatcher constructor branches', () => {
   it('throws when tailwind package cannot be resolved', async () => {
     const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => undefined)
     expect(() => new TailwindcssPatcher({
-      tailwind: {
+      tailwindcss: {
+        version: 3,
         packageName: 'tailwindcss-missing',
       },
     })).toThrow('Unable to locate Tailwind CSS package')
   })
 
-  it('caps unknown future major versions to v4 for compatibility', async () => {
-    const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('5.0.1'))
-    const patcher = new TailwindcssPatcher({
+  it('requires an explicit tailwindcss.version', async () => {
+    const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('3.4.19'))
+    expect(() => new TailwindcssPatcher({
       cache: false,
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-    })
-    expect(patcher.majorVersion).toBe(4)
+      tailwindcss: {} as any,
+    })).toThrow('Missing required "tailwindcss.version"')
   })
 
-  it('falls back to v3 when installed package version is not semver', async () => {
+  it('uses the explicit version hint when the installed package version is not semver', async () => {
     const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('canary'))
     const patcher = new TailwindcssPatcher({
       cache: false,
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-    })
-    expect(patcher.majorVersion).toBe(3)
-  })
-
-  it('accepts legacy options wrapper and honors explicit version hint', async () => {
-    const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('5.0.1'))
-    const patcher = new TailwindcssPatcher({
-      patch: {
-        tailwindcss: {
-          version: 2,
-        },
+      tailwindcss: {
+        version: 2,
       },
     })
     expect(patcher.majorVersion).toBe(2)
+  })
+
+  it('throws when the configured version does not match the resolved package version', async () => {
+    const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('5.0.1'))
+    expect(() => new TailwindcssPatcher({
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 2,
+      },
+    })).toThrow('Configured tailwindcss.version=2')
   })
 })

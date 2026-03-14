@@ -29,13 +29,16 @@ describe('TailwindcssPatcher', () => {
     const outputFile = path.join(tempDir, 'classes.json')
 
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
+      extract: {
         file: outputFile,
       },
-      tailwind: {
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
         v4: {
           base: fixturesRoot,
           cssEntries: [path.join(fixturesRoot, 'index.css')],
@@ -66,6 +69,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
         v4: {
           base: fixturesRoot,
           cssEntries: [path.join(fixturesRoot, 'index.css')],
@@ -108,14 +112,17 @@ describe('TailwindcssPatcher', () => {
       await fs.writeFile(usageFile, '<div class="px-[48rpx]"></div>', 'utf8')
 
       const patcher = new TailwindcssPatcher({
-        cwd: workspaceRoot,
-        overwrite: false,
-        cache: false,
-        output: {
-          enabled: false,
+        projectRoot: workspaceRoot,
+        apply: {
+          overwrite: false,
         },
-        tailwind: {
+        cache: false,
+        extract: {
+          write: false,
+        },
+        tailwindcss: {
           version: 4,
+        packageName: 'tailwindcss-4',
           v4: {
             base: workspaceRoot,
             cssEntries: [cssEntry],
@@ -185,14 +192,17 @@ describe('TailwindcssPatcher', () => {
       await fs.writeFile(usageFile, '<div class="bg-configa bg-configb"></div>', 'utf8')
 
       const patcher = new TailwindcssPatcher({
-        cwd: workspaceRoot,
-        overwrite: false,
-        cache: false,
-        output: {
-          enabled: false,
+        projectRoot: workspaceRoot,
+        apply: {
+          overwrite: false,
         },
-        tailwind: {
+        cache: false,
+        extract: {
+          write: false,
+        },
+        tailwindcss: {
           version: 4,
+        packageName: 'tailwindcss-4',
           v4: {
             base: workspaceRoot,
             cssEntries: [cssEntry],
@@ -244,14 +254,17 @@ describe('TailwindcssPatcher', () => {
       await fs.writeFile(usageFile, '<div class="bg-[#00aa55]"></div>', 'utf8')
 
       const patcher = new TailwindcssPatcher({
-        cwd: workspaceRoot,
-        overwrite: false,
-        cache: false,
-        output: {
-          enabled: false,
+        projectRoot: workspaceRoot,
+        apply: {
+          overwrite: false,
         },
-        tailwind: {
+        cache: false,
+        extract: {
+          write: false,
+        },
+        tailwindcss: {
           version: 4,
+        packageName: 'tailwindcss-4',
           cwd: workspaceRoot,
           v4: {
             base: cssDir,
@@ -272,14 +285,16 @@ describe('TailwindcssPatcher', () => {
   it('collects classes synchronously from runtime contexts', () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
       },
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -310,15 +325,17 @@ describe('TailwindcssPatcher', () => {
     fs.writeJSONSync(cacheFile, ['cached-class'])
 
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
         strategy: 'overwrite',
       },
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -339,10 +356,12 @@ describe('TailwindcssPatcher', () => {
     const contexts: any[] = []
 
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -364,10 +383,13 @@ describe('TailwindcssPatcher', () => {
 
   it('throws when getClassSetSync is used in Tailwind CSS v4 mode', () => {
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      tailwind: {
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -377,15 +399,18 @@ describe('TailwindcssPatcher', () => {
   it('writes extracted classes using lines format', async () => {
     const outputFile = path.join(tempDir, 'classes.txt')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
-        enabled: true,
+      extract: {
+        write: true,
         file: outputFile,
         format: 'lines',
       },
-      tailwind: {
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
         v4: {
           base: fixturesRoot,
           cssEntries: [path.join(fixturesRoot, 'index.css')],
@@ -405,14 +430,17 @@ describe('TailwindcssPatcher', () => {
   it('returns extraction result without writing when output file is empty', async () => {
     const writeFileSpy = vi.spyOn(fs, 'writeFile')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
-        enabled: true,
+      extract: {
+        write: true,
         file: '',
       },
-      tailwind: {
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
         v4: {
           base: fixturesRoot,
           cssEntries: [path.join(fixturesRoot, 'index.css')],
@@ -430,10 +458,16 @@ describe('TailwindcssPatcher', () => {
   it('logs cache clear summary through the public clearCache API', async () => {
     const debugSpy = vi.spyOn(logger, 'debug')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -447,10 +481,16 @@ describe('TailwindcssPatcher', () => {
     const patchSpy = vi.spyOn(patchRunner, 'applyTailwindPatches').mockResolvedValue('patched' as any)
     const statusSpy = vi.spyOn(patchStatus, 'getPatchStatusReport').mockResolvedValue('status' as any)
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -463,10 +503,16 @@ describe('TailwindcssPatcher', () => {
   it('skips repeated patch work when patch targets are unchanged', async () => {
     const patchSpy = vi.spyOn(patchRunner, 'applyTailwindPatches').mockReturnValue({ ok: true } as any)
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: false,
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -484,19 +530,19 @@ describe('TailwindcssPatcher', () => {
       await fs.copy(path.resolve(__dirname, 'fixtures/versions/3.3.1'), packageRoot)
 
       const patcher = new TailwindcssPatcher({
-        cwd: rootDir,
-        overwrite: false,
+        projectRoot: rootDir,
         cache: false,
-        output: {
-          enabled: false,
+        extract: {
+          write: false,
         },
-        tailwind: {
+        tailwindcss: {
           version: 3,
           resolve: {
             paths: [rootDir],
           },
         },
-        features: {
+        apply: {
+          overwrite: false,
           extendLengthUnits: {
             enabled: true,
             units: ['rpx'],
@@ -525,15 +571,19 @@ describe('TailwindcssPatcher', () => {
   it('delegates context loading with configured ref property', () => {
     const loadSpy = vi.spyOn(contextRegistry, 'loadRuntimeContexts').mockReturnValue([])
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
-      cache: false,
-      output: {
-        enabled: false,
-      },
-      features: {
+      apply: {
+        overwrite: false,
         exposeContext: {
           refProperty: 'customContextRef',
         },
+      },
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -547,13 +597,16 @@ describe('TailwindcssPatcher', () => {
     const runBuildSpy = vi.spyOn(runtimeBuild, 'runTailwindBuild').mockResolvedValue({ css: '', messages: [] } as any)
 
     const v2Patcher = new TailwindcssPatcher({
-      overwrite: false,
-      cache: false,
-      output: {
-        enabled: false,
+      apply: {
+        overwrite: false,
       },
-      tailwind: {
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
         version: 2,
+        packageName: 'tailwindcss2',
         cwd: path.join(tempDir, 'base-v2-cwd'),
         config: path.join(tempDir, 'base-v2.config.js'),
         postcssPlugin: 'base-v2-plugin',
@@ -574,12 +627,14 @@ describe('TailwindcssPatcher', () => {
     })
 
     const v3Patcher = new TailwindcssPatcher({
-      overwrite: false,
-      cache: false,
-      output: {
-        enabled: false,
+      apply: {
+        overwrite: false,
       },
-      tailwind: {
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
         version: 3,
         cwd: path.join(tempDir, 'base-v3-cwd'),
         config: path.join(tempDir, 'base-v3.config.js'),
@@ -599,13 +654,16 @@ describe('TailwindcssPatcher', () => {
     })
 
     const v4Patcher = new TailwindcssPatcher({
-      overwrite: false,
-      cache: false,
-      output: {
-        enabled: false,
+      apply: {
+        overwrite: false,
       },
-      tailwind: {
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
     await (v4Patcher as any).runTailwindBuildIfNeeded()
@@ -624,13 +682,16 @@ describe('TailwindcssPatcher', () => {
     const groupSpy = vi.spyOn(extraction, 'groupTokensByFile').mockReturnValue(grouped)
 
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
-      cache: false,
-      output: {
-        enabled: false,
+      apply: {
+        overwrite: false,
       },
-      tailwind: {
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
         version: 4,
+        packageName: 'tailwindcss-4',
       },
     })
 
@@ -663,14 +724,16 @@ describe('TailwindcssPatcher', () => {
   it('does not rewrite cache when repeated getClassSetSync returns the same class set', async () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
       },
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -698,15 +761,17 @@ describe('TailwindcssPatcher', () => {
   it('does not cache an empty class set as a successful result', () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
         strategy: 'overwrite',
       },
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -725,14 +790,16 @@ describe('TailwindcssPatcher', () => {
 
   it('recollects classes after clearCache removes the current context entry', async () => {
     const patcher = new TailwindcssPatcher({
-      overwrite: false,
+      apply: {
+        overwrite: false,
+      },
       cache: {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
       },
-      tailwind: {
-        versionHint: 3,
+      tailwindcss: {
+        version: 3,
       },
     })
 
@@ -787,10 +854,10 @@ describe('TailwindcssPatcher', () => {
       const createPatcher = () => new TailwindcssPatcher({
         projectRoot,
         cache: false,
-        output: {
-          enabled: false,
+        extract: {
+          write: false,
         },
-        tailwind: {
+        tailwindcss: {
           packageName: 'tailwindcss-3',
           version: 3,
           resolve: {

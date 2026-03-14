@@ -1,8 +1,4 @@
-export {
-  fromLegacyOptions,
-  fromUnifiedConfig,
-  type LegacyTailwindcssPatcherOptions,
-} from '../options/legacy'
+export { fromUnifiedConfig } from '../options/legacy'
 export { normalizeOptions } from '../options/normalize'
 export type {
   CacheStrategy,

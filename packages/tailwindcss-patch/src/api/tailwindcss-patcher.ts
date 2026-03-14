@@ -1,6 +1,6 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageInfo } from 'local-pkg'
-import type { LegacyTailwindcssPatcherOptions, NormalizedTailwindcssPatchOptions } from '../config'
+import type { NormalizedTailwindcssPatchOptions } from '../config'
 import type {
   CacheClearOptions,
   CacheClearResult,
@@ -19,7 +19,7 @@ import path from 'pathe'
 import { coerce } from 'semver'
 import { createCacheContextDescriptor } from '../cache/context'
 import { CacheStore } from '../cache/store'
-import { fromLegacyOptions, normalizeOptions } from '../config'
+import { normalizeOptions } from '../config'
 import {
   extractValidCandidates as extractCandidates,
   extractProjectCandidatesWithPositions,
@@ -40,25 +40,39 @@ interface PatchMemo {
   snapshot: string
 }
 
-function resolveMajorVersion(version?: string | null, hint?: 2 | 3 | 4): TailwindMajorVersion {
-  if (hint && [2, 3, 4].includes(hint)) {
-    return hint
+function resolveInstalledMajorVersion(version?: string | null) {
+  if (!version) {
+    return undefined
   }
 
-  if (version) {
-    const coerced = coerce(version)
-    if (coerced) {
-      const major = coerced.major as TailwindMajorVersion
-      if (major === 2 || major === 3 || major === 4) {
-        return major
-      }
-      if (major >= 4) {
-        return 4
-      }
-    }
+  const coerced = coerce(version)
+  if (!coerced) {
+    return undefined
   }
 
-  return 3
+  const major = coerced.major as TailwindMajorVersion
+  if (major === 2 || major === 3 || major === 4) {
+    return major
+  }
+
+  if (major >= 4) {
+    return 4
+  }
+
+  return undefined
+}
+
+function validateInstalledVersion(packageVersion: string | undefined, expectedMajor: TailwindMajorVersion, packageName: string) {
+  const installedMajor = resolveInstalledMajorVersion(packageVersion)
+  if (installedMajor === undefined) {
+    return
+  }
+
+  if (installedMajor !== expectedMajor) {
+    throw new Error(
+      `Configured tailwindcss.version=${expectedMajor}, but resolved package "${packageName}" is version ${packageVersion}. Update the configuration or resolve the correct package.`,
+    )
+  }
 }
 
 function resolveTailwindExecutionOptions(
@@ -89,8 +103,6 @@ function resolveTailwindExecutionOptions(
   }
 }
 
-type TailwindcssPatcherInitOptions = TailwindcssPatchOptions | LegacyTailwindcssPatcherOptions
-
 export class TailwindcssPatcher {
   public readonly options: NormalizedTailwindcssPatchOptions
   public readonly packageInfo: PackageInfo
@@ -105,13 +117,8 @@ export class TailwindcssPatcher {
   private patchMemo: PatchMemo | undefined
   private inFlightBuild: Promise<void> | undefined
 
-  constructor(options: TailwindcssPatcherInitOptions = {}) {
-    const resolvedOptions: TailwindcssPatchOptions
-      = options && typeof options === 'object' && 'patch' in options
-        ? fromLegacyOptions(options as LegacyTailwindcssPatcherOptions)
-        : (options as TailwindcssPatchOptions)
-
-    this.options = normalizeOptions(resolvedOptions)
+  constructor(options: TailwindcssPatchOptions = {}) {
+    this.options = normalizeOptions(options)
     const packageInfo = getPackageInfoSync(
       this.options.tailwind.packageName,
       this.options.tailwind.resolve,
@@ -122,10 +129,8 @@ export class TailwindcssPatcher {
     }
 
     this.packageInfo = packageInfo as PackageInfo
-    this.majorVersion = resolveMajorVersion(
-      this.packageInfo.version,
-      this.options.tailwind.versionHint,
-    )
+    this.majorVersion = this.options.tailwind.versionHint
+    validateInstalledVersion(this.packageInfo.version, this.majorVersion, this.options.tailwind.packageName)
 
     this.cacheContext = createCacheContextDescriptor(
       this.options,

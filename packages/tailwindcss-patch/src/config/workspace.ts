@@ -1,12 +1,11 @@
-import type { LegacyTailwindcssPatcherOptions } from '../options/legacy'
 import type { TailwindcssPatchOptions } from '../types'
 import { pathToFileURL } from 'node:url'
 import path from 'pathe'
-import { fromLegacyOptions, fromUnifiedConfig } from '../options/legacy'
+import { fromUnifiedConfig } from '../options/legacy'
 
 export interface TailwindcssConfigModule {
   CONFIG_NAME: string
-  getConfig: (cwd?: string) => Promise<{ config?: { registry?: unknown, patch?: LegacyTailwindcssPatcherOptions['patch'] } }>
+  getConfig: (cwd?: string) => Promise<{ config?: { registry?: unknown, patch?: unknown } }>
   initConfig: (cwd: string) => Promise<unknown>
 }
 
@@ -70,12 +69,13 @@ export async function loadPatchOptionsForWorkspace(cwd: string, overrides?: Tail
   const merge = await loadWorkspaceDefu()
   const configModule = await loadWorkspaceConfigModule()
   const { config } = await configModule.getConfig(cwd)
-  const legacyConfig = config as (typeof config) & { patch?: LegacyTailwindcssPatcherOptions['patch'] }
+  if (config && typeof config === 'object' && 'patch' in config && config.patch !== undefined) {
+    throw new Error('Legacy workspace config field "patch" is no longer supported. Move patcher options under "registry".')
+  }
+
   const base = config?.registry
     ? fromUnifiedConfig(config.registry)
-    : legacyConfig?.patch
-      ? fromLegacyOptions({ patch: legacyConfig.patch })
-      : {}
+    : {}
   const merged = merge(overrides ?? {}, base) as TailwindcssPatchOptions
   return merged
 }

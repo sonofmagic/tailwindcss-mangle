@@ -36,15 +36,15 @@ describe('cache context fingerprint', () => {
     await fs.writeFile(path.join(projectRoot, 'tailwind.config.js'), 'module.exports = { content: [] }', 'utf8')
 
     const normalized = normalizeOptions({
-      cwd: projectRoot,
+      projectRoot,
       cache: {
         enabled: true,
         dir: path.join(tempDir, '.cache'),
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-      tailwind: {
+      tailwindcss: {
         version: 3,
       },
     })
@@ -69,15 +69,15 @@ describe('cache context fingerprint', () => {
     await fs.writeFile(path.join(projectRoot, 'tailwind.config.js'), 'module.exports = { content: [] }', 'utf8')
 
     const normalized = normalizeOptions({
-      cwd: projectRoot,
+      projectRoot,
       cache: {
         enabled: true,
         dir: path.join(tempDir, '.cache'),
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-      tailwind: {
+      tailwindcss: {
         version: 3,
       },
     })
@@ -97,15 +97,15 @@ describe('cache context fingerprint', () => {
     await fs.ensureDir(packageRoot)
 
     const normalizedA = normalizeOptions({
-      cwd: projectRoot,
+      projectRoot,
       cache: {
         enabled: true,
         dir: path.join(tempDir, '.cache'),
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-      tailwind: {
+      tailwindcss: {
         version: 4,
         v4: {
           cssEntries: [path.join(projectRoot, 'a.css')],
@@ -114,15 +114,15 @@ describe('cache context fingerprint', () => {
     })
 
     const normalizedB = normalizeOptions({
-      cwd: projectRoot,
+      projectRoot,
       cache: {
         enabled: true,
         dir: path.join(tempDir, '.cache'),
       },
-      output: {
-        enabled: false,
+      extract: {
+        write: false,
       },
-      tailwind: {
+      tailwindcss: {
         version: 4,
         v4: {
           cssEntries: [path.join(projectRoot, 'b.css')],

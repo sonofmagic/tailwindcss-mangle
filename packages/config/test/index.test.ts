@@ -47,7 +47,9 @@ describe('config', () => {
           pretty: false,
           stripUniversalSelector: false,
         },
-        tailwindcss: {},
+        tailwindcss: {
+          version: 3,
+        },
         tailwind: {
           cwd: 'aaa/bbb/cc',
         },
@@ -67,12 +69,6 @@ describe('config', () => {
     const { config } = await getConfig(cwd)
     expect(normaliseRegex(config)).toEqual(normaliseRegex({
       registry: {
-        output: {
-          file: '.tw-patch/tw-class-list.json',
-          pretty: true,
-          stripUniversalSelector: true,
-        },
-        tailwind: {},
         projectRoot: 'apps/demo-a',
         extract: {
           write: false,
@@ -91,8 +87,8 @@ describe('config', () => {
           },
         },
         tailwindcss: {
-          packageName: 'tailwindcss-modern',
           version: 4,
+          packageName: 'tailwindcss-modern',
           v4: {
             cssEntries: ['dist/tailwind.css'],
           },

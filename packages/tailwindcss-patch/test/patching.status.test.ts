@@ -22,17 +22,17 @@ describe('patch status reporting', () => {
     await fs.copy(fixtureRoot, packageRoot)
 
     const patcher = new TailwindcssPatcher({
-      cwd: tempDir,
-      overwrite: true,
+      projectRoot: tempDir,
       cache: false,
-      output: { enabled: false },
-      features: {
+      extract: { write: false },
+      apply: {
+        overwrite: true,
         extendLengthUnits: {
           enabled: true,
           units: ['rpx'],
         },
       },
-      tailwind: {
+      tailwindcss: {
         version: 3,
         resolve: {
           paths: [tempDir],

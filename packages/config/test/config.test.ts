@@ -15,7 +15,7 @@ describe('config', () => {
   it('defineConfig helper returns provided config', () => {
     const config = defineConfig({
       registry: {
-        output: {
+        extract: {
           file: 'custom.json',
         },
       },
@@ -23,7 +23,7 @@ describe('config', () => {
 
     expect(config).toEqual({
       registry: {
-        output: {
+        extract: {
           file: 'custom.json',
         },
       },

@@ -43,23 +43,6 @@ export interface TailwindExtractionUserOptions {
 }
 
 /**
- * @deprecated Use `TailwindExtractionUserOptions`.
- * Legacy output options kept for backward compatibility and will be removed in the next major version.
- */
-export interface OutputUserOptions {
-  /** @deprecated Use `extract.write` instead. */
-  enabled?: boolean
-  /** @deprecated Use `extract.file` instead. */
-  file?: string
-  /** @deprecated Use `extract.format` instead. */
-  format?: 'json' | 'lines'
-  /** @deprecated Use `extract.pretty` instead. */
-  pretty?: number | boolean
-  /** @deprecated Use `extract.removeUniversalSelector` instead. */
-  removeUniversalSelector?: boolean
-}
-
-/**
  * Options controlling how Tailwind contexts are exposed during runtime patching.
  */
 export interface ExposeContextUserOptions {
@@ -88,17 +71,6 @@ export interface PatchApplyUserOptions {
 }
 
 /**
- * @deprecated Use `PatchApplyUserOptions`.
- * Legacy nested feature options kept for backward compatibility and will be removed in the next major version.
- */
-export interface FeatureUserOptions {
-  /** @deprecated Use `apply.exposeContext` instead. */
-  exposeContext?: boolean | ExposeContextUserOptions
-  /** @deprecated Use `apply.extendLengthUnits` instead. */
-  extendLengthUnits?: false | ExtendLengthUnitsUserOptions
-}
-
-/**
  * Shared configuration used for Tailwind v2/v3 patching flows.
  */
 export interface TailwindRuntimeConfigUserOptions {
@@ -109,12 +81,6 @@ export interface TailwindRuntimeConfigUserOptions {
   /** Optional PostCSS plugin name to use instead of the default. */
   postcssPlugin?: string
 }
-
-/**
- * @deprecated Use `TailwindRuntimeConfigUserOptions`.
- * Legacy naming kept for backward compatibility and will be removed in the next major version.
- */
-export interface TailwindConfigUserOptions extends TailwindRuntimeConfigUserOptions {}
 
 /**
  * Additional configuration specific to Tailwind CSS v4 extraction.
@@ -131,20 +97,11 @@ export interface TailwindV4RuntimeUserOptions {
 }
 
 /**
- * @deprecated Use `TailwindV4RuntimeUserOptions`.
- * Legacy naming kept for backward compatibility and will be removed in the next major version.
- */
-export interface TailwindV4UserOptions extends TailwindV4RuntimeUserOptions {}
-
-/**
  * High-level Tailwind patch configuration shared across versions.
  */
 export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions {
-  /**
-   * Optional hint for picking the patch strategy.
-   * When omitted we infer from the installed Tailwind CSS package version.
-   */
-  version?: 2 | 3 | 4
+  /** Explicit Tailwind CSS major version used by the current project. */
+  version: 2 | 3 | 4
   /** Tailwind package name if the project uses a fork. */
   packageName?: string
   /** Package resolution options forwarded to `local-pkg`. */
@@ -156,12 +113,6 @@ export interface TailwindcssUserOptions extends TailwindRuntimeConfigUserOptions
   /** Options specific to Tailwind CSS v4 patching. */
   v4?: TailwindV4RuntimeUserOptions
 }
-
-/**
- * @deprecated Use `TailwindcssUserOptions`.
- * Legacy naming kept for backward compatibility and will be removed in the next major version.
- */
-export interface TailwindUserOptions extends TailwindcssUserOptions {}
 
 /**
  * Root configuration consumed by the Tailwind CSS patch runner.
@@ -182,24 +133,6 @@ export interface TailwindcssPatchOptions {
   filter?: (className: string) => boolean
   /** Cache configuration or boolean to enable/disable quickly. */
   cache?: boolean | CacheUserOptions
-
-  /**
-   * Base directory used when resolving Tailwind resources.
-   * Defaults to `process.cwd()`.
-   * @deprecated Use `projectRoot` instead.
-   */
-  cwd?: string
-  /**
-   * Whether to overwrite generated artifacts (e.g., caches, outputs).
-   * @deprecated Use `apply.overwrite` instead.
-   */
-  overwrite?: boolean
-  /** @deprecated Use `tailwindcss` instead. */
-  tailwind?: TailwindUserOptions
-  /** @deprecated Use `apply` instead. */
-  features?: FeatureUserOptions
-  /** @deprecated Use `extract` instead. */
-  output?: OutputUserOptions
 }
 
 /**
@@ -250,12 +183,12 @@ export interface NormalizedTailwindV4Options {
 /**
  * Tailwind configuration ready for consumption by the runtime after normalization.
  */
-export interface NormalizedTailwindConfigOptions extends TailwindConfigUserOptions {
+export interface NormalizedTailwindConfigOptions extends TailwindRuntimeConfigUserOptions {
   packageName: string
-  versionHint?: 2 | 3 | 4
+  versionHint: 2 | 3 | 4
   resolve?: PackageResolvingOptions
-  v2?: TailwindConfigUserOptions
-  v3?: TailwindConfigUserOptions
+  v2?: TailwindRuntimeConfigUserOptions
+  v3?: TailwindRuntimeConfigUserOptions
   v4?: NormalizedTailwindV4Options
 }
 

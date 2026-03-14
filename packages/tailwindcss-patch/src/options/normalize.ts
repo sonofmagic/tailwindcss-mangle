@@ -18,19 +18,6 @@ import process from 'node:process'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { pkgName } from '../constants'
-import logger from '../logger'
-
-let hasWarnedDeprecatedOptions = false
-
-const deprecatedOptionMapping = {
-  cwd: 'projectRoot',
-  overwrite: 'apply.overwrite',
-  tailwind: 'tailwindcss',
-  features: 'apply',
-  output: 'extract',
-} as const
-
-type DeprecatedTopLevelOptionKey = keyof typeof deprecatedOptionMapping
 
 function resolveRealpathSafe(value: string) {
   const resolved = path.resolve(value)
@@ -190,8 +177,16 @@ function normalizeTailwindOptions(
   tailwind: TailwindcssUserOptions | undefined,
   projectRoot: string,
 ): NormalizedTailwindConfigOptions {
+  if (!tailwind) {
+    throw new Error('Missing required "tailwindcss" options. Provide "tailwindcss.version" with an explicit Tailwind CSS major version.')
+  }
+
+  if (tailwind.version === undefined) {
+    throw new Error('Missing required "tailwindcss.version". Set it to 2, 3, or 4.')
+  }
+
   const packageName = tailwind?.packageName ?? 'tailwindcss'
-  const versionHint = tailwind?.version
+  const versionHint = tailwind.version
   const resolve = tailwind?.resolve
 
   const cwd = tailwind?.cwd ?? projectRoot
@@ -203,7 +198,7 @@ function normalizeTailwindOptions(
   return {
     packageName,
     cwd,
-    ...(versionHint === undefined ? {} : { versionHint }),
+    versionHint,
     ...(resolve === undefined ? {} : { resolve }),
     ...(config === undefined ? {} : { config }),
     ...(postcssPlugin === undefined ? {} : { postcssPlugin }),
@@ -213,88 +208,41 @@ function normalizeTailwindOptions(
   }
 }
 
-interface ResolvedOptionSlices {
-  projectRoot?: string
-  overwrite?: boolean
-  tailwind?: TailwindcssUserOptions
-  extract?: TailwindExtractionUserOptions
-  exposeContext?: PatchApplyUserOptions['exposeContext']
-  extendLengthUnits?: PatchApplyUserOptions['extendLengthUnits']
-}
+const deprecatedOptionMapping = {
+  cwd: 'projectRoot',
+  overwrite: 'apply.overwrite',
+  tailwind: 'tailwindcss',
+  features: 'apply',
+  output: 'extract',
+} as const
 
-function resolveOptionSlices(options: TailwindcssPatchOptions): ResolvedOptionSlices {
-  const projectRoot = options.projectRoot ?? options.cwd
-  const overwrite = options.apply?.overwrite ?? options.overwrite
-  const tailwind = options.tailwindcss ?? options.tailwind
-  const exposeContext = options.apply?.exposeContext !== undefined
-    ? options.apply.exposeContext
-    : options.features?.exposeContext
-  const extendLengthUnits = options.apply?.extendLengthUnits !== undefined
-    ? options.apply.extendLengthUnits
-    : options.features?.extendLengthUnits
+type DeprecatedTopLevelOptionKey = keyof typeof deprecatedOptionMapping
 
-  const write = options.extract?.write ?? options.output?.enabled
-  const file = options.extract?.file ?? options.output?.file
-  const format = options.extract?.format ?? options.output?.format
-  const pretty = options.extract?.pretty ?? options.output?.pretty
-  const removeUniversalSelector = options.extract?.removeUniversalSelector ?? options.output?.removeUniversalSelector
-  const extract: TailwindExtractionUserOptions = {
-    ...(write === undefined ? {} : { write }),
-    ...(file === undefined ? {} : { file }),
-    ...(format === undefined ? {} : { format }),
-    ...(pretty === undefined ? {} : { pretty }),
-    ...(removeUniversalSelector === undefined ? {} : { removeUniversalSelector }),
-  }
+function assertNoDeprecatedOptions(options: TailwindcssPatchOptions) {
+  const used = (Object.keys(deprecatedOptionMapping) as DeprecatedTopLevelOptionKey[])
+    .filter(key => Object.prototype.hasOwnProperty.call(options, key))
 
-  return {
-    ...(projectRoot === undefined ? {} : { projectRoot }),
-    ...(overwrite === undefined ? {} : { overwrite }),
-    ...(tailwind === undefined ? {} : { tailwind }),
-    ...(Object.keys(extract).length === 0 ? {} : { extract }),
-    ...(exposeContext === undefined ? {} : { exposeContext }),
-    ...(extendLengthUnits === undefined ? {} : { extendLengthUnits }),
-  }
-}
-
-function findUsedDeprecatedOptions(options: TailwindcssPatchOptions): DeprecatedTopLevelOptionKey[] {
-  const result: DeprecatedTopLevelOptionKey[] = []
-  for (const key of Object.keys(deprecatedOptionMapping) as DeprecatedTopLevelOptionKey[]) {
-    if (options[key] !== undefined) {
-      result.push(key)
-    }
-  }
-  return result
-}
-
-function warnDeprecatedOptionsIfNeeded(options: TailwindcssPatchOptions) {
-  if (hasWarnedDeprecatedOptions) {
-    return
-  }
-
-  const used = findUsedDeprecatedOptions(options)
   if (used.length === 0) {
     return
   }
 
-  hasWarnedDeprecatedOptions = true
   const mapping = used.map(key => `${key} -> ${deprecatedOptionMapping[key]}`).join(', ')
-  logger.warn(
-    `[deprecated] TailwindcssPatcher options (${used.join(', ')}) are deprecated and will be removed in the next major version. Please migrate to: ${mapping}.`,
+  throw new Error(
+    `Legacy TailwindcssPatcher options are no longer supported: ${used.join(', ')}. Use the modern fields instead: ${mapping}.`,
   )
 }
 
 export function normalizeOptions(options: TailwindcssPatchOptions = {}): NormalizedTailwindcssPatchOptions {
-  warnDeprecatedOptionsIfNeeded(options)
+  assertNoDeprecatedOptions(options)
 
-  const resolved = resolveOptionSlices(options)
-  const projectRoot = resolveRealpathSafe(resolved.projectRoot ? path.resolve(resolved.projectRoot) : process.cwd())
-  const overwrite = resolved.overwrite ?? true
+  const projectRoot = resolveRealpathSafe(options.projectRoot ? path.resolve(options.projectRoot) : process.cwd())
+  const overwrite = options.apply?.overwrite ?? true
 
-  const output = normalizeOutputOptions(resolved.extract)
+  const output = normalizeOutputOptions(options.extract)
   const cache = normalizeCacheOptions(options.cache, projectRoot)
-  const tailwind = normalizeTailwindOptions(resolved.tailwind, projectRoot)
-  const exposeContext = normalizeExposeContextOptions(resolved.exposeContext)
-  const extendLengthUnits = normalizeExtendLengthUnitsOptions(resolved.extendLengthUnits)
+  const tailwind = normalizeTailwindOptions(options.tailwindcss, projectRoot)
+  const exposeContext = normalizeExposeContextOptions(options.apply?.exposeContext)
+  const extendLengthUnits = normalizeExtendLengthUnitsOptions(options.apply?.extendLengthUnits)
 
   const filter = (className: string) => {
     if (output.removeUniversalSelector && className === '*') {

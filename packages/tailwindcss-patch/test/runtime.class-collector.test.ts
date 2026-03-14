@@ -66,8 +66,8 @@ describe('collectClassesFromTailwindV4', () => {
       await fs.writeFile(usageFile, '<div class="bg-brand"></div>', 'utf8')
 
       const normalized = normalizeOptions({
-        cwd: tempDir,
-        tailwind: {
+        projectRoot: tempDir,
+        tailwindcss: {
           version: 4,
           v4: {
             cssEntries: [cssPath],

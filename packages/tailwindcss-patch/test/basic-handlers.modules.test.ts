@@ -82,7 +82,11 @@ describe('basic command handlers module', () => {
   })
 
   it('install handler patches runtime via TailwindcssPatcher', async () => {
-    await installCommandDefaultHandler({} as any)
+    await installCommandDefaultHandler({
+      createPatcher: async () => ({
+        patch: patchMock,
+      }),
+    } as any)
 
     expect(patchMock).toHaveBeenCalledOnce()
     expect(logger.success).toHaveBeenCalledWith('Tailwind CSS runtime patched successfully.')

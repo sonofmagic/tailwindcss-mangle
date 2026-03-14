@@ -22,7 +22,7 @@ async function createStoreOptions(projectRoot: string, cacheDir: string, driver:
   await fs.writeFile(path.join(projectRoot, 'tailwind.config.js'), 'module.exports = { content: [] }', 'utf8')
 
   return normalizeOptions({
-    cwd: projectRoot,
+    projectRoot,
     cache: {
       enabled: true,
       dir: cacheDir,
@@ -30,10 +30,10 @@ async function createStoreOptions(projectRoot: string, cacheDir: string, driver:
       strategy: 'overwrite',
       driver,
     },
-    output: {
-      enabled: false,
+    extract: {
+      write: false,
     },
-    tailwind: {
+    tailwindcss: {
       version: 3,
       config: 'tailwind.config.js',
     },
