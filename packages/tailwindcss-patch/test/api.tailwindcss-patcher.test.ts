@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module'
 import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
@@ -11,6 +12,7 @@ import * as contextRegistry from '@/runtime/context-registry'
 import * as runtimeBuild from '@/runtime/process-tailwindcss'
 
 const fixturesRoot = path.resolve(__dirname, 'fixtures/v4')
+const require = createRequire(import.meta.url)
 let tempDir: string
 
 beforeEach(async () => {
@@ -276,6 +278,9 @@ describe('TailwindcssPatcher', () => {
         dir: tempDir,
         file: 'cache.json',
       },
+      tailwind: {
+        versionHint: 3,
+      },
     })
 
     const classCache = new Map<string, any>([
@@ -312,6 +317,9 @@ describe('TailwindcssPatcher', () => {
         file: 'cache.json',
         strategy: 'overwrite',
       },
+      tailwind: {
+        versionHint: 3,
+      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockReturnValue([
@@ -333,6 +341,9 @@ describe('TailwindcssPatcher', () => {
     const patcher = new TailwindcssPatcher({
       overwrite: false,
       cache: false,
+      tailwind: {
+        versionHint: 3,
+      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockImplementation(() => contexts)
@@ -658,6 +669,9 @@ describe('TailwindcssPatcher', () => {
         dir: tempDir,
         file: 'cache.json',
       },
+      tailwind: {
+        versionHint: 3,
+      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockReturnValue([
@@ -691,6 +705,9 @@ describe('TailwindcssPatcher', () => {
         file: 'cache.json',
         strategy: 'overwrite',
       },
+      tailwind: {
+        versionHint: 3,
+      },
     })
 
     vi.spyOn(patcher, 'getContexts').mockReturnValue([
@@ -713,6 +730,9 @@ describe('TailwindcssPatcher', () => {
         enabled: true,
         dir: tempDir,
         file: 'cache.json',
+      },
+      tailwind: {
+        versionHint: 3,
       },
     })
 
@@ -737,5 +757,75 @@ describe('TailwindcssPatcher', () => {
     const second = patcher.getClassSetSync()
     expect(second?.has('second-pass')).toBe(true)
     expect(second?.has('first-pass')).toBe(false)
+  })
+
+  it('drops removed v3 content classes after recreating the patcher', async () => {
+    const projectRoot = await fs.mkdtemp(path.join(tempDir, 'v3-refresh-'))
+    const tailwindRoot = path.dirname(require.resolve('tailwindcss-3/package.json'))
+    const postcssPlugin = require.resolve('tailwindcss-3')
+    const wxmlFile = path.join(projectRoot, 'src/index.wxml')
+    const marker = 'text-red-500'
+
+    try {
+      await fs.ensureDir(path.join(projectRoot, 'src'))
+      await fs.writeFile(
+        path.join(projectRoot, 'tailwind.config.js'),
+        [
+          'const path = require(\'path\')',
+          'module.exports = {',
+          '  content: [path.resolve(__dirname, "./src/*.{js,wxml}")],',
+          '  theme: { extend: {} },',
+          '  plugins: [],',
+          '  corePlugins: { preflight: false },',
+          '}',
+        ].join('\n'),
+        'utf8',
+      )
+      const original = '<view class="font-bold">baseline</view>\n'
+      await fs.writeFile(wxmlFile, original, 'utf8')
+
+      const createPatcher = () => new TailwindcssPatcher({
+        projectRoot,
+        cache: false,
+        output: {
+          enabled: false,
+        },
+        tailwind: {
+          packageName: 'tailwindcss-3',
+          version: 3,
+          resolve: {
+            paths: [path.dirname(tailwindRoot)],
+          },
+          cwd: projectRoot,
+          config: path.join(projectRoot, 'tailwind.config.js'),
+          postcssPlugin,
+          v3: {
+            cwd: projectRoot,
+            config: path.join(projectRoot, 'tailwind.config.js'),
+            postcssPlugin,
+          },
+        },
+      })
+
+      const baselinePatcher = createPatcher()
+      await baselinePatcher.patch()
+      const baseline = await baselinePatcher.extract({ write: false })
+      expect(baseline.classSet.has(marker)).toBe(false)
+
+      await fs.writeFile(wxmlFile, `${original}<view class="${marker}">hmr</view>\n`, 'utf8')
+      const updatedPatcher = createPatcher()
+      await updatedPatcher.patch()
+      const updated = await updatedPatcher.extract({ write: false })
+      expect(updated.classSet.has(marker)).toBe(true)
+
+      await fs.writeFile(wxmlFile, original, 'utf8')
+      const restoredPatcher = createPatcher()
+      await restoredPatcher.patch()
+      const restored = await restoredPatcher.extract({ write: false })
+      expect(restored.classSet.has(marker)).toBe(false)
+    }
+    finally {
+      await fs.remove(projectRoot)
+    }
   })
 })

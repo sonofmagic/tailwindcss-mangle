@@ -102,8 +102,8 @@ export class TailwindcssPatcher {
   }
 
   private readonly cacheStore: CacheStore
-  private patchMemo?: PatchMemo
-  private inFlightBuild?: Promise<void>
+  private patchMemo: PatchMemo | undefined
+  private inFlightBuild: Promise<void> | undefined
 
   constructor(options: TailwindcssPatcherInitOptions = {}) {
     const resolvedOptions: TailwindcssPatchOptions
