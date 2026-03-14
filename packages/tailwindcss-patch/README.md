@@ -117,6 +117,48 @@ Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing b
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. v9 expects the modern `registry` shape; use `tw-patch migrate` before upgrading if your config still uses deprecated keys.
 
+### v9 upgrade flow
+
+1. Run `pnpm dlx tw-patch migrate --dry-run` to preview required config rewrites.
+2. Apply the migration, or rewrite the config manually to modern `registry` fields.
+3. Confirm every config sets `registry.tailwindcss.version` explicitly.
+4. Upgrade to v9 and rerun `tw-patch install` / `tw-patch extract` in your project.
+
+Legacy to v9 example:
+
+```ts
+// before
+export default defineConfig({
+  registry: {
+    output: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwind: {
+      package: 'tailwindcss',
+      classic: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+
+// after
+export default defineConfig({
+  registry: {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwindcss: {
+      version: 4,
+      packageName: 'tailwindcss',
+      v3: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
 ### Migrate options
 
 | Flag                   | Description                                                           |
@@ -297,8 +339,6 @@ console.log(patchStatus.entries)
 ```
 
 The constructor accepts the modern object shown above only in v9.
-
-Deprecated fields kept temporarily (to be removed in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
 
 Migration mapping:
 

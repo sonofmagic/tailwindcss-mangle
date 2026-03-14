@@ -60,6 +60,48 @@ pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --json
 
 CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。v9 仅接受现代 `registry` 结构；如果项目里仍有旧字段，请先执行 `tw-patch migrate`，详情见 [迁移指南](./MIGRATION.md)。
 
+### v9 升级步骤
+
+1. 先执行 `pnpm dlx tw-patch migrate --dry-run`，确认有哪些配置需要改写。
+2. 应用迁移结果，或者手动把配置改成现代 `registry` 字段。
+3. 确认所有配置都显式设置了 `registry.tailwindcss.version`。
+4. 升级到 v9 后，重新执行项目里的 `tw-patch install` / `tw-patch extract`。
+
+legacy 到 v9 的对照示例：
+
+```ts
+// before
+export default defineConfig({
+  registry: {
+    output: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwind: {
+      package: 'tailwindcss',
+      classic: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+
+// after
+export default defineConfig({
+  registry: {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwindcss: {
+      version: 4,
+      packageName: 'tailwindcss',
+      v3: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
 ### `migrate` 常用参数
 
 | 参数                   | 说明                                             |
@@ -239,9 +281,9 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 // await patcher.collectContentTokensByFile({ key: 'absolute', stripAbsolutePaths: false })
 ```
 
-构造函数既可以接收上述新版对象，也可以传入旧结构；内部会自动完成兼容转换。
+构造函数在 v9 中只接受上述新版对象。
 
-已标记弃用（下一个大版本移除）的旧字段：`cwd`、`overwrite`、`tailwind`、`features`、`output`。
+以下旧字段在 v9 中会直接报错：`cwd`、`overwrite`、`tailwind`、`features`、`output`。
 
 字段迁移关系：
 
@@ -251,7 +293,7 @@ console.log(groupedTokens['src/button.tsx'][0].rawCandidate)
 - `features` -> `apply`
 - `output` -> `extract`
 
-当运行时检测到这些旧字段时，`normalizeOptions` 会输出一次性告警，帮助你逐步迁移。
+如果项目里还存在这些字段，请先运行 `tw-patch migrate --dry-run` 预览改写结果。
 
 当遇到文件权限受限等情况时，可通过 cache.driver 切换为默认的文件缓存、内存缓存（memory）或无操作模式（noop）。
 

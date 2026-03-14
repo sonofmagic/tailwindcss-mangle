@@ -79,6 +79,41 @@ Migration mapping:
 
 If you still have legacy fields, run `tw-patch migrate --dry-run` first, then apply the rewritten config before upgrading.
 
+### Quick config diff
+
+```ts
+// before
+export default defineConfig({
+  registry: {
+    output: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwind: {
+      package: 'tailwindcss',
+      classic: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+
+// after
+export default defineConfig({
+  registry: {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwindcss: {
+      version: 4,
+      packageName: 'tailwindcss',
+      v3: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
 ## 3. CLI changes
 
 - `tw-patch install` still applies the runtime patch, but logging and error handling were refreshed.
@@ -104,7 +139,7 @@ If you still have legacy fields, run `tw-patch migrate --dry-run` first, then ap
 - The affected-shards template supports repo-level shard config via `.tw-patch/ci-shards.json` (example: `packages/tailwindcss-patch/examples/github-actions/ci-shards.example.json`).
 - README/README-cn now include a CI copy checklist and troubleshooting notes for local action wiring and common failure modes.
 - Migration report tooling now has public exports from package entry (`migrateConfigFiles`, `restoreConfigFiles`, report constants/types) and published JSON schema subpaths: `tailwindcss-patch/migration-report.schema.json`, `tailwindcss-patch/restore-result.schema.json`, `tailwindcss-patch/validate-result.schema.json`.
-- Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Existing configuration files continue to work without changes.
+- Commands resolve configuration from `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Upgrade configs to the modern `registry` shape before moving to v9.
 
 ## 4. Cache handling
 
@@ -125,7 +160,7 @@ Starting from the cache governance update, the on-disk cache also moved to **sch
 - Legacy array files are still readable, but treated as cache-miss and lazily rebuilt.
 - `TailwindcssPatcher#clearCache()` can clear current-context (default) or all contexts.
 
-This keeps public APIs backward compatible while preventing cross-project cache pollution in monorepos.
+This preserves cache-file compatibility while preventing cross-project cache pollution in monorepos.
 
 ## 5. Exported helpers
 
@@ -153,11 +188,13 @@ Update imports accordingly when consuming these helpers directly.
 
 ## 9. Checklist for upgrading projects
 
-1. Update the dependency to the latest version of `tailwindcss-patch`.
-2. Review custom imports from `tailwindcss-patch/core/*` and switch to the new module paths.
-3. If you instantiate the patcher manually, adopt the new options object.
-4. Refresh CLI usage in scripts (e.g. add `--output` or `--no-write` where appropriate).
-5. For Tailwind v4 projects, configure `tailwindcss.v4.cssEntries` and `sources` so that `extract()` can discover candidates.
-6. Run your extraction workflow and ensure the generated class list matches expectations.
+1. Run `tw-patch migrate --dry-run` and inspect every reported config rewrite.
+2. Rewrite or migrate all config files to modern `registry.extract`, `registry.apply`, and `registry.tailwindcss` fields.
+3. Set `registry.tailwindcss.version` explicitly in every project config.
+4. Update custom imports from `tailwindcss-patch/core/*` to the new module paths.
+5. If you instantiate the patcher manually, switch to the modern constructor shape.
+6. Refresh CLI usage in scripts and rerun `tw-patch install`.
+7. For Tailwind v4 projects, configure `tailwindcss.v4.cssEntries` and `sources` so `extract()` can discover candidates.
+8. Run extraction in each project and compare the generated class list with the pre-upgrade output.
 
 For any regressions or gaps discovered during migration, please open an issue with reproduction details so we can iterate quickly.
