@@ -25,15 +25,10 @@ import {
   extractProjectCandidatesWithPositions,
   groupTokensByFile,
 } from '../extraction/candidate-extractor'
-import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../install/class-collector'
-import { loadRuntimeContexts } from '../install/context-registry'
-import { applyTailwindPatches } from '../install/patch-runner'
-import { runTailwindBuild } from '../install/process-tailwindcss'
-import { getPatchStatusReport } from '../install/status'
+import { collectClassesFromContexts } from '../install/class-collector'
 import logger from '../logger'
+import { RuntimeCollector, TailwindV4Collector, type PatchResult, type TailwindCollector, type TailwindMajorVersion } from '../runtime/collector'
 
-type TailwindMajorVersion = 2 | 3 | 4
-type PatchResult = ReturnType<typeof applyTailwindPatches>
 
 interface PatchMemo {
   result: PatchResult
@@ -75,32 +70,17 @@ function validateInstalledVersion(packageVersion: string | undefined, expectedMa
   }
 }
 
-function resolveTailwindExecutionOptions(
-  normalized: NormalizedTailwindcssPatchOptions,
+function createCollector(
+  packageInfo: PackageInfo,
+  options: NormalizedTailwindcssPatchOptions,
   majorVersion: TailwindMajorVersion,
-) {
-  const base = normalized.tailwind
-  if (majorVersion === 2 && base.v2) {
-    return {
-      cwd: base.v2.cwd ?? base.cwd ?? normalized.projectRoot,
-      config: base.v2.config ?? base.config,
-      postcssPlugin: base.v2.postcssPlugin ?? base.postcssPlugin,
-    }
+  snapshotFactory: () => string,
+): TailwindCollector {
+  if (majorVersion === 4) {
+    return new TailwindV4Collector(packageInfo, options, snapshotFactory)
   }
 
-  if (majorVersion === 3 && base.v3) {
-    return {
-      cwd: base.v3.cwd ?? base.cwd ?? normalized.projectRoot,
-      config: base.v3.config ?? base.config,
-      postcssPlugin: base.v3.postcssPlugin ?? base.postcssPlugin,
-    }
-  }
-
-  return {
-    cwd: base.cwd ?? normalized.projectRoot,
-    config: base.config,
-    postcssPlugin: base.postcssPlugin,
-  }
+  return new RuntimeCollector(packageInfo, options, majorVersion, snapshotFactory)
 }
 
 export class TailwindcssPatcher {
@@ -114,8 +94,8 @@ export class TailwindcssPatcher {
   }
 
   private readonly cacheStore: CacheStore
+  private readonly collector: TailwindCollector
   private patchMemo: PatchMemo | undefined
-  private inFlightBuild: Promise<void> | undefined
 
   constructor(options: TailwindcssPatchOptions = {}) {
     this.options = normalizeOptions(options)
@@ -138,63 +118,34 @@ export class TailwindcssPatcher {
       this.majorVersion,
     )
     this.cacheStore = new CacheStore(this.options.cache, this.cacheContext)
+    this.collector = createCollector(
+      this.packageInfo,
+      this.options,
+      this.majorVersion,
+      () => this.createPatchSnapshot(),
+    )
   }
 
   async patch() {
-    const snapshot = this.createPatchSnapshot()
+    const snapshot = this.collector.getPatchSnapshot()
     if (this.patchMemo && this.patchMemo.snapshot === snapshot) {
       return this.patchMemo.result
     }
 
-    const result = applyTailwindPatches({
-      packageInfo: this.packageInfo,
-      options: this.options,
-      majorVersion: this.majorVersion,
-    })
+    const result = await this.collector.patch()
     this.patchMemo = {
       result,
-      snapshot: this.createPatchSnapshot(),
+      snapshot: this.collector.getPatchSnapshot(),
     }
     return result
   }
 
   async getPatchStatus() {
-    return getPatchStatusReport({
-      packageInfo: this.packageInfo,
-      options: this.options,
-      majorVersion: this.majorVersion,
-    })
+    return this.collector.getPatchStatus()
   }
 
   getContexts() {
-    return loadRuntimeContexts(
-      this.packageInfo,
-      this.majorVersion,
-      this.options.features.exposeContext.refProperty,
-    )
-  }
-
-  private async runTailwindBuildIfNeeded() {
-    if (this.majorVersion === 2 || this.majorVersion === 3) {
-      if (this.inFlightBuild) {
-        return this.inFlightBuild
-      }
-
-      const executionOptions = resolveTailwindExecutionOptions(this.options, this.majorVersion)
-      const buildOptions = {
-        cwd: executionOptions.cwd,
-        majorVersion: this.majorVersion,
-        ...(executionOptions.config === undefined ? {} : { config: executionOptions.config }),
-        ...(executionOptions.postcssPlugin === undefined ? {} : { postcssPlugin: executionOptions.postcssPlugin }),
-      }
-      this.inFlightBuild = runTailwindBuild(buildOptions).then(() => undefined)
-      try {
-        await this.inFlightBuild
-      }
-      finally {
-        this.inFlightBuild = undefined
-      }
-    }
+    return this.collector.getContexts()
   }
 
   private createPatchSnapshot() {
@@ -251,11 +202,15 @@ export class TailwindcssPatcher {
 
   private async collectClassSet(): Promise<Set<string>> {
     if (this.majorVersion === 4) {
-      return collectClassesFromTailwindV4(this.options)
+      return this.collector.collectClassSet()
     }
 
     const contexts = this.getContexts()
     return collectClassesFromContexts(contexts, this.options.filter)
+  }
+
+  private async runTailwindBuildIfNeeded() {
+    await this.collector.runTailwindBuildIfNeeded?.()
   }
 
   private debugCacheRead(meta: CacheReadMeta) {

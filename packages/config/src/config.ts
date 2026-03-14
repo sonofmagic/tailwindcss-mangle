@@ -40,7 +40,7 @@ export default defineConfig({
       file: '.tw-patch/tw-class-list.json',
     },
     tailwindcss: {
-      version: 3,
+      version: 4,
     },
   },
   transformer: {
