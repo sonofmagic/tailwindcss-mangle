@@ -1,5 +1,15 @@
 # tailwindcss-patch
 
+## 8.7.4-alpha.0
+
+### Patch Changes
+
+- 🐛 **Fix Tailwind CSS v3 runtime context refresh so removed classes are dropped correctly across repeated patcher recreations, including HMR-style update flows that add and then remove content classes in the same process.** [`395e22f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/395e22f80b15437703544e1af8b19d08c82ea9ba) by @sonofmagic
+
+- 🐛 **Improve `tailwindcss-patch` cold-start and repeated-run performance by avoiding redundant patch work, reducing unnecessary cache writes, and reusing Tailwind v4 candidate extraction state across repeated calls. Also add benchmark coverage and regression tests for cache invalidation, repeated patch/getClassSet calls, empty class sets, and v3/v4 behavior.** [`aed889c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/aed889ce843cae9d9edf6baed75725fa2de05259) by @sonofmagic
+- 📦 **Dependencies** [`8937b29`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8937b296f995888d39e4c6714f35e83a9a260fa0)
+  → `@tailwindcss-mangle/config@6.1.4-alpha.0`
+
 ## 8.7.3
 
 ### Patch Changes

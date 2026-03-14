@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 6.1.4-alpha.0
+
+### Patch Changes
+
+- 🐛 **Refresh internal dependency ranges for the published config and core packages, including `fs-extra`, `postcss`, `@vue/compiler-sfc`, and `svelte`, to keep the workspace aligned with the updated toolchain.** [`8937b29`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8937b296f995888d39e4c6714f35e83a9a260fa0) by @sonofmagic
+
 ## 6.1.3
 
 ### Patch Changes

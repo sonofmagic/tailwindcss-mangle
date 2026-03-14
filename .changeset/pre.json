@@ -22,5 +22,9 @@
     "postcss7-compat": "0.0.19",
     "@tailwindcss-mangle/website": "1.1.2"
   },
-  "changesets": []
+  "changesets": [
+    "few-rice-rhyme",
+    "short-buckets-cheer",
+    "tall-rabbits-bathe"
+  ]
 }
