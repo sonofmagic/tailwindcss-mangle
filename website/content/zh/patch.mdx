@@ -2,17 +2,17 @@ import { Callout } from 'nextra/components'
 
 # 1. Patch
 
-`tailwindcss-patch` 是整个混淆流程的第一步。8.0 版本重构了架构，帮助你捕获运行时上下文、枚举 Tailwind CSS 可以生成的所有类名，并让这些数据与现代项目保持同步。
+`tailwindcss-patch` 是整个混淆流程的第一步。9.0 版本将配置模型收口为 modern-only，帮助你捕获运行时上下文、枚举 Tailwind CSS 可以生成的所有类名，并让这些数据与现代项目保持同步。
 
 ## 8.0 版本速览
 
 - 模块重新分层（`api/`、`patching/`、`runtime/`、`extraction/`、`cache/`），提供清晰且类型化的导入入口。
-- 统一的 `registry` 配置对象自动兼容旧版 `patch`/`cache` 结构，同时集中管理缓存、输出与功能开关。
+- 统一的 `registry` 配置对象，使用显式的 `extract`、`apply`、`tailwindcss` 分块。
 - 对 Tailwind CSS v4 提供一等支持，可直接扫描 CSS 产物与项目内容源，与 v2/v3 的运行时补丁并行工作。
 - 全新的 CLI 日志体验，并为 `extract` 命令带来 `--output`、`--format`、`--css`、`--no-write` 等新选项。
 
 <Callout type="info">
-需要从 7.x 升级？查看 <a href="./migration">迁移指南</a> 获取逐步检查清单。
+需要从 v8 升级？查看 <a href="./patch-v9-migration">tailwindcss-patch v8 -> v9 迁移指南</a>。
 </Callout>
 
 ## 安装
@@ -62,7 +62,7 @@ npx tw-patch extract
 | `--css &lt;file&gt;` | 为 Tailwind v4 提供 CSS 入口文件；可重复使用多个参数。 |
 | `--no-write` | 跳过写入磁盘，仅在调用者中返回类名列表。 |
 
-CLI 会通过 `@tailwindcss-mangle/config` 读取 `tailwindcss-patch.config.ts`（兼容旧的 `tailwindcss-mangle.config.ts`），因此现有配置仍然可用。
+CLI 会通过 `@tailwindcss-mangle/config` 读取 `tailwindcss-patch.config.ts`。v9 只接受现代 `registry` 结构。
 
 ## 配置
 
@@ -79,23 +79,23 @@ import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      stripUniversalSelector: true,
+      removeUniversalSelector: true,
     },
-    tailwind: {
+    tailwindcss: {
       version: 4,
-      next: {
+      v4: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
         ],
       },
     },
-    features: {
-      exportContext: true,
+    apply: {
+      exposeContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
@@ -104,33 +104,33 @@ export default defineConfig({
 })
 ```
 
-`defineConfig` 会在内部将旧有的 `patch` / `mangle` 字段转换成新的 `registry` / `transformer` 结构，可按需逐步迁移，运行时会自动完成归一化。
+v9 中的 `defineConfig` 只描述现代 `registry` 结构。`registry.output`、`registry.tailwind` 等旧 alias 需要在升级前完成迁移。
 
 ## 编程接口
 
-新版构造函数接受统一的配置对象，带有 `patch`/`cache` 字段的旧结构也会在内部转换：
+新版构造函数只接受现代配置对象：
 
 ```ts
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 
 const patcher = new TailwindcssPatcher({
-  overwrite: true,
+  apply: {
+    overwrite: true,
+    exposeContext: { refProperty: 'runtimeContexts' },
+    extendLengthUnits: { units: ['rpx'] },
+  },
   cache: {
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
     driver: 'file',
   },
-  output: {
+  extract: {
     file: '.tw-patch/tw-class-list.json',
     format: 'json',
     pretty: 2,
   },
-  features: {
-    exposeContext: { refProperty: 'runtimeContexts' },
-    extendLengthUnits: { units: ['rpx'] },
-  },
-  tailwind: {
+  tailwindcss: {
     version: 4,
     v4: {
       base: './src',
@@ -156,8 +156,8 @@ const classSet = await patcher.getClassSet()
 
 ## 升级检查清单
 
-1. 安装 `tailwindcss-patch@^8.0.0` 并执行 `tw-patch install`。
-2. 检查自定义的 `tailwindcss-patch/core/*` 导入，替换为新的公开模块路径。
-3. 根据需要更新脚本中的 CLI 参数。
+1. 安装 `tailwindcss-patch@^9.0.0` 并执行 `tw-patch install`。
+2. 将所有旧配置 alias 改写为现代 `registry.extract`、`registry.apply`、`registry.tailwindcss`。
+3. 检查自定义的 `tailwindcss-patch/core/*` 导入，替换为新的公开模块路径。
 4. 如果是 Tailwind v4 项目，请配置 `cssEntries` 与 `sources`。
 5. 运行 `tw-patch extract` 重新生成 `.tw-patch/tw-class-list.json`，确认输出后再继续执行混淆流程。

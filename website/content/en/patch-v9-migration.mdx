@@ -1,0 +1,146 @@
+import { Callout } from 'nextra/components'
+
+# tailwindcss-patch · v8 -> v9
+
+This guide is only about upgrading `tailwindcss-patch` from v8 to v9.
+
+<Callout type="warning">
+v9 is modern-only. Legacy constructor aliases and legacy `registry` aliases are rejected at runtime instead of being normalized automatically.
+</Callout>
+
+## What changed
+
+- `TailwindcssPatcher` now accepts only the modern constructor shape: `projectRoot`, `tailwindcss`, `apply`, `extract`, `cache`, `filter`.
+- `tailwindcss.version` is required.
+- Workspace config loading rejects legacy `registry.output`, `registry.tailwind`, and `registry.patch`.
+- `@tailwindcss-mangle/config` defaults `registry.tailwindcss.version` to `4`.
+
+Tailwind v2 support remains available in v9. The breaking change is the config shape, not version coverage.
+
+## 1. Upgrade packages
+
+```sh npm2yarn
+npm i -D tailwindcss-patch@^9 @tailwindcss-mangle/config@latest
+```
+
+## 2. Rewrite config to the modern registry shape
+
+### Before
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({
+  registry: {
+    output: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwind: {
+      package: 'tailwindcss',
+      classic: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
+### After
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({
+  registry: {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwindcss: {
+      version: 3,
+      packageName: 'tailwindcss',
+      v3: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
+### Field mapping
+
+| Legacy | v9 |
+| --- | --- |
+| `registry.output` | `registry.extract` |
+| `registry.tailwind` | `registry.tailwindcss` |
+| `tailwindcss.package` | `tailwindcss.packageName` |
+| `tailwindcss.legacy` | `tailwindcss.v2` |
+| `tailwindcss.classic` | `tailwindcss.v3` |
+| `tailwindcss.next` | `tailwindcss.v4` |
+
+## 3. Update programmatic patcher usage
+
+### Before
+
+```ts
+const patcher = new TailwindcssPatcher({
+  overwrite: true,
+  output: {
+    file: '.tw-patch/tw-class-list.json',
+  },
+  features: {
+    exposeContext: { refProperty: 'runtimeContexts' },
+  },
+  tailwind: {
+    version: 4,
+    v4: {
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+### After
+
+```ts
+const patcher = new TailwindcssPatcher({
+  apply: {
+    overwrite: true,
+    exposeContext: { refProperty: 'runtimeContexts' },
+  },
+  extract: {
+    file: '.tw-patch/tw-class-list.json',
+  },
+  tailwindcss: {
+    version: 4,
+    v4: {
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+## 4. Verify Tailwind version-specific fields
+
+- Tailwind v2 projects: use `tailwindcss.version = 2` and `tailwindcss.v2`.
+- Tailwind v3 projects: use `tailwindcss.version = 3` and `tailwindcss.v3`.
+- Tailwind v4 projects: use `tailwindcss.version = 4` and `tailwindcss.v4`.
+
+Do not mix `version: 4` with `v3`, or `version: 3` with `v4`. Only the matching version block is used.
+
+## 5. Rerun patch and extraction
+
+```sh
+npx tw-patch install
+npx tw-patch extract
+```
+
+If you use cached class inventories, clear stale cache files before comparing outputs.
+
+## 6. Migration checklist
+
+1. Upgrade `tailwindcss-patch` and `@tailwindcss-mangle/config`.
+2. Rewrite every config file to modern `registry.extract`, `registry.apply`, and `registry.tailwindcss`.
+3. Set `registry.tailwindcss.version` explicitly in each project.
+4. Rewrite programmatic `TailwindcssPatcher` calls to the modern constructor shape.
+5. Run `tw-patch install` and `tw-patch extract`.
+6. Compare the generated class list with your previous output before shipping.

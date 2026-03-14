@@ -1,0 +1,146 @@
+import { Callout } from 'nextra/components'
+
+# tailwindcss-patch · v8 -> v9
+
+这篇指南只覆盖 `tailwindcss-patch` 从 v8 升级到 v9。
+
+<Callout type="warning">
+v9 只接受现代配置结构。旧的构造函数 alias 和旧的 `registry` alias 不再自动归一化，而是会直接报错。
+</Callout>
+
+## 变更点
+
+- `TailwindcssPatcher` 只接受现代构造参数：`projectRoot`、`tailwindcss`、`apply`、`extract`、`cache`、`filter`。
+- `tailwindcss.version` 现在是必填项。
+- workspace 配置加载会拒绝旧的 `registry.output`、`registry.tailwind` 和 `registry.patch`。
+- `@tailwindcss-mangle/config` 默认会生成 `registry.tailwindcss.version = 4`。
+
+v9 仍然保留 Tailwind v2 支持。breaking 的是配置结构，不是支持范围。
+
+## 1. 升级依赖
+
+```sh npm2yarn
+npm i -D tailwindcss-patch@^9 @tailwindcss-mangle/config@latest
+```
+
+## 2. 把配置改成现代 registry 结构
+
+### 升级前
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({
+  registry: {
+    output: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwind: {
+      package: 'tailwindcss',
+      classic: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
+### 升级后
+
+```ts
+import { defineConfig } from 'tailwindcss-patch'
+
+export default defineConfig({
+  registry: {
+    extract: {
+      file: '.tw-patch/tw-class-list.json',
+    },
+    tailwindcss: {
+      version: 3,
+      packageName: 'tailwindcss',
+      v3: {
+        cwd: 'apps/web',
+      },
+    },
+  },
+})
+```
+
+### 字段映射
+
+| 旧字段 | v9 字段 |
+| --- | --- |
+| `registry.output` | `registry.extract` |
+| `registry.tailwind` | `registry.tailwindcss` |
+| `tailwindcss.package` | `tailwindcss.packageName` |
+| `tailwindcss.legacy` | `tailwindcss.v2` |
+| `tailwindcss.classic` | `tailwindcss.v3` |
+| `tailwindcss.next` | `tailwindcss.v4` |
+
+## 3. 更新程序化调用
+
+### 升级前
+
+```ts
+const patcher = new TailwindcssPatcher({
+  overwrite: true,
+  output: {
+    file: '.tw-patch/tw-class-list.json',
+  },
+  features: {
+    exposeContext: { refProperty: 'runtimeContexts' },
+  },
+  tailwind: {
+    version: 4,
+    v4: {
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+### 升级后
+
+```ts
+const patcher = new TailwindcssPatcher({
+  apply: {
+    overwrite: true,
+    exposeContext: { refProperty: 'runtimeContexts' },
+  },
+  extract: {
+    file: '.tw-patch/tw-class-list.json',
+  },
+  tailwindcss: {
+    version: 4,
+    v4: {
+      cssEntries: ['dist/tailwind.css'],
+    },
+  },
+})
+```
+
+## 4. 检查版本专属字段
+
+- Tailwind v2 项目：使用 `tailwindcss.version = 2` 和 `tailwindcss.v2`
+- Tailwind v3 项目：使用 `tailwindcss.version = 3` 和 `tailwindcss.v3`
+- Tailwind v4 项目：使用 `tailwindcss.version = 4` 和 `tailwindcss.v4`
+
+不要把 `version: 4` 和 `v3` 混在一起，也不要把 `version: 3` 和 `v4` 混在一起。只有匹配当前版本的分支会生效。
+
+## 5. 重新执行 patch 和提取
+
+```sh
+npx tw-patch install
+npx tw-patch extract
+```
+
+如果项目里有缓存过的类名清单，建议在对比结果前先清理旧缓存。
+
+## 6. 升级检查清单
+
+1. 升级 `tailwindcss-patch` 和 `@tailwindcss-mangle/config`
+2. 把所有配置文件改成现代 `registry.extract`、`registry.apply`、`registry.tailwindcss`
+3. 在每个项目里显式设置 `registry.tailwindcss.version`
+4. 把程序化 `TailwindcssPatcher` 调用改成现代构造参数
+5. 运行 `tw-patch install` 和 `tw-patch extract`
+6. 发布前对比新的 class list 和旧产物是否一致

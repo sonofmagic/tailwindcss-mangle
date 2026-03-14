@@ -2,17 +2,17 @@ import { Callout } from 'nextra/components'
 
 # 1. Patch
 
-`tailwindcss-patch` is the first step of the mangling workflow. Version 8.0 refactors the package so you can capture runtime contexts, enumerate every Tailwind CSS class, and keep the results in sync with modern projects.
+`tailwindcss-patch` is the first step of the mangling workflow. Version 9 focuses on a modern-only configuration model so you can capture runtime contexts, enumerate every Tailwind CSS class, and keep the results in sync with modern projects.
 
 ## Tailwindcss-Patch 8.0 at a glance
 
 - Re-architected modules (`api/`, `patching/`, `runtime/`, `extraction/`, `cache/`) with typed entry points for direct imports.
-- Unified `registry` configuration that normalises legacy `patch`/`cache` configs and unlocks cache, output, and feature flags in one place.
+- Unified `registry` configuration with explicit `extract`, `apply`, and `tailwindcss` blocks.
 - First-class Tailwind CSS v4 support by scanning CSS entry files and project sources alongside the existing v2/v3 runtime patch.
 - Refreshed CLI with clearer logging plus new `extract` flags (`--output`, `--format`, `--css`, `--no-write`) for automation.
 
 <Callout type="info">
-Need upgrade guidance? See the <a href="./migration">migration guide</a> for a step-by-step checklist from v7.x.
+Need upgrade guidance? See the <a href="./patch-v9-migration">v8 -> v9 patch migration guide</a>.
 </Callout>
 
 ## Installation
@@ -62,7 +62,7 @@ By default `extract` writes `.tw-patch/tw-class-list.json`. Customise the destin
 | `--css &lt;file&gt;` | Provide CSS entry files used by Tailwind v4 builds. Repeat for multiple files. |
 | `--no-write` | Skip writing to disk and return the class list to the caller. |
 
-The CLI reads `tailwindcss-patch.config.ts` (or legacy `tailwindcss-mangle.config.ts`) through `@tailwindcss-mangle/config`, so existing configs remain valid.
+The CLI reads `tailwindcss-patch.config.ts` through `@tailwindcss-mangle/config`. v9 expects the modern `registry` shape.
 
 ## Configuration
 
@@ -79,23 +79,23 @@ import { defineConfig } from 'tailwindcss-patch'
 
 export default defineConfig({
   registry: {
-    output: {
+    extract: {
       file: '.tw-patch/tw-class-list.json',
       format: 'json',
       pretty: 2,
-      stripUniversalSelector: true,
+      removeUniversalSelector: true,
     },
-    tailwind: {
+    tailwindcss: {
       version: 4,
-      next: {
+      v4: {
         cssEntries: ['dist/tailwind.css'],
         sources: [
           { base: 'src', pattern: '**/*.{html,tsx}', negated: false },
         ],
       },
     },
-    features: {
-      exportContext: true,
+    apply: {
+      exposeContext: true,
       extendLengthUnits: {
         units: ['rpx'],
       },
@@ -104,33 +104,33 @@ export default defineConfig({
 })
 ```
 
-`defineConfig` still accepts legacy `patch` / `mangle` fields, converting them to the new `registry` / `transformer` shape so you can migrate at your own pace. Newly added fields are normalised automatically at runtime.
+`defineConfig` in v9 describes the modern `registry` shape only. Legacy aliases such as `registry.output` and `registry.tailwind` should be migrated before upgrading.
 
 ## Programmatic API
 
-The modern constructor accepts the unified options object. Legacy objects with `patch`/`cache` keys are still converted internally.
+The constructor accepts the modern options object only.
 
 ```ts
 import { TailwindcssPatcher } from 'tailwindcss-patch'
 
 const patcher = new TailwindcssPatcher({
-  overwrite: true,
+  apply: {
+    overwrite: true,
+    exposeContext: { refProperty: 'runtimeContexts' },
+    extendLengthUnits: { units: ['rpx'] },
+  },
   cache: {
     enabled: true,
     dir: '.tw-patch/cache',
     strategy: 'merge',
     driver: 'file',
   },
-  output: {
+  extract: {
     file: '.tw-patch/tw-class-list.json',
     format: 'json',
     pretty: 2,
   },
-  features: {
-    exposeContext: { refProperty: 'runtimeContexts' },
-    extendLengthUnits: { units: ['rpx'] },
-  },
-  tailwind: {
+  tailwindcss: {
     version: 4,
     v4: {
       base: './src',
@@ -156,8 +156,8 @@ Specific helpers are available for custom tooling:
 
 ## Typical upgrade checklist
 
-1. Install `tailwindcss-patch@^8.0.0` and run `tw-patch install`.
-2. Review custom imports from `tailwindcss-patch/core/*` and switch to the new public modules.
-3. Refresh CLI scripts with the new flags where applicable.
+1. Install `tailwindcss-patch@^9.0.0` and run `tw-patch install`.
+2. Rewrite any legacy config aliases to modern `registry.extract`, `registry.apply`, and `registry.tailwindcss`.
+3. Review custom imports from `tailwindcss-patch/core/*` and switch to the new public modules.
 4. Configure Tailwind v4 projects by declaring `cssEntries` and `sources`.
 5. Regenerate `.tw-patch/tw-class-list.json` with `tw-patch extract` and verify the output before proceeding to the mangling step.
