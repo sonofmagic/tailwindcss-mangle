@@ -115,7 +115,7 @@ Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing b
 | `--css <file>`           | Provide a CSS entry file when working with Tailwind v4 projects. |
 | `--no-write`             | Skip writing to disk and only return the collected classes.      |
 
-The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. Legacy configs continue to work; see the [migration guide](./MIGRATION.md) for hints on the new fields.
+The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. v9 expects the modern `registry` shape; use `tw-patch migrate` before upgrading if your config still uses deprecated keys.
 
 ### Migrate options
 
@@ -296,7 +296,7 @@ const patchStatus = await patcher.getPatchStatus()
 console.log(patchStatus.entries)
 ```
 
-The constructor accepts either the new object shown above or historical shapes. Conversions happen internally so existing configs remain backwards compatible.
+The constructor accepts the modern object shown above only in v9.
 
 Deprecated fields kept temporarily (to be removed in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
 
@@ -308,7 +308,7 @@ Migration mapping:
 - `features` -> `apply`
 - `output` -> `extract`
 
-When deprecated fields are detected at runtime, `normalizeOptions` logs a one-time warning to help migration.
+Deprecated fields are rejected at runtime in v9. Run `tw-patch migrate --dry-run` to preview required rewrites.
 
 Use cache.driver to switch between the default file-backed cache, an in-memory cache (memory), or a no-op cache (noop) when filesystem permissions are restricted.
 

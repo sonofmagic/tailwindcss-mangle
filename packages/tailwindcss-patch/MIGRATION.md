@@ -2,7 +2,7 @@
 
 This document describes the changes introduced by the full refactor of `tailwindcss-patch`. It helps teams upgrading from the 7.x line (or earlier) to the new architecture.
 
-> TL;DR — the public API now revolves around the `TailwindcssPatcher` class, helpers live in explicit folders, and the CLI exposes clearer options. Legacy configuration objects are still accepted, but adopting the new structure unlocks additional features.
+> TL;DR — the public API now revolves around the `TailwindcssPatcher` class, helpers live in explicit folders, and the CLI exposes clearer options. v9 is modern-only: migrate deprecated config fields before upgrading.
 
 ## 1. Package layout
 
@@ -67,9 +67,7 @@ const patcher = new TailwindcssPatcher({
 })
 ```
 
-Both shapes are accepted. When the constructor detects `patch`/`cache` keys it automatically converts them via `fromLegacyOptions()`. This allows step-by-step migrations.
-
-Deprecated fields (planned removal in the next major): `cwd`, `overwrite`, `tailwind`, `features`, `output`.
+Legacy constructor aliases are no longer accepted in v9.
 
 Migration mapping:
 
@@ -79,7 +77,7 @@ Migration mapping:
 - `features` -> `apply`
 - `output` -> `extract`
 
-`normalizeOptions` now emits a one-time runtime warning when deprecated fields are detected.
+If you still have legacy fields, run `tw-patch migrate --dry-run` first, then apply the rewritten config before upgrading.
 
 ## 3. CLI changes
 
@@ -139,9 +137,7 @@ Update imports accordingly when consuming these helpers directly.
 
 ## 6. Configuration advice
 
-`defineConfig` from `tailwindcss-patch` (provided by `@tailwindcss-mangle/config`) still emits the legacy `patch` object. The patcher normalizer maps it to the modern runtime shape (`tailwindcss`, `apply`, `extract`) automatically, so migration can be gradual.
-
-If you want the new structure inside application code, prefer creating the patcher manually and pass the modern object as demonstrated above.
+`defineConfig` from `tailwindcss-patch` (provided by `@tailwindcss-mangle/config`) now describes the modern `registry` shape only. Legacy aliases such as `registry.output`, `registry.tailwind`, `tailwindcss.package`, `tailwindcss.legacy`, `tailwindcss.classic`, and `tailwindcss.next` are migration-only inputs and should be rewritten before v9 rollout.
 
 ## 7. Feature highlights
 
@@ -159,7 +155,7 @@ If you want the new structure inside application code, prefer creating the patch
 
 1. Update the dependency to the latest version of `tailwindcss-patch`.
 2. Review custom imports from `tailwindcss-patch/core/*` and switch to the new module paths.
-3. If you instantiate the patcher manually, adopt the new options object (or keep legacy options temporarily).
+3. If you instantiate the patcher manually, adopt the new options object.
 4. Refresh CLI usage in scripts (e.g. add `--output` or `--no-write` where appropriate).
 5. For Tailwind v4 projects, configure `tailwindcss.v4.cssEntries` and `sources` so that `extract()` can discover candidates.
 6. Run your extraction workflow and ensure the generated class list matches expectations.

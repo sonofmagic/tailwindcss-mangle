@@ -97,26 +97,12 @@ export interface RegistryCacheOptions {
 export interface TailwindTargetOptions {
   version?: 2 | 3 | 4
   packageName?: string
-  /** @deprecated Use `packageName` instead. */
-  package?: string
   resolve?: PackageResolvingOptions
   v2?: TailwindLocatorOptions
   v3?: TailwindLocatorOptions
   v4?: TailwindNextOptions
-  /** @deprecated Use `v2` instead. */
-  legacy?: TailwindLocatorOptions
-  /** @deprecated Use `v3` instead. */
-  classic?: TailwindLocatorOptions
-  /** @deprecated Use `v4` instead. */
-  next?: TailwindNextOptions
   cwd?: string
   config?: string
-}
-
-export interface RegistryOutputOptions {
-  file?: string
-  pretty?: boolean | number
-  stripUniversalSelector?: boolean
 }
 
 export interface RegistryOptions {
@@ -126,10 +112,6 @@ export interface RegistryOptions {
   extract?: RegistryExtractOptions
   cache?: RegistryCacheOptions
   filter?: (className: string) => boolean
-  /** @deprecated Use `extract` instead. */
-  output?: RegistryOutputOptions
-  /** @deprecated Use `tailwindcss` instead. */
-  tailwind?: TailwindTargetOptions
 }
 
 export interface TailwindcssMangleConfig {

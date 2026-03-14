@@ -1,6 +1,6 @@
 # tailwindcss-patch
 
-重新设计的 Tailwind CSS 补丁工具，用于导出运行时上下文、扫描 v4 的类候选、并在同一个入口管理缓存与输出。新的架构提供更清晰的配置体验，同时完全兼容旧版配置文件。
+重新设计的 Tailwind CSS 补丁工具，用于导出运行时上下文、扫描 v4 的类候选、并在同一个入口管理缓存与输出。新的架构提供更清晰的配置体验；v9 起仅接受现代配置结构。
 
 - 自动为 Tailwind v2/v3 打补丁，暴露运行时上下文，不再手动修改源码。
 - 针对 Tailwind v4，通过扫描 CSS 和内容源生成完整类名清单。
@@ -58,7 +58,7 @@ pnpm dlx tw-patch validate --report-file .tw-patch/migrate-report.json --json
 | `--css <file>`           | 使用 Tailwind v4 时指定 CSS 入口文件。 |
 | `--no-write`             | 仅返回结果，不落盘。                   |
 
-CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。旧配置仍可使用，详情请参考 [迁移指南](./MIGRATION.md)。
+CLI 会通过 `@tailwindcss-mangle/config` 加载 `tailwindcss-patch.config.ts`。v9 仅接受现代 `registry` 结构；如果项目里仍有旧字段，请先执行 `tw-patch migrate`，详情见 [迁移指南](./MIGRATION.md)。
 
 ### `migrate` 常用参数
 
