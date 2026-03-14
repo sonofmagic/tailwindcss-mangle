@@ -46,10 +46,14 @@ export interface TransformerOptions {
   preserve?: TransformerPreserveOptions
 }
 
-export interface TailwindV2V3Options {
+interface TailwindRuntimeOptionsBase {
   cwd?: string
   config?: string
 }
+
+export interface TailwindV2Options extends TailwindRuntimeOptionsBase {}
+
+export interface TailwindV3Options extends TailwindRuntimeOptionsBase {}
 
 export interface TailwindV4Options {
   sources?: SourceEntry[]
@@ -98,8 +102,8 @@ export interface TailwindCssOptions {
   version?: 2 | 3 | 4
   packageName?: string
   resolve?: PackageResolvingOptions
-  v2?: TailwindV2V3Options
-  v3?: TailwindV2V3Options
+  v2?: TailwindV2Options
+  v3?: TailwindV3Options
   v4?: TailwindV4Options
   cwd?: string
   config?: string

@@ -128,7 +128,8 @@ import type {
   ExtractOptions,
   TailwindCssOptions,
   TailwindCssPatchOptions,
-  TailwindV2V3Options,
+  TailwindV2Options,
+  TailwindV3Options,
   TailwindV4Options,
   NormalizedTailwindCssPatchOptions,
 } from 'tailwindcss-patch'

@@ -70,10 +70,7 @@ export interface ApplyOptions {
   extendLengthUnits?: false | ExtendLengthUnitsOptions
 }
 
-/**
- * Shared configuration used for Tailwind v2/v3 patching flows.
- */
-export interface TailwindV2V3Options {
+interface TailwindRuntimeOptionsBase {
   /** Path to a Tailwind config file when auto-detection is insufficient. */
   config?: string
   /** Custom working directory used when resolving config-relative paths. */
@@ -81,6 +78,16 @@ export interface TailwindV2V3Options {
   /** Optional PostCSS plugin name to use instead of the default. */
   postcssPlugin?: string
 }
+
+/**
+ * Configuration specific to Tailwind CSS v2 patching flows.
+ */
+export interface TailwindV2Options extends TailwindRuntimeOptionsBase {}
+
+/**
+ * Configuration specific to Tailwind CSS v3 patching flows.
+ */
+export interface TailwindV3Options extends TailwindRuntimeOptionsBase {}
 
 /**
  * Additional configuration specific to Tailwind CSS v4 extraction.
@@ -99,7 +106,7 @@ export interface TailwindV4Options {
 /**
  * High-level Tailwind patch configuration shared across versions.
  */
-export interface TailwindCssOptions extends TailwindV2V3Options {
+export interface TailwindCssOptions extends TailwindRuntimeOptionsBase {
   /** Explicit Tailwind CSS major version used by the current project. When omitted, the installed package version is inferred. */
   version?: 2 | 3 | 4
   /** Tailwind package name if the project uses a fork. */
@@ -107,9 +114,9 @@ export interface TailwindCssOptions extends TailwindV2V3Options {
   /** Package resolution options forwarded to `local-pkg`. */
   resolve?: PackageResolvingOptions
   /** Overrides applied when patching Tailwind CSS v2. */
-  v2?: TailwindV2V3Options
+  v2?: TailwindV2Options
   /** Overrides applied when patching Tailwind CSS v3. */
-  v3?: TailwindV2V3Options
+  v3?: TailwindV3Options
   /** Options specific to Tailwind CSS v4 patching. */
   v4?: TailwindV4Options
 }
@@ -183,12 +190,12 @@ export interface NormalizedTailwindV4Options {
 /**
  * Tailwind configuration ready for consumption by the runtime after normalization.
  */
-export interface NormalizedTailwindConfigOptions extends TailwindV2V3Options {
+export interface NormalizedTailwindConfigOptions extends TailwindRuntimeOptionsBase {
   packageName: string
   versionHint?: 2 | 3 | 4
   resolve?: PackageResolvingOptions
-  v2?: TailwindV2V3Options
-  v3?: TailwindV2V3Options
+  v2?: TailwindV2Options
+  v3?: TailwindV3Options
   v4?: NormalizedTailwindV4Options
 }
 

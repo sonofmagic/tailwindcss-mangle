@@ -13,7 +13,8 @@ import {
   type NormalizedTailwindCssPatchOptions,
   type TailwindCssOptions,
   type TailwindCssPatchOptions,
-  type TailwindV2V3Options,
+  type TailwindV2Options,
+  type TailwindV3Options,
   type TailwindV4Options,
 } from '..'
 
@@ -50,7 +51,12 @@ const cacheOptions: CacheOptions = {
   driver: 'memory',
 }
 
-const v3Options: TailwindV2V3Options = {
+const v2Options: TailwindV2Options = {
+  cwd: 'apps/legacy',
+  config: 'tailwind.config.js',
+}
+
+const v3Options: TailwindV3Options = {
   cwd: 'apps/web',
   config: 'tailwind.config.ts',
   postcssPlugin: '@tailwindcss/postcss',
@@ -90,9 +96,7 @@ expectAssignable<TailwindCssOptions>({
   version: 3,
   cwd: 'apps/docs',
   config: 'tailwind.config.ts',
-  v2: {
-    cwd: 'apps/legacy',
-  },
+  v2: v2Options,
   v3: {
     config: 'tailwind.config.cjs',
     postcssPlugin: '@tailwindcss/postcss',

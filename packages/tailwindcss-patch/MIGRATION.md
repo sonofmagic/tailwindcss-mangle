@@ -77,7 +77,8 @@ Use these names in user code:
 
 - `TailwindCssPatchOptions`
 - `TailwindCssOptions`
-- `TailwindV2V3Options`
+- `TailwindV2Options`
+- `TailwindV3Options`
 - `TailwindV4Options`
 - `ApplyOptions`
 - `ExtractOptions`

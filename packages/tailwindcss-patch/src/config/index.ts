@@ -12,7 +12,8 @@ export type {
   NormalizedExtendLengthUnitsOptions,
   TailwindCssOptions,
   TailwindCssPatchOptions,
-  TailwindV2V3Options,
+  TailwindV2Options,
+  TailwindV3Options,
   TailwindV4Options,
 } from '../options/types'
 export {
