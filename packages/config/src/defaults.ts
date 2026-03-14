@@ -1,6 +1,6 @@
 import type { RegistryOptions, TailwindcssMangleConfig, TransformerOptions } from './types'
 import process from 'node:process'
-import { defaultMangleClassFilter } from '@tailwindcss-mangle/shared'
+import { defaultMangleClassFilter } from '../../shared/src/utils'
 import { CSS_LANGS_RE } from 'is-css-request'
 // /\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/
 const defaultPipelineInclude = [
