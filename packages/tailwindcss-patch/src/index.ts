@@ -49,4 +49,7 @@ export {
 } from './install'
 export { default as logger } from './logger'
 export * from './types'
-export { defineConfig } from '@tailwindcss-mangle/config'
+
+export function defineConfig<T>(config: T): T {
+  return config
+}
