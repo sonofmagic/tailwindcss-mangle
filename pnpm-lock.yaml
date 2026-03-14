@@ -317,6 +317,12 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
 
   apps/next-app:
     dependencies:
@@ -353,9 +359,15 @@ importers:
       tailwindcss:
         specifier: 3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
 
   apps/next-app-router:
     dependencies:
@@ -390,9 +402,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
 
   apps/nuxt-app:
     devDependencies:
@@ -411,6 +429,12 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
 
   apps/remix-app:
     dependencies:
@@ -451,6 +475,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -470,9 +497,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -495,9 +528,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -547,9 +586,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -577,12 +622,18 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       tslib:
         specifier: ^2.8.0
         version: 2.8.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -598,9 +649,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -626,9 +683,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
       vite:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -705,9 +768,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.14
         version: 3.4.14
+      tailwindcss-patch:
+        specifier: workspace:*
+        version: link:../../packages/tailwindcss-patch
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
+      unplugin-tailwindcss-mangle:
+        specifier: workspace:*
+        version: link:../../packages/unplugin-tailwindcss-mangle
 
   packages/config:
     dependencies:
@@ -30881,7 +30950,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.1.6
       eslint: 10.0.3(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@10.0.3(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint@10.0.3(jiti@2.6.1)))(eslint@10.0.3(jiti@2.6.1))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.0.3(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.0.3(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@10.0.3(jiti@2.6.1))
@@ -30956,7 +31025,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@10.0.3(jiti@2.6.1)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint@10.0.3(jiti@2.6.1)))(eslint@10.0.3(jiti@2.6.1)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -30968,6 +31037,22 @@ snapshots:
       unrs-resolver: 1.11.1
     optionalDependencies:
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.0.3(jiti@2.6.1))
+      eslint-plugin-import-x: 4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1))
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@10.0.3(jiti@2.6.1)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.3
+      eslint: 10.0.3(jiti@2.6.1)
+      get-tsconfig: 4.13.6
+      is-bun-module: 2.0.0
+      stable-hash: 0.0.5
+      tinyglobby: 0.2.15
+      unrs-resolver: 1.11.1
+    optionalDependencies:
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.0.3(jiti@2.6.1))
       eslint-plugin-import-x: 4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
@@ -31020,7 +31105,7 @@ snapshots:
       '@typescript-eslint/parser': 8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3)
       eslint: 10.0.3(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@10.0.3(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@10.0.3(jiti@2.6.1)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint@10.0.3(jiti@2.6.1)))(eslint@10.0.3(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 

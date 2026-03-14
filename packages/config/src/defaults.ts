@@ -1,6 +1,5 @@
 import type { RegistryOptions, TailwindcssMangleConfig, TransformerOptions } from './types'
 import process from 'node:process'
-import { defaultMangleClassFilter } from '../../shared/src/utils'
 import { CSS_LANGS_RE } from 'is-css-request'
 // /\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/
 const defaultPipelineInclude = [
@@ -9,6 +8,19 @@ const defaultPipelineInclude = [
 ]
 
 const defaultPipelineExclude: string[] = []
+const preservedClassNames = new Set([
+  'ease-out',
+  'ease-linear',
+  'ease-in',
+  'ease-in-out',
+])
+
+function defaultMangleClassFilter(className: string) {
+  if (preservedClassNames.has(className)) {
+    return false
+  }
+  return /[:-]/.test(className)
+}
 
 export function getDefaultRegistryConfig(): RegistryOptions {
   return {

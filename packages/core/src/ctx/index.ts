@@ -126,7 +126,7 @@ export class Context {
       this.loadClassSet(_classList)
     }
     else {
-      const fallbackFile = config?.registry?.output?.file
+      const fallbackFile = config?.registry?.extract?.file
       let jsonPath = this.options.registry?.file ?? fallbackFile
       if (jsonPath) {
         if (!isAbsolute(jsonPath)) {
