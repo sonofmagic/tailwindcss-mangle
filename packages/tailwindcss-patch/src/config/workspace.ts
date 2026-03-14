@@ -19,20 +19,26 @@ function isNodeError(error: unknown): error is NodeJS.ErrnoException {
   return !!error && typeof error === 'object' && ('code' in error || 'message' in error)
 }
 
-function isMissingConfigModuleError(error: unknown) {
-  if (!isNodeError(error) || error.code !== 'MODULE_NOT_FOUND') {
+export function isMissingModuleError(error: unknown, pkgName: string) {
+  if (!isNodeError(error)) {
     return false
   }
+
+  const code = error.code
+  if (code !== 'MODULE_NOT_FOUND' && code !== 'ERR_MODULE_NOT_FOUND') {
+    return false
+  }
+
   const message = error.message ?? ''
-  return message.includes('@tailwindcss-mangle/config')
+  return message.includes(pkgName) || message.includes(`${pkgName}/dist/`)
+}
+
+function isMissingConfigModuleError(error: unknown) {
+  return isMissingModuleError(error, '@tailwindcss-mangle/config')
 }
 
 function isMissingSharedModuleError(error: unknown) {
-  if (!isNodeError(error) || error.code !== 'MODULE_NOT_FOUND') {
-    return false
-  }
-  const message = error.message ?? ''
-  return message.includes('@tailwindcss-mangle/shared')
+  return isMissingModuleError(error, '@tailwindcss-mangle/shared')
 }
 
 export async function loadWorkspaceConfigModule() {
