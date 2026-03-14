@@ -14,7 +14,11 @@
       ],
       "outputs": [
         "dist/**",
-        "bin/**"
+        "bin/**",
+        ".next/**",
+        "build/**",
+        ".output/**",
+        ".nuxt/**"
       ]
     },
     "lint": {
