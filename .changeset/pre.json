@@ -23,6 +23,7 @@
     "@tailwindcss-mangle/website": "1.1.2"
   },
   "changesets": [
+    "blue-rivers-shout",
     "cold-cobras-smash",
     "few-rice-rhyme",
     "flat-snails-burn",

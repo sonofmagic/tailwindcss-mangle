@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.0.0-alpha.4
+
+### Patch Changes
+
+- 🐛 **Downgrade `cac` to `6.7.14` for `tailwindcss-patch` to restore compatibility with CommonJS consumers that cannot load the ESM-only `cac@7` package.** [`6adfc71`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6adfc71a3c898857a721ca9aa758d083bf318871) by @sonofmagic
+
 ## 9.0.0-alpha.3
 
 ### Patch Changes
