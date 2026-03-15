@@ -1,0 +1,10 @@
+**/node_modules/**
+**/dist/**
+**/coverage/**
+**/.next/**
+**/.nuxt/**
+**/.output/**
+**/public/build/**
+**/test/fixtures/**
+website/content/**/*.mdx
+website/public/_pagefind/**

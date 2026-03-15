@@ -16,6 +16,17 @@ Source lives in `packages/`, with `@tailwindcss-mangle/core` providing the trans
 ## Coding Style & Naming Conventions
 The codebase is TypeScript-first with strict ESM modules. Formatting is handled by the shared `@icebreakers/eslint-config` and Prettier defaults (2-space indentation, semicolons omitted). Prefer PascalCase for exported classes (e.g., `ClassGenerator`) and camelCase for functions and variables. Keep filenames lowercase with dashes or dots (`css/index.ts`, `test/utils.ts`).
 
+## AI Code Gate
+Any AI-generated code must satisfy the same quality gate as human-written code before it is considered complete:
+- `pnpm lint`
+- `pnpm lint:style`
+- package-specific `pnpm test:types` when the touched package exposes public types
+- run the relevant TypeScript validation for the touched project
+  - package/library code: package `tsc` / `vitest` / `pnpm test:types`
+  - framework apps: the app's own `build` or framework-specific typecheck command
+
+AI-generated changes should update local ignores or test/config scopes only when the reported files are not first-party source files (for example generated assets, snapshots, or fixtures). Do not bypass real source errors by weakening lint/type/style rules.
+
 ## Testing Guidelines
 Vitest drives unit tests via `vitest.config.ts`, discovering suites inside each package’s `test/` directory. Name files `*.test.ts` and keep snapshots in `__snapshots__/`. Run the full suite with `pnpm test`; use `pnpm test:dev` for focused watch mode, or filter with `pnpm --filter @tailwindcss-mangle/core test`. Coverage is enabled by default and stored in `coverage/` directories.
 

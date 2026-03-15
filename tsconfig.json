@@ -47,5 +47,11 @@
 
     // 跳过库文件的类型检查，提高编译速度（库文件通常已经有类型声明）
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "packages/**/test/fixtures/**/*.js"
+  ]
 }

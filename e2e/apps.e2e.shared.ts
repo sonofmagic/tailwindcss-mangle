@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import process from 'node:process'
-import { execa } from 'execa'
 import path from 'pathe'
+import { runCommand } from './process'
 
 export interface MappingEntry {
   original: string
@@ -150,7 +150,7 @@ export async function ensureClassList(app: AppE2ECase) {
 }
 
 export async function buildApp(app: AppE2ECase) {
-  await execa('pnpm', ['--dir', app.appDir, 'build'], {
+  await runCommand('pnpm', ['--dir', app.appDir, 'build'], {
     cwd: repoRoot,
     env: {
       ...process.env,

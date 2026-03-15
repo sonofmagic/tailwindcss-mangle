@@ -1,11 +1,11 @@
-import type { ExecaChildProcess } from 'execa'
+import type { RunningCommand } from './process'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { chromium } from '@playwright/test'
-import { execa } from 'execa'
 import { buildApp, cases, ensureClassList, readMappingFile, repoRoot, resolveMapFile, resolveServeCommand } from './apps.e2e.shared'
+import { spawnCommand } from './process'
 
-const runPlaywrightE2E = process.env.TWM_APPS_E2E_PLAYWRIGHT === '1'
+const runPlaywrightE2E = process.env['TWM_APPS_E2E_PLAYWRIGHT'] === '1'
 const basePort = 4200
 
 function sleep(ms: number) {
@@ -21,13 +21,13 @@ function hasCssSelector(css: string, className: string) {
   return new RegExp(`\\.${escaped}(?=[^A-Za-z0-9_-]|$)`).test(css)
 }
 
-async function waitForHttpReady(url: string, child: ExecaChildProcess, timeoutMs = 120_000) {
+async function waitForHttpReady(url: string, child: RunningCommand, timeoutMs = 120_000) {
   const startedAt = Date.now()
   let lastError: unknown
 
   while (Date.now() - startedAt < timeoutMs) {
     if (child.exitCode !== null) {
-      const result = await child
+      const result = await child.completed
       const output = [result.stdout, result.stderr]
         .filter(Boolean)
         .join('\n')
@@ -55,6 +55,9 @@ async function waitForHttpReady(url: string, child: ExecaChildProcess, timeoutMs
 
 async function startServer(appIndex: number) {
   const app = cases[appIndex]
+  if (!app) {
+    throw new Error(`Unknown e2e app index: ${appIndex}`)
+  }
   const port = basePort + appIndex
   const url = `http://127.0.0.1:${port}/`
   let cmd: string
@@ -75,9 +78,8 @@ async function startServer(appIndex: number) {
     args = [...serveCommand[1]]
   }
 
-  const child = execa(cmd, args, {
+  const child = spawnCommand(cmd, args, {
     cwd: repoRoot,
-    reject: false,
     env: {
       ...process.env,
       NODE_ENV: 'production',
@@ -93,20 +95,19 @@ async function startServer(appIndex: number) {
   }
 }
 
-async function stopServer(child: ExecaChildProcess) {
+async function stopServer(child: RunningCommand) {
   if (child.exitCode === null) {
     child.kill('SIGTERM')
-    await Promise.race([child, sleep(5000)])
+    await Promise.race([child.completed, sleep(5000)])
   }
   if (child.exitCode === null) {
     child.kill('SIGKILL')
-    await Promise.race([child, sleep(3000)])
+    await Promise.race([child.completed, sleep(3000)])
   }
 }
 
 describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
-  for (let index = 0; index < cases.length; index++) {
-    const app = cases[index]
+  for (const [index, app] of cases.entries()) {
     it(`verifies ${app.name} mangled classes in browser`, async () => {
       const mapFile = resolveMapFile(app.appDir)
       await ensureClassList(app)
@@ -133,12 +134,12 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
         const domClasses = await page.evaluate(() => {
           const classes = new Set<string>()
           const elements = document.querySelectorAll<HTMLElement>('[class]')
-          for (const element of Array.from(elements)) {
-            for (const className of Array.from(element.classList)) {
+          for (const element of [...elements]) {
+            for (const className of [...element.classList]) {
               classes.add(className)
             }
           }
-          return Array.from(classes)
+          return [...classes]
         })
         expect(domClasses.length).toBeGreaterThan(0)
 
@@ -152,10 +153,10 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
 
         const cssText = await page.evaluate(() => {
           const cssRules: string[] = []
-          for (const styleSheet of Array.from(document.styleSheets)) {
+          for (const styleSheet of [...document.styleSheets]) {
             try {
               const rules = (styleSheet as CSSStyleSheet).cssRules
-              for (const rule of Array.from(rules)) {
+              for (const rule of [...rules]) {
                 cssRules.push(rule.cssText)
               }
             }
