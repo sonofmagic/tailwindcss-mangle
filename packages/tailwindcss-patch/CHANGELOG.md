@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.0.0-alpha.3
+
+### Patch Changes
+
+- 🐛 **Fix the published CommonJS runtime entry so non-CLI APIs no longer eagerly load the ESM-only `cac` dependency. CLI code is now split into a separate lazy-loaded bundle, which keeps `require('tailwindcss-patch')` working in CommonJS config loaders while preserving CLI factory support.** [`e6b0fa3`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e6b0fa33f16d63d032cf002c1b50aa34af3a901d) by @sonofmagic
+
 ## 9.0.0-alpha.2
 
 ### Minor Changes
