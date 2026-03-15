@@ -95,7 +95,7 @@
     "@babel/types": "^7.29.0",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss/node": "^4.2.1",
-    "cac": "^7.0.0",
+    "cac": "6.7.14",
     "consola": "^3.4.2",
     "fs-extra": "^11.3.4",
     "local-pkg": "^1.1.2",
