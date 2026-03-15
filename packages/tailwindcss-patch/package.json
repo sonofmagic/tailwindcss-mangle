@@ -4,6 +4,9 @@
   "description": "patch tailwindcss for exposing context and extract classes",
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "homepage": "https://mangle.icebreaker.top/",
   "repository": {
     "type": "git",
