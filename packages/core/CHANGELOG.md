@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/core
 
+## 5.1.2-alpha.2
+
+### Patch Changes
+
+- 🐛 **Refresh parser, Tailwind, and related toolchain dependencies across the workspace, including newer runtime dependencies used by `@tailwindcss-mangle/core` and `tailwindcss-patch`.** [`905000b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/905000bbf892eeaa0e26a65c27c16263707eb364) by @sonofmagic
+
 ## 5.1.2-alpha.1
 
 ### Patch Changes
