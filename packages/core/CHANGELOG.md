@@ -1,5 +1,17 @@
 # @tailwindcss-mangle/core
 
+## 5.1.2
+
+### Patch Changes
+
+- 🐛 **Refresh parser, Tailwind, and related toolchain dependencies across the workspace, including newer runtime dependencies used by `@tailwindcss-mangle/core` and `tailwindcss-patch`.** [`905000b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/905000bbf892eeaa0e26a65c27c16263707eb364) by @sonofmagic
+
+- 🐛 **Refresh internal dependency ranges for the published config and core packages, including `fs-extra`, `postcss`, `@vue/compiler-sfc`, and `svelte`, to keep the workspace aligned with the updated toolchain.** [`8937b29`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8937b296f995888d39e4c6714f35e83a9a260fa0) by @sonofmagic
+
+- 🐛 **Align workspace package metadata with built `dist` outputs and fix config consumption to use the modern `registry.extract.file` fallback. Demo apps now declare the workspace packages they execute or import so Turbo can derive internal build dependencies correctly.** [`b42175f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b42175f33ab8751c4591c04160261e708c90689c) by @sonofmagic
+- 📦 **Dependencies** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c)
+  → `@tailwindcss-mangle/config@7.0.0`, `@tailwindcss-mangle/shared@4.1.4`
+
 ## 5.1.2-alpha.2
 
 ### Patch Changes

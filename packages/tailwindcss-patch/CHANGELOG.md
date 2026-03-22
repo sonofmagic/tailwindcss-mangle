@@ -1,5 +1,45 @@
 # tailwindcss-patch
 
+## 9.0.0
+
+### Major Changes
+
+- 🚀 **Require modern `tailwindcss-patch` options and an explicit `tailwindcss.version`, removing support for legacy constructor aliases like `cwd`, `tailwind`, `features`, `output`, `overwrite`, and `patch`.** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c) by @sonofmagic
+  - Workspace registry loading now rejects deprecated `registry.output`, `registry.tailwind`, and `registry.patch` fields. Use `registry.extract`, `registry.tailwindcss`, and `registry.apply` instead.
+  - The default generated config now includes `registry.tailwindcss.version = 4`.
+  - `@tailwindcss-mangle/config` now types only the modern `registry` shape. Deprecated aliases like `registry.output`, `registry.tailwind`, `tailwindcss.package`, `tailwindcss.legacy`, `tailwindcss.classic`, and `tailwindcss.next` are no longer part of the public type surface.
+
+- 🚀 **Finalize the v9 `tailwindcss-patch` upgrade:** [`2a7f8b6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/2a7f8b6c7c40c0f8c806c9efda2cd2760b1d882e) by @sonofmagic
+  - require the modern `TailwindcssPatcher` option shape and reject legacy constructor aliases
+  - require explicit `tailwindcss.version` and validate it against the resolved Tailwind package version
+  - reject legacy workspace registry aliases such as `registry.output`, `registry.tailwind`, and `registry.patch`
+  - default generated config to `registry.tailwindcss.version = 4`
+  - document the v8 -> v9 migration path and modern-only configuration model
+
+### Minor Changes
+
+- ✨ **Remove legacy public option type aliases from the v9 alpha line and keep only the modern option names such as `TailwindCssPatchOptions`, `TailwindCssOptions`, `TailwindV2Options`, `TailwindV3Options`, and `TailwindV4Options`.** [`3e1c464`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3e1c464318266eec37ee33b63aebed7a54cbae86) by @sonofmagic
+
+### Patch Changes
+
+- 🐛 **Downgrade `cac` to `6.7.14` for `tailwindcss-patch` to restore compatibility with CommonJS consumers that cannot load the ESM-only `cac@7` package.** [`6adfc71`](https://github.com/sonofmagic/tailwindcss-mangle/commit/6adfc71a3c898857a721ca9aa758d083bf318871) by @sonofmagic
+
+- 🐛 **Fix Tailwind CSS v3 runtime context refresh so removed classes are dropped correctly across repeated patcher recreations, including HMR-style update flows that add and then remove content classes in the same process.** [`395e22f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/395e22f80b15437703544e1af8b19d08c82ea9ba) by @sonofmagic
+
+- 🐛 **Restore automatic Tailwind CSS major version detection when `registry.tailwindcss.version` is omitted, while keeping strict validation for explicitly configured versions. This also removes the default config value that forced version `4` during install-time prepare scripts in Tailwind v3 demo apps.** [`c87c9ab`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c87c9ab86dfa083f0f85d688f953d94834b2e293) by @sonofmagic
+
+- 🐛 **Fix workspace installs for monorepo consumers by making the local `tailwindcss-patch` entrypoint usable before `dist` is built. This keeps app-level `prepare` scripts working during fresh installs while preserving published package outputs via `publishConfig`.** [`1549b55`](https://github.com/sonofmagic/tailwindcss-mangle/commit/1549b55a1c6b9dbc462ea8cac83660a43e6a29b4) by @sonofmagic
+
+- 🐛 **Preserve original runtime candidate tokens when collecting the class set for Tailwind CSS v2/v3 projects, so shorthand and full hex arbitrary color classes remain distinct and only match when the exact source token is present.** [`ea6cbf0`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ea6cbf0f40efee7f92733327da74fa4396c15fa7) by @sonofmagic
+
+- 🐛 **Refresh parser, Tailwind, and related toolchain dependencies across the workspace, including newer runtime dependencies used by `@tailwindcss-mangle/core` and `tailwindcss-patch`.** [`905000b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/905000bbf892eeaa0e26a65c27c16263707eb364) by @sonofmagic
+
+- 🐛 **Improve `tailwindcss-patch` cold-start and repeated-run performance by avoiding redundant patch work, reducing unnecessary cache writes, and reusing Tailwind v4 candidate extraction state across repeated calls. Also add benchmark coverage and regression tests for cache invalidation, repeated patch/getClassSet calls, empty class sets, and v3/v4 behavior.** [`aed889c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/aed889ce843cae9d9edf6baed75725fa2de05259) by @sonofmagic
+
+- 🐛 **Fix the published CommonJS runtime entry so non-CLI APIs no longer eagerly load the ESM-only `cac` dependency. CLI code is now split into a separate lazy-loaded bundle, which keeps `require('tailwindcss-patch')` working in CommonJS config loaders while preserving CLI factory support.** [`e6b0fa3`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e6b0fa33f16d63d032cf002c1b50aa34af3a901d) by @sonofmagic
+- 📦 **Dependencies** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c)
+  → `@tailwindcss-mangle/config@7.0.0`
+
 ## 9.0.0-alpha.5
 
 ### Patch Changes

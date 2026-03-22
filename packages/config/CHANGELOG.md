@@ -1,5 +1,28 @@
 # @tailwindcss-mangle/config
 
+## 7.0.0
+
+### Major Changes
+
+- 🚀 **Require modern `tailwindcss-patch` options and an explicit `tailwindcss.version`, removing support for legacy constructor aliases like `cwd`, `tailwind`, `features`, `output`, `overwrite`, and `patch`.** [`f4d9cec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/f4d9cecf1b92acfb9512ef8910ec749bbeb8e61c) by @sonofmagic
+  - Workspace registry loading now rejects deprecated `registry.output`, `registry.tailwind`, and `registry.patch` fields. Use `registry.extract`, `registry.tailwindcss`, and `registry.apply` instead.
+  - The default generated config now includes `registry.tailwindcss.version = 4`.
+  - `@tailwindcss-mangle/config` now types only the modern `registry` shape. Deprecated aliases like `registry.output`, `registry.tailwind`, `tailwindcss.package`, `tailwindcss.legacy`, `tailwindcss.classic`, and `tailwindcss.next` are no longer part of the public type surface.
+
+### Minor Changes
+
+- ✨ **Remove legacy public option type aliases from the v9 alpha line and keep only the modern option names such as `TailwindCssPatchOptions`, `TailwindCssOptions`, `TailwindV2Options`, `TailwindV3Options`, and `TailwindV4Options`.** [`3e1c464`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3e1c464318266eec37ee33b63aebed7a54cbae86) by @sonofmagic
+
+### Patch Changes
+
+- 🐛 **Restore automatic Tailwind CSS major version detection when `registry.tailwindcss.version` is omitted, while keeping strict validation for explicitly configured versions. This also removes the default config value that forced version `4` during install-time prepare scripts in Tailwind v3 demo apps.** [`c87c9ab`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c87c9ab86dfa083f0f85d688f953d94834b2e293) by @sonofmagic
+
+- 🐛 **Refresh internal dependency ranges for the published config and core packages, including `fs-extra`, `postcss`, `@vue/compiler-sfc`, and `svelte`, to keep the workspace aligned with the updated toolchain.** [`8937b29`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8937b296f995888d39e4c6714f35e83a9a260fa0) by @sonofmagic
+
+- 🐛 **Align workspace package metadata with built `dist` outputs and fix config consumption to use the modern `registry.extract.file` fallback. Demo apps now declare the workspace packages they execute or import so Turbo can derive internal build dependencies correctly.** [`b42175f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b42175f33ab8751c4591c04160261e708c90689c) by @sonofmagic
+- 📦 **Dependencies** [`b42175f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b42175f33ab8751c4591c04160261e708c90689c)
+  → `@tailwindcss-mangle/shared@4.1.4`
+
 ## 7.0.0-alpha.2
 
 ### Minor Changes
