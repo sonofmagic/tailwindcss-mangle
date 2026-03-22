@@ -6,6 +6,15 @@ import path from 'pathe'
 import { extractValidCandidates } from '../extraction/candidate-extractor'
 import { isObject } from '../utils'
 
+function collectRuntimeCandidateKeys(context: TailwindcssRuntimeContext) {
+  const candidateRuleCache = context.candidateRuleCache
+  if (candidateRuleCache instanceof Map && candidateRuleCache.size > 0) {
+    return candidateRuleCache.keys()
+  }
+
+  return context.classCache.keys()
+}
+
 export function collectClassesFromContexts(
   contexts: TailwindcssRuntimeContext[],
   filter: (className: string) => boolean,
@@ -16,7 +25,7 @@ export function collectClassesFromContexts(
       continue
     }
 
-    for (const key of context.classCache.keys()) {
+    for (const key of collectRuntimeCandidateKeys(context)) {
       const className = key.toString()
       if (filter(className)) {
         set.add(className)

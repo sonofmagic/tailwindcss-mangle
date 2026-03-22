@@ -320,6 +320,81 @@ describe('TailwindcssPatcher', () => {
     expect(firstEntry?.values).toEqual(expect.arrayContaining(['foo', 'bar']))
   })
 
+  it.each([
+    {
+      name: 'only shorthand black token',
+      rawCandidates: ['bg-[#000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000]'],
+      expectedAbsent: ['bg-[#000000]'],
+    },
+    {
+      name: 'only full black token',
+      rawCandidates: ['bg-[#000000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000000]'],
+      expectedAbsent: ['bg-[#000]'],
+    },
+    {
+      name: 'both black tokens',
+      rawCandidates: ['bg-[#000]', 'bg-[#000000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000]', 'bg-[#000000]'],
+      expectedAbsent: [],
+    },
+    {
+      name: 'red shorthand and full tokens',
+      rawCandidates: ['bg-[#f00]', 'bg-[#ff0000]'],
+      normalizedClasses: ['bg-[#ff0000]'],
+      expectedPresent: ['bg-[#f00]', 'bg-[#ff0000]'],
+      expectedAbsent: [],
+    },
+    {
+      name: 'green shorthand and full tokens',
+      rawCandidates: ['bg-[#0f0]', 'bg-[#00ff00]'],
+      normalizedClasses: ['bg-[#00ff00]'],
+      expectedPresent: ['bg-[#0f0]', 'bg-[#00ff00]'],
+      expectedAbsent: [],
+    },
+  ])('prefers raw runtime candidates for precise class set matching: $name', ({ rawCandidates, normalizedClasses, expectedPresent, expectedAbsent }) => {
+    const patcher = new TailwindcssPatcher({
+      apply: {
+        overwrite: false,
+      },
+      cache: false,
+      tailwindcss: {
+        version: 3,
+      },
+    })
+
+    const candidateRuleCache = new Map<string, Set<any>>()
+    for (const candidate of rawCandidates) {
+      candidateRuleCache.set(candidate, new Set())
+    }
+
+    const classCache = new Map<string, any>()
+    for (const cls of normalizedClasses) {
+      classCache.set(cls, [])
+    }
+
+    vi.spyOn(patcher, 'getContexts').mockReturnValue([
+      {
+        candidateRuleCache,
+        classCache,
+      } as any,
+    ])
+
+    const result = patcher.getClassSetSync()
+
+    expect(result).toBeDefined()
+    for (const token of expectedPresent) {
+      expect(result?.has(token)).toBe(true)
+    }
+    for (const token of expectedAbsent) {
+      expect(result?.has(token)).toBe(false)
+    }
+  })
+
   it('treats legacy cache schema as miss to avoid cross-context pollution', () => {
     const cacheFile = path.join(tempDir, 'cache.json')
     fs.writeJSONSync(cacheFile, ['cached-class'])

@@ -15,6 +15,23 @@ function createContext(classes: string[]) {
   } as any
 }
 
+function createContextWithCandidateRuleCache(rawCandidates: string[], normalizedClasses: string[]) {
+  const candidateRuleCache = new Map()
+  for (const candidate of rawCandidates) {
+    candidateRuleCache.set(candidate, new Set())
+  }
+
+  const classCache = new Map()
+  for (const cls of normalizedClasses) {
+    classCache.set(cls, [])
+  }
+
+  return {
+    candidateRuleCache,
+    classCache,
+  } as any
+}
+
 describe('collectClassesFromContexts', () => {
   it('aggregates class names respecting the filter', () => {
     const contexts = [createContext(['text-lg', '*', 'font-bold'])]
@@ -22,6 +39,55 @@ describe('collectClassesFromContexts', () => {
     const result = collectClassesFromContexts(contexts as any, filter)
     expect(result.has('text-lg')).toBe(true)
     expect(result.has('*')).toBe(false)
+  })
+
+  it.each([
+    {
+      name: 'keeps shorthand hex tokens when shorthand is the only source token',
+      rawCandidates: ['bg-[#000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000]'],
+      expectedAbsent: ['bg-[#000000]'],
+    },
+    {
+      name: 'keeps full hex tokens when full hex is the only source token',
+      rawCandidates: ['bg-[#000000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000000]'],
+      expectedAbsent: ['bg-[#000]'],
+    },
+    {
+      name: 'keeps shorthand and full hex tokens distinct when both appear',
+      rawCandidates: ['bg-[#000]', 'bg-[#000000]'],
+      normalizedClasses: ['bg-[#000000]'],
+      expectedPresent: ['bg-[#000]', 'bg-[#000000]'],
+      expectedAbsent: [],
+    },
+    {
+      name: 'does not merge red shorthand and full hex tokens',
+      rawCandidates: ['bg-[#f00]', 'bg-[#ff0000]'],
+      normalizedClasses: ['bg-[#ff0000]'],
+      expectedPresent: ['bg-[#f00]', 'bg-[#ff0000]'],
+      expectedAbsent: [],
+    },
+    {
+      name: 'does not merge green shorthand and full hex tokens',
+      rawCandidates: ['bg-[#0f0]', 'bg-[#00ff00]'],
+      normalizedClasses: ['bg-[#00ff00]'],
+      expectedPresent: ['bg-[#0f0]', 'bg-[#00ff00]'],
+      expectedAbsent: [],
+    },
+  ])('$name', ({ rawCandidates, normalizedClasses, expectedPresent, expectedAbsent }) => {
+    const contexts = [createContextWithCandidateRuleCache(rawCandidates, normalizedClasses)]
+    const result = collectClassesFromContexts(contexts as any, () => true)
+
+    for (const token of expectedPresent) {
+      expect(result.has(token)).toBe(true)
+    }
+
+    for (const token of expectedAbsent) {
+      expect(result.has(token)).toBe(false)
+    }
   })
 })
 
