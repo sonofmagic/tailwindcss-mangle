@@ -28,6 +28,6 @@
     "tailwindcss-patch": "workspace:*",
     "typescript": "^5.9.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.0.0"
+    "vite": "^8.0.1"
   }
 }
