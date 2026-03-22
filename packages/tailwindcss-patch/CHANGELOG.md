@@ -1,5 +1,13 @@
 # tailwindcss-patch
 
+## 9.0.0-alpha.5
+
+### Patch Changes
+
+- 🐛 **Preserve original runtime candidate tokens when collecting the class set for Tailwind CSS v2/v3 projects, so shorthand and full hex arbitrary color classes remain distinct and only match when the exact source token is present.** [`ea6cbf0`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ea6cbf0f40efee7f92733327da74fa4396c15fa7) by @sonofmagic
+
+- 🐛 **Refresh parser, Tailwind, and related toolchain dependencies across the workspace, including newer runtime dependencies used by `@tailwindcss-mangle/core` and `tailwindcss-patch`.** [`905000b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/905000bbf892eeaa0e26a65c27c16263707eb364) by @sonofmagic
+
 ## 9.0.0-alpha.4
 
 ### Patch Changes
