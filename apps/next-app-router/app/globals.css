@@ -22,7 +22,7 @@ body {
 }
 
 @layer utilities {
-  .text-balance {
+  .balanced-copy {
     text-wrap: balance;
   }
 }
