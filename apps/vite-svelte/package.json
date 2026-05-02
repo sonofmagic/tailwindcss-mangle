@@ -14,15 +14,15 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tsconfig/svelte": "^5.0.8",
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8",
-    "svelte": "^5.54.1",
-    "svelte-check": "^4.4.5",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.13",
+    "svelte": "^5.55.5",
+    "svelte-check": "^4.4.7",
     "tailwindcss": "^3.4.14",
     "tailwindcss-patch": "workspace:*",
     "tslib": "^2.8.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.0.1"
+    "vite": "^8.0.10"
   }
 }

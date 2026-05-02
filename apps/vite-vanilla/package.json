@@ -11,12 +11,12 @@
     "tw-extract": "tw-patch extract"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.13",
     "tailwindcss": "^3.4.14",
     "tailwindcss-patch": "workspace:*",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.0.1"
+    "vite": "^8.0.10"
   }
 }

@@ -17,20 +17,20 @@
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
-    "markdown-to-jsx": "^9.7.13",
-    "next": "^16.2.1",
+    "markdown-to-jsx": "^9.7.16",
+    "next": "^16.2.4",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-intersection-observer": "^10.0.3"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.2.1",
+    "@next/bundle-analyzer": "^16.2.4",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/react": "19.2.14",
-    "pagefind": "^1.4.0",
+    "pagefind": "^1.5.2",
     "tailwindcss": "catalog:tailwindcss4"
   },
   "browserslist": [

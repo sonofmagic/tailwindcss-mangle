@@ -15,8 +15,8 @@
     "tailwindcss-patch": "workspace:^"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.13",
     "tailwindcss": "catalog:tailwindcss2"
   }
 }
