@@ -46,7 +46,10 @@
     "esModuleInterop": true,
 
     // 跳过库文件的类型检查，提高编译速度（库文件通常已经有类型声明）
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    // TypeScript 6 deprecates baseUrl, but package tsconfigs still use it for local path aliases.
+    "ignoreDeprecations": "6.0"
   },
   "exclude": [
     "**/node_modules/**",

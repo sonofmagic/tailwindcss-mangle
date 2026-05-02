@@ -25,19 +25,19 @@
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./src/index.ts",
       "require": "./src/index.ts"
     }
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
-        "./src/*",
-        "./src/index.ts"
+        "./dist/*",
+        "./dist/index.d.ts"
       ]
     }
   },
