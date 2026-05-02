@@ -134,7 +134,6 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
       const { child, url } = await startServer(index)
       const browser = await chromium.launch({
         headless: true,
-        channel: 'chrome',
       })
 
       try {

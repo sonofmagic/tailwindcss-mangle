@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  # push:
-  #   branches: ['main']
+  push:
+    branches: ['main']
   pull_request:
     types: [opened, synchronize]
   workflow_dispatch:
@@ -65,9 +65,13 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   apps-e2e:
-    name: Apps E2E
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
+    name: Apps E2E (${{ matrix.os }})
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out code
@@ -89,3 +93,77 @@ jobs:
 
       - name: Run apps e2e
         run: pnpm test:e2e
+
+  apps-playwright-e2e:
+    name: Apps Playwright E2E (${{ matrix.os }})
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright system dependencies
+        if: runner.os == 'Linux'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+
+      - name: Run apps Playwright e2e
+        run: pnpm test:e2e:pw
+
+  apps-hmr-e2e:
+    name: Apps HMR E2E (${{ matrix.os }})
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright system dependencies
+        if: runner.os == 'Linux'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+
+      - name: Run apps HMR e2e
+        run: pnpm test:e2e:hmr

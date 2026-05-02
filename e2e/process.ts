@@ -1,6 +1,7 @@
 import type { ChildProcessByStdio, SpawnOptionsWithoutStdio } from 'node:child_process'
 import type { Readable } from 'node:stream'
 import { spawn } from 'node:child_process'
+import process from 'node:process'
 
 export interface CommandResult {
   exitCode: number | null
@@ -55,6 +56,7 @@ export function spawnCommand(
 ): RunningCommand {
   const child = spawn(command, args, {
     ...options,
+    shell: options.shell ?? process.platform === 'win32',
     stdio: ['ignore', 'pipe', 'pipe'],
   })
 
