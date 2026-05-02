@@ -44,8 +44,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --sourcemap",
-    "build": "tsup",
+    "dev": "tsdown --watch --sourcemap",
+    "build": "tsdown",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest"
   },

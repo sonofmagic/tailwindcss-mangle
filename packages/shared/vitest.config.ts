@@ -15,7 +15,7 @@ export default defineProject({
       exclude: [
         'src/types.ts',
         'dist/**',
-        'tsup.config.ts',
+        'tsdown.config.ts',
         'vitest.config.ts',
       ],
     },

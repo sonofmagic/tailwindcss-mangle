@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig({
   entry: [
@@ -10,14 +10,16 @@ export default defineConfig({
     'src/webpack.ts',
     'src/utils.ts',
     'src/loader.ts',
-  ], // , 'src/cli.ts'],
+  ],
   shims: true,
   format: ['cjs', 'esm'],
   clean: true,
   dts: true,
-  cjsInterop: true,
-  splitting: true,
+  fixedExtension: false,
   define: {
     __DEV__: 'false',
+  },
+  deps: {
+    skipNodeModulesBundle: true,
   },
 })

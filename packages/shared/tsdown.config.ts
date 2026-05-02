@@ -1,13 +1,15 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig({
   entry: [
     'src/index.ts',
-  ], // , 'src/cli.ts'],
+  ],
   shims: true,
   format: ['cjs', 'esm'],
   clean: true,
   dts: true,
-  // cjsInterop: true,
-  // splitting: true,
+  fixedExtension: false,
+  deps: {
+    skipNodeModulesBundle: true,
+  },
 })

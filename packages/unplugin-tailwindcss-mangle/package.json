@@ -70,8 +70,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --sourcemap",
-    "build": "tsup",
+    "dev": "tsdown --watch --sourcemap",
+    "build": "tsdown",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
     "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts",
