@@ -9,7 +9,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "remix-serve build",
+    "start": "remix-serve build/index.js",
     "typecheck": "tsc",
     "prepare": "tw-patch install",
     "tw-extract": "tw-patch extract"

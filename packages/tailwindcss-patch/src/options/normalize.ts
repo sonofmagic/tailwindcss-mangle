@@ -176,12 +176,13 @@ function normalizeTailwindV4Options(
 function normalizeTailwindOptions(
   tailwind: TailwindCssOptions | undefined,
   projectRoot: string,
+  shouldDefaultResolveFromCwd: boolean,
 ): NormalizedTailwindConfigOptions {
   const packageName = tailwind?.packageName ?? 'tailwindcss'
   const versionHint = tailwind?.version
-  const resolve = tailwind?.resolve
 
   const cwd = tailwind?.cwd ?? projectRoot
+  const resolve = tailwind?.resolve ?? (shouldDefaultResolveFromCwd ? { paths: [cwd] } : undefined)
   const config = tailwind?.config
   const postcssPlugin = tailwind?.postcssPlugin
 
@@ -232,7 +233,11 @@ export function normalizeOptions(options: TailwindCssPatchOptions = {}): Normali
 
   const output = normalizeOutputOptions(options.extract)
   const cache = normalizeCacheOptions(options.cache, projectRoot)
-  const tailwind = normalizeTailwindOptions(options.tailwindcss, projectRoot)
+  const tailwind = normalizeTailwindOptions(
+    options.tailwindcss,
+    projectRoot,
+    options.projectRoot !== undefined || options.tailwindcss?.cwd !== undefined,
+  )
   const exposeContext = normalizeExposeContextOptions(options.apply?.exposeContext)
   const extendLengthUnits = normalizeExtendLengthUnitsOptions(options.apply?.extendLengthUnits)
 

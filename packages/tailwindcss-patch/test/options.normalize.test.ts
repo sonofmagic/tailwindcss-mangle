@@ -16,6 +16,19 @@ describe('normalizeOptions', () => {
     expect(normalized.cache.driver).toBe('file')
     expect(normalized.features.exposeContext.enabled).toBe(true)
     expect(normalized.features.extendLengthUnits).toBeNull()
+    expect(normalized.tailwind.resolve).toBeUndefined()
+  })
+
+  it('resolves Tailwind packages from the configured project root by default', () => {
+    const normalized = normalizeOptions({
+      projectRoot: '/tmp/app',
+      tailwindcss: {
+        version: 3,
+      },
+    })
+
+    expect(normalized.tailwind.cwd).toBe('/tmp/app')
+    expect(normalized.tailwind.resolve).toEqual({ paths: ['/tmp/app'] })
   })
 
   it('honours overrides for cache, features, and output', () => {
@@ -42,6 +55,9 @@ describe('normalizeOptions', () => {
       },
       tailwindcss: {
         version: 4,
+        resolve: {
+          paths: ['/tmp/custom'],
+        },
       },
     })
 
@@ -53,6 +69,7 @@ describe('normalizeOptions', () => {
     expect(normalized.cache.driver).toBe('memory')
     expect(normalized.features.exposeContext.refProperty).toBe('runtimeContexts')
     expect(normalized.features.extendLengthUnits?.units).toContain('vh')
+    expect(normalized.tailwind.resolve).toEqual({ paths: ['/tmp/custom'] })
   })
 
   it('requires modern options only', () => {

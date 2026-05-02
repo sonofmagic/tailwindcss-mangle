@@ -62,6 +62,29 @@ describe('TailwindcssPatcher constructor branches', () => {
     expect(patcher.majorVersion).toBe(3)
   })
 
+  it('prefers the Tailwind package installed under projectRoot', async () => {
+    const tailwindRoot = path.join(tempDir, 'node_modules/tailwindcss')
+    await fs.ensureDir(tailwindRoot)
+    await fs.writeJson(path.join(tailwindRoot, 'package.json'), {
+      name: 'tailwindcss',
+      version: '3.4.14',
+      main: 'index.js',
+    })
+    await fs.writeFile(path.join(tailwindRoot, 'index.js'), 'module.exports = {}', 'utf8')
+
+    const { TailwindcssPatcher } = await import('@/api/tailwindcss-patcher')
+    const patcher = new TailwindcssPatcher({
+      projectRoot: tempDir,
+      cache: false,
+      extract: {
+        write: false,
+      },
+    })
+
+    expect(patcher.packageInfo.version).toBe('3.4.14')
+    expect(patcher.packageInfo.rootPath).toBe(await fs.realpath(tailwindRoot))
+  })
+
   it('requires an explicit tailwindcss.version when the resolved package version is not inferable', async () => {
     const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('canary'))
     expect(() => new TailwindcssPatcher({

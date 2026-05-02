@@ -8,6 +8,7 @@ import { createCacheContextDescriptor } from '@/cache/context'
 import { CacheStore } from '@/cache/store'
 import { normalizeOptions } from '@/options/normalize'
 
+const repoRoot = path.resolve(__dirname, '../../..')
 let tempDir: string
 
 beforeEach(async () => {
@@ -173,6 +174,9 @@ describe('cache governance', () => {
       },
       tailwindcss: {
         version: 3,
+        resolve: {
+          paths: [repoRoot],
+        },
       },
     })
 
@@ -188,6 +192,9 @@ describe('cache governance', () => {
       },
       tailwindcss: {
         version: 3,
+        resolve: {
+          paths: [repoRoot],
+        },
       },
     })
 

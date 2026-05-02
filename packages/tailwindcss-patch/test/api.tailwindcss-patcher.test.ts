@@ -13,6 +13,7 @@ import * as runtimeBuild from '@/runtime/process-tailwindcss'
 
 const fixturesRoot = path.resolve(__dirname, 'fixtures/v4')
 const require = createRequire(import.meta.url)
+const repoRoot = path.resolve(__dirname, '../../..')
 let tempDir: string
 
 beforeEach(async () => {
@@ -685,6 +686,9 @@ describe('TailwindcssPatcher', () => {
         cwd: path.join(tempDir, 'base-v2-cwd'),
         config: path.join(tempDir, 'base-v2.config.js'),
         postcssPlugin: 'base-v2-plugin',
+        resolve: {
+          paths: [repoRoot],
+        },
         v2: {
           cwd: path.join(tempDir, 'v2-cwd'),
           config: path.join(tempDir, 'v2.config.js'),
@@ -714,6 +718,9 @@ describe('TailwindcssPatcher', () => {
         cwd: path.join(tempDir, 'base-v3-cwd'),
         config: path.join(tempDir, 'base-v3.config.js'),
         postcssPlugin: 'base-v3-plugin',
+        resolve: {
+          paths: [repoRoot],
+        },
         v3: {
           cwd: path.join(tempDir, 'v3-cwd'),
         },

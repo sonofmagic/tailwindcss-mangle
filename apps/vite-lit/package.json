@@ -14,7 +14,9 @@
   ],
   "scripts": {
     "dev": "vite",
-    "_build": "tsc && vite build",
+    "build": "tsc && vite build",
+    "_build": "pnpm run build",
+    "preview": "vite preview",
     "prepare": "tw-patch install",
     "tw-extract": "tw-patch extract"
   },

@@ -82,6 +82,6 @@ export async function loadPatchOptionsForWorkspace(cwd: string, overrides?: Tail
   const base = config?.registry
     ? fromUnifiedConfig(config.registry)
     : {}
-  const merged = merge(overrides ?? {}, base) as TailwindCssPatchOptions
+  const merged = merge(overrides ?? {}, base, { projectRoot: cwd }) as TailwindCssPatchOptions
   return merged
 }

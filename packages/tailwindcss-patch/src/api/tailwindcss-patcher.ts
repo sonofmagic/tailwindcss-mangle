@@ -12,6 +12,7 @@ import type {
   TailwindTokenFileKey,
   TailwindTokenReport,
 } from '../types'
+import { createRequire } from 'node:module'
 import process from 'node:process'
 import fs from 'fs-extra'
 import { getPackageInfoSync } from 'local-pkg'
@@ -103,6 +104,35 @@ function createCollector(
   return new RuntimeCollector(packageInfo, options, majorVersion, snapshotFactory)
 }
 
+function getPackageInfoFromCwd(packageName: string, cwd: string): PackageInfo | undefined {
+  try {
+    const packageJsonPath = createRequire(path.join(cwd, 'package.json')).resolve(`${packageName}/package.json`)
+    const packageJson = fs.readJSONSync(packageJsonPath) as PackageInfo['packageJson']
+    return {
+      name: packageName,
+      version: typeof packageJson.version === 'string' ? packageJson.version : undefined,
+      rootPath: path.dirname(packageJsonPath),
+      packageJsonPath,
+      packageJson,
+    } as PackageInfo
+  }
+  catch {
+    return undefined
+  }
+}
+
+function getTailwindPackageInfo(options: NormalizedTailwindCssPatchOptions) {
+  const cwd = options.tailwind.cwd ?? options.projectRoot
+  const cwdPackageInfo = options.tailwind.resolve?.paths?.length
+    ? getPackageInfoFromCwd(options.tailwind.packageName, cwd)
+    : undefined
+  return cwdPackageInfo
+    ?? getPackageInfoSync(
+      options.tailwind.packageName,
+      options.tailwind.resolve,
+    )
+}
+
 export class TailwindcssPatcher {
   public readonly options: NormalizedTailwindCssPatchOptions
   public readonly packageInfo: PackageInfo
@@ -119,10 +149,7 @@ export class TailwindcssPatcher {
 
   constructor(options: TailwindCssPatchOptions = {}) {
     this.options = normalizeOptions(options)
-    const packageInfo = getPackageInfoSync(
-      this.options.tailwind.packageName,
-      this.options.tailwind.resolve,
-    )
+    const packageInfo = getTailwindPackageInfo(this.options)
 
     if (!packageInfo) {
       throw new Error(`Unable to locate Tailwind CSS package "${this.options.tailwind.packageName}".`)

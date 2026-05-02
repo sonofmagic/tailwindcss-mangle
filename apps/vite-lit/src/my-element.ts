@@ -100,10 +100,6 @@ export class MyElement extends LitElement {
     `
   }
 
-  private _onClick() {
-    this.count++
-  }
-
   static styles = css`
     :host {
       max-width: 1280px;

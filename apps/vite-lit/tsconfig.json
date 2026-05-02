@@ -6,6 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
+    "rootDir": "./src",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -16,7 +17,8 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0"
   },
   "references": [{ "path": "./tsconfig.node.json" }],
   "include": ["src/**/*.ts"]

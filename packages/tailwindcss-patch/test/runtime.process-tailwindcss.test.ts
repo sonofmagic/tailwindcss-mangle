@@ -25,6 +25,7 @@ beforeEach(async () => {
   pluginPath = path.join(tempDir, 'test-plugin.cjs')
 
   await fs.writeFile(configPath, 'module.exports = { content: [] }', 'utf8')
+  await fs.writeFile(path.join(tempDir, 'package.json'), '{"name":"fixture"}', 'utf8')
   await fs.writeFile(
     pluginPath,
     [
@@ -73,6 +74,37 @@ describe('runTailwindBuild', () => {
     expect(loadConfigMock).toHaveBeenCalledWith({ cwd: tempDir })
     expect(result.css).toContain('tailwindcss')
     expect(result.messages.some(x => x.type === 'config-path' && (x as any).value === configPath)).toBe(true)
+  })
+
+  it('resolves default postcss plugin from the provided cwd', async () => {
+    const tailwindDir = path.join(tempDir, 'node_modules/tailwindcss')
+    await fs.ensureDir(tailwindDir)
+    await fs.writeJson(path.join(tailwindDir, 'package.json'), {
+      name: 'tailwindcss',
+      main: 'index.js',
+    })
+    await fs.writeFile(
+      path.join(tailwindDir, 'index.js'),
+      [
+        'module.exports = function localTailwindPlugin(opts) {',
+        '  return {',
+        '    postcssPlugin: "local-tailwindcss",',
+        '    Once(root, { result }) {',
+        '      result.messages.push({ type: "resolved-from-cwd", value: opts.config })',
+        '    },',
+        '  }',
+        '}',
+      ].join('\n'),
+      'utf8',
+    )
+
+    const result = await runTailwindBuild({
+      cwd: tempDir,
+      config: configPath,
+      majorVersion: 3,
+    })
+
+    expect(result.messages.some(x => x.type === 'resolved-from-cwd' && (x as any).value === configPath)).toBe(true)
   })
 
   it('throws when loadConfig cannot resolve a config file', async () => {

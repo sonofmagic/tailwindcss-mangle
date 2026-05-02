@@ -4,7 +4,7 @@ import path from 'pathe'
 import postcss from 'postcss'
 import { loadConfig } from 'tailwindcss-config'
 
-const require = createRequire(import.meta.url)
+type NodeRequire = ReturnType<typeof createRequire>
 
 export interface TailwindBuildOptions {
   cwd: string
@@ -13,8 +13,12 @@ export interface TailwindBuildOptions {
   postcssPlugin?: string
 }
 
-function resolveModuleEntry(id: string) {
-  return path.isAbsolute(id) ? id : require.resolve(id)
+function createCwdRequire(cwd: string) {
+  return createRequire(path.join(cwd, 'package.json'))
+}
+
+function resolveModuleEntry(id: string, moduleRequire: NodeRequire) {
+  return path.isAbsolute(id) ? id : moduleRequire.resolve(id)
 }
 
 function resolvePackageRootFromEntry(entry: string) {
@@ -29,9 +33,9 @@ function resolvePackageRootFromEntry(entry: string) {
   return undefined
 }
 
-function clearTailwindV3RuntimeState(pluginName: string) {
+function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequire) {
   try {
-    const entry = resolveModuleEntry(pluginName)
+    const entry = resolveModuleEntry(pluginName, moduleRequire)
     const root = resolvePackageRootFromEntry(entry)
     if (!root) {
       return
@@ -42,7 +46,7 @@ function clearTailwindV3RuntimeState(pluginName: string) {
       return
     }
 
-    const sharedState = require.cache[sharedStatePath]?.exports as
+    const sharedState = moduleRequire.cache[sharedStatePath]?.exports as
       | {
       contextMap?: Map<unknown, unknown>
       configContextMap?: Map<unknown, unknown>
@@ -61,7 +65,7 @@ function clearTailwindV3RuntimeState(pluginName: string) {
         continue
       }
 
-      const runtimeModule = require.cache[runtimeEntry]?.exports as
+      const runtimeModule = moduleRequire.cache[runtimeEntry]?.exports as
         | {
         contextRef?: { value?: unknown[] }
       }
@@ -90,14 +94,15 @@ async function resolveConfigPath(options: TailwindBuildOptions) {
 export async function runTailwindBuild(options: TailwindBuildOptions) {
   const configPath = await resolveConfigPath(options)
   const pluginName = options.postcssPlugin ?? (options.majorVersion === 4 ? '@tailwindcss/postcss' : 'tailwindcss')
+  const moduleRequire = createCwdRequire(options.cwd)
 
   if (options.majorVersion === 3) {
-    clearTailwindV3RuntimeState(pluginName)
+    clearTailwindV3RuntimeState(pluginName, moduleRequire)
   }
 
   if (options.majorVersion === 4) {
     return postcss([
-      require(pluginName)({
+      moduleRequire(pluginName)({
         config: configPath,
       }),
     ]).process('@import \'tailwindcss\';', {
@@ -106,7 +111,7 @@ export async function runTailwindBuild(options: TailwindBuildOptions) {
   }
 
   return postcss([
-    require(pluginName)({
+    moduleRequire(pluginName)({
       config: configPath,
     }),
   ]).process('@tailwind base;@tailwind components;@tailwind utilities;', {
