@@ -1,5 +1,15 @@
 # tailwindcss-patch
 
+## 9.0.1
+
+### Patch Changes
+
+- 🐛 **Resolve Tailwind CSS and Tailwind plugins from the configured project root when running in app workspaces.** [`d205424`](https://github.com/sonofmagic/tailwindcss-mangle/commit/d2054249fe21ab807dc8d2f6deaec81a66c9fa4e) by @sonofmagic
+
+- 🐛 **Migrate package builds from tsup to tsdown.** [`9f510d4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9f510d4614cd1a40d328b8b56adcbfe6700757f6) by @sonofmagic
+- 📦 **Dependencies** [`9f510d4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9f510d4614cd1a40d328b8b56adcbfe6700757f6)
+  → `@tailwindcss-mangle/config@7.0.1`
+
 ## 9.0.0
 
 ### Major Changes

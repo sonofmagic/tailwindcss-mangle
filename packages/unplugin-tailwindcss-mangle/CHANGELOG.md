@@ -1,5 +1,13 @@
 # unplugin-tailwindcss-mangle
 
+## 5.1.3
+
+### Patch Changes
+
+- 🐛 **Migrate package builds from tsup to tsdown.** [`9f510d4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9f510d4614cd1a40d328b8b56adcbfe6700757f6) by @sonofmagic
+- 📦 **Dependencies** [`9f510d4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9f510d4614cd1a40d328b8b56adcbfe6700757f6)
+  → `@tailwindcss-mangle/config@7.0.1`, `@tailwindcss-mangle/core@5.1.3`, `@tailwindcss-mangle/shared@4.1.5`
+
 ## 5.1.2
 
 ### Patch Changes
