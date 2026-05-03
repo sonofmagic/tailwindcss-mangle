@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/shared
 
+## 4.1.5
+
+### Patch Changes
+
+- 🐛 **Migrate package builds from tsup to tsdown.** [`9f510d4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/9f510d4614cd1a40d328b8b56adcbfe6700757f6) by @sonofmagic
+
 ## 4.1.4
 
 ### Patch Changes
