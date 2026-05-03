@@ -175,4 +175,4 @@ jobs:
         run: pnpm exec playwright install chromium
 
       - name: Run apps HMR e2e
-        run: pnpm test:e2e:hmr
+        run: pnpm test:e2e:apps:hmr

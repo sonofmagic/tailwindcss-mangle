@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises'
+import path from 'pathe'
 import { appCases, hmrCases } from '../../../e2e/apps.hmr.shared'
 
 const viteHmrAppNames = [
@@ -26,6 +28,15 @@ describe('apps hmr e2e matrix', () => {
     for (const hmrCase of hmrCases) {
       expect(hmrCase.beforeClass).not.toBe(hmrCase.afterClass)
       expect(hmrCase.sourceFile.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('adds Tailwind classes that are absent before the HMR mutation', async () => {
+    for (const hmrCase of hmrCases) {
+      const source = await fs.readFile(path.resolve(hmrCase.appDir, hmrCase.sourceFile), 'utf8')
+
+      expect(source).toContain(hmrCase.beforeClass)
+      expect(source).not.toContain(hmrCase.afterClass)
     }
   })
 })
