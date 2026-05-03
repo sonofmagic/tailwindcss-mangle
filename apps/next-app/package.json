@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "tw-patch install",
+    "prepare": "node ../../scripts/prepare-tw-patch.mjs",
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {

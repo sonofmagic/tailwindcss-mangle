@@ -84,12 +84,15 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
 
       - name: Run apps e2e
         run: pnpm test:e2e
@@ -114,12 +117,15 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
 
       - name: Install Playwright system dependencies
         if: runner.os == 'Linux'
@@ -151,12 +157,15 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
 
       - name: Install Playwright system dependencies
         if: runner.os == 'Linux'

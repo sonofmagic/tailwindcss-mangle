@@ -17,7 +17,7 @@
     "build": "tsc && vite build",
     "_build": "pnpm run build",
     "preview": "vite preview",
-    "prepare": "tw-patch install",
+    "prepare": "node ../../scripts/prepare-tw-patch.mjs",
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {

@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prepare": "tw-patch install",
+    "prepare": "node ../../scripts/prepare-tw-patch.mjs",
     "tw-extract": "tw-patch extract"
   },
   "devDependencies": {

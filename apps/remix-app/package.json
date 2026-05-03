@@ -11,7 +11,7 @@
     "dev": "remix dev",
     "start": "remix-serve build/index.js",
     "typecheck": "tsc",
-    "prepare": "tw-patch install",
+    "prepare": "node ../../scripts/prepare-tw-patch.mjs",
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
