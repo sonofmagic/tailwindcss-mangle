@@ -1,4 +1,4 @@
-import { hmrCases, appCases } from '../../../e2e/apps.hmr.shared'
+import { appCases, hmrCases } from '../../../e2e/apps.hmr.shared'
 
 const viteHmrAppNames = [
   'solid-app',

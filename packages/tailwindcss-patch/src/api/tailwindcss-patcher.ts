@@ -1,6 +1,7 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageInfo } from 'local-pkg'
 import type { NormalizedTailwindCssPatchOptions } from '../config'
+import type { PatchResult, TailwindCollector, TailwindMajorVersion } from '../runtime/collector'
 import type {
   CacheClearOptions,
   CacheClearResult,
@@ -28,8 +29,7 @@ import {
 } from '../extraction/candidate-extractor'
 import { collectClassesFromContexts } from '../install/class-collector'
 import logger from '../logger'
-import { RuntimeCollector, TailwindV4Collector, type PatchResult, type TailwindCollector, type TailwindMajorVersion } from '../runtime/collector'
-
+import { RuntimeCollector, TailwindV4Collector } from '../runtime/collector'
 
 interface PatchMemo {
   result: PatchResult

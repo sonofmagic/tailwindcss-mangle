@@ -123,7 +123,7 @@ describe('TailwindcssPatcher', () => {
         },
         tailwindcss: {
           version: 4,
-        packageName: 'tailwindcss-4',
+          packageName: 'tailwindcss-4',
           v4: {
             base: workspaceRoot,
             cssEntries: [cssEntry],
@@ -203,7 +203,7 @@ describe('TailwindcssPatcher', () => {
         },
         tailwindcss: {
           version: 4,
-        packageName: 'tailwindcss-4',
+          packageName: 'tailwindcss-4',
           v4: {
             base: workspaceRoot,
             cssEntries: [cssEntry],
@@ -265,7 +265,7 @@ describe('TailwindcssPatcher', () => {
         },
         tailwindcss: {
           version: 4,
-        packageName: 'tailwindcss-4',
+          packageName: 'tailwindcss-4',
           cwd: workspaceRoot,
           v4: {
             base: cssDir,

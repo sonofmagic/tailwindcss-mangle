@@ -48,11 +48,11 @@ function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequ
 
     const sharedState = moduleRequire.cache[sharedStatePath]?.exports as
       | {
-      contextMap?: Map<unknown, unknown>
-      configContextMap?: Map<unknown, unknown>
-      contextSourcesMap?: Map<unknown, unknown>
-      sourceHashMap?: Map<unknown, unknown>
-    }
+        contextMap?: Map<unknown, unknown>
+        configContextMap?: Map<unknown, unknown>
+        contextSourcesMap?: Map<unknown, unknown>
+        sourceHashMap?: Map<unknown, unknown>
+      }
       | undefined
     sharedState?.contextMap?.clear()
     sharedState?.configContextMap?.clear()
@@ -67,8 +67,8 @@ function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequ
 
       const runtimeModule = moduleRequire.cache[runtimeEntry]?.exports as
         | {
-        contextRef?: { value?: unknown[] }
-      }
+          contextRef?: { value?: unknown[] }
+        }
         | undefined
       runtimeModule?.contextRef?.value?.splice(0, runtimeModule.contextRef.value.length)
       break

@@ -1,5 +1,5 @@
-import { ClassGenerator } from '@/classGenerator'
 import process from 'node:process'
+import { ClassGenerator } from '@/classGenerator'
 
 describe('ClassGenerator behaviour', () => {
   it('respects include/exclude filters and ignore rules', () => {

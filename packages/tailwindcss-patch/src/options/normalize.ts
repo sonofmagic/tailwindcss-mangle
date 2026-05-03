@@ -1,14 +1,14 @@
 import type { ILengthUnitsPatchOptions } from '../types'
 import type {
+  ApplyOptions,
   CacheDriver,
   CacheStrategy,
-  ApplyOptions,
   ExtractOptions,
   NormalizedCacheOptions,
-  NormalizedTailwindCssPatchOptions,
   NormalizedFeatureOptions,
   NormalizedOutputOptions,
   NormalizedTailwindConfigOptions,
+  NormalizedTailwindCssPatchOptions,
   NormalizedTailwindV4Options,
   TailwindCssOptions,
   TailwindCssPatchOptions,
@@ -213,7 +213,7 @@ type DeprecatedTopLevelOptionKey = keyof typeof deprecatedOptionMapping
 
 function assertNoDeprecatedOptions(options: TailwindCssPatchOptions) {
   const used = (Object.keys(deprecatedOptionMapping) as DeprecatedTopLevelOptionKey[])
-    .filter(key => Object.prototype.hasOwnProperty.call(options, key))
+    .filter(key => Object.hasOwn(options, key))
 
   if (used.length === 0) {
     return

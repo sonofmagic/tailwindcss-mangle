@@ -1,7 +1,7 @@
 import type { PackageInfo } from 'local-pkg'
 import type { NormalizedTailwindCssPatchOptions } from '../config'
-import type { PatchStatusReport, TailwindcssRuntimeContext } from '../types'
 import type { applyTailwindPatches } from '../install/patch-runner'
+import type { PatchStatusReport, TailwindcssRuntimeContext } from '../types'
 import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '../install/class-collector'
 import { loadRuntimeContexts } from '../install/context-registry'
 import { applyTailwindPatches as runPatch } from '../install/patch-runner'
@@ -12,12 +12,12 @@ export type TailwindMajorVersion = 2 | 3 | 4
 export type PatchResult = ReturnType<typeof applyTailwindPatches>
 
 export interface TailwindCollector {
-  patch(): Promise<PatchResult>
-  getPatchStatus(): Promise<PatchStatusReport>
-  collectClassSet(): Promise<Set<string>>
-  getContexts(): TailwindcssRuntimeContext[]
-  getPatchSnapshot(): string
-  runTailwindBuildIfNeeded?(): Promise<void>
+  patch: () => Promise<PatchResult>
+  getPatchStatus: () => Promise<PatchStatusReport>
+  collectClassSet: () => Promise<Set<string>>
+  getContexts: () => TailwindcssRuntimeContext[]
+  getPatchSnapshot: () => string
+  runTailwindBuildIfNeeded?: () => Promise<void>
 }
 
 function resolveTailwindExecutionOptions(

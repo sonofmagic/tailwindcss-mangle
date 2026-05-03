@@ -19,7 +19,7 @@ type DeprecatedTailwindKey = keyof typeof deprecatedTailwindMapping
 
 function assertNoDeprecatedRegistryOptions(registry: RegistryOptions) {
   const usedRegistryKeys = (Object.keys(deprecatedRegistryMapping) as DeprecatedRegistryKey[])
-    .filter(key => Object.prototype.hasOwnProperty.call(registry, key))
+    .filter(key => Object.hasOwn(registry, key))
 
   if (usedRegistryKeys.length > 0) {
     const mapping = usedRegistryKeys.map(key => `${key} -> ${deprecatedRegistryMapping[key]}`).join(', ')
@@ -34,7 +34,7 @@ function assertNoDeprecatedRegistryOptions(registry: RegistryOptions) {
   }
 
   const usedTailwindKeys = (Object.keys(deprecatedTailwindMapping) as DeprecatedTailwindKey[])
-    .filter(key => Object.prototype.hasOwnProperty.call(tailwind, key))
+    .filter(key => Object.hasOwn(tailwind, key))
 
   if (usedTailwindKeys.length > 0) {
     const mapping = usedTailwindKeys.map(key => `${key} -> tailwindcss.${deprecatedTailwindMapping[key]}`).join(', ')
