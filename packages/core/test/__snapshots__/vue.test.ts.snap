@@ -27,7 +27,7 @@ exports[`vue handler > should handle dynamic :class binding 1`] = `
 exports[`vue handler > should preserve twMerge classes 1`] = `
 "<script setup>
 import { twMerge } from 'tailwind-merge'
-const cls = twMerge('tw-b', 'tw-a')
+const cls = twMerge('bg-red-500', 'bg-blue-500')
 </script>"
 `;
 

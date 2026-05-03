@@ -157,7 +157,7 @@ describe('js handler', async () => {
     }).code
 
     expect(code).toContain(`'use server'`)
-    expect(code).not.toContain('return "server"')
+    expect(code).toContain('return "server"')
   })
 
   it('nextjs server side mangle', () => {
@@ -300,7 +300,7 @@ describe('js handler', async () => {
       ctx,
       id: 'xxx',
     })
-    expect(code).toBe('const LINEFEED = `tw-a${n}tw-a`;')
+    expect(code).toBe(testCase)
   })
 
   it('preProcessJs MagicString TemplateElement case', () => {
@@ -312,7 +312,147 @@ describe('js handler', async () => {
       ctx,
       id: 'xxx',
     })
-    expect(code).toBe('const LINEFEED = `tw-a${n}tw-b`;')
+    expect(code).toBe('const LINEFEED = `bg-red-500/50${n}bg-red-500`;')
+  })
+
+  describe('precise class contexts', () => {
+    beforeEach(() => {
+      ctx = new Context()
+      ctx.replaceMap.set('bg-red-500', '1')
+      ctx.replaceMap.set('hover:bg-red-600', '1')
+      ctx.replaceMap.set('text-white', '1')
+      ctx.replaceMap.set('text-red-500', '1')
+    })
+
+    it('does not transform arbitrary business strings', () => {
+      const testCase = `
+        console.log('bg-red-500 hover:bg-red-600')
+        const apiPath = '/api/bg-red-500'
+        const status = 'text-red-500'
+        const obj = { status: 'text-white' }
+      `
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).toBe(testCase)
+    })
+
+    it('transforms explicit className and class assignment contexts', () => {
+      const testCase = `
+        const className = 'bg-red-500 text-white'
+        element.className = 'hover:bg-red-600'
+        const vnode = { class: 'text-red-500' }
+      `
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain('bg-red-500 text-white')
+      expect(code).not.toContain('hover:bg-red-600')
+      expect(code).not.toContain(`class: 'text-red-500'`)
+    })
+
+    it('transforms DOM class APIs', () => {
+      const testCase = `
+        el.setAttribute('class', 'bg-red-500 text-white')
+        el.classList.add('hover:bg-red-600')
+      `
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain('bg-red-500 text-white')
+      expect(code).not.toContain('hover:bg-red-600')
+    })
+
+    it('only transforms class attributes inside html strings', () => {
+      const testCase = `element.innerHTML = '<div class="bg-red-500 text-white">x</div><span data-id="bg-red-500"></span>'`
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain('class=\\"bg-red-500 text-white\\"')
+      expect(code).toContain('data-id=\\"bg-red-500\\"')
+    })
+
+    it('keeps split template html class attributes precise', () => {
+      const testCase = 'element.innerHTML = `<div class="${active ? \'bg-red-500\' : \'\'} text-white"></div><span data-id="hover:bg-red-600"></span>`'
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain(' text-white')
+      expect(code).toContain('data-id="hover:bg-red-600"')
+    })
+
+    it('transforms default class helper function arguments', async () => {
+      const testCase = `
+        const button = cva('bg-red-500 text-white', {
+          variants: {
+            intent: {
+              danger: 'text-red-500 hover:bg-red-600',
+            },
+          },
+        })
+        const card = tv({
+          base: 'bg-red-500 text-white',
+          variants: {
+            active: {
+              true: 'hover:bg-red-600',
+            },
+          },
+        })
+        const joined = twJoin('bg-red-500', condition && 'text-white')
+      `
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'hover:bg-red-600', 'text-white', 'text-red-500'],
+      })
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain('bg-red-500 text-white')
+      expect(code).not.toContain('text-red-500 hover:bg-red-600')
+      expect(code).not.toContain(`'hover:bg-red-600'`)
+    })
+
+    it('preserves twMerge arguments by default', async () => {
+      const testCase = `const className = twMerge('bg-red-500 text-white', active && 'hover:bg-red-600')`
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'hover:bg-red-600', 'text-white'],
+      })
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).toBe(testCase)
+      expect(ctx.preserveClassNamesSet.has('bg-red-500')).toBe(true)
+      expect(ctx.preserveClassNamesSet.has('hover:bg-red-600')).toBe(true)
+    })
+
+    it('supports user configured class helper names', async () => {
+      const testCase = `const className = myCva('bg-red-500 text-white')`
+      await ctx.initConfig({
+        classList: ['bg-red-500', 'text-white'],
+        transformerOptions: {
+          classFunctions: ['myCva'],
+        },
+      })
+      const { code } = jsHandler(testCase, {
+        ctx,
+        id: 'precision.js',
+      })
+
+      expect(code).not.toContain('bg-red-500 text-white')
+    })
   })
 
   it('preserve-fn-case0.js case 0', async () => {
@@ -351,7 +491,7 @@ describe('js handler', async () => {
 
     })
     expect(code).toMatchSnapshot()
-    expect(ctx.preserveClassNamesSet.size).toBe(4)
+    expect(ctx.preserveClassNamesSet.size).toBe(8)
     expect(replaceMap).toMatchSnapshot()
     // expect(
     //   [...ctx.getReplaceMap().entries()].reduce<Record<string, string>>((acc, cur) => {

@@ -43,6 +43,7 @@ export interface TransformerOptions {
   generator?: IClassGeneratorOptions
   sources?: TransformerSourceOptions
   registry?: TransformerRegistryOptions
+  classFunctions?: string[]
   preserve?: TransformerPreserveOptions
 }
 

@@ -46,8 +46,18 @@ export function getDefaultTransformerConfig(): TransformerOptions {
         loose: true,
       },
     },
+    classFunctions: [
+      'classNames',
+      'classnames',
+      'clsx',
+      'cn',
+      'cva',
+      'cx',
+      'tv',
+      'twJoin',
+    ],
     preserve: {
-      functions: [],
+      functions: ['twMerge'],
       classes: [],
     },
   }

@@ -16,11 +16,23 @@ exports[`defaults > getDefaultUserConfig 1`] = `
     },
   },
   "transformer": {
+    "classFunctions": [
+      "classNames",
+      "classnames",
+      "clsx",
+      "cn",
+      "cva",
+      "cx",
+      "tv",
+      "twJoin",
+    ],
     "disabled": false,
     "filter": [Function],
     "preserve": {
       "classes": [],
-      "functions": [],
+      "functions": [
+        "twMerge",
+      ],
     },
     "registry": {
       "file": ".tw-patch/tw-class-list.json",

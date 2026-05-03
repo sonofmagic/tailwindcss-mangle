@@ -22,6 +22,7 @@ export class Context {
 
   configRoot: string
 
+  classFunctionSet: Set<string>
   preserveFunctionSet: Set<string>
   preserveClassNamesSet: Set<string>
   preserveFunctionRegexs: RegExp[]
@@ -31,6 +32,7 @@ export class Context {
     this.replaceMap = new Map()
     this.classGenerator = new ClassGenerator()
     this.configRoot = process.cwd()
+    this.classFunctionSet = new Set()
     this.preserveFunctionSet = new Set()
     this.preserveClassNamesSet = new Set()
     this.preserveFunctionRegexs = []
@@ -44,6 +46,10 @@ export class Context {
     return this.preserveClassNamesSet.add(className)
   }
 
+  isClassFunction(calleeName: string) {
+    return this.classFunctionSet.has(calleeName)
+  }
+
   isPreserveFunction(calleeName: string) {
     return this.preserveFunctionSet.has(calleeName)
   }
@@ -53,6 +59,7 @@ export class Context {
     this.options = defu(this.options, ...opts)
     this.classGenerator = new ClassGenerator(this.options.generator)
     const preserveOptions = this.options.preserve ?? {}
+    this.classFunctionSet = new Set(this.options.classFunctions ?? [])
     this.preserveFunctionSet = new Set(preserveOptions.functions ?? [])
     this.preserveClassNamesSet = new Set(preserveOptions.classes ?? [])
     this.preserveFunctionRegexs = [...this.preserveFunctionSet.values()].map((x) => {

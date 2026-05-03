@@ -16,6 +16,16 @@ exports[`config > 2.transformer-options 1`] = `
     },
   },
   "transformer": {
+    "classFunctions": [
+      "classNames",
+      "classnames",
+      "clsx",
+      "cn",
+      "cva",
+      "cx",
+      "tv",
+      "twJoin",
+    ],
     "disabled": false,
     "filter": [Function],
     "generator": {
@@ -23,7 +33,9 @@ exports[`config > 2.transformer-options 1`] = `
     },
     "preserve": {
       "classes": [],
-      "functions": [],
+      "functions": [
+        "twMerge",
+      ],
     },
     "registry": {
       "file": "zzzzz.json",
