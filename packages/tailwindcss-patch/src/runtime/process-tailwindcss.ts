@@ -33,6 +33,15 @@ function resolvePackageRootFromEntry(entry: string) {
   return undefined
 }
 
+function resolveCacheKey(moduleRequire: NodeRequire, entry: string) {
+  try {
+    return moduleRequire.resolve(entry)
+  }
+  catch {
+    return entry
+  }
+}
+
 function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequire) {
   try {
     const entry = resolveModuleEntry(pluginName, moduleRequire)
@@ -46,7 +55,8 @@ function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequ
       return
     }
 
-    const sharedState = moduleRequire.cache[sharedStatePath]?.exports as
+    const sharedStateKey = resolveCacheKey(moduleRequire, sharedStatePath)
+    const sharedState = moduleRequire.cache[sharedStateKey]?.exports as
       | {
         contextMap?: Map<unknown, unknown>
         configContextMap?: Map<unknown, unknown>
@@ -65,7 +75,8 @@ function clearTailwindV3RuntimeState(pluginName: string, moduleRequire: NodeRequ
         continue
       }
 
-      const runtimeModule = moduleRequire.cache[runtimeEntry]?.exports as
+      const runtimeKey = resolveCacheKey(moduleRequire, runtimeEntry)
+      const runtimeModule = moduleRequire.cache[runtimeKey]?.exports as
         | {
           contextRef?: { value?: unknown[] }
         }

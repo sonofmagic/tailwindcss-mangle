@@ -82,7 +82,7 @@ describe('TailwindcssPatcher constructor branches', () => {
     })
 
     expect(patcher.packageInfo.version).toBe('3.4.14')
-    expect(patcher.packageInfo.rootPath).toBe(await fs.realpath(tailwindRoot))
+    expect(path.normalize(patcher.packageInfo.rootPath)).toBe(path.normalize(await fs.realpath(tailwindRoot)))
   })
 
   it('requires an explicit tailwindcss.version when the resolved package version is not inferable', async () => {

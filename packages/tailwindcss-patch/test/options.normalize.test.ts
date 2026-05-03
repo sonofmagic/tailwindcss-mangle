@@ -1,3 +1,4 @@
+import path from 'pathe'
 import { describe, expect, it } from 'vitest'
 import { normalizeOptions } from '@/options/normalize'
 
@@ -9,7 +10,7 @@ describe('normalizeOptions', () => {
       },
     })
 
-    expect(normalized.projectRoot).toBe(process.cwd())
+    expect(path.normalize(normalized.projectRoot)).toBe(path.normalize(process.cwd()))
     expect(normalized.output.file).toBe('.tw-patch/tw-class-list.json')
     expect(normalized.output.removeUniversalSelector).toBe(true)
     expect(normalized.cache.enabled).toBe(false)
