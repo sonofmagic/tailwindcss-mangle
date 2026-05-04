@@ -8,76 +8,19 @@ import type {
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
+import { resolveValidTailwindV4Candidates } from '../v4/candidates'
+import { getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter'
 
-let nodeImportPromise: ReturnType<typeof importNode> | undefined
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
-const designSystemPromiseCache = new Map<string, Promise<any>>()
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
-
-async function importNode() {
-  return import('@tailwindcss/node')
-}
 
 async function importOxide() {
   return import('@tailwindcss/oxide')
 }
 
-function getNodeModule() {
-  nodeImportPromise ??= importNode()
-  return nodeImportPromise
-}
-
 function getOxideModule() {
   oxideImportPromise ??= importOxide()
   return oxideImportPromise
-}
-
-function createDesignSystemCacheKey(css: string, bases: string[]) {
-  return JSON.stringify({
-    css,
-    bases: Array.from(new Set(bases.filter(Boolean))),
-  })
-}
-
-async function loadDesignSystem(css: string, bases: string[]) {
-  const uniqueBases = Array.from(new Set(bases.filter(Boolean)))
-  if (uniqueBases.length === 0) {
-    throw new Error('No base directories provided for Tailwind CSS design system.')
-  }
-
-  const cacheKey = createDesignSystemCacheKey(css, uniqueBases)
-  const cached = designSystemPromiseCache.get(cacheKey)
-  if (cached) {
-    return cached
-  }
-
-  const promise = (async () => {
-    const { __unstable__loadDesignSystem } = await getNodeModule()
-    let lastError: unknown
-
-    for (const base of uniqueBases) {
-      try {
-        return await __unstable__loadDesignSystem(css, { base })
-      }
-      catch (error) {
-        lastError = error
-      }
-    }
-
-    if (lastError instanceof Error) {
-      throw lastError
-    }
-    throw new Error('Failed to load Tailwind CSS design system.')
-  })()
-
-  designSystemPromiseCache.set(cacheKey, promise)
-  promise.catch(() => {
-    if (designSystemPromiseCache.get(cacheKey) === promise) {
-      designSystemPromiseCache.delete(cacheKey)
-      designSystemCandidateCache.delete(cacheKey)
-    }
-  })
-  return promise
 }
 
 export interface ExtractValidCandidatesOption {
@@ -131,8 +74,15 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     negated: source.negated,
   }))
 
-  const designSystemKey = createDesignSystemCacheKey(css, [base, ...baseFallbacks])
-  const designSystem = await loadDesignSystem(css, [base, ...baseFallbacks])
+  const source = {
+    projectRoot: defaultCwd,
+    base,
+    baseFallbacks,
+    css,
+    dependencies: [],
+  }
+  const designSystemKey = getTailwindV4DesignSystemCacheKey(source)
+  const designSystem = await loadTailwindV4DesignSystem(source)
   const candidateCache = designSystemCandidateCache.get(designSystemKey) ?? new Map<string, boolean>()
   designSystemCandidateCache.set(designSystemKey, candidateCache)
 
@@ -163,15 +113,10 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     return validCandidates
   }
 
-  const cssByCandidate = designSystem.candidatesToCss(uncachedCandidates)
+  const validUncachedCandidates = resolveValidTailwindV4Candidates(designSystem, uncachedCandidates)
 
-  for (let index = 0; index < uncachedCandidates.length; index++) {
-    const candidate = uncachedCandidates[index]
-    if (candidate === undefined) {
-      continue
-    }
-    const candidateCss = cssByCandidate[index]
-    const isValid = typeof candidateCss === 'string' && candidateCss.trim().length > 0
+  for (const candidate of uncachedCandidates) {
+    const isValid = validUncachedCandidates.has(candidate)
     candidateCache.set(candidate, isValid)
     if (!isValid) {
       continue

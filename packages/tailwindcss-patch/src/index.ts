@@ -51,6 +51,22 @@ export {
 } from './install'
 export { default as logger } from './logger'
 export * from './types'
+export {
+  createTailwindV4Engine,
+  loadTailwindV4DesignSystem,
+  resolveTailwindV4Source,
+  resolveTailwindV4SourceFromPatchOptions,
+  resolveValidTailwindV4Candidates,
+} from './v4'
+export type {
+  TailwindV4CandidateSource,
+  TailwindV4DesignSystem,
+  TailwindV4Engine,
+  TailwindV4GenerateOptions,
+  TailwindV4GenerateResult,
+  TailwindV4ResolvedSource,
+  TailwindV4SourceOptions,
+} from './v4'
 
 export function defineConfig<T extends TailwindcssMangleConfig>(config: T): T {
   return config

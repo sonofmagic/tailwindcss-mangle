@@ -33,6 +33,13 @@ import {
   runTailwindBuild,
 } from './install'
 import logger from './logger'
+import {
+  createTailwindV4Engine,
+  loadTailwindV4DesignSystem,
+  resolveTailwindV4Source,
+  resolveTailwindV4SourceFromPatchOptions,
+  resolveValidTailwindV4Candidates,
+} from './v4'
 
 const require = createRequire(import.meta.url)
 
@@ -46,6 +53,7 @@ export {
   CacheStore,
   collectClassesFromContexts,
   collectClassesFromTailwindV4,
+  createTailwindV4Engine,
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
@@ -53,11 +61,15 @@ export {
   getPatchStatusReport,
   groupTokensByFile,
   loadRuntimeContexts,
+  loadTailwindV4DesignSystem,
   logger,
   migrateConfigFiles,
   MIGRATION_REPORT_KIND,
   MIGRATION_REPORT_SCHEMA_VERSION,
   normalizeOptions,
+  resolveTailwindV4Source,
+  resolveTailwindV4SourceFromPatchOptions,
+  resolveValidTailwindV4Candidates,
   restoreConfigFiles,
   runTailwindBuild,
   tailwindcssPatchCommands,
@@ -91,6 +103,15 @@ export type {
 } from './commands/validate'
 export type { TailwindCssPatchOptions } from './config'
 export * from './types'
+export type {
+  TailwindV4CandidateSource,
+  TailwindV4DesignSystem,
+  TailwindV4Engine,
+  TailwindV4GenerateOptions,
+  TailwindV4GenerateResult,
+  TailwindV4ResolvedSource,
+  TailwindV4SourceOptions,
+} from './v4'
 
 export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatchCliMountOptions = {}) {
   return loadCliModule().mountTailwindcssPatchCommands(cli, options)
