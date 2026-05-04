@@ -100,7 +100,7 @@
     "fs-extra": "^11.3.4",
     "local-pkg": "^1.1.2",
     "pathe": "^2.0.3",
-    "postcss": "^8.5.13",
+    "postcss": "^8.5.14",
     "semver": "^7.7.4",
     "tailwindcss-config": "^1.1.5"
   },
