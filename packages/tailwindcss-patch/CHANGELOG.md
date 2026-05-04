@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.1.0
+
+### Minor Changes
+
+- ✨ **Expose a reusable Tailwind CSS v4 engine API for resolving CSS sources, validating candidates through the v4 design system, and generating CSS with Tailwind's compile/build pipeline.** [`e430655`](https://github.com/sonofmagic/tailwindcss-mangle/commit/e4306559b95549dea939a66d6952e03e391cb1b1) by @sonofmagic
+
 ## 9.0.1
 
 ### Patch Changes
