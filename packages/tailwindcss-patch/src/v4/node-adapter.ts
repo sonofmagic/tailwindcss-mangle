@@ -20,6 +20,7 @@ interface TailwindV4NodeModule {
   compile: (css: string, options: {
     base: string
     onDependency: (dependency: string) => void
+    customCssResolver?: (id: string, base: string) => Promise<string | false | undefined>
   }) => Promise<TailwindV4CompiledSource>
   __unstable__loadDesignSystem: (css: string, options: { base: string }) => Promise<TailwindV4DesignSystem>
 }
@@ -33,6 +34,45 @@ function unique(values: Iterable<string>) {
 
 function createRequireBase(base: string) {
   return path.join(base, 'package.json')
+}
+
+function isRelativeSpecifier(id: string) {
+  return id.startsWith('./') || id.startsWith('../') || id === '.' || id === '..'
+}
+
+function isAbsoluteSpecifier(id: string) {
+  return path.isAbsolute(id)
+}
+
+function isCssSpecifier(id: string) {
+  return path.extname(id) === '.css'
+}
+
+function createCssResolutionCandidates(id: string) {
+  if (isCssSpecifier(id)) {
+    return [id]
+  }
+  return [`${id}/index.css`, id]
+}
+
+function createFallbackCssResolver(baseCandidates: string[]) {
+  const bases = unique(baseCandidates)
+  return async (id: string) => {
+    if (isRelativeSpecifier(id) || isAbsoluteSpecifier(id)) {
+      return undefined
+    }
+
+    for (const base of bases) {
+      const requireFromBase = createRequire(createRequireBase(base))
+      for (const candidate of createCssResolutionCandidates(id)) {
+        try {
+          return requireFromBase.resolve(candidate)
+        }
+        catch {}
+      }
+    }
+    return undefined
+  }
 }
 
 async function importResolvedModule(resolved: string): Promise<TailwindV4NodeModule> {
@@ -133,17 +173,37 @@ export async function loadTailwindV4DesignSystem(source: TailwindV4ResolvedSourc
 }
 
 export async function compileTailwindV4Source(source: TailwindV4ResolvedSource) {
-  const node = await loadTailwindV4NodeModule([source.projectRoot, source.base, ...source.baseFallbacks])
-  const dependencies = new Set(source.dependencies)
-  const compiled = await node.compile(source.css, {
-    base: source.base,
-    onDependency(dependency) {
-      dependencies.add(path.resolve(dependency))
-    },
-  })
-
-  return {
-    compiled,
-    dependencies,
+  const bases = unique([source.base, ...source.baseFallbacks])
+  if (bases.length === 0) {
+    throw new Error('No base directories provided for Tailwind CSS v4 compiler.')
   }
+
+  const node = await loadTailwindV4NodeModule([source.projectRoot, ...bases])
+  let lastError: unknown
+
+  for (const base of bases) {
+    const dependencies = new Set(source.dependencies)
+    try {
+      const compiled = await node.compile(source.css, {
+        base,
+        customCssResolver: createFallbackCssResolver([source.projectRoot, ...bases]),
+        onDependency(dependency) {
+          dependencies.add(path.resolve(dependency))
+        },
+      })
+
+      return {
+        compiled,
+        dependencies,
+      }
+    }
+    catch (error) {
+      lastError = error
+    }
+  }
+
+  if (lastError instanceof Error) {
+    throw lastError
+  }
+  throw new Error('Failed to compile Tailwind CSS v4 source.')
 }

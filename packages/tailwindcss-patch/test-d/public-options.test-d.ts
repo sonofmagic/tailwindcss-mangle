@@ -13,6 +13,7 @@ import {
   type NormalizedTailwindCssPatchOptions,
   type TailwindCssOptions,
   type TailwindCssPatchOptions,
+  type TailwindV4GenerateOptions,
   type TailwindV2Options,
   type TailwindV3Options,
   type TailwindV4Options,
@@ -74,6 +75,18 @@ const v4Options: TailwindV4Options = {
     },
   ],
 }
+
+const v4GenerateOptions: TailwindV4GenerateOptions = {
+  scanSources: [
+    {
+      base: 'apps/web',
+      pattern: '**/*.{html,tsx}',
+      negated: false,
+    },
+  ],
+}
+
+expectAssignable<TailwindV4GenerateOptions['scanSources']>(v4GenerateOptions.scanSources)
 
 const tailwindCssOptions: TailwindCssOptions = {
   packageName: 'tailwindcss',

@@ -146,4 +146,57 @@ describe('Tailwind v4 engine', () => {
     expect(result.classSet).toContain('text-blue-500')
     expect(result.classSet).not.toContain('invalid-token')
   })
+
+  it('scans explicit filesystem sources when requested', async () => {
+    const tempDir = await createTempDir()
+    await fs.writeFile(
+      path.join(tempDir, 'index.html'),
+      '<div class="text-green-500 invalid-token"></div>',
+      'utf8',
+    )
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      scanSources: [
+        {
+          base: tempDir,
+          pattern: '**/*.html',
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result.rawCandidates).toContain('text-green-500')
+    expect(result.classSet).toContain('text-green-500')
+    expect(result.classSet).not.toContain('invalid-token')
+    expect(result.css).toContain('.text-green-500')
+  })
+
+  it('uses compiled @source entries when scanSources is true', async () => {
+    const tempDir = await createTempDir()
+    const srcDir = path.join(tempDir, 'src')
+    await fs.mkdir(srcDir, { recursive: true })
+    await fs.writeFile(path.join(srcDir, 'index.html'), '<div class="text-green-500"></div>', 'utf8')
+    await fs.writeFile(path.join(srcDir, 'ignored.html'), '<div class="text-red-500"></div>', 'utf8')
+    const css = [
+      '@import "tailwindcss";',
+      '@source "./src/**/*.html";',
+      '@source not "./src/ignored.html";',
+    ].join('\n')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      base: tempDir,
+      baseFallbacks: [tailwindNodeBase],
+      css,
+    })
+    const engine = createTailwindV4Engine(source)
+
+    const withoutScan = await engine.generate()
+    const withScan = await engine.generate({ scanSources: true })
+
+    expect(withoutScan.classSet).not.toContain('text-green-500')
+    expect(withScan.classSet).toContain('text-green-500')
+    expect(withScan.classSet).not.toContain('text-red-500')
+    expect(withScan.css).toContain('.text-green-500')
+    expect(withScan.css).not.toContain('.text-red-500')
+  })
 })

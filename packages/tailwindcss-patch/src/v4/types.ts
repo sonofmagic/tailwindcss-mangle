@@ -24,6 +24,13 @@ export interface TailwindV4CandidateSource {
 export interface TailwindV4GenerateOptions {
   candidates?: Iterable<string>
   sources?: TailwindV4CandidateSource[]
+  /**
+   * 扫描文件系统 source entries 中的候选类名。
+   *
+   * - `true`：使用 Tailwind v4 编译入口解析出的 `@source` 列表。
+   * - `TailwindV4SourcePattern[]`：使用调用方显式传入的 source 列表。
+   */
+  scanSources?: boolean | TailwindV4SourcePattern[]
 }
 
 export interface TailwindV4SourcePattern {
