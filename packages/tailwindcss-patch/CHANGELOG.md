@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.2.0
+
+### Minor Changes
+
+- ✨ **增强 Tailwind CSS v4 engine 的 source 扫描能力，支持从编译后的 `@source` 列表或显式 source entries 中收集候选类名，并改进 v4 编译时的 CSS import fallback 解析。** [`c7afce6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c7afce68f44b4f2625970a9c1bf460be92bac9f5) by @sonofmagic
+
 ## 9.1.0
 
 ### Minor Changes
