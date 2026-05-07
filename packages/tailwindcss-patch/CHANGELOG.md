@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.2.1
+
+### Patch Changes
+
+- 🐛 **Move `@tailwindcss/oxide` to runtime dependencies and improve source candidate scanner failures so clean downstream installs no longer need to install oxide manually.** [`65658da`](https://github.com/sonofmagic/tailwindcss-mangle/commit/65658da452c7ee65ba90f9ab2678d152691e3b40) by @sonofmagic
+
 ## 9.2.0
 
 ### Minor Changes
