@@ -14,12 +14,31 @@ import { getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '.
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
 
+function createOxideRuntimeDependencyError(cause: unknown) {
+  return new Error(
+    [
+      'tailwindcss-patch could not load @tailwindcss/oxide, which is required for source candidate scanning.',
+      'This dependency should be installed automatically by tailwindcss-patch.',
+      'Reinstall dependencies without disabling optional dependencies, or install @tailwindcss/oxide@^4.2.4 manually if your package manager omitted it.',
+    ].join(' '),
+    { cause },
+  )
+}
+
 async function importOxide() {
-  return import('@tailwindcss/oxide')
+  try {
+    return await import('@tailwindcss/oxide')
+  }
+  catch (error) {
+    throw createOxideRuntimeDependencyError(error)
+  }
 }
 
 function getOxideModule() {
   oxideImportPromise ??= importOxide()
+  oxideImportPromise.catch(() => {
+    oxideImportPromise = undefined
+  })
   return oxideImportPromise
 }
 

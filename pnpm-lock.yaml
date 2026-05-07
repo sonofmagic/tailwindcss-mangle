@@ -873,6 +873,9 @@ importers:
       '@tailwindcss/node':
         specifier: ^4.2.4
         version: 4.2.4
+      '@tailwindcss/oxide':
+        specifier: ^4.2.4
+        version: 4.2.4
       cac:
         specifier: 6.7.14
         version: 6.7.14
@@ -898,9 +901,6 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
     devDependencies:
-      '@tailwindcss/oxide':
-        specifier: ^4.2.4
-        version: 4.2.4
       '@tailwindcss/postcss':
         specifier: ^4.2.4
         version: 4.2.4
@@ -28064,8 +28064,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.57.0(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.57.0(typescript@6.0.3)
-      '@typescript-eslint/types': 8.57.0
+      '@typescript-eslint/tsconfig-utils': 8.59.2(typescript@6.0.3)
+      '@typescript-eslint/types': 8.59.2
       debug: 4.4.3
       typescript: 6.0.3
     transitivePeerDependencies:
