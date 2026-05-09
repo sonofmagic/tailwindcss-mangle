@@ -25,6 +25,12 @@ export interface TailwindV4GenerateOptions {
   candidates?: Iterable<string>
   sources?: TailwindV4CandidateSource[]
   /**
+   * Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`.
+   */
+  bareArbitraryValues?: boolean | {
+    units?: string[]
+  }
+  /**
    * 扫描文件系统 source entries 中的候选类名。
    *
    * - `true`：使用 Tailwind v4 编译入口解析出的 `@source` 列表。

@@ -67,6 +67,9 @@ const v4Options: TailwindV4Options = {
   base: 'apps/web',
   css: '@import "tailwindcss";',
   cssEntries: ['./src/app.css'],
+  bareArbitraryValues: {
+    units: ['%', 'px', 'rem'],
+  },
   sources: [
     {
       base: 'apps/web',
@@ -77,6 +80,7 @@ const v4Options: TailwindV4Options = {
 }
 
 const v4GenerateOptions: TailwindV4GenerateOptions = {
+  bareArbitraryValues: true,
   scanSources: [
     {
       base: 'apps/web',

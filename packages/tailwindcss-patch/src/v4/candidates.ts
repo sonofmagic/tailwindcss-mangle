@@ -1,20 +1,39 @@
 import type { TailwindV4DesignSystem } from './types'
 import postcss from 'postcss'
+import {
+  escapeCssClassName,
+  type BareArbitraryValueOptions,
+  resolveBareArbitraryValueCandidate,
+} from './bare-arbitrary-values'
 
 export function resolveValidTailwindV4Candidates(
   designSystem: TailwindV4DesignSystem,
   candidates: Iterable<string>,
+  options?: {
+    bareArbitraryValues?: boolean | BareArbitraryValueOptions
+  },
 ): Set<string> {
   const validCandidates = new Set<string>()
   const parsedCandidates: string[] = []
+  const originalCandidateByCanonical = new Map<string, string>()
 
   for (const candidate of candidates) {
-    if (!candidate || parsedCandidates.includes(candidate)) {
+    if (!candidate) {
       continue
     }
 
-    if (designSystem.parseCandidate(candidate).length > 0) {
-      parsedCandidates.push(candidate)
+    const bareArbitrary = resolveBareArbitraryValueCandidate(candidate, options?.bareArbitraryValues)
+    const candidateToCheck = bareArbitrary?.canonicalCandidate ?? candidate
+
+    if (parsedCandidates.includes(candidateToCheck)) {
+      continue
+    }
+
+    if (designSystem.parseCandidate(candidateToCheck).length > 0) {
+      parsedCandidates.push(candidateToCheck)
+      if (bareArbitrary) {
+        originalCandidateByCanonical.set(candidateToCheck, candidate)
+      }
     }
   }
 
@@ -27,11 +46,56 @@ export function resolveValidTailwindV4Candidates(
     const candidate = parsedCandidates[index]
     const candidateCss = cssByCandidate[index]
     if (candidate && typeof candidateCss === 'string' && candidateCss.trim().length > 0) {
-      validCandidates.add(candidate)
+      validCandidates.add(originalCandidateByCanonical.get(candidate) ?? candidate)
     }
   }
 
   return validCandidates
+}
+
+function createSelectorAliasMap(
+  candidates: Iterable<string>,
+  options?: boolean | BareArbitraryValueOptions,
+) {
+  const aliases = new Map<string, string>()
+  for (const candidate of candidates) {
+    const bareArbitrary = resolveBareArbitraryValueCandidate(candidate, options)
+    if (!bareArbitrary) {
+      continue
+    }
+    aliases.set(
+      escapeCssClassName(bareArbitrary.canonicalCandidate),
+      escapeCssClassName(bareArbitrary.candidate),
+    )
+  }
+  return aliases
+}
+
+export function replaceBareArbitraryValueSelectors(
+  css: string,
+  candidates: Iterable<string>,
+  options?: boolean | BareArbitraryValueOptions,
+) {
+  const aliases = createSelectorAliasMap(candidates, options)
+  if (aliases.size === 0) {
+    return css
+  }
+
+  let result = css
+  for (const [canonicalSelector, bareSelector] of aliases) {
+    result = result.replaceAll(canonicalSelector, bareSelector)
+  }
+  return result
+}
+
+export function canonicalizeBareArbitraryValueCandidates(
+  candidates: Iterable<string>,
+  options?: boolean | BareArbitraryValueOptions,
+) {
+  return Array.from(candidates, (candidate) => {
+    const bareArbitrary = resolveBareArbitraryValueCandidate(candidate, options)
+    return bareArbitrary?.canonicalCandidate ?? candidate
+  })
 }
 
 function splitTopLevel(value: string, separator: string) {

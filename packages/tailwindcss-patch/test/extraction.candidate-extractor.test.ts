@@ -80,6 +80,41 @@ describe('candidate extractor', () => {
     expect(result).toContain('underline')
   })
 
+  it('keeps bare arbitrary values disabled by default', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: 'hello-world.html',
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).not.toContain('p-10%')
+  })
+
+  it('can include UnoCSS-style bare arbitrary values when enabled', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      bareArbitraryValues: true,
+      sources: [
+        {
+          base: fixturesRoot,
+          pattern: '**/*.html',
+          negated: false,
+        },
+      ],
+    })
+
+    expect(result).toEqual(expect.arrayContaining([
+      'p-10%',
+      'p-2.5px',
+      'm-4rem',
+    ]))
+  })
+
   it('ignores HTTP header literals when filtering candidates', async () => {
     const result = await extractValidCandidates({
       base: fixturesRoot,

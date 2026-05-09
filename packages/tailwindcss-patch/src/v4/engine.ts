@@ -6,7 +6,12 @@ import type {
   TailwindV4SourcePattern,
 } from './types'
 import { extractRawCandidates, extractRawCandidatesWithPositions } from '../extraction/candidate-extractor'
-import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from './candidates'
+import {
+  canonicalizeBareArbitraryValueCandidates,
+  extractTailwindV4InlineSourceCandidates,
+  replaceBareArbitraryValueSelectors,
+  resolveValidTailwindV4Candidates,
+} from './candidates'
 import { compileTailwindV4Source, loadTailwindV4DesignSystem } from './node-adapter'
 
 function resolveScanSources(
@@ -72,13 +77,20 @@ export function createTailwindV4Engine(source: TailwindV4ResolvedSource): Tailwi
       const { compiled, dependencies } = await compileTailwindV4Source(source)
       const rawCandidates = await collectRawCandidates(source, options, compiled.sources)
       const designSystem = await loadTailwindV4DesignSystem(source)
-      const classSet = resolveValidTailwindV4Candidates(designSystem, rawCandidates)
+      const classSet = resolveValidTailwindV4Candidates(designSystem, rawCandidates, {
+        ...(options?.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: options.bareArbitraryValues }),
+      })
       const inlineSources = extractTailwindV4InlineSourceCandidates(source.css)
       for (const candidate of inlineSources.excluded) {
         classSet.delete(candidate)
       }
 
-      const css = compiled.build(Array.from(classSet))
+      const buildCandidates = canonicalizeBareArbitraryValueCandidates(classSet, options?.bareArbitraryValues)
+      const css = replaceBareArbitraryValueSelectors(
+        compiled.build(buildCandidates),
+        classSet,
+        options?.bareArbitraryValues,
+      )
 
       return {
         css,

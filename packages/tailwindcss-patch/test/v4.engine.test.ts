@@ -63,6 +63,63 @@ describe('Tailwind v4 engine', () => {
     expect(result.css).toContain('width: 100px')
   })
 
+  it('keeps UnoCSS-style bare arbitrary values disabled by default', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      candidates: ['p-10%', 'p-2.5px', 'm-4rem'],
+    })
+
+    expect(result.rawCandidates).toContain('p-10%')
+    expect(result.classSet).not.toContain('p-10%')
+    expect(result.css).not.toContain('.p-10\\%')
+  })
+
+  it('generates CSS for UnoCSS-style bare arbitrary values when enabled', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      bareArbitraryValues: true,
+      candidates: ['p-10%', 'p-2.5px', 'm-4rem'],
+    })
+
+    expect(result.classSet).toEqual(new Set(['p-10%', 'p-2.5px', 'm-4rem']))
+    expect(result.css).toContain('.p-10\\%')
+    expect(result.css).toContain('padding: 10%')
+    expect(result.css).toContain('.p-2\\.5px')
+    expect(result.css).toContain('padding: 2.5px')
+    expect(result.css).toContain('.m-4rem')
+    expect(result.css).toContain('margin: 4rem')
+    expect(result.css).not.toContain('.p-\\[10\\%\\]')
+    expect(result.css).not.toContain('.p-\\[2\\.5px\\]')
+  })
+
+  it('supports broader bare arbitrary value forms when enabled', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      bareArbitraryValues: true,
+      candidates: [
+        'bg-#fff',
+        'text-rgb(255,0,0)',
+        'w-calc(100vh)',
+        'sm:-top-1.5rem',
+      ],
+    })
+
+    expect(result.classSet).toEqual(new Set([
+      'bg-#fff',
+      'text-rgb(255,0,0)',
+      'w-calc(100vh)',
+      'sm:-top-1.5rem',
+    ]))
+    expect(result.css).toContain('.bg-\\#fff')
+    expect(result.css).toContain('background-color: #fff')
+    expect(result.css).toContain('.text-rgb\\(255\\,0\\,0\\)')
+    expect(result.css).toContain('color: rgb(255,0,0)')
+    expect(result.css).toContain('.w-calc\\(100vh\\)')
+    expect(result.css).toContain('width: calc(100vh)')
+    expect(result.css).toContain('.sm\\:-top-1\\.5rem')
+    expect(result.css).toContain('top: calc(1.5rem * -1)')
+  })
+
   it('includes @source inline candidates in classSet', async () => {
     const engine = createTailwindV4Engine(await createDefaultSource([
       '@import "tailwindcss";',

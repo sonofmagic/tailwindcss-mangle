@@ -170,6 +170,11 @@ function normalizeTailwindV4Options(
     cssEntries,
     sources,
     hasUserDefinedSources,
+    bareArbitraryValues: v4?.bareArbitraryValues === true
+      ? {}
+      : typeof v4?.bareArbitraryValues === 'object' && v4.bareArbitraryValues !== null
+        ? { ...v4.bareArbitraryValues }
+        : false,
   }
 }
 

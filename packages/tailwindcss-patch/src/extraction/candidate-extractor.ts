@@ -8,6 +8,10 @@ import type {
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
+import {
+  type BareArbitraryValueOptions,
+  resolveBareArbitraryValueCandidate,
+} from '../v4/bare-arbitrary-values'
 import { resolveValidTailwindV4Candidates } from '../v4/candidates'
 import { getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter'
 
@@ -48,6 +52,17 @@ export interface ExtractValidCandidatesOption {
   baseFallbacks?: string[]
   css?: string
   cwd?: string
+  bareArbitraryValues?: boolean | BareArbitraryValueOptions
+}
+
+function createCandidateCacheKey(
+  designSystemKey: string,
+  options: Pick<ExtractValidCandidatesOption, 'bareArbitraryValues'>,
+) {
+  if (options.bareArbitraryValues == null || options.bareArbitraryValues === false) {
+    return designSystemKey
+  }
+  return `${designSystemKey}:bare-arbitrary:${JSON.stringify(options.bareArbitraryValues)}`
 }
 
 export async function extractRawCandidatesWithPositions(
@@ -102,8 +117,9 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   }
   const designSystemKey = getTailwindV4DesignSystemCacheKey(source)
   const designSystem = await loadTailwindV4DesignSystem(source)
-  const candidateCache = designSystemCandidateCache.get(designSystemKey) ?? new Map<string, boolean>()
-  designSystemCandidateCache.set(designSystemKey, candidateCache)
+  const candidateCacheKey = createCandidateCacheKey(designSystemKey, providedOptions)
+  const candidateCache = designSystemCandidateCache.get(candidateCacheKey) ?? new Map<string, boolean>()
+  designSystemCandidateCache.set(candidateCacheKey, candidateCache)
 
   const candidates = await extractRawCandidates(sources)
   const validCandidates: string[] = []
@@ -120,7 +136,11 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
       continue
     }
 
-    if (designSystem.parseCandidate(rawCandidate).length > 0) {
+    const bareArbitrary = resolveBareArbitraryValueCandidate(rawCandidate, providedOptions.bareArbitraryValues)
+    if (
+      designSystem.parseCandidate(rawCandidate).length > 0
+      || (bareArbitrary && designSystem.parseCandidate(bareArbitrary.canonicalCandidate).length > 0)
+    ) {
       uncachedCandidates.push(rawCandidate)
       continue
     }
@@ -132,7 +152,13 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
     return validCandidates
   }
 
-  const validUncachedCandidates = resolveValidTailwindV4Candidates(designSystem, uncachedCandidates)
+  const validUncachedCandidates = resolveValidTailwindV4Candidates(
+    designSystem,
+    uncachedCandidates,
+    providedOptions.bareArbitraryValues === undefined
+      ? undefined
+      : { bareArbitraryValues: providedOptions.bareArbitraryValues },
+  )
 
   for (const candidate of uncachedCandidates) {
     const isValid = validUncachedCandidates.has(candidate)

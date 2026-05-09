@@ -83,6 +83,7 @@ export async function collectClassesFromTailwindV4(
         base: firstBase,
         baseFallbacks: designSystemBases.slice(1),
         css,
+        ...(v4Options.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: v4Options.bareArbitraryValues }),
         ...(sources === undefined ? {} : { sources }),
       }
       const candidates = await extractValidCandidates(extractOptions)
@@ -99,6 +100,7 @@ export async function collectClassesFromTailwindV4(
     const extractOptions = {
       cwd: options.projectRoot,
       base: baseForCss,
+      ...(v4Options.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: v4Options.bareArbitraryValues }),
       ...(v4Options.css === undefined ? {} : { css: v4Options.css }),
       ...(sources === undefined ? {} : { sources }),
     }

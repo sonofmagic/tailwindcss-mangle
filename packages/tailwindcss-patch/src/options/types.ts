@@ -101,6 +101,11 @@ export interface TailwindV4Options {
   cssEntries?: string[]
   /** Overrides the content sources scanned by the oxide scanner. */
   sources?: SourceEntry[]
+  /** Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`. */
+  bareArbitraryValues?: boolean | {
+    /** Unit allow-list used when detecting bare arbitrary values. */
+    units?: string[]
+  } | undefined
 }
 
 /**
@@ -185,6 +190,9 @@ export interface NormalizedTailwindV4Options {
   cssEntries: string[]
   sources: SourceEntry[]
   hasUserDefinedSources: boolean
+  bareArbitraryValues: false | {
+    units?: string[]
+  } | undefined
 }
 
 /**
