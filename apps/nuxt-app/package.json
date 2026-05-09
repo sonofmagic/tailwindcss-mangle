@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "node -e \"if (process.env.CI) { console.log('Skip nuxt prepare in CI'); process.exit(0) } require('node:child_process').execSync('nuxt prepare', { stdio: 'inherit' })\"",
+    "postinstall": "node ../../scripts/prepare-nuxt-app.mjs",
     "prepare": "node ../../scripts/prepare-tw-patch.mjs",
     "tw-extract": "tw-patch extract"
   },
