@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.0
+
+### Minor Changes
+
+- ✨ **新增 `bareArbitraryValues` 选项，默认关闭。开启后，`tailwindcss-patch` 会把 UnoCSS 风格的裸任意值（例如 `p-10%`、`p-2.5px`、`m-4rem`）纳入 v4 候选收集与生成流程，并在输出中保留原始类名选择器。** [`63c647e`](https://github.com/sonofmagic/tailwindcss-mangle/commit/63c647e358db4b23766ee97d77b724925661fef4) by @sonofmagic
+
 ## 9.2.1
 
 ### Patch Changes
