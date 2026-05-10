@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/config
 
+## 7.0.2
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`faed0e2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/faed0e22ba668cab25800303e80596388ca8929f) by @sonofmagic
+
 ## 7.0.1
 
 ### Patch Changes

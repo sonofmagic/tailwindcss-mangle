@@ -1,5 +1,12 @@
 # next-app
 
+## 0.1.7
+
+### Patch Changes
+
+- 📦 **Dependencies** [`faed0e2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/faed0e22ba668cab25800303e80596388ca8929f)
+  → `tailwindcss-patch@9.3.1`
+
 ## 0.1.6
 
 ### Patch Changes

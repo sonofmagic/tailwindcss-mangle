@@ -1,5 +1,13 @@
 # tailwindcss-patch
 
+## 9.3.1
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`faed0e2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/faed0e22ba668cab25800303e80596388ca8929f) by @sonofmagic
+- 📦 **Dependencies** [`faed0e2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/faed0e22ba668cab25800303e80596388ca8929f)
+  → `@tailwindcss-mangle/config@7.0.2`
+
 ## 9.3.0
 
 ### Minor Changes
