@@ -33,6 +33,10 @@ describe('bare arbitrary value resolver', () => {
       candidate: 'bg-#fff',
       canonicalCandidate: 'bg-[#fff]',
     })
+    expect(resolveBareArbitraryValueCandidate('bg-\\#fff', true)).toEqual({
+      candidate: 'bg-\\#fff',
+      canonicalCandidate: 'bg-[#fff]',
+    })
     expect(resolveBareArbitraryValueCandidate('text-rgb(255,0,0)', true)).toEqual({
       candidate: 'text-rgb(255,0,0)',
       canonicalCandidate: 'text-[rgb(255,0,0)]',
@@ -41,6 +45,32 @@ describe('bare arbitrary value resolver', () => {
     expect(resolveBareArbitraryValueCandidate('w-calc(100vh)', true)).toEqual({
       candidate: 'w-calc(100vh)',
       canonicalCandidate: 'w-[calc(100vh)]',
+    })
+    expect(resolveBareArbitraryValueCandidate('w-calc(100%_-_1rem)', true)).toEqual({
+      candidate: 'w-calc(100%_-_1rem)',
+      canonicalCandidate: 'w-[calc(100%_-_1rem)]',
+    })
+  })
+
+  it('keeps escaped underscores inside arbitrary values', () => {
+    expect(resolveBareArbitraryValueCandidate('content-"hello_world"', true)).toEqual({
+      candidate: 'content-"hello_world"',
+      canonicalCandidate: 'content-["hello_world"]',
+    })
+    expect(resolveBareArbitraryValueCandidate('content-"hello\\_world"', true)).toEqual({
+      candidate: 'content-"hello\\_world"',
+      canonicalCandidate: 'content-["hello\\_world"]',
+    })
+    expect(resolveBareArbitraryValueCandidate('content-"hello\\5f world"', true)).toEqual({
+      candidate: 'content-"hello\\5f world"',
+      canonicalCandidate: 'content-["hello\\_world"]',
+    })
+  })
+
+  it('prefers the longest utility prefix before bare function values', () => {
+    expect(resolveBareArbitraryValueCandidate('grid-cols-repeat(2,_minmax(0,_1fr))', true)).toEqual({
+      candidate: 'grid-cols-repeat(2,_minmax(0,_1fr))',
+      canonicalCandidate: 'grid-cols-[repeat(2,_minmax(0,_1fr))]',
     })
   })
 

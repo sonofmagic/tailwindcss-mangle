@@ -39,7 +39,8 @@ const DEFAULT_BARE_ARBITRARY_VALUE_UNITS = [
 ]
 
 const NUMBER_RE = /^-?(?:\d+|\d*\.\d+)$/
-const FUNCTION_VALUE_RE = /^[a-zA-Z_-][a-zA-Z0-9_-]*\(/
+const FUNCTION_VALUE_RE = /^[a-z_-][\w-]*\(/i
+const HEX_ESCAPE_RE = /^[\da-f]$/i
 
 function splitVariantPrefix(candidate: string) {
   let depth = 0
@@ -133,8 +134,55 @@ function isBalancedFunctionValue(value: string) {
   return depth === 0 && quote === undefined
 }
 
+function isEscapedAt(value: string, index: number) {
+  let slashCount = 0
+  for (let slashIndex = index - 1; slashIndex >= 0 && value[slashIndex] === '\\'; slashIndex--) {
+    slashCount++
+  }
+  return slashCount % 2 === 1
+}
+
+function isBalancedBareArbitraryBody(value: string) {
+  let depth = 0
+  let quote: string | undefined
+
+  for (let index = 0; index < value.length; index++) {
+    const character = value[index]
+
+    if (isEscapedAt(value, index)) {
+      continue
+    }
+
+    if (quote) {
+      if (character === quote) {
+        quote = undefined
+      }
+      continue
+    }
+
+    if (character === '"' || character === '\'') {
+      quote = character
+      continue
+    }
+
+    if (character === '(' || character === '{') {
+      depth++
+      continue
+    }
+
+    if (character === ')' || character === '}') {
+      depth--
+      if (depth < 0) {
+        return false
+      }
+    }
+  }
+
+  return depth === 0 && quote === undefined
+}
+
 function isHexColorValue(value: string) {
-  return /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6,8})$/.test(value)
+  return /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6,8})$/i.test(value)
 }
 
 function isQuotedValue(value: string) {
@@ -173,12 +221,55 @@ function normalizeBareArbitraryValueOptions(options: boolean | BareArbitraryValu
   }
 }
 
-function resolveValueWithUnit(body: string, units: string[]) {
-  for (const unit of units) {
-    if (!body.endsWith(unit)) {
+function normalizeEscapedValue(value: string) {
+  let result = ''
+  for (let index = 0; index < value.length; index++) {
+    const character = value[index]
+    if (character !== '\\') {
+      result += character
       continue
     }
-    const numberPart = body.slice(0, -unit.length)
+
+    const nextCharacter = value[index + 1]
+    if (nextCharacter === undefined) {
+      result += character
+      continue
+    }
+
+    if (HEX_ESCAPE_RE.test(nextCharacter)) {
+      let hex = ''
+      let nextIndex = index + 1
+      while (nextIndex < value.length && hex.length < 6) {
+        const hexCharacter = value[nextIndex]
+        if (hexCharacter === undefined || !HEX_ESCAPE_RE.test(hexCharacter)) {
+          break
+        }
+        hex += hexCharacter
+        nextIndex++
+      }
+      if (/[\t\n\f\r ]/.test(value[nextIndex] ?? '')) {
+        nextIndex++
+      }
+
+      const decoded = String.fromCodePoint(Number.parseInt(hex, 16))
+      result += decoded === '_' ? '\\_' : decoded
+      index = nextIndex - 1
+      continue
+    }
+
+    result += nextCharacter === '_' ? '\\_' : nextCharacter
+    index++
+  }
+  return result
+}
+
+function resolveValueWithUnit(body: string, units: string[]) {
+  const value = normalizeEscapedValue(body)
+  for (const unit of units) {
+    if (!value.endsWith(unit)) {
+      continue
+    }
+    const numberPart = value.slice(0, -unit.length)
     if (NUMBER_RE.test(numberPart)) {
       return `${numberPart}${unit}`
     }
@@ -186,21 +277,22 @@ function resolveValueWithUnit(body: string, units: string[]) {
 }
 
 function resolveArbitraryValue(body: string, units: string[]) {
-  const withUnit = resolveValueWithUnit(body, units)
+  const value = normalizeEscapedValue(body)
+  const withUnit = resolveValueWithUnit(value, units)
   if (withUnit) {
     return withUnit
   }
 
-  if (isHexColorValue(body)) {
-    return body
+  if (isHexColorValue(value)) {
+    return value
   }
 
-  if (isQuotedValue(body)) {
-    return body
+  if (isQuotedValue(value)) {
+    return value
   }
 
-  if (FUNCTION_VALUE_RE.test(body) && body.endsWith(')') && isBalancedFunctionValue(body)) {
-    return body
+  if (FUNCTION_VALUE_RE.test(value) && value.endsWith(')') && isBalancedFunctionValue(value)) {
+    return value
   }
 }
 
@@ -208,11 +300,10 @@ function resolveUtilityAndValue(body: string, units: string[]) {
   let depth = 0
   let quote: string | undefined
 
-  for (let index = 1; index < body.length; index++) {
+  for (let index = body.length - 1; index > 0; index--) {
     const character = body[index]
 
-    if (character === '\\') {
-      index++
+    if (isEscapedAt(body, index)) {
       continue
     }
 
@@ -228,12 +319,12 @@ function resolveUtilityAndValue(body: string, units: string[]) {
       continue
     }
 
-    if (character === '(' || character === '{') {
+    if (character === ')' || character === '}') {
       depth++
       continue
     }
 
-    if (character === ')' || character === '}') {
+    if (character === '(' || character === '{') {
       depth = Math.max(0, depth - 1)
       continue
     }
@@ -273,6 +364,9 @@ export function resolveBareArbitraryValueCandidate(
   const negative = normalizedBody.startsWith('-') ? '-' : ''
   if (negative) {
     normalizedBody = normalizedBody.slice(1)
+  }
+  if (!isBalancedBareArbitraryBody(normalizedBody)) {
+    return
   }
 
   const resolved = resolveUtilityAndValue(normalizedBody, normalizedOptions.units)

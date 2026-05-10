@@ -1,10 +1,7 @@
+import type { BareArbitraryValueOptions } from './bare-arbitrary-values'
 import type { TailwindV4DesignSystem } from './types'
 import postcss from 'postcss'
-import {
-  escapeCssClassName,
-  type BareArbitraryValueOptions,
-  resolveBareArbitraryValueCandidate,
-} from './bare-arbitrary-values'
+import { escapeCssClassName, resolveBareArbitraryValueCandidate } from './bare-arbitrary-values'
 
 export function resolveValidTailwindV4Candidates(
   designSystem: TailwindV4DesignSystem,
@@ -15,7 +12,7 @@ export function resolveValidTailwindV4Candidates(
 ): Set<string> {
   const validCandidates = new Set<string>()
   const parsedCandidates: string[] = []
-  const originalCandidateByCanonical = new Map<string, string>()
+  const originalCandidatesByCanonical = new Map<string, Set<string>>()
 
   for (const candidate of candidates) {
     if (!candidate) {
@@ -25,15 +22,19 @@ export function resolveValidTailwindV4Candidates(
     const bareArbitrary = resolveBareArbitraryValueCandidate(candidate, options?.bareArbitraryValues)
     const candidateToCheck = bareArbitrary?.canonicalCandidate ?? candidate
 
-    if (parsedCandidates.includes(candidateToCheck)) {
+    if (bareArbitrary) {
+      const originalCandidates = originalCandidatesByCanonical.get(candidateToCheck) ?? new Set<string>()
+      originalCandidates.add(candidate)
+      originalCandidatesByCanonical.set(candidateToCheck, originalCandidates)
+    }
+
+    const alreadyParsed = parsedCandidates.includes(candidateToCheck)
+    if (alreadyParsed) {
       continue
     }
 
     if (designSystem.parseCandidate(candidateToCheck).length > 0) {
       parsedCandidates.push(candidateToCheck)
-      if (bareArbitrary) {
-        originalCandidateByCanonical.set(candidateToCheck, candidate)
-      }
     }
   }
 
@@ -46,7 +47,14 @@ export function resolveValidTailwindV4Candidates(
     const candidate = parsedCandidates[index]
     const candidateCss = cssByCandidate[index]
     if (candidate && typeof candidateCss === 'string' && candidateCss.trim().length > 0) {
-      validCandidates.add(originalCandidateByCanonical.get(candidate) ?? candidate)
+      const originalCandidates = originalCandidatesByCanonical.get(candidate)
+      if (originalCandidates) {
+        for (const originalCandidate of originalCandidates) {
+          validCandidates.add(originalCandidate)
+        }
+        continue
+      }
+      validCandidates.add(candidate)
     }
   }
 
@@ -57,16 +65,16 @@ function createSelectorAliasMap(
   candidates: Iterable<string>,
   options?: boolean | BareArbitraryValueOptions,
 ) {
-  const aliases = new Map<string, string>()
+  const aliases = new Map<string, Set<string>>()
   for (const candidate of candidates) {
     const bareArbitrary = resolveBareArbitraryValueCandidate(candidate, options)
     if (!bareArbitrary) {
       continue
     }
-    aliases.set(
-      escapeCssClassName(bareArbitrary.canonicalCandidate),
-      escapeCssClassName(bareArbitrary.candidate),
-    )
+    const canonicalSelector = escapeCssClassName(bareArbitrary.canonicalCandidate)
+    const bareSelectors = aliases.get(canonicalSelector) ?? new Set<string>()
+    bareSelectors.add(escapeCssClassName(bareArbitrary.candidate))
+    aliases.set(canonicalSelector, bareSelectors)
   }
   return aliases
 }
@@ -81,11 +89,31 @@ export function replaceBareArbitraryValueSelectors(
     return css
   }
 
-  let result = css
-  for (const [canonicalSelector, bareSelector] of aliases) {
-    result = result.replaceAll(canonicalSelector, bareSelector)
+  if (Array.from(aliases.values()).every(bareSelectors => bareSelectors.size === 1)) {
+    let result = css
+    for (const [canonicalSelector, bareSelectors] of aliases) {
+      const bareSelector = Array.from(bareSelectors)[0]
+      if (bareSelector !== undefined) {
+        result = result.replaceAll(canonicalSelector, bareSelector)
+      }
+    }
+    return result
   }
-  return result
+
+  const root = postcss.parse(css)
+  root.walkRules((rule) => {
+    let selectors = rule.selectors
+    for (const [canonicalSelector, bareSelectors] of aliases) {
+      selectors = selectors.flatMap((selector) => {
+        if (!selector.includes(canonicalSelector)) {
+          return selector
+        }
+        return Array.from(bareSelectors, bareSelector => selector.replaceAll(canonicalSelector, bareSelector))
+      })
+    }
+    rule.selectors = selectors
+  })
+  return root.toString()
 }
 
 export function canonicalizeBareArbitraryValueCandidates(

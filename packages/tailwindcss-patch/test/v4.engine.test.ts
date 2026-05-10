@@ -98,7 +98,10 @@ describe('Tailwind v4 engine', () => {
       bareArbitraryValues: true,
       candidates: [
         'bg-#fff',
+        'bg-\\#000',
         'text-rgb(255,0,0)',
+        'grid-cols-repeat(2,_minmax(0,_1fr))',
+        'w-calc(100%_-_1rem)',
         'w-calc(100vh)',
         'sm:-top-1.5rem',
       ],
@@ -106,18 +109,50 @@ describe('Tailwind v4 engine', () => {
 
     expect(result.classSet).toEqual(new Set([
       'bg-#fff',
+      'bg-\\#000',
       'text-rgb(255,0,0)',
+      'grid-cols-repeat(2,_minmax(0,_1fr))',
+      'w-calc(100%_-_1rem)',
       'w-calc(100vh)',
       'sm:-top-1.5rem',
     ]))
     expect(result.css).toContain('.bg-\\#fff')
     expect(result.css).toContain('background-color: #fff')
+    expect(result.css).toContain('.bg-\\\\\\#000')
+    expect(result.css).toContain('background-color: #000')
     expect(result.css).toContain('.text-rgb\\(255\\,0\\,0\\)')
     expect(result.css).toContain('color: rgb(255,0,0)')
+    expect(result.css).toContain('.grid-cols-repeat\\(2\\,_minmax\\(0\\,_1fr\\)\\)')
+    expect(result.css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
+    expect(result.css).toContain('.w-calc\\(100\\%_-_1rem\\)')
+    expect(result.css).toContain('width: calc(100% - 1rem)')
     expect(result.css).toContain('.w-calc\\(100vh\\)')
     expect(result.css).toContain('width: calc(100vh)')
     expect(result.css).toContain('.sm\\:-top-1\\.5rem')
     expect(result.css).toContain('top: calc(1.5rem * -1)')
+  })
+
+  it('preserves escaped underscores in bare arbitrary values', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      bareArbitraryValues: true,
+      candidates: [
+        'content-"hello_world"',
+        'content-"hello\\_world"',
+        'content-"hello\\5f world"',
+      ],
+    })
+
+    expect(result.classSet).toEqual(new Set([
+      'content-"hello_world"',
+      'content-"hello\\_world"',
+      'content-"hello\\5f world"',
+    ]))
+    expect(result.css).toContain('.content-\\"hello_world\\"')
+    expect(result.css).toContain('--tw-content: "hello world"')
+    expect(result.css).toContain('.content-\\"hello\\\\_world\\"')
+    expect(result.css).toContain('--tw-content: "hello_world"')
+    expect(result.css).toContain('.content-\\"hello\\\\5f\\ world\\"')
   })
 
   it('includes @source inline candidates in classSet', async () => {
