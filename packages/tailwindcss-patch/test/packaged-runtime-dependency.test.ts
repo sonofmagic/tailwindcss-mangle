@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import fsSync, { promises as fs } from 'node:fs'
 import { createRequire } from 'node:module'
 import os from 'node:os'
-import path from 'pathe'
+import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const require = createRequire(import.meta.url)
