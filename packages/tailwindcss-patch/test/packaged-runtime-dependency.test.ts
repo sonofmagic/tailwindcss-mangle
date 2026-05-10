@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 const require = createRequire(import.meta.url)
 const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../..')
+const configPackageDir = path.resolve(repoRoot, 'packages/config')
 
 let tempDir: string
 
@@ -35,12 +36,25 @@ function run(command: string, args: string[], cwd: string, timeout = 180_000) {
   }
 }
 
-async function packTailwindcssPatch() {
+async function packPackage(packageDirectory: string) {
   const packDir = path.join(tempDir, 'pack')
   await fs.mkdir(packDir, { recursive: true })
-  const output = run('pnpm', ['--dir', packageDir, 'pack', '--json', '--pack-destination', packDir], repoRoot)
+  const output = run('pnpm', ['--dir', packageDirectory, 'pack', '--json', '--pack-destination', packDir], repoRoot)
   const result = JSON.parse(output) as { filename: string }
   return result.filename
+}
+
+async function packTailwindcssPatch() {
+  return packPackage(packageDir)
+}
+
+async function packConsumerInstallTarballs() {
+  const configTarball = await packPackage(configPackageDir)
+  const tailwindcssPatchTarball = await packTailwindcssPatch()
+  return {
+    config: configTarball,
+    tailwindcssPatch: tailwindcssPatchTarball,
+  }
 }
 
 async function createProject(name: string) {
@@ -58,11 +72,26 @@ async function createProject(name: string) {
   return projectDir
 }
 
-function installProject(projectDir: string, tarball: string, tailwindVersion: string) {
+function installProject(
+  projectDir: string,
+  tarballs: { config: string, tailwindcssPatch: string },
+  tailwindVersion: string,
+) {
+  const packageJsonPath = path.join(projectDir, 'package.json')
+  const packageJson = JSON.parse(fsSync.readFileSync(packageJsonPath, 'utf8'))
+  packageJson.pnpm = {
+    ...packageJson.pnpm,
+    overrides: {
+      ...packageJson.pnpm?.overrides,
+      '@tailwindcss-mangle/config': `file:${tarballs.config}`,
+    },
+  }
+  fsSync.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8')
+
   run('pnpm', [
     'add',
     '--ignore-workspace',
-    tarball,
+    tarballs.tailwindcssPatch,
     `tailwindcss@${tailwindVersion}`,
   ], projectDir)
 }
@@ -102,9 +131,9 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
   })
 
   it('runs source candidate scanning from a clean Tailwind CSS v3.4.19 project without explicitly installing oxide', async () => {
-    const tarball = await packTailwindcssPatch()
+    const tarballs = await packConsumerInstallTarballs()
     const projectDir = await createProject('tailwind-v3-consumer')
-    installProject(projectDir, tarball, '3.4.19')
+    installProject(projectDir, tarballs, '3.4.19')
 
     const result = runProjectScript(projectDir, `
       import fs from 'node:fs/promises'
@@ -142,9 +171,9 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
   })
 
   it('keeps the Tailwind CSS v4 oxide source scanner path working from a clean project', async () => {
-    const tarball = await packTailwindcssPatch()
+    const tarballs = await packConsumerInstallTarballs()
     const projectDir = await createProject('tailwind-v4-consumer')
-    installProject(projectDir, tarball, '4.2.4')
+    installProject(projectDir, tarballs, '4.2.4')
 
     const result = runProjectScript(projectDir, `
       import { createTailwindV4Engine, resolveTailwindV4Source } from 'tailwindcss-patch'
