@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.2
+
+### Patch Changes
+
+- 🐛 **增强 v4 `bareArbitraryValues` 对 UnoCSS 风格裸任意值的兼容性，支持转义字符、转义下划线和多个原始写法映射到同一 Tailwind 任意值。** [`b04f33d`](https://github.com/sonofmagic/tailwindcss-mangle/commit/b04f33dfcbf9a2c42d14a60d01bf1b5895775ed4) by @sonofmagic
+
 ## 9.3.1
 
 ### Patch Changes
