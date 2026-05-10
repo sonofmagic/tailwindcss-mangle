@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "core-js": "^3.49.0",
-    "vue": "^3.5.33",
+    "vue": "^3.5.34",
     "vue-router": "^5.0.6"
   },
   "devDependencies": {
@@ -30,10 +30,10 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^7.3.0",
-    "eslint-plugin-vue": "^10.9.0",
+    "eslint-plugin-vue": "^10.9.1",
     "postcss": "^8.5.14",
     "sass": "^1.99.0",
-    "sass-loader": "^16.0.2",
+    "sass-loader": "^16.0.8",
     "tailwindcss": "^3.4.14",
     "tailwindcss-patch": "workspace:*",
     "typescript": "~6.0.3",

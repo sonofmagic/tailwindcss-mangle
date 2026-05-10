@@ -17,6 +17,6 @@
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.0.10"
+    "vite": "^8.0.11"
   }
 }

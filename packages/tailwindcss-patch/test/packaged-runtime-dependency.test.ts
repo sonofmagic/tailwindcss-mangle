@@ -87,8 +87,13 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
     const manifest = JSON.parse(
       run('tar', ['-xOf', tarball, 'package/package.json'], repoRoot),
     )
+    const packageManifest = JSON.parse(
+      await fs.readFile(path.join(packageDir, 'package.json'), 'utf8'),
+    )
 
-    expect(manifest.dependencies['@tailwindcss/oxide']).toBe('^4.2.4')
+    expect(manifest.dependencies['@tailwindcss/oxide']).toBe(
+      packageManifest.dependencies['@tailwindcss/oxide'],
+    )
     expect(manifest.devDependencies?.['@tailwindcss/oxide']).toBeUndefined()
 
     const oxideManifestPath = require.resolve('@tailwindcss/oxide/package.json')
