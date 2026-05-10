@@ -11,7 +11,7 @@ const configPackageDir = path.resolve(repoRoot, 'packages/config')
 
 let tempDir: string
 
-function run(command: string, args: string[], cwd: string, timeout = 180_000) {
+function run(command: string, args: string[], cwd: string, timeout = 180_000, shell = false) {
   try {
     return execFileSync(command, args, {
       cwd,
@@ -21,12 +21,14 @@ function run(command: string, args: string[], cwd: string, timeout = 180_000) {
         CI: '1',
         npm_config_update_notifier: 'false',
       },
+      shell,
       timeout,
     }).trim()
   }
   catch (error) {
     const output = error && typeof error === 'object'
       ? [
+          'message' in error ? String(error.message ?? '') : '',
           'stdout' in error ? String(error.stdout ?? '') : '',
           'stderr' in error ? String(error.stderr ?? '') : '',
         ].filter(Boolean).join('\n')
@@ -35,10 +37,14 @@ function run(command: string, args: string[], cwd: string, timeout = 180_000) {
   }
 }
 
+function runPnpm(args: string[], cwd: string, timeout?: number) {
+  return run('pnpm', args, cwd, timeout, process.platform === 'win32')
+}
+
 async function packPackage(packageDirectory: string) {
   const packDir = path.join(tempDir, 'pack')
   await fs.mkdir(packDir, { recursive: true })
-  const output = run('pnpm', ['pack', '--json', '--pack-destination', path.relative(packageDirectory, packDir)], packageDirectory)
+  const output = runPnpm(['pack', '--json', '--pack-destination', path.relative(packageDirectory, packDir)], packageDirectory)
   const result = JSON.parse(output) as { filename: string }
   return result.filename
 }
@@ -87,7 +93,7 @@ function installProject(
   }
   fsSync.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8')
 
-  run('pnpm', [
+  runPnpm([
     'add',
     '--ignore-workspace',
     tarballs.tailwindcssPatch,
