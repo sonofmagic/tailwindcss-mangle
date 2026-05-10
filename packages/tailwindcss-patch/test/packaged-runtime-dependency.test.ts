@@ -1,7 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import fsSync, { promises as fs } from 'node:fs'
 import { createRequire } from 'node:module'
-import os from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
@@ -39,7 +38,7 @@ function run(command: string, args: string[], cwd: string, timeout = 180_000) {
 async function packPackage(packageDirectory: string) {
   const packDir = path.join(tempDir, 'pack')
   await fs.mkdir(packDir, { recursive: true })
-  const output = run('pnpm', ['--dir', packageDirectory, 'pack', '--json', '--pack-destination', packDir], repoRoot)
+  const output = run('pnpm', ['pack', '--json', '--pack-destination', path.relative(packageDirectory, packDir)], packageDirectory)
   const result = JSON.parse(output) as { filename: string }
   return result.filename
 }
@@ -104,7 +103,7 @@ function runProjectScript(projectDir: string, source: string) {
 
 describe('packed tailwindcss-patch runtime dependencies', () => {
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-packaged-'))
+    tempDir = await fs.mkdtemp(path.join(repoRoot, '.tmp-tw-patch-packaged-'))
   })
 
   afterEach(async () => {
