@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.3
+
+### Patch Changes
+
+- 🐛 **支持 Tailwind CSS v4 通过 `cssSources` 传入构建器捕获的内存 CSS 入口，让调用方可以在 CSS 尚未落盘为 `cssEntries` 时完成入口解析、依赖记录和候选类名收集。** [`7b01ea1`](https://github.com/sonofmagic/tailwindcss-mangle/commit/7b01ea1b6983f588194b33614edc80a8aec95664) by @sonofmagic
+
 ## 9.3.2
 
 ### Patch Changes
