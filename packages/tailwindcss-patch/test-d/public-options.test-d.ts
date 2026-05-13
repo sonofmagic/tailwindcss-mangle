@@ -14,6 +14,7 @@ import {
   type TailwindCssOptions,
   type TailwindCssPatchOptions,
   type TailwindV4GenerateOptions,
+  type TailwindV4CssSource,
   type TailwindV2Options,
   type TailwindV3Options,
   type TailwindV4Options,
@@ -66,6 +67,13 @@ const v3Options: TailwindV3Options = {
 const v4Options: TailwindV4Options = {
   base: 'apps/web',
   css: '@import "tailwindcss";',
+  cssSources: [
+    {
+      file: './src/app.css',
+      css: '@import "tailwindcss";',
+      dependencies: ['./src/theme.css'],
+    },
+  ],
   cssEntries: ['./src/app.css'],
   bareArbitraryValues: {
     units: ['%', 'px', 'rem'],
@@ -78,6 +86,8 @@ const v4Options: TailwindV4Options = {
     },
   ],
 }
+
+expectAssignable<TailwindV4CssSource[]>(v4Options.cssSources!)
 
 const v4GenerateOptions: TailwindV4GenerateOptions = {
   bareArbitraryValues: true,
@@ -133,6 +143,7 @@ expectType<NormalizedTailwindCssPatchOptions>(normalized)
 expectType<'lines' | 'json'>(normalized.output.format)
 expectType<boolean>(normalized.features.exposeContext.enabled)
 expectType<string[]>(normalized.tailwind.v4!.cssEntries)
+expectType<TailwindV4CssSource[]>(normalized.tailwind.v4!.cssSources)
 expectType<'merge' | 'overwrite'>(normalized.cache.strategy)
 expectType<'file' | 'memory' | 'noop'>(normalized.cache.driver)
 expectType<(className: string) => boolean>(normalized.filter)

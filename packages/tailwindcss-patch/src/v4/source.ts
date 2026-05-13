@@ -1,5 +1,5 @@
 import type { NormalizedTailwindCssPatchOptions, TailwindCssPatchOptions } from '../config'
-import type { TailwindV4ResolvedSource, TailwindV4SourceOptions } from './types'
+import type { TailwindV4CssSource, TailwindV4ResolvedSource, TailwindV4SourceOptions } from './types'
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
@@ -87,6 +87,35 @@ async function resolveCssEntries(entries: string[], projectRoot: string, base: s
   }
 }
 
+function resolveCssSources(sources: TailwindV4CssSource[], projectRoot: string, base: string | undefined) {
+  const resolvedSources = sources.map(source => ({
+    ...source,
+    base: source.base === undefined ? undefined : resolveBase(source.base, projectRoot),
+    file: source.file === undefined
+      ? undefined
+      : path.isAbsolute(source.file)
+        ? path.resolve(source.file)
+        : path.resolve(projectRoot, source.file),
+    dependencies: source.dependencies?.map(dependency =>
+      path.isAbsolute(dependency) ? path.resolve(dependency) : path.resolve(projectRoot, dependency),
+    ) ?? [],
+  }))
+  const firstSource = resolvedSources[0]
+  const resolvedBase = base
+    ?? firstSource?.base
+    ?? (firstSource?.file ? path.dirname(firstSource.file) : projectRoot)
+  const dependencies = resolvedSources.flatMap(source => [
+    source.file,
+    ...source.dependencies,
+  ]).filter((dependency): dependency is string => Boolean(dependency))
+
+  return {
+    base: resolvedBase,
+    css: resolvedSources.map(source => source.css).join('\n'),
+    dependencies,
+  }
+}
+
 function normalizeResolvedSource(
   source: {
     projectRoot: string
@@ -129,15 +158,27 @@ export async function resolveTailwindV4Source(options: TailwindV4SourceOptions =
     })
   }
 
-  if (options.cssEntries?.length) {
-    const entries = await resolveCssEntries(options.cssEntries, projectRoot, configuredBase)
+  if (options.cssEntries?.length || options.cssSources?.length) {
+    const entries = options.cssEntries?.length
+      ? await resolveCssEntries(options.cssEntries, projectRoot, configuredBase)
+      : undefined
+    const sources = options.cssSources?.length
+      ? resolveCssSources(options.cssSources, projectRoot, configuredBase)
+      : undefined
+    const css = [
+      entries?.css,
+      sources?.css,
+    ].filter(Boolean).join('\n')
     return normalizeResolvedSource({
       projectRoot,
       cwd,
-      base: entries.base,
+      base: configuredBase ?? entries?.base ?? sources?.base ?? cwd,
       baseFallbacks,
-      css: entries.css,
-      dependencies: entries.dependencies,
+      css,
+      dependencies: [
+        ...(entries?.dependencies ?? []),
+        ...(sources?.dependencies ?? []),
+      ],
     })
   }
 
@@ -177,6 +218,7 @@ function createSourceOptionsFromNormalizedPatchOptions(
     ...(v4?.configuredBase === undefined ? {} : { base: v4.configuredBase }),
     baseFallbacks,
     ...(v4?.css === undefined ? {} : { css: v4.css }),
+    ...(v4?.cssSources === undefined ? {} : { cssSources: v4.cssSources }),
     ...(v4?.cssEntries === undefined ? {} : { cssEntries: v4.cssEntries }),
     packageName: options.tailwind.packageName,
   }

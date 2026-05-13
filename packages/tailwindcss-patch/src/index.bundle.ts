@@ -105,6 +105,7 @@ export type { TailwindCssPatchOptions } from './config'
 export * from './types'
 export type {
   TailwindV4CandidateSource,
+  TailwindV4CssSource,
   TailwindV4DesignSystem,
   TailwindV4Engine,
   TailwindV4GenerateOptions,

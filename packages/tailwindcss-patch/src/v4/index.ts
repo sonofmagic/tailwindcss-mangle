@@ -15,6 +15,7 @@ export {
 } from './source'
 export type {
   TailwindV4CandidateSource,
+  TailwindV4CssSource,
   TailwindV4DesignSystem,
   TailwindV4Engine,
   TailwindV4GenerateOptions,

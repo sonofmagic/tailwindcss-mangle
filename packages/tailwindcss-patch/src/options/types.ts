@@ -1,6 +1,7 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageResolvingOptions } from 'local-pkg'
 import type { ILengthUnitsPatchOptions } from '../types'
+import type { TailwindV4CssSource } from '../v4/types'
 
 export type CacheStrategy = 'merge' | 'overwrite'
 export type CacheDriver = 'file' | 'memory' | 'noop'
@@ -97,6 +98,8 @@ export interface TailwindV4Options {
   base?: string
   /** Raw CSS passed directly to the v4 design system. */
   css?: string
+  /** 构建器在 CSS 落盘前捕获的内存 CSS 入口。 */
+  cssSources?: TailwindV4CssSource[]
   /** Set of CSS entry files that should be scanned for `@config` directives. */
   cssEntries?: string[]
   /** Overrides the content sources scanned by the oxide scanner. */
@@ -187,6 +190,7 @@ export interface NormalizedTailwindV4Options {
   base: string
   configuredBase?: string
   css?: string
+  cssSources: TailwindV4CssSource[]
   cssEntries: string[]
   sources: SourceEntry[]
   hasUserDefinedSources: boolean

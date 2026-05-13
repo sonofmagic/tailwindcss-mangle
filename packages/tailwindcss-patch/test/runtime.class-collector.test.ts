@@ -1,9 +1,14 @@
+import { createRequire } from 'node:module'
 import os from 'node:os'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
 import { normalizeOptions } from '@/options/normalize'
 import { collectClassesFromContexts, collectClassesFromTailwindV4 } from '@/runtime/class-collector'
+
+const require = createRequire(import.meta.url)
+const packageRoot = path.resolve(__dirname, '..')
+const tailwindNodeBase = path.dirname(require.resolve('@tailwindcss/node'))
 
 function createContext(classes: string[]) {
   const map = new Map()
@@ -143,6 +148,46 @@ describe('collectClassesFromTailwindV4', () => {
 
       const classes = await collectClassesFromTailwindV4(normalized)
       expect(classes.has('bg-brand')).toBe(true)
+    }
+    finally {
+      await fs.remove(tempDir)
+    }
+  })
+
+  it('collects classes from in-memory Tailwind v4 cssSources', async () => {
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-v4-css-sources-'))
+    try {
+      const cssDir = path.join(tempDir, 'styles')
+      const cssFile = path.join(cssDir, 'app.css')
+      const srcDir = path.join(tempDir, 'src')
+      await fs.ensureDir(srcDir)
+      await fs.writeFile(path.join(srcDir, 'index.html'), '<div class="text-green-500"></div>', 'utf8')
+
+      const normalized = normalizeOptions({
+        projectRoot: packageRoot,
+        tailwindcss: {
+          version: 4,
+          v4: {
+            base: tailwindNodeBase,
+            cssSources: [
+              {
+                file: cssFile,
+                css: '@import "tailwindcss";',
+              },
+            ],
+            sources: [
+              {
+                base: srcDir,
+                pattern: '**/*.html',
+                negated: false,
+              },
+            ],
+          },
+        },
+      })
+
+      const classes = await collectClassesFromTailwindV4(normalized)
+      expect(classes.has('text-green-500')).toBe(true)
     }
     finally {
       await fs.remove(tempDir)

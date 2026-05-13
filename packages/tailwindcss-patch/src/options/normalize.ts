@@ -148,6 +148,19 @@ function normalizeTailwindV4Options(
 ): NormalizedTailwindV4Options {
   const configuredBase = v4?.base ? path.resolve(v4.base) : undefined
   const base = configuredBase ?? fallbackBase
+  const resolveV4Path = (value: string) => path.isAbsolute(value) ? path.resolve(value) : path.resolve(fallbackBase, value)
+  const cssSources = Array.isArray(v4?.cssSources)
+    ? v4!.cssSources
+        .filter(source => typeof source?.css === 'string')
+        .map(source => ({
+          css: source.css,
+          ...(source.base === undefined ? {} : { base: resolveV4Path(source.base) }),
+          ...(source.file === undefined ? {} : { file: resolveV4Path(source.file) }),
+          ...(source.dependencies === undefined
+            ? {}
+            : { dependencies: source.dependencies.filter(Boolean).map(resolveV4Path) }),
+        }))
+    : []
   const cssEntries = Array.isArray(v4?.cssEntries)
     ? v4!.cssEntries.filter((entry): entry is string => Boolean(entry)).map(entry => path.resolve(entry))
     : []
@@ -167,6 +180,7 @@ function normalizeTailwindV4Options(
     base,
     ...(configuredBase === undefined ? {} : { configuredBase }),
     ...(v4?.css === undefined ? {} : { css: v4.css }),
+    cssSources,
     cssEntries,
     sources,
     hasUserDefinedSources,

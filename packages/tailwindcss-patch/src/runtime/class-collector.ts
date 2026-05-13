@@ -1,3 +1,4 @@
+import type { ExtractValidCandidatesOption } from '../extraction/candidate-extractor'
 import type { NormalizedTailwindCssPatchOptions } from '../options/types'
 import type { TailwindcssRuntimeContext } from '../types'
 import process from 'node:process'
@@ -63,6 +64,35 @@ export async function collectClassesFromTailwindV4(
       negated: source.negated,
     }))
   }
+  const addCandidates = async (extractOptions: ExtractValidCandidatesOption) => {
+    const candidates = await extractValidCandidates(extractOptions)
+    for (const candidate of candidates) {
+      if (options.filter(candidate)) {
+        set.add(candidate)
+      }
+    }
+  }
+
+  if (v4Options.cssSources.length > 0) {
+    for (const source of v4Options.cssSources) {
+      const sourceFile = toAbsolute(source.file)
+      const sourceBase = toAbsolute(source.base)
+        ?? (sourceFile ? path.dirname(sourceFile) : resolvedDefaultBase)
+      const designSystemBases = resolvedConfiguredBase && resolvedConfiguredBase !== sourceBase
+        ? [sourceBase, resolvedConfiguredBase]
+        : [sourceBase]
+      const sources = resolveSources(sourceBase)
+      const firstBase = designSystemBases[0] ?? sourceBase
+      await addCandidates({
+        cwd: options.projectRoot,
+        base: firstBase,
+        baseFallbacks: designSystemBases.slice(1),
+        css: source.css,
+        ...(v4Options.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: v4Options.bareArbitraryValues }),
+        ...(sources === undefined ? {} : { sources }),
+      })
+    }
+  }
 
   if (v4Options.cssEntries.length > 0) {
     for (const entry of v4Options.cssEntries) {
@@ -86,15 +116,10 @@ export async function collectClassesFromTailwindV4(
         ...(v4Options.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: v4Options.bareArbitraryValues }),
         ...(sources === undefined ? {} : { sources }),
       }
-      const candidates = await extractValidCandidates(extractOptions)
-      for (const candidate of candidates) {
-        if (options.filter(candidate)) {
-          set.add(candidate)
-        }
-      }
+      await addCandidates(extractOptions)
     }
   }
-  else {
+  else if (v4Options.cssSources.length === 0) {
     const baseForCss = resolvedConfiguredBase ?? resolvedDefaultBase
     const sources = resolveSources(baseForCss)
     const extractOptions = {
@@ -104,12 +129,7 @@ export async function collectClassesFromTailwindV4(
       ...(v4Options.css === undefined ? {} : { css: v4Options.css }),
       ...(sources === undefined ? {} : { sources }),
     }
-    const candidates = await extractValidCandidates(extractOptions)
-    for (const candidate of candidates) {
-      if (options.filter(candidate)) {
-        set.add(candidate)
-      }
-    }
+    await addCandidates(extractOptions)
   }
 
   return set

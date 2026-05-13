@@ -170,7 +170,10 @@ describe('Tailwind v4 engine', () => {
   it('reads available cssEntries and records dependencies', async () => {
     const tempDir = await createTempDir()
     const entry = path.join(tempDir, 'app.css')
-    await fs.writeFile(entry, '@source inline("w-4");', 'utf8')
+    await fs.writeFile(entry, [
+      '@import "tailwindcss";',
+      '@source inline("w-4");',
+    ].join('\n'), 'utf8')
 
     const source = await resolveTailwindV4Source({
       projectRoot: packageRoot,
@@ -180,6 +183,60 @@ describe('Tailwind v4 engine', () => {
 
     expect(source.css).toContain('@source inline("w-4");')
     expect(source.dependencies).toContain(entry)
+  })
+
+  it('reads in-memory cssSources and records file dependencies', async () => {
+    const tempDir = await createTempDir()
+    const cssDir = path.join(tempDir, 'styles')
+    const cssFile = path.join(cssDir, 'app.css')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      baseFallbacks: [tailwindNodeBase],
+      cssSources: [
+        {
+          file: cssFile,
+          css: [
+            '@import "tailwindcss";',
+            '@source inline("text-green-500");',
+          ].join('\n'),
+        },
+      ],
+    })
+    const engine = createTailwindV4Engine(source)
+    const result = await engine.generate()
+
+    expect(source.base).toBe(cssDir)
+    expect(source.dependencies).toContain(cssFile)
+    expect(result.classSet).toContain('text-green-500')
+    expect(result.css).toContain('.text-green-500')
+  })
+
+  it('combines cssEntries and in-memory cssSources', async () => {
+    const tempDir = await createTempDir()
+    const entry = path.join(tempDir, 'app.css')
+    const virtualFile = path.join(tempDir, 'virtual.css')
+    await fs.writeFile(entry, [
+      '@import "tailwindcss";',
+      '@source inline("w-4");',
+    ].join('\n'), 'utf8')
+
+    const source = await resolveTailwindV4Source({
+      projectRoot: packageRoot,
+      base: tailwindNodeBase,
+      cssEntries: [entry],
+      cssSources: [
+        {
+          file: virtualFile,
+          css: '@source inline("h-4");',
+        },
+      ],
+    })
+    const engine = createTailwindV4Engine(source)
+    const result = await engine.generate()
+
+    expect(source.dependencies).toEqual(expect.arrayContaining([entry, virtualFile]))
+    expect(result.classSet).toContain('w-4')
+    expect(result.classSet).toContain('h-4')
   })
 
   it('keeps missing cssEntries as imports and records dependencies', async () => {

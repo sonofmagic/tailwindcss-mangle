@@ -4,8 +4,16 @@ export interface TailwindV4SourceOptions {
   base?: string
   baseFallbacks?: string[]
   css?: string
+  cssSources?: TailwindV4CssSource[]
   cssEntries?: string[]
   packageName?: string
+}
+
+export interface TailwindV4CssSource {
+  css: string
+  base?: string
+  file?: string
+  dependencies?: string[]
 }
 
 export interface TailwindV4ResolvedSource {
