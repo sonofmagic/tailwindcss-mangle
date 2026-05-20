@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.4
+
+### Patch Changes
+
+- 🐛 **新增源码候选提取 API，用于在源码片段中基于 Tailwind scanner 提取候选类名，并过滤 HTML 属性名、JS 模板插值和 CSS `@apply` 指令噪音。** [`96166b6`](https://github.com/sonofmagic/tailwindcss-mangle/commit/96166b65dd6f1ebee23d758a18df737209953a94) by @sonofmagic
+
 ## 9.3.3
 
 ### Patch Changes
