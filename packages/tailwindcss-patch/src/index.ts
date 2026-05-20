@@ -39,8 +39,11 @@ export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
+  extractSourceCandidates,
+  extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
+  type ExtractSourceCandidate,
 } from './extraction/candidate-extractor'
 export {
   collectClassesFromContexts,

@@ -22,6 +22,8 @@ import {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
+  extractSourceCandidates,
+  extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
 } from './extraction/candidate-extractor'
@@ -57,6 +59,8 @@ export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
+  extractSourceCandidates,
+  extractSourceCandidatesWithPositions,
   extractValidCandidates,
   getPatchStatusReport,
   groupTokensByFile,

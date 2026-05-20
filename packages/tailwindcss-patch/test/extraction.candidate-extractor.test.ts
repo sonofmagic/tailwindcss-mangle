@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import {
   extractProjectCandidatesWithPositions,
   extractRawCandidatesWithPositions,
+  extractSourceCandidates,
   extractValidCandidates,
   groupTokensByFile,
 } from '@/extraction/candidate-extractor'
@@ -61,6 +62,59 @@ describe('candidate extractor', () => {
     const classes = result.map(item => item.rawCandidate)
     expect(classes).toContain('text-blue-500')
     expect(result[0]).toHaveProperty('start')
+  })
+
+  it('extracts source candidates without html attribute names', async () => {
+    const result = await extractSourceCandidates(
+      '<view class="text-[23px] bg-[#123456] !-mt-[1.5px]"></view>',
+      'wxml',
+    )
+
+    expect(result).toEqual(expect.arrayContaining(['text-[23px]', 'bg-[#123456]', '!-mt-[1.5px]']))
+    expect(result).not.toContain('class')
+  })
+
+  it('extracts source candidates from JavaScript string content only', async () => {
+    const result = await extractSourceCandidates(
+      [
+        'document.body.append(`<div class="${className}">className</div>`)',
+        'const className = "flex bg-yellow-300/30 w-[100px]"',
+      ].join('\n'),
+      'js',
+    )
+
+    expect(result).toEqual(['flex', 'bg-yellow-300/30', 'w-[100px]'])
+    expect(result).not.toContain('className')
+  })
+
+  it('extracts CSS @apply params without directive tokens', async () => {
+    const result = await extractSourceCandidates(
+      '.x { @apply flex bg-[#123456] !mt-[1.5px] hover:text-[13px] !important; }',
+      'css',
+    )
+
+    expect(result).toEqual(['flex', 'bg-[#123456]', '!mt-[1.5px]', 'hover:text-[13px]'])
+  })
+
+  it.each(['vue', 'uvue', 'nvue'])('extracts source candidates from mixed %s template and script content', async (extension) => {
+    const result = await extractSourceCandidates(
+      [
+        '<template><view class="bg-[#000020] text-[23.000020px]"></view></template>',
+        '<script setup>',
+        'const className = "flex w-[100px]"',
+        '</script>',
+      ].join('\n'),
+      extension,
+    )
+
+    expect(result).toEqual(expect.arrayContaining([
+      'bg-[#000020]',
+      'text-[23.000020px]',
+      'flex',
+      'w-[100px]',
+    ]))
+    expect(result).not.toContain('class')
+    expect(result).not.toContain('className')
   })
 
   it('filters valid Tailwind candidates using design system', async () => {

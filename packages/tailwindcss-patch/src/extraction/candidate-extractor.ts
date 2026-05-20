@@ -55,6 +55,190 @@ export interface ExtractValidCandidatesOption {
   bareArbitraryValues?: boolean | BareArbitraryValueOptions
 }
 
+export interface ExtractSourceCandidate {
+  rawCandidate: string
+  start: number
+  end: number
+}
+
+interface ExtractSourceCandidateWithContext extends ExtractSourceCandidate {
+  content: string
+  extension: string
+  localStart: number
+}
+
+const HTML_ATTRIBUTE_NAME_CANDIDATE_RE = /^(?:class|className|hover-class|hoverClass)$/
+const CSS_DIRECTIVE_CANDIDATE_RE = /^@(?:apply|tailwind|source|config|plugin|theme|utility|custom-variant|variant)$/
+const CSS_APPLY_IMPORTANT = '!important'
+const JS_LIKE_SOURCE_EXTENSION_RE = /^(?:[cm]?[jt]sx?)$/
+const MIXED_TEMPLATE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue|svelte|mpx)$/
+const CSS_LIKE_SOURCE_EXTENSION_RE = /^(?:css|wxss|acss|jxss|ttss|qss|tyss|scss|sass|less|styl|stylus)$/
+const SFC_SCRIPT_BLOCK_RE = /<script\b[^>]*>([\s\S]*?)<\/script>/gi
+
+function isWhitespace(value: string | undefined) {
+  return value === ' ' || value === '\n' || value === '\r' || value === '\t' || value === '\f'
+}
+
+function isHtmlAttributeNameCandidate(content: string, candidate: ExtractSourceCandidate) {
+  if (!HTML_ATTRIBUTE_NAME_CANDIDATE_RE.test(candidate.rawCandidate)) {
+    return false
+  }
+  let index = candidate.end
+  while (isWhitespace(content[index])) {
+    index++
+  }
+  return content[index] === '='
+}
+
+function isInsideHtmlTagText(content: string, candidate: ExtractSourceCandidate) {
+  const open = content.lastIndexOf('<', candidate.start)
+  const close = content.lastIndexOf('>', candidate.start)
+  if (open > close) {
+    return false
+  }
+  const nextOpen = content.indexOf('<', candidate.end)
+  return nextOpen !== -1 && (nextOpen < content.indexOf('>', candidate.end) || content.indexOf('>', candidate.end) === -1)
+}
+
+function isCssDirectiveCandidate(candidate: string) {
+  return candidate === CSS_APPLY_IMPORTANT || CSS_DIRECTIVE_CANDIDATE_RE.test(candidate)
+}
+
+function isCandidateInCssApplyParams(content: string, candidate: ExtractSourceCandidate) {
+  const apply = content.lastIndexOf('@apply', candidate.start)
+  if (apply === -1) {
+    return false
+  }
+  const boundary = content.slice(apply + '@apply'.length, candidate.start)
+  return !/[;{}]/.test(boundary)
+}
+
+function isCandidateInsideJsStringStaticContent(content: string, start: number) {
+  let quote: '"' | '\'' | '`' | undefined
+  let templateExpressionDepth = 0
+  for (let index = 0; index < start; index++) {
+    const char = content[index]
+    const next = content[index + 1]
+
+    if (quote && char === '\\') {
+      index++
+      continue
+    }
+
+    if (quote === '`' && templateExpressionDepth > 0) {
+      if (char === '"' || char === '\'') {
+        const nestedQuote = char
+        index++
+        while (index < start) {
+          const nestedChar = content[index]
+          if (nestedChar === '\\') {
+            index += 2
+            continue
+          }
+          if (nestedChar === nestedQuote) {
+            break
+          }
+          index++
+        }
+        continue
+      }
+      if (char === '`') {
+        index++
+        while (index < start) {
+          const nestedChar = content[index]
+          if (nestedChar === '\\') {
+            index += 2
+            continue
+          }
+          if (nestedChar === '`') {
+            break
+          }
+          index++
+        }
+        continue
+      }
+      if (char === '{') {
+        templateExpressionDepth++
+        continue
+      }
+      if (char === '}') {
+        templateExpressionDepth--
+        continue
+      }
+      continue
+    }
+
+    if (quote) {
+      if (quote === '`' && char === '$' && next === '{') {
+        templateExpressionDepth = 1
+        index++
+        continue
+      }
+      if (char === quote) {
+        quote = undefined
+      }
+      continue
+    }
+
+    if (char === '"' || char === '\'' || char === '`') {
+      quote = char
+    }
+  }
+
+  return quote !== undefined && templateExpressionDepth === 0
+}
+
+function shouldKeepSourceCandidate(content: string, extension: string, candidate: ExtractSourceCandidate) {
+  if (!candidate.rawCandidate || isCssDirectiveCandidate(candidate.rawCandidate)) {
+    return false
+  }
+  if (CSS_LIKE_SOURCE_EXTENSION_RE.test(extension) && !isCandidateInCssApplyParams(content, candidate)) {
+    return false
+  }
+  if (isHtmlAttributeNameCandidate(content, candidate)) {
+    return false
+  }
+  if (isInsideHtmlTagText(content, candidate)) {
+    return false
+  }
+  if (
+    JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
+    && !isCandidateInsideJsStringStaticContent(content, candidate.start)
+  ) {
+    return false
+  }
+  return true
+}
+
+function createLocalCandidate(candidate: ExtractSourceCandidateWithContext): ExtractSourceCandidate {
+  return {
+    rawCandidate: candidate.rawCandidate,
+    start: candidate.localStart,
+    end: candidate.localStart + candidate.rawCandidate.length,
+  }
+}
+
+async function extractMixedSourceScriptCandidates(content: string) {
+  const candidates: ExtractSourceCandidateWithContext[] = []
+  SFC_SCRIPT_BLOCK_RE.lastIndex = 0
+  let match = SFC_SCRIPT_BLOCK_RE.exec(content)
+  while (match !== null) {
+    const scriptContent = match[1] ?? ''
+    const scriptStart = match.index + match[0].indexOf(scriptContent)
+    const scriptCandidates = await extractRawCandidatesWithPositions(scriptContent, 'js')
+    candidates.push(...scriptCandidates.map(candidate => ({
+      content: scriptContent,
+      extension: 'js',
+      localStart: candidate.start,
+      rawCandidate: candidate.rawCandidate,
+      start: candidate.start + scriptStart,
+      end: candidate.end + scriptStart,
+    })))
+    match = SFC_SCRIPT_BLOCK_RE.exec(content)
+  }
+  return candidates
+}
+
 function createCandidateCacheKey(
   designSystemKey: string,
   options: Pick<ExtractValidCandidatesOption, 'bareArbitraryValues'>,
@@ -68,7 +252,7 @@ function createCandidateCacheKey(
 export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
-): Promise<{ rawCandidate: string, start: number, end: number }[]> {
+): Promise<ExtractSourceCandidate[]> {
   const { Scanner } = await getOxideModule()
   const scanner = new Scanner({})
   const result = scanner.getCandidatesWithPositions({ content, extension })
@@ -78,6 +262,43 @@ export async function extractRawCandidatesWithPositions(
     start: position,
     end: position + candidate.length,
   }))
+}
+
+export async function extractSourceCandidatesWithPositions(
+  content: string,
+  extension: string = 'html',
+): Promise<ExtractSourceCandidate[]> {
+  const normalizedExtension = extension.replace(/^\./, '')
+  const candidates: ExtractSourceCandidateWithContext[] = (await extractRawCandidatesWithPositions(content, normalizedExtension))
+    .map(candidate => ({
+      ...candidate,
+      content,
+      extension: normalizedExtension,
+      localStart: candidate.start,
+    }))
+  if (MIXED_TEMPLATE_SOURCE_EXTENSION_RE.test(normalizedExtension)) {
+    candidates.push(...await extractMixedSourceScriptCandidates(content))
+  }
+  const seen = new Set<string>()
+  return candidates.filter((candidate) => {
+    if (!shouldKeepSourceCandidate(candidate.content, candidate.extension, createLocalCandidate(candidate))) {
+      return false
+    }
+    const key = `${candidate.start}:${candidate.end}:${candidate.rawCandidate}`
+    if (seen.has(key)) {
+      return false
+    }
+    seen.add(key)
+    return true
+  }).map(({ rawCandidate, start, end }) => ({ rawCandidate, start, end }))
+}
+
+export async function extractSourceCandidates(
+  content: string,
+  extension: string = 'html',
+): Promise<string[]> {
+  const candidates = await extractSourceCandidatesWithPositions(content, extension)
+  return [...new Set(candidates.map(candidate => candidate.rawCandidate))]
 }
 
 export async function extractRawCandidates(
