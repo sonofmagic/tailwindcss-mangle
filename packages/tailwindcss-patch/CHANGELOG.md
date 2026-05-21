@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.5
+
+### Patch Changes
+
+- 🐛 **修复 CSS-like 文件源码候选提取时，`@apply` 参数中的任意值工具类可能被整段 CSS scanner 漏掉的问题。** [`7a53099`](https://github.com/sonofmagic/tailwindcss-mangle/commit/7a530993c6d96065c0e04b8c4aa36f5d23d69552) by @sonofmagic
+
 ## 9.3.4
 
 ### Patch Changes
