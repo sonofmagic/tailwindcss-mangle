@@ -70,6 +70,7 @@ interface ExtractSourceCandidateWithContext extends ExtractSourceCandidate {
 const HTML_ATTRIBUTE_NAME_CANDIDATE_RE = /^(?:class|className|hover-class|hoverClass)$/
 const CSS_DIRECTIVE_CANDIDATE_RE = /^@(?:apply|tailwind|source|config|plugin|theme|utility|custom-variant|variant)$/
 const CSS_APPLY_IMPORTANT = '!important'
+const CSS_APPLY_RE = /@apply\s+([^;{}]+)/g
 const JS_LIKE_SOURCE_EXTENSION_RE = /^(?:[cm]?[jt]sx?)$/
 const MIXED_TEMPLATE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue|svelte|mpx)$/
 const CSS_LIKE_SOURCE_EXTENSION_RE = /^(?:css|wxss|acss|jxss|ttss|qss|tyss|scss|sass|less|styl|stylus)$/
@@ -218,6 +219,27 @@ function createLocalCandidate(candidate: ExtractSourceCandidateWithContext): Ext
   }
 }
 
+async function extractCssApplyCandidates(content: string, extension: string) {
+  const candidates: ExtractSourceCandidateWithContext[] = []
+  CSS_APPLY_RE.lastIndex = 0
+  let match = CSS_APPLY_RE.exec(content)
+  while (match !== null) {
+    const applyParams = match[1] ?? ''
+    const applyParamsStart = match.index + match[0].indexOf(applyParams)
+    const applyCandidates = await extractRawCandidatesWithPositions(applyParams, extension)
+    candidates.push(...applyCandidates.map(candidate => ({
+      content: applyParams,
+      extension: 'html',
+      localStart: candidate.start,
+      rawCandidate: candidate.rawCandidate,
+      start: candidate.start + applyParamsStart,
+      end: candidate.end + applyParamsStart,
+    })))
+    match = CSS_APPLY_RE.exec(content)
+  }
+  return candidates
+}
+
 async function extractMixedSourceScriptCandidates(content: string) {
   const candidates: ExtractSourceCandidateWithContext[] = []
   SFC_SCRIPT_BLOCK_RE.lastIndex = 0
@@ -269,13 +291,15 @@ export async function extractSourceCandidatesWithPositions(
   extension: string = 'html',
 ): Promise<ExtractSourceCandidate[]> {
   const normalizedExtension = extension.replace(/^\./, '')
-  const candidates: ExtractSourceCandidateWithContext[] = (await extractRawCandidatesWithPositions(content, normalizedExtension))
-    .map(candidate => ({
-      ...candidate,
-      content,
-      extension: normalizedExtension,
-      localStart: candidate.start,
-    }))
+  const candidates: ExtractSourceCandidateWithContext[] = CSS_LIKE_SOURCE_EXTENSION_RE.test(normalizedExtension)
+    ? await extractCssApplyCandidates(content, normalizedExtension)
+    : (await extractRawCandidatesWithPositions(content, normalizedExtension))
+        .map(candidate => ({
+          ...candidate,
+          content,
+          extension: normalizedExtension,
+          localStart: candidate.start,
+        }))
   if (MIXED_TEMPLATE_SOURCE_EXTENSION_RE.test(normalizedExtension)) {
     candidates.push(...await extractMixedSourceScriptCandidates(content))
   }

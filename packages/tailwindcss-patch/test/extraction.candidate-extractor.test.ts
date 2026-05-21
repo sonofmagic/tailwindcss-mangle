@@ -89,11 +89,12 @@ describe('candidate extractor', () => {
 
   it('extracts CSS @apply params without directive tokens', async () => {
     const result = await extractSourceCandidates(
-      '.x { @apply flex bg-[#123456] !mt-[1.5px] hover:text-[13px] !important; }',
+      '.x { @apply flex bg-[#123456] px-[12px] !mt-[1.5px] hover:text-[13px] !important; }',
       'css',
     )
 
-    expect(result).toEqual(['flex', 'bg-[#123456]', '!mt-[1.5px]', 'hover:text-[13px]'])
+    expect(result).toEqual(['flex', 'bg-[#123456]', 'px-[12px]', '!mt-[1.5px]', 'hover:text-[13px]'])
+    expect(result).not.toContain('x')
   })
 
   it.each(['vue', 'uvue', 'nvue'])('extracts source candidates from mixed %s template and script content', async (extension) => {
