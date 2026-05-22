@@ -25,9 +25,9 @@
   "devDependencies": {
     "@remix-run/dev": "^2.13.1",
     "@remix-run/eslint-config": "^2.13.1",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "tailwindcss": "^3.4.14",
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3"

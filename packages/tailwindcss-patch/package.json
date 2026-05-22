@@ -99,10 +99,10 @@
     "cac": "6.7.14",
     "consola": "^3.4.2",
     "fs-extra": "^11.3.5",
-    "local-pkg": "^1.1.2",
+    "local-pkg": "^1.2.1",
     "pathe": "^2.0.3",
-    "postcss": "^8.5.14",
-    "semver": "^7.8.0",
+    "postcss": "^8.5.15",
+    "semver": "^7.8.1",
     "tailwindcss-config": "^1.1.5"
   },
   "devDependencies": {
