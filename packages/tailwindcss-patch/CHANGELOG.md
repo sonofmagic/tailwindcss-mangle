@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.6
+
+### Patch Changes
+
+- 🐛 **Support Tailwind CSS v4 source detection syntax, including `@import "tailwindcss" source(...)`, `source(none)`, `@source`, `@source not`, `@source inline(...)`, and `@source not inline(...)`, matching the default scanner behavior used by the official PostCSS and Vite integrations.** [`2b4b6ec`](https://github.com/sonofmagic/tailwindcss-mangle/commit/2b4b6ec2d05232944d6aeeb36bac9c13a71ba973) by @sonofmagic
+
 ## 9.3.5
 
 ### Patch Changes
