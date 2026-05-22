@@ -1,12 +1,15 @@
 import { createRequire } from 'node:module'
+import { promises as fs } from 'node:fs'
+import os from 'node:os'
 import path from 'pathe'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import {
   extractProjectCandidatesWithPositions,
   extractRawCandidatesWithPositions,
   extractSourceCandidates,
   extractValidCandidates,
   groupTokensByFile,
+  resolveProjectSourceFiles,
 } from '@/extraction/candidate-extractor'
 
 const require = createRequire(import.meta.url)
@@ -54,8 +57,24 @@ const v42VariantCandidates = [
   'nth-of-type-4:text-green-500',
   'nth-last-of-type-5:underline',
 ]
+const tempDirs: string[] = []
+
+async function createTempDir(prefix: string) {
+  const tempDir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), prefix)))
+  tempDirs.push(tempDir)
+  return tempDir
+}
+
+async function writeTempFile(file: string, content: string) {
+  await fs.mkdir(path.dirname(file), { recursive: true })
+  await fs.writeFile(file, content, 'utf8')
+}
 
 describe('candidate extractor', () => {
+  afterEach(async () => {
+    await Promise.all(tempDirs.splice(0).map(tempDir => fs.rm(tempDir, { recursive: true, force: true })))
+  })
+
   it('returns candidate positions for raw content', async () => {
     const html = '<div class="text-blue-500 font-bold"></div>'
     const result = await extractRawCandidatesWithPositions(html)
@@ -95,6 +114,115 @@ describe('candidate extractor', () => {
 
     expect(result).toEqual(['flex', 'bg-[#123456]', 'px-[12px]', '!mt-[1.5px]', 'hover:text-[13px]'])
     expect(result).not.toContain('x')
+  })
+
+  it('resolves project source files with Tailwind v4 scanner default ignores', async () => {
+    const root = await createTempDir('tw-patch-source-files-')
+    await writeTempFile(path.join(root, '.gitignore'), 'ignored-by-gitignore.html\n')
+    await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
+    await writeTempFile(path.join(root, 'node_modules/pkg/page.html'), '<div class="text-red-500"></div>')
+    await writeTempFile(path.join(root, 'ignored-by-gitignore.html'), '<div class="text-blue-500"></div>')
+    await writeTempFile(path.join(root, 'src/ignored.scss'), '.x { @apply text-yellow-500; }')
+    await writeTempFile(path.join(root, 'package-lock.json'), '{"class":"text-pink-500"}')
+
+    const files = await resolveProjectSourceFiles({ cwd: root })
+
+    expect(files.map(file => path.relative(root, file)).sort()).toEqual(['src/page.html'])
+  })
+
+  it('expands brace source patterns before passing them to the Tailwind v4 scanner', async () => {
+    const root = await createTempDir('tw-patch-source-files-brace-')
+    await writeTempFile(path.join(root, 'src/page.ts'), 'export const cls = "text-green-500"')
+    await writeTempFile(path.join(root, 'src/page.tsx'), 'export const cls = "text-blue-500"')
+    await writeTempFile(path.join(root, 'src/page.vue'), '<template><div class="text-red-500"></div></template>')
+
+    const files = await resolveProjectSourceFiles({
+      cwd: root,
+      sources: [{
+        base: root,
+        pattern: 'src/**/*.{ts,tsx}',
+        negated: false,
+      }],
+    })
+
+    expect(files.map(file => path.relative(root, file)).sort()).toEqual(['src/page.ts', 'src/page.tsx'])
+  })
+
+  it('lets explicit source patterns include extensions ignored by default', async () => {
+    const root = await createTempDir('tw-patch-source-files-explicit-')
+    const scssFile = path.join(root, 'src/explicit.scss')
+    await writeTempFile(scssFile, '.x { @apply text-yellow-500; }')
+
+    await expect(resolveProjectSourceFiles({
+      cwd: root,
+      sources: [{
+        base: path.join(root, 'src'),
+        pattern: 'explicit.scss',
+        negated: false,
+      }],
+    })).resolves.toEqual([scssFile])
+  })
+
+  it('resolves Tailwind v4 @source paths and @source not paths from css like official integrations', async () => {
+    const root = await createTempDir('tw-patch-source-files-css-')
+    await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
+    await writeTempFile(path.join(root, 'src/legacy/page.html'), '<div class="text-red-500"></div>')
+    await writeTempFile(path.join(root, 'vendor/ui/button.html'), '<button class="text-blue-500"></button>')
+    await writeTempFile(path.join(root, 'outside/page.html'), '<div class="text-pink-500"></div>')
+
+    const files = await resolveProjectSourceFiles({
+      cwd: root,
+      base: root,
+      baseFallbacks: [tailwindNodeBase],
+      css: [
+        '@import "tailwindcss" source("./src");',
+        '@source not "./src/legacy";',
+        '@source "./vendor/ui";',
+      ].join('\n'),
+    })
+
+    expect(files.map(file => path.relative(root, file)).sort()).toEqual([
+      'src/page.html',
+      'vendor/ui/button.html',
+    ])
+  })
+
+  it('respects @import "tailwindcss" source(none) when resolving css sources', async () => {
+    const root = await createTempDir('tw-patch-source-files-none-')
+    await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
+    await writeTempFile(path.join(root, 'admin/page.html'), '<div class="text-red-500"></div>')
+    await writeTempFile(path.join(root, 'shared/page.html'), '<div class="text-blue-500"></div>')
+
+    const files = await resolveProjectSourceFiles({
+      cwd: root,
+      base: root,
+      baseFallbacks: [tailwindNodeBase],
+      css: [
+        '@import "tailwindcss" source(none);',
+        '@source "./admin";',
+        '@source "./shared";',
+      ].join('\n'),
+    })
+
+    expect(files.map(file => path.relative(root, file)).sort()).toEqual([
+      'admin/page.html',
+      'shared/page.html',
+    ])
+  })
+
+  it('uses the Tailwind v4 default source root when css has no source override', async () => {
+    const root = await createTempDir('tw-patch-source-files-default-root-')
+    await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
+    await writeTempFile(path.join(root, 'node_modules/pkg/page.html'), '<div class="text-red-500"></div>')
+
+    const files = await resolveProjectSourceFiles({
+      cwd: root,
+      base: root,
+      baseFallbacks: [tailwindNodeBase],
+      css: '@import "tailwindcss";',
+    })
+
+    expect(files.map(file => path.relative(root, file)).sort()).toEqual(['src/page.html'])
   })
 
   it.each(['vue', 'uvue', 'nvue'])('extracts source candidates from mixed %s template and script content', async (extension) => {
@@ -254,6 +382,34 @@ describe('candidate extractor', () => {
 
     expect(result).toContain('text-shadow-md')
     expect(result).toContain('text-pretty')
+  })
+
+  it('expands Tailwind v4 @source inline variants, ranges, and not inline exclusions', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      css: [
+        '@import "tailwindcss";',
+        '@source inline("{hover:,focus:,}underline");',
+        '@source inline("p-{2..6..2}");',
+        '@source inline("bg-red-{50,{100..300..100},950}");',
+        '@source not inline("bg-red-{200..300..100}");',
+      ].join('\n'),
+      sources: [],
+    })
+
+    expect(result).toEqual(expect.arrayContaining([
+      'underline',
+      'hover:underline',
+      'focus:underline',
+      'p-2',
+      'p-4',
+      'p-6',
+      'bg-red-50',
+      'bg-red-100',
+      'bg-red-950',
+    ]))
+    expect(result).not.toContain('bg-red-200')
+    expect(result).not.toContain('bg-red-300')
   })
 
   it('scans project files for token metadata', async () => {

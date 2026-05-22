@@ -12,8 +12,8 @@ import {
   type BareArbitraryValueOptions,
   resolveBareArbitraryValueCandidate,
 } from '../v4/bare-arbitrary-values'
-import { resolveValidTailwindV4Candidates } from '../v4/candidates'
-import { getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter'
+import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from '../v4/candidates'
+import { compileTailwindV4Source, getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter'
 
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
@@ -367,6 +367,17 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   designSystemCandidateCache.set(candidateCacheKey, candidateCache)
 
   const candidates = await extractRawCandidates(sources)
+  const inlineSources = extractTailwindV4InlineSourceCandidates(css)
+  for (const candidate of inlineSources.included) {
+    candidates.push(candidate)
+  }
+  for (const candidate of inlineSources.excluded) {
+    let index = candidates.indexOf(candidate)
+    while (index !== -1) {
+      candidates.splice(index, 1)
+      index = candidates.indexOf(candidate)
+    }
+  }
   const validCandidates: string[] = []
   const uncachedCandidates: string[] = []
 
@@ -415,24 +426,6 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   }
 
   return validCandidates
-}
-
-function normalizeSources(sources: SourceEntry[] | undefined, cwd: string) {
-  const baseSources = sources?.length
-    ? sources
-    : [
-        {
-          base: cwd,
-          pattern: '**/*',
-          negated: false,
-        },
-      ]
-
-  return baseSources.map(source => ({
-    base: source.base ?? cwd,
-    pattern: source.pattern,
-    negated: source.negated,
-  }))
 }
 
 function buildLineOffsets(content: string) {
@@ -499,16 +492,160 @@ function toRelativeFile(cwd: string, filename: string) {
 export interface ExtractProjectCandidatesOptions {
   cwd?: string
   sources?: SourceEntry[]
+  base?: string
+  baseFallbacks?: string[]
+  css?: string
+}
+
+export interface ResolveProjectSourceFilesOptions {
+  cwd?: string
+  sources?: SourceEntry[]
+  ignoredSources?: SourceEntry[]
+  base?: string
+  baseFallbacks?: string[]
+  css?: string
+  filter?: (file: string) => boolean
+}
+
+function expandBracePattern(pattern: string) {
+  const index = pattern.indexOf('{')
+  if (index === -1) {
+    return [pattern]
+  }
+
+  const rest = pattern.slice(index)
+  let depth = 0
+  let endIndex = -1
+  for (let i = 0; i < rest.length; i++) {
+    const char = rest[i]
+    if (char === '\\') {
+      i += 1
+      continue
+    }
+    if (char === '{') {
+      depth += 1
+      continue
+    }
+    if (char === '}') {
+      depth -= 1
+      if (depth === 0) {
+        endIndex = i
+        break
+      }
+    }
+  }
+  if (endIndex === -1) {
+    return [pattern]
+  }
+
+  const prefix = pattern.slice(0, index)
+  const inner = rest.slice(1, endIndex)
+  const suffix = rest.slice(endIndex + 1)
+  const parts: string[] = []
+  const stack: string[] = []
+  let lastPos = 0
+  for (let i = 0; i < inner.length; i++) {
+    const char = inner[i]
+    if (char === '\\') {
+      i += 1
+      continue
+    }
+    if (char === '{') {
+      stack.push('}')
+      continue
+    }
+    if (char === '}' && stack[stack.length - 1] === '}') {
+      stack.pop()
+      continue
+    }
+    if (char === ',' && stack.length === 0) {
+      parts.push(inner.slice(lastPos, i))
+      lastPos = i + 1
+    }
+  }
+  parts.push(inner.slice(lastPos))
+
+  return parts.flatMap(part =>
+    expandBracePattern(`${prefix}${part}${suffix}`))
+}
+
+function normalizeScannerSources(
+  sources: SourceEntry[] | undefined,
+  cwd: string,
+  ignoredSources: SourceEntry[] = [],
+) {
+  const baseSources = sources?.length
+    ? sources
+    : [
+        {
+          base: cwd,
+          pattern: '**/*',
+          negated: false,
+        },
+      ]
+
+  return [...baseSources, ...ignoredSources].flatMap((source) => {
+    const base = source.base ?? cwd
+    return expandBracePattern(source.pattern).map(pattern => ({
+      base,
+      pattern,
+      negated: source.negated,
+    }))
+  })
+}
+
+async function resolveScannerSources(options?: ResolveProjectSourceFilesOptions) {
+  const cwd = options?.cwd ? path.resolve(options.cwd) : process.cwd()
+  if (options?.sources?.length || options?.css === undefined) {
+    return {
+      cwd,
+      sources: normalizeScannerSources(options?.sources, cwd, options?.ignoredSources),
+    }
+  }
+
+  const base = options.base ? path.resolve(options.base) : cwd
+  const { compiled } = await compileTailwindV4Source({
+    projectRoot: cwd,
+    base,
+    baseFallbacks: options.baseFallbacks?.map(baseFallback => path.resolve(baseFallback)) ?? [],
+    css: options.css,
+    dependencies: [],
+  })
+  const rootSources = (() => {
+    if (compiled.root === 'none') {
+      return []
+    }
+    if (compiled.root === null) {
+      return [{ base, pattern: '**/*', negated: false }]
+    }
+    return [{ ...compiled.root, negated: false }]
+  })()
+
+  return {
+    cwd,
+    sources: normalizeScannerSources([...rootSources, ...compiled.sources], cwd, options.ignoredSources),
+  }
+}
+
+export async function resolveProjectSourceFiles(options?: ResolveProjectSourceFilesOptions): Promise<string[]> {
+  const { sources } = await resolveScannerSources(options)
+  const { Scanner } = await getOxideModule()
+  const scanner = new Scanner({
+    sources,
+  })
+  const files = scanner.files ?? []
+  return options?.filter
+    ? files.filter(options.filter)
+    : files
 }
 
 export async function extractProjectCandidatesWithPositions(
   options?: ExtractProjectCandidatesOptions,
 ): Promise<TailwindTokenReport> {
-  const cwd = options?.cwd ? path.resolve(options.cwd) : process.cwd()
-  const normalizedSources = normalizeSources(options?.sources, cwd)
+  const { cwd, sources } = await resolveScannerSources(options)
   const { Scanner } = await getOxideModule()
   const scanner = new Scanner({
-    sources: normalizedSources,
+    sources,
   })
 
   const files = scanner.files ?? []
@@ -563,7 +700,7 @@ export async function extractProjectCandidatesWithPositions(
     entries,
     filesScanned: files.length,
     skippedFiles: skipped,
-    sources: normalizedSources,
+    sources,
   }
 }
 

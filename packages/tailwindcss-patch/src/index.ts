@@ -43,6 +43,7 @@ export {
   extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
+  resolveProjectSourceFiles,
   type ExtractSourceCandidate,
 } from './extraction/candidate-extractor'
 export {

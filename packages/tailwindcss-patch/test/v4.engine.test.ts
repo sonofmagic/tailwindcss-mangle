@@ -167,6 +167,47 @@ describe('Tailwind v4 engine', () => {
     expect(result.css).toContain('.w-4')
   })
 
+  it('expands official @source inline variant and range syntax', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource([
+      '@import "tailwindcss";',
+      '@source inline("{hover:,focus:,}underline");',
+      '@source inline("p-{2..6..2}");',
+    ].join('\n')))
+    const result = await engine.generate()
+
+    expect(result.classSet).toEqual(new Set([
+      'hover:underline',
+      'focus:underline',
+      'underline',
+      'p-2',
+      'p-4',
+      'p-6',
+    ]))
+    expect(result.css).toContain('.underline')
+    expect(result.css).toContain('.hover\\:underline')
+    expect(result.css).toContain('.focus\\:underline')
+    expect(result.css).toContain('.p-2')
+    expect(result.css).toContain('.p-4')
+    expect(result.css).toContain('.p-6')
+  })
+
+  it('applies @source not inline exclusions after explicit candidates', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource([
+      '@import "tailwindcss";',
+      '@source not inline("bg-red-{200..300..100}");',
+    ].join('\n')))
+    const result = await engine.generate({
+      candidates: ['bg-red-100', 'bg-red-200', 'bg-red-300'],
+    })
+
+    expect(result.classSet).toContain('bg-red-100')
+    expect(result.classSet).not.toContain('bg-red-200')
+    expect(result.classSet).not.toContain('bg-red-300')
+    expect(result.css).toContain('.bg-red-100')
+    expect(result.css).not.toContain('.bg-red-200')
+    expect(result.css).not.toContain('.bg-red-300')
+  })
+
   it('reads available cssEntries and records dependencies', async () => {
     const tempDir = await createTempDir()
     const entry = path.join(tempDir, 'app.css')
@@ -347,5 +388,54 @@ describe('Tailwind v4 engine', () => {
     expect(withScan.classSet).not.toContain('text-red-500')
     expect(withScan.css).toContain('.text-green-500')
     expect(withScan.css).not.toContain('.text-red-500')
+  })
+
+  it('uses @import source() root and @source not entries when scanSources is true', async () => {
+    const tempDir = await createTempDir()
+    await fs.mkdir(path.join(tempDir, 'src/legacy'), { recursive: true })
+    await fs.mkdir(path.join(tempDir, 'outside'), { recursive: true })
+    await fs.writeFile(path.join(tempDir, 'src/index.html'), '<div class="text-green-500"></div>', 'utf8')
+    await fs.writeFile(path.join(tempDir, 'src/legacy/index.html'), '<div class="text-red-500"></div>', 'utf8')
+    await fs.writeFile(path.join(tempDir, 'outside/index.html'), '<div class="text-blue-500"></div>', 'utf8')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      base: tempDir,
+      baseFallbacks: [tailwindNodeBase],
+      css: [
+        '@import "tailwindcss" source("./src");',
+        '@source not "./src/legacy";',
+      ].join('\n'),
+    })
+    const engine = createTailwindV4Engine(source)
+    const result = await engine.generate({ scanSources: true })
+
+    expect(result.root).toEqual({ base: tempDir, pattern: './src' })
+    expect(result.sources).toEqual([{ base: tempDir, pattern: './src/legacy', negated: true }])
+    expect(result.classSet).toContain('text-green-500')
+    expect(result.classSet).not.toContain('text-red-500')
+    expect(result.classSet).not.toContain('text-blue-500')
+  })
+
+  it('uses source(none) to disable automatic source detection when scanSources is true', async () => {
+    const tempDir = await createTempDir()
+    await fs.mkdir(path.join(tempDir, 'src'), { recursive: true })
+    await fs.mkdir(path.join(tempDir, 'admin'), { recursive: true })
+    await fs.writeFile(path.join(tempDir, 'src/index.html'), '<div class="text-green-500"></div>', 'utf8')
+    await fs.writeFile(path.join(tempDir, 'admin/index.html'), '<div class="text-red-500"></div>', 'utf8')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      base: tempDir,
+      baseFallbacks: [tailwindNodeBase],
+      css: [
+        '@import "tailwindcss" source(none);',
+        '@source "./admin";',
+      ].join('\n'),
+    })
+    const engine = createTailwindV4Engine(source)
+    const result = await engine.generate({ scanSources: true })
+
+    expect(result.root).toBe('none')
+    expect(result.classSet).toContain('text-red-500')
+    expect(result.classSet).not.toContain('text-green-500')
   })
 })

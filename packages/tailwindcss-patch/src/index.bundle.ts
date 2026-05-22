@@ -26,6 +26,7 @@ import {
   extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
+  resolveProjectSourceFiles,
 } from './extraction/candidate-extractor'
 import {
   collectClassesFromContexts,
@@ -73,6 +74,7 @@ export {
   normalizeOptions,
   resolveTailwindV4Source,
   resolveTailwindV4SourceFromPatchOptions,
+  resolveProjectSourceFiles,
   resolveValidTailwindV4Candidates,
   restoreConfigFiles,
   runTailwindBuild,

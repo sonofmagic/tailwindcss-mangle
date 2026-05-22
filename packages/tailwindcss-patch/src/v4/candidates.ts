@@ -126,7 +126,7 @@ export function canonicalizeBareArbitraryValueCandidates(
   })
 }
 
-function splitTopLevel(value: string, separator: string) {
+function splitTopLevel(value: string, separator: string, options?: { keepEmpty?: boolean }) {
   const result: string[] = []
   let start = 0
   let depth = 0
@@ -163,7 +163,7 @@ function splitTopLevel(value: string, separator: string) {
 
     if (depth === 0 && character === separator) {
       const item = value.slice(start, index).trim()
-      if (item) {
+      if (item || options?.keepEmpty) {
         result.push(item)
       }
       start = index + 1
@@ -171,7 +171,7 @@ function splitTopLevel(value: string, separator: string) {
   }
 
   const item = value.slice(start).trim()
-  if (item) {
+  if (item || options?.keepEmpty) {
     result.push(item)
   }
   return result
@@ -244,7 +244,7 @@ function expandInlinePattern(pattern: string): string[] {
   const suffix = rest.slice(closeIndex + 1)
   const parts = sequencePattern.test(body)
     ? expandSequence(body)
-    : splitTopLevel(body, ',').flatMap(part => expandInlinePattern(part))
+    : splitTopLevel(body, ',', { keepEmpty: true }).flatMap(part => expandInlinePattern(part))
   const suffixes = expandInlinePattern(suffix)
 
   const result: string[] = []

@@ -16,13 +16,24 @@ import { compileTailwindV4Source, loadTailwindV4DesignSystem } from './node-adap
 
 function resolveScanSources(
   options: TailwindV4GenerateOptions | undefined,
+  source: TailwindV4ResolvedSource,
+  compiledRoot: TailwindV4GenerateResult['root'],
   compiledSources: TailwindV4SourcePattern[],
 ) {
   if (Array.isArray(options?.scanSources)) {
     return options.scanSources
   }
   if (options?.scanSources === true) {
-    return compiledSources
+    const rootSources = (() => {
+      if (compiledRoot === 'none') {
+        return []
+      }
+      if (compiledRoot === null) {
+        return [{ base: source.base, pattern: '**/*', negated: false }]
+      }
+      return [{ ...compiledRoot, negated: false }]
+    })()
+    return [...rootSources, ...compiledSources]
   }
   return []
 }
@@ -30,6 +41,7 @@ function resolveScanSources(
 async function collectRawCandidates(
   source: TailwindV4ResolvedSource,
   options: TailwindV4GenerateOptions | undefined,
+  compiledRoot: TailwindV4GenerateResult['root'],
   compiledSources: TailwindV4SourcePattern[] = [],
 ) {
   const rawCandidates = new Set<string>()
@@ -45,7 +57,7 @@ async function collectRawCandidates(
     }
   }
 
-  const filesystemSources = resolveScanSources(options, compiledSources)
+  const filesystemSources = resolveScanSources(options, source, compiledRoot, compiledSources)
   if (filesystemSources.length > 0) {
     for (const candidate of await extractRawCandidates(filesystemSources)) {
       rawCandidates.add(candidate)
@@ -75,7 +87,7 @@ export function createTailwindV4Engine(source: TailwindV4ResolvedSource): Tailwi
     },
     async generate(options): Promise<TailwindV4GenerateResult> {
       const { compiled, dependencies } = await compileTailwindV4Source(source)
-      const rawCandidates = await collectRawCandidates(source, options, compiled.sources)
+      const rawCandidates = await collectRawCandidates(source, options, compiled.root, compiled.sources)
       const designSystem = await loadTailwindV4DesignSystem(source)
       const classSet = resolveValidTailwindV4Candidates(designSystem, rawCandidates, {
         ...(options?.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: options.bareArbitraryValues }),
