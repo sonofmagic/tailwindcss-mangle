@@ -1,5 +1,11 @@
 # tailwindcss-patch
 
+## 9.3.7
+
+### Patch Changes
+
+- 🐛 **Add Tailwind CSS v4 source scan helpers for official `@source` path normalization, compiled source root handling, matcher utilities, and default ignored source rules.** [`ca484c9`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ca484c9a926c29da86beacd0f11c59965e2725cb) by @sonofmagic
+
 ## 9.3.6
 
 ### Patch Changes
