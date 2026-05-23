@@ -13,6 +13,7 @@ import {
   resolveValidTailwindV4Candidates,
 } from './candidates'
 import { compileTailwindV4Source, loadTailwindV4DesignSystem } from './node-adapter'
+import { createTailwindV4CompiledSourceEntries } from './source-scan'
 
 function resolveScanSources(
   options: TailwindV4GenerateOptions | undefined,
@@ -24,16 +25,7 @@ function resolveScanSources(
     return options.scanSources
   }
   if (options?.scanSources === true) {
-    const rootSources = (() => {
-      if (compiledRoot === 'none') {
-        return []
-      }
-      if (compiledRoot === null) {
-        return [{ base: source.base, pattern: '**/*', negated: false }]
-      }
-      return [{ ...compiledRoot, negated: false }]
-    })()
-    return [...rootSources, ...compiledSources]
+    return createTailwindV4CompiledSourceEntries(compiledRoot, compiledSources, source.base)
   }
   return []
 }

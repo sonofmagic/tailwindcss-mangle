@@ -121,9 +121,15 @@ describe('candidate extractor', () => {
     await writeTempFile(path.join(root, '.gitignore'), 'ignored-by-gitignore.html\n')
     await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
     await writeTempFile(path.join(root, 'node_modules/pkg/page.html'), '<div class="text-red-500"></div>')
+    await writeTempFile(path.join(root, '.next/server/page.html'), '<div class="text-cyan-500"></div>')
+    await writeTempFile(path.join(root, '.svelte-kit/page.html'), '<div class="text-orange-500"></div>')
+    await writeTempFile(path.join(root, '.turbo/page.html'), '<div class="text-purple-500"></div>')
     await writeTempFile(path.join(root, 'ignored-by-gitignore.html'), '<div class="text-blue-500"></div>')
     await writeTempFile(path.join(root, 'src/ignored.scss'), '.x { @apply text-yellow-500; }')
+    await writeTempFile(path.join(root, 'src/debug.log'), 'text-zinc-500')
     await writeTempFile(path.join(root, 'package-lock.json'), '{"class":"text-pink-500"}')
+    await writeTempFile(path.join(root, 'pnpm-lock.yaml'), 'text-indigo-500')
+    await writeTempFile(path.join(root, '.env.local'), 'text-rose-500')
 
     const files = await resolveProjectSourceFiles({ cwd: root })
 
@@ -401,6 +407,38 @@ describe('candidate extractor', () => {
       'underline',
       'hover:underline',
       'focus:underline',
+      'p-2',
+      'p-4',
+      'p-6',
+      'bg-red-50',
+      'bg-red-100',
+      'bg-red-950',
+    ]))
+    expect(result).not.toContain('bg-red-200')
+    expect(result).not.toContain('bg-red-300')
+  })
+
+  it('supports official @source inline whitespace, brace, range, and not inline syntax in css option', async () => {
+    const result = await extractValidCandidates({
+      base: tailwindNodeBase,
+      css: [
+        '@import "tailwindcss" source(none);',
+        '@source inline( "underline" );',
+        '@source inline(',
+        '  "{hover:,focus:,}block"',
+        ');',
+        '@source inline("p-{2..6..2}");',
+        '@source inline("bg-red-{50,{100..300..100},950}");',
+        '@source not inline("bg-red-{200..300..100}");',
+      ].join('\n'),
+      sources: [],
+    })
+
+    expect(result).toEqual(expect.arrayContaining([
+      'underline',
+      'block',
+      'hover:block',
+      'focus:block',
       'p-2',
       'p-4',
       'p-6',

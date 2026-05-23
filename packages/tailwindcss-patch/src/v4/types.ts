@@ -47,6 +47,11 @@ export interface TailwindV4GenerateOptions {
   scanSources?: boolean | TailwindV4SourcePattern[]
 }
 
+export type TailwindV4CompiledSourceRoot = null | 'none' | {
+  base: string
+  pattern: string
+}
+
 export interface TailwindV4SourcePattern {
   base: string
   pattern: string
@@ -59,10 +64,7 @@ export interface TailwindV4GenerateResult {
   rawCandidates: Set<string>
   dependencies: string[]
   sources: TailwindV4SourcePattern[]
-  root: null | 'none' | {
-    base: string
-    pattern: string
-  }
+  root: TailwindV4CompiledSourceRoot
 }
 
 export interface TailwindV4DesignSystem {

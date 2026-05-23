@@ -56,14 +56,34 @@ export {
 export { default as logger } from './logger'
 export * from './types'
 export {
+  createTailwindV4CompiledSourceEntries,
   createTailwindV4Engine,
+  createTailwindV4DefaultIgnoreSources,
+  createTailwindV4RootSources,
+  createTailwindV4SourceEntryMatcher,
+  createTailwindV4SourceExclusionMatcher,
+  expandTailwindV4SourceEntries,
+  expandTailwindV4SourceEntryBraces,
+  isFileExcludedByTailwindV4SourceEntries,
+  isFileMatchedByTailwindV4SourceEntries,
   loadTailwindV4DesignSystem,
+  mergeTailwindV4SourceEntries,
+  normalizeTailwindV4ScannerSources,
+  normalizeTailwindV4SourceEntries,
+  resolveSourceScanPath,
   resolveTailwindV4Source,
+  resolveTailwindV4SourceBaseCandidates,
+  resolveTailwindV4SourceEntry,
   resolveTailwindV4SourceFromPatchOptions,
   resolveValidTailwindV4Candidates,
+  TAILWIND_V4_AUTO_SOURCE_SCAN_PATTERN,
+  TAILWIND_V4_IGNORED_CONTENT_DIRS,
+  TAILWIND_V4_IGNORED_EXTENSIONS,
+  TAILWIND_V4_IGNORED_FILES,
 } from './v4'
 export type {
   TailwindV4CandidateSource,
+  TailwindV4CompiledSourceRoot,
   TailwindV4CssSource,
   TailwindV4DesignSystem,
   TailwindV4Engine,
@@ -71,6 +91,7 @@ export type {
   TailwindV4GenerateResult,
   TailwindV4ResolvedSource,
   TailwindV4SourceOptions,
+  TailwindV4SourcePattern,
 } from './v4'
 
 export function defineConfig<T extends TailwindcssMangleConfig>(config: T): T {

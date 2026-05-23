@@ -1,6 +1,7 @@
 import type {
   TailwindV4DesignSystem,
   TailwindV4ResolvedSource,
+  TailwindV4CompiledSourceRoot,
   TailwindV4SourcePattern,
 } from './types'
 import { createRequire } from 'node:module'
@@ -9,10 +10,7 @@ import path from 'pathe'
 
 interface TailwindV4CompiledSource {
   sources: TailwindV4SourcePattern[]
-  root: null | 'none' | {
-    base: string
-    pattern: string
-  }
+  root: TailwindV4CompiledSourceRoot
   build: (candidates: string[]) => string
 }
 

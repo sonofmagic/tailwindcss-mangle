@@ -14,6 +14,10 @@ import {
 } from '../v4/bare-arbitrary-values'
 import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from '../v4/candidates'
 import { compileTailwindV4Source, getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter'
+import {
+  createTailwindV4CompiledSourceEntries,
+  normalizeTailwindV4ScannerSources,
+} from '../v4/source-scan'
 
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
@@ -507,99 +511,12 @@ export interface ResolveProjectSourceFilesOptions {
   filter?: (file: string) => boolean
 }
 
-function expandBracePattern(pattern: string) {
-  const index = pattern.indexOf('{')
-  if (index === -1) {
-    return [pattern]
-  }
-
-  const rest = pattern.slice(index)
-  let depth = 0
-  let endIndex = -1
-  for (let i = 0; i < rest.length; i++) {
-    const char = rest[i]
-    if (char === '\\') {
-      i += 1
-      continue
-    }
-    if (char === '{') {
-      depth += 1
-      continue
-    }
-    if (char === '}') {
-      depth -= 1
-      if (depth === 0) {
-        endIndex = i
-        break
-      }
-    }
-  }
-  if (endIndex === -1) {
-    return [pattern]
-  }
-
-  const prefix = pattern.slice(0, index)
-  const inner = rest.slice(1, endIndex)
-  const suffix = rest.slice(endIndex + 1)
-  const parts: string[] = []
-  const stack: string[] = []
-  let lastPos = 0
-  for (let i = 0; i < inner.length; i++) {
-    const char = inner[i]
-    if (char === '\\') {
-      i += 1
-      continue
-    }
-    if (char === '{') {
-      stack.push('}')
-      continue
-    }
-    if (char === '}' && stack[stack.length - 1] === '}') {
-      stack.pop()
-      continue
-    }
-    if (char === ',' && stack.length === 0) {
-      parts.push(inner.slice(lastPos, i))
-      lastPos = i + 1
-    }
-  }
-  parts.push(inner.slice(lastPos))
-
-  return parts.flatMap(part =>
-    expandBracePattern(`${prefix}${part}${suffix}`))
-}
-
-function normalizeScannerSources(
-  sources: SourceEntry[] | undefined,
-  cwd: string,
-  ignoredSources: SourceEntry[] = [],
-) {
-  const baseSources = sources?.length
-    ? sources
-    : [
-        {
-          base: cwd,
-          pattern: '**/*',
-          negated: false,
-        },
-      ]
-
-  return [...baseSources, ...ignoredSources].flatMap((source) => {
-    const base = source.base ?? cwd
-    return expandBracePattern(source.pattern).map(pattern => ({
-      base,
-      pattern,
-      negated: source.negated,
-    }))
-  })
-}
-
 async function resolveScannerSources(options?: ResolveProjectSourceFilesOptions) {
   const cwd = options?.cwd ? path.resolve(options.cwd) : process.cwd()
   if (options?.sources?.length || options?.css === undefined) {
     return {
       cwd,
-      sources: normalizeScannerSources(options?.sources, cwd, options?.ignoredSources),
+      sources: normalizeTailwindV4ScannerSources(options?.sources, cwd, options?.ignoredSources),
     }
   }
 
@@ -611,19 +528,13 @@ async function resolveScannerSources(options?: ResolveProjectSourceFilesOptions)
     css: options.css,
     dependencies: [],
   })
-  const rootSources = (() => {
-    if (compiled.root === 'none') {
-      return []
-    }
-    if (compiled.root === null) {
-      return [{ base, pattern: '**/*', negated: false }]
-    }
-    return [{ ...compiled.root, negated: false }]
-  })()
-
   return {
     cwd,
-    sources: normalizeScannerSources([...rootSources, ...compiled.sources], cwd, options.ignoredSources),
+    sources: normalizeTailwindV4ScannerSources(
+      createTailwindV4CompiledSourceEntries(compiled.root, compiled.sources, base),
+      cwd,
+      options.ignoredSources,
+    ),
   }
 }
 

@@ -100,6 +100,7 @@
     "consola": "^3.4.2",
     "fs-extra": "^11.3.5",
     "local-pkg": "^1.2.1",
+    "micromatch": "^4.0.8",
     "pathe": "^2.0.3",
     "postcss": "^8.5.15",
     "semver": "^7.8.1",
