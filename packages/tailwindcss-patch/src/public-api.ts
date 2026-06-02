@@ -3,6 +3,17 @@ import type { TailwindcssMangleConfig } from '@tailwindcss-mangle/config'
 export { TailwindcssPatcher } from './api/tailwindcss-patcher'
 export { CacheStore } from './cache/store'
 export {
+  type ConfigFileMigrationEntry,
+  type ConfigFileMigrationReport,
+  migrateConfigFiles,
+  type MigrateConfigFilesOptions,
+  MIGRATION_REPORT_KIND,
+  MIGRATION_REPORT_SCHEMA_VERSION,
+  restoreConfigFiles,
+  type RestoreConfigFilesOptions,
+  type RestoreConfigFilesResult,
+} from './commands/migrate-config'
+export {
   type TailwindcssPatchCliMountOptions,
   type TailwindcssPatchCliOptions,
   type TailwindcssPatchCommand,
@@ -22,29 +33,18 @@ export {
   type ValidateJsonFailurePayload,
   type ValidateJsonSuccessPayload,
 } from './commands/validate'
-export {
-  type ConfigFileMigrationEntry,
-  type ConfigFileMigrationReport,
-  migrateConfigFiles,
-  type MigrateConfigFilesOptions,
-  MIGRATION_REPORT_KIND,
-  MIGRATION_REPORT_SCHEMA_VERSION,
-  restoreConfigFiles,
-  type RestoreConfigFilesOptions,
-  type RestoreConfigFilesResult,
-} from './commands/migrate-config'
 export { normalizeOptions } from './config'
 export type { TailwindCssPatchOptions } from './config'
 export {
   extractProjectCandidatesWithPositions,
   extractRawCandidates,
   extractRawCandidatesWithPositions,
+  type ExtractSourceCandidate,
   extractSourceCandidates,
   extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
   resolveProjectSourceFiles,
-  type ExtractSourceCandidate,
 } from './extraction/candidate-extractor'
 export {
   isValidCandidateToken,
@@ -62,8 +62,8 @@ export { default as logger } from './logger'
 export * from './types'
 export {
   createTailwindV4CompiledSourceEntries,
-  createTailwindV4Engine,
   createTailwindV4DefaultIgnoreSources,
+  createTailwindV4Engine,
   createTailwindV4RootSources,
   createTailwindV4SourceEntryMatcher,
   createTailwindV4SourceExclusionMatcher,

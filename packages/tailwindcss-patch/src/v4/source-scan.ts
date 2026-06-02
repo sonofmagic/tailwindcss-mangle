@@ -3,8 +3,8 @@ import type { TailwindV4CompiledSourceRoot, TailwindV4SourcePattern } from './ty
 import { realpathSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import process from 'node:process'
-import path from 'pathe'
 import micromatch from 'micromatch'
+import path from 'pathe'
 
 export const TAILWIND_V4_IGNORED_CONTENT_DIRS = [
   '.git',

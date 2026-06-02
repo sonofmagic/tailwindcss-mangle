@@ -1,5 +1,5 @@
-import { createRequire } from 'node:module'
 import { promises as fs } from 'node:fs'
+import { createRequire } from 'node:module'
 import os from 'node:os'
 import path from 'pathe'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -96,7 +96,7 @@ describe('candidate extractor', () => {
   it('extracts source candidates from JavaScript string content only', async () => {
     const result = await extractSourceCandidates(
       [
-        'document.body.append(`<div class="${className}">className</div>`)',
+        'document.body.append(`<div class="$' + '{className}">className</div>`)',
         'const className = "flex bg-yellow-300/30 w-[100px]"',
       ].join('\n'),
       'js',

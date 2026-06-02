@@ -9,6 +9,11 @@ export {
   loadTailwindV4NodeModule,
 } from './node-adapter'
 export {
+  resolveTailwindV4Source,
+  resolveTailwindV4SourceFromPatchOptions,
+  tailwindV4SourceOptionsFromPatchOptions,
+} from './source'
+export {
   createTailwindV4CompiledSourceEntries,
   createTailwindV4DefaultIgnoreSources,
   createTailwindV4RootSources,
@@ -29,11 +34,6 @@ export {
   TAILWIND_V4_IGNORED_EXTENSIONS,
   TAILWIND_V4_IGNORED_FILES,
 } from './source-scan'
-export {
-  resolveTailwindV4Source,
-  resolveTailwindV4SourceFromPatchOptions,
-  tailwindV4SourceOptionsFromPatchOptions,
-} from './source'
 export type {
   TailwindV4CandidateSource,
   TailwindV4CompiledSourceRoot,

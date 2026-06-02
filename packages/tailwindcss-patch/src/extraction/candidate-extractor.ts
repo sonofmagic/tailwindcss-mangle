@@ -5,11 +5,12 @@ import type {
   TailwindTokenLocation,
   TailwindTokenReport,
 } from '../types'
+import type { BareArbitraryValueOptions } from '../v4/bare-arbitrary-values'
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
 import {
-  type BareArbitraryValueOptions,
+
   resolveBareArbitraryValueCandidate,
 } from '../v4/bare-arbitrary-values'
 import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from '../v4/candidates'
@@ -75,7 +76,7 @@ const HTML_ATTRIBUTE_NAME_CANDIDATE_RE = /^(?:class|className|hover-class|hoverC
 const CSS_DIRECTIVE_CANDIDATE_RE = /^@(?:apply|tailwind|source|config|plugin|theme|utility|custom-variant|variant)$/
 const CSS_APPLY_IMPORTANT = '!important'
 const CSS_APPLY_RE = /@apply\s+([^;{}]+)/g
-const JS_LIKE_SOURCE_EXTENSION_RE = /^(?:[cm]?[jt]sx?)$/
+const JS_LIKE_SOURCE_EXTENSION_RE = /^[cm]?[jt]sx?$/
 const MIXED_TEMPLATE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue|svelte|mpx)$/
 const CSS_LIKE_SOURCE_EXTENSION_RE = /^(?:css|wxss|acss|jxss|ttss|qss|tyss|scss|sass|less|styl|stylus)$/
 const SFC_SCRIPT_BLOCK_RE = /<script\b[^>]*>([\s\S]*?)<\/script>/gi
@@ -102,7 +103,7 @@ function isInsideHtmlTagText(content: string, candidate: ExtractSourceCandidate)
     return false
   }
   const nextOpen = content.indexOf('<', candidate.end)
-  return nextOpen !== -1 && (nextOpen < content.indexOf('>', candidate.end) || content.indexOf('>', candidate.end) === -1)
+  return nextOpen !== -1 && (nextOpen < content.indexOf('>', candidate.end) || !content.includes('>', candidate.end))
 }
 
 function isCssDirectiveCandidate(candidate: string) {

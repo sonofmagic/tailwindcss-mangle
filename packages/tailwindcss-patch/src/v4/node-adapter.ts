@@ -1,7 +1,7 @@
 import type {
+  TailwindV4CompiledSourceRoot,
   TailwindV4DesignSystem,
   TailwindV4ResolvedSource,
-  TailwindV4CompiledSourceRoot,
   TailwindV4SourcePattern,
 } from './types'
 import { createRequire } from 'node:module'
