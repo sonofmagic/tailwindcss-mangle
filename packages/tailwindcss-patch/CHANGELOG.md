@@ -1,5 +1,12 @@
 # tailwindcss-patch
 
+## 9.4.0
+
+### Minor Changes
+
+- ✨ **新增 `splitCandidateTokens` 同步候选 token 分割 API，用于在 JS、WXML 等源码片段中识别 Tailwind 候选 token。** [`94abbe4`](https://github.com/sonofmagic/tailwindcss-mangle/commit/94abbe439085823254f5299c8412b5512c5a08ce) by @sonofmagic
+  - 该 API 支持单引号和双引号包裹的 arbitrary value，并在 malformed arbitrary value 场景下避免吞掉后续 token。
+
 ## 9.3.7
 
 ### Patch Changes
