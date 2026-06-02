@@ -47,6 +47,11 @@ export {
   type ExtractSourceCandidate,
 } from './extraction/candidate-extractor'
 export {
+  isValidCandidateToken,
+  splitCandidateTokens,
+  validateCandidateTokenRE,
+} from './extraction/split-candidate-tokens'
+export {
   collectClassesFromContexts,
   collectClassesFromTailwindV4,
   getPatchStatusReport,
