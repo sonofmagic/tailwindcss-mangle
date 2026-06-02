@@ -19,11 +19,14 @@ describe('published CommonJS runtime entry', () => {
         const patch = require(${JSON.stringify(distEntry)})
         const normalized = patch.normalizeOptions({ cache: false })
         const extracted = await patch.extractRawCandidatesWithPositions('<div class="text-red-500"></div>', 'html')
+        const splitTokens = patch.splitCandidateTokens('before:content-["x"] text-red-500')
         console.log(JSON.stringify({
           normalizedCacheEnabled: normalized.cache.enabled,
           containsUtilityCandidate: extracted.some(entry => entry.rawCandidate === 'text-red-500'),
           hasPatcher: typeof patch.TailwindcssPatcher,
           hasExtractValidCandidates: typeof patch.extractValidCandidates,
+          hasSplitCandidateTokens: typeof patch.splitCandidateTokens,
+          splitTokens,
         }))
       })().catch((error) => {
         console.error(error)
@@ -36,6 +39,8 @@ describe('published CommonJS runtime entry', () => {
       containsUtilityCandidate: true,
       hasPatcher: 'function',
       hasExtractValidCandidates: 'function',
+      hasSplitCandidateTokens: 'function',
+      splitTokens: ['before:content-["x"]', 'text-red-500'],
     })
   })
 

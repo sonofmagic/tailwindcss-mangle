@@ -5,6 +5,7 @@ import {
   TailwindcssPatcher,
   defineConfig,
   normalizeOptions,
+  splitCandidateTokens,
   type ApplyOptions,
   type CacheOptions,
   type ExposeContextOptions,
@@ -20,6 +21,8 @@ import {
   type TailwindV3Options,
   type TailwindV4Options,
 } from '..'
+
+expectType<string[]>(splitCandidateTokens('before:content-["x"] text-red-500'))
 
 const exposeContext: ExposeContextOptions = {
   refProperty: 'contextRef',

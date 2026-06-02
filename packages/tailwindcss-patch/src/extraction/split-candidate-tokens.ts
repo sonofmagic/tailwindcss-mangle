@@ -36,6 +36,9 @@ function splitBracketAware(code: string) {
 
   for (let index = 0; index < code.length; index++) {
     const char = code[index]
+    if (char === undefined) {
+      continue
+    }
     if (bracketDepth > 0 && char === '\\') {
       index++
       continue
