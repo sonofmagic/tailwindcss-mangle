@@ -176,14 +176,16 @@ describe('candidate extractor', () => {
     const scssFile = path.join(root, 'src/explicit.scss')
     await writeTempFile(scssFile, '.x { @apply text-yellow-500; }')
 
-    await expect(resolveProjectSourceFiles({
+    const files = await resolveProjectSourceFiles({
       cwd: root,
       sources: [{
         base: path.join(root, 'src'),
         pattern: 'explicit.scss',
         negated: false,
       }],
-    })).resolves.toEqual([scssFile])
+    })
+
+    expect(files.map(file => path.normalize(file))).toEqual([path.normalize(scssFile)])
   })
 
   it('resolves Tailwind v4 @source paths and @source not paths from css like official integrations', async () => {
