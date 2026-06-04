@@ -1,7 +1,16 @@
 export {
+  canonicalizeBareArbitraryValueCandidates,
   extractTailwindV4InlineSourceCandidates,
+  replaceBareArbitraryValueSelectors,
   resolveValidTailwindV4Candidates,
 } from './candidates'
+export {
+  escapeCssClassName,
+  extractBareArbitraryValueSourceCandidates,
+  extractBareArbitraryValueSourceCandidatesWithPositions,
+  isBareArbitraryValuesEnabled,
+  resolveBareArbitraryValueCandidate,
+} from './bare-arbitrary-values'
 export { createTailwindV4Engine } from './engine'
 export {
   compileTailwindV4Source,

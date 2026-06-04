@@ -132,6 +132,63 @@ describe('Tailwind v4 engine', () => {
     expect(result.css).toContain('top: calc(1.5rem * -1)')
   })
 
+  it('extracts UnoCSS-style bare arbitrary values from inline sources when enabled', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      bareArbitraryValues: true,
+      sources: [{
+        extension: 'html',
+        content: '<view class="text-var(--brand) w-calc(100%-1rem) bg-#fff text-rgb(255,0,0)"></view>',
+      }],
+    })
+
+    expect([...result.rawCandidates]).toEqual(expect.arrayContaining([
+      'text-var(--brand)',
+      'w-calc(100%-1rem)',
+      'bg-#fff',
+      'text-rgb(255,0,0)',
+    ]))
+    expect(result.classSet).toEqual(new Set([
+      'text-var(--brand)',
+      'w-calc(100%-1rem)',
+      'bg-#fff',
+      'text-rgb(255,0,0)',
+    ]))
+    expect(result.css).toContain('.text-var\\(--brand\\)')
+    expect(result.css).toContain('color: var(--brand)')
+    expect(result.css).toContain('.w-calc\\(100\\%-1rem\\)')
+    expect(result.css).toContain('width: calc(100% - 1rem)')
+    expect(result.css).toContain('.bg-\\#fff')
+    expect(result.css).toContain('.text-rgb\\(255\\,0\\,0\\)')
+  })
+
+  it('extracts UnoCSS-style bare arbitrary values from scanned files when enabled', async () => {
+    const tempDir = await createTempDir()
+    await fs.writeFile(
+      path.join(tempDir, 'page.html'),
+      '<view class="text-var(--brand) w-calc(100%-1rem) bg-#fff"></view>',
+      'utf8',
+    )
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const result = await engine.generate({
+      bareArbitraryValues: true,
+      scanSources: [{
+        base: tempDir,
+        pattern: '*.html',
+        negated: false,
+      }],
+    })
+
+    expect(result.classSet).toEqual(new Set([
+      'text-var(--brand)',
+      'w-calc(100%-1rem)',
+      'bg-#fff',
+    ]))
+    expect(result.css).toContain('color: var(--brand)')
+    expect(result.css).toContain('width: calc(100% - 1rem)')
+    expect(result.css).toContain('background-color: #fff')
+  })
+
   it('preserves escaped underscores in bare arbitrary values', async () => {
     const engine = createTailwindV4Engine(await createDefaultSource())
     const result = await engine.generate({

@@ -10,7 +10,7 @@ import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
 import {
-
+  extractBareArbitraryValueSourceCandidatesWithPositions,
   resolveBareArbitraryValueCandidate,
 } from '../v4/bare-arbitrary-values'
 import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from '../v4/candidates'
@@ -57,6 +57,10 @@ export interface ExtractValidCandidatesOption {
   baseFallbacks?: string[]
   css?: string
   cwd?: string
+  bareArbitraryValues?: boolean | BareArbitraryValueOptions
+}
+
+export interface ExtractCandidateOptions {
   bareArbitraryValues?: boolean | BareArbitraryValueOptions
 }
 
@@ -224,7 +228,36 @@ function createLocalCandidate(candidate: ExtractSourceCandidateWithContext): Ext
   }
 }
 
-async function extractCssApplyCandidates(content: string, extension: string) {
+function dedupeCandidatesWithPositions(candidates: ExtractSourceCandidate[]) {
+  const seen = new Set<string>()
+  return candidates.filter((candidate) => {
+    const key = `${candidate.start}:${candidate.end}:${candidate.rawCandidate}`
+    if (seen.has(key)) {
+      return false
+    }
+    seen.add(key)
+    return true
+  })
+}
+
+function createBareArbitraryValueCandidateContexts(
+  content: string,
+  extension: string,
+  offset: number,
+  options?: ExtractCandidateOptions,
+): ExtractSourceCandidateWithContext[] {
+  return extractBareArbitraryValueSourceCandidatesWithPositions(content, options?.bareArbitraryValues)
+    .map(candidate => ({
+      content,
+      extension,
+      localStart: candidate.start,
+      rawCandidate: candidate.rawCandidate,
+      start: candidate.start + offset,
+      end: candidate.end + offset,
+    }))
+}
+
+async function extractCssApplyCandidates(content: string, extension: string, options?: ExtractCandidateOptions) {
   const candidates: ExtractSourceCandidateWithContext[] = []
   CSS_APPLY_RE.lastIndex = 0
   let match = CSS_APPLY_RE.exec(content)
@@ -240,12 +273,13 @@ async function extractCssApplyCandidates(content: string, extension: string) {
       start: candidate.start + applyParamsStart,
       end: candidate.end + applyParamsStart,
     })))
+    candidates.push(...createBareArbitraryValueCandidateContexts(applyParams, 'html', applyParamsStart, options))
     match = CSS_APPLY_RE.exec(content)
   }
   return candidates
 }
 
-async function extractMixedSourceScriptCandidates(content: string) {
+async function extractMixedSourceScriptCandidates(content: string, options?: ExtractCandidateOptions) {
   const candidates: ExtractSourceCandidateWithContext[] = []
   SFC_SCRIPT_BLOCK_RE.lastIndex = 0
   let match = SFC_SCRIPT_BLOCK_RE.exec(content)
@@ -261,6 +295,7 @@ async function extractMixedSourceScriptCandidates(content: string) {
       start: candidate.start + scriptStart,
       end: candidate.end + scriptStart,
     })))
+    candidates.push(...createBareArbitraryValueCandidateContexts(scriptContent, 'js', scriptStart, options))
     match = SFC_SCRIPT_BLOCK_RE.exec(content)
   }
   return candidates
@@ -279,26 +314,30 @@ function createCandidateCacheKey(
 export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
+  options?: ExtractCandidateOptions,
 ): Promise<ExtractSourceCandidate[]> {
   const { Scanner } = await getOxideModule()
   const scanner = new Scanner({})
   const result = scanner.getCandidatesWithPositions({ content, extension })
 
-  return result.map(({ candidate, position }) => ({
+  const candidates = result.map(({ candidate, position }) => ({
     rawCandidate: candidate,
     start: position,
     end: position + candidate.length,
   }))
+  candidates.push(...extractBareArbitraryValueSourceCandidatesWithPositions(content, options?.bareArbitraryValues))
+  return dedupeCandidatesWithPositions(candidates)
 }
 
 export async function extractSourceCandidatesWithPositions(
   content: string,
   extension: string = 'html',
+  options?: ExtractCandidateOptions,
 ): Promise<ExtractSourceCandidate[]> {
   const normalizedExtension = extension.replace(/^\./, '')
   const candidates: ExtractSourceCandidateWithContext[] = CSS_LIKE_SOURCE_EXTENSION_RE.test(normalizedExtension)
-    ? await extractCssApplyCandidates(content, normalizedExtension)
-    : (await extractRawCandidatesWithPositions(content, normalizedExtension))
+    ? await extractCssApplyCandidates(content, normalizedExtension, options)
+    : (await extractRawCandidatesWithPositions(content, normalizedExtension, options))
         .map(candidate => ({
           ...candidate,
           content,
@@ -306,7 +345,7 @@ export async function extractSourceCandidatesWithPositions(
           localStart: candidate.start,
         }))
   if (MIXED_TEMPLATE_SOURCE_EXTENSION_RE.test(normalizedExtension)) {
-    candidates.push(...await extractMixedSourceScriptCandidates(content))
+    candidates.push(...await extractMixedSourceScriptCandidates(content, options))
   }
   const seen = new Set<string>()
   return candidates.filter((candidate) => {
@@ -325,18 +364,37 @@ export async function extractSourceCandidatesWithPositions(
 export async function extractSourceCandidates(
   content: string,
   extension: string = 'html',
+  options?: ExtractCandidateOptions,
 ): Promise<string[]> {
-  const candidates = await extractSourceCandidatesWithPositions(content, extension)
+  const candidates = await extractSourceCandidatesWithPositions(content, extension, options)
   return [...new Set(candidates.map(candidate => candidate.rawCandidate))]
 }
 
 export async function extractRawCandidates(
   sources?: SourceEntry[],
+  options?: ExtractCandidateOptions,
 ): Promise<string[]> {
   const { Scanner } = await getOxideModule()
   const scanner = new Scanner(sources === undefined ? {} : { sources })
 
-  return scanner.scan()
+  const candidates = new Set(scanner.scan())
+  if (options?.bareArbitraryValues !== undefined && options.bareArbitraryValues !== false) {
+    await Promise.all((scanner.files ?? []).map(async (file) => {
+      try {
+        const content = await fs.readFile(file, 'utf8')
+        const extension = toExtension(file)
+        for (const candidate of extractBareArbitraryValueSourceCandidatesWithPositions(content, options.bareArbitraryValues)) {
+          if (shouldKeepSourceCandidate(content, extension, candidate)) {
+            candidates.add(candidate.rawCandidate)
+          }
+        }
+      }
+      catch {
+        // 文件可能在扫描和读取之间被移除，保持与 Tailwind 原扫描结果一致。
+      }
+    }))
+  }
+  return [...candidates]
 }
 
 export async function extractValidCandidates(options?: ExtractValidCandidatesOption) {
@@ -371,7 +429,12 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   const candidateCache = designSystemCandidateCache.get(candidateCacheKey) ?? new Map<string, boolean>()
   designSystemCandidateCache.set(candidateCacheKey, candidateCache)
 
-  const candidates = await extractRawCandidates(sources)
+  const candidates = await extractRawCandidates(
+    sources,
+    providedOptions.bareArbitraryValues === undefined
+      ? undefined
+      : { bareArbitraryValues: providedOptions.bareArbitraryValues },
+  )
   const inlineSources = extractTailwindV4InlineSourceCandidates(css)
   for (const candidate of inlineSources.included) {
     candidates.push(candidate)

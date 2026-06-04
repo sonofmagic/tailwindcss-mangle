@@ -93,6 +93,23 @@ describe('candidate extractor', () => {
     expect(result).not.toContain('class')
   })
 
+  it('extracts UnoCSS-style bare arbitrary source candidates when enabled', async () => {
+    const source = '<view class="text-var(--brand) w-calc(100%-1rem) bg-#fff text-rgb(255,0,0) hover:!p-2.5px sm:-top-1.5rem"></view>'
+
+    await expect(extractSourceCandidates(source, 'wxml')).resolves.toEqual([
+      'hover:!p-2.5px',
+      'sm:-top-1.5rem',
+    ])
+    await expect(extractSourceCandidates(source, 'wxml', { bareArbitraryValues: true })).resolves.toEqual([
+      'hover:!p-2.5px',
+      'sm:-top-1.5rem',
+      'text-var(--brand)',
+      'w-calc(100%-1rem)',
+      'bg-#fff',
+      'text-rgb(255,0,0)',
+    ])
+  })
+
   it('extracts source candidates from JavaScript string content only', async () => {
     const result = await extractSourceCandidates(
       [
@@ -301,6 +318,10 @@ describe('candidate extractor', () => {
       'p-10%',
       'p-2.5px',
       'm-4rem',
+      'bg-#fff',
+      'text-rgb(255,0,0)',
+      'text-var(--brand)',
+      'w-calc(100%-1rem)',
     ]))
   })
 

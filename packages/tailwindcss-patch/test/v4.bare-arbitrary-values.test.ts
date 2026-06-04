@@ -79,9 +79,16 @@ describe('bare arbitrary value resolver', () => {
     expect(resolveBareArbitraryValueCandidate('bg-red-500', true)).toBeUndefined()
     expect(resolveBareArbitraryValueCandidate('text-var(--brand)', true)).toEqual({
       candidate: 'text-var(--brand)',
-      canonicalCandidate: 'text-[var(--brand)]',
+      canonicalCandidate: 'text-[color:var(--brand)]',
     })
     expect(resolveBareArbitraryValueCandidate('w-calc(100%-1rem', true)).toBeUndefined()
+  })
+
+  it('supports UnoCSS aspect ratio shorthand', () => {
+    expect(resolveBareArbitraryValueCandidate('aspect-16/9', true)).toEqual({
+      candidate: 'aspect-16/9',
+      canonicalCandidate: 'aspect-[16/9]',
+    })
   })
 
   it('respects custom unit allow lists', () => {

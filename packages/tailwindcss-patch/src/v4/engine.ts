@@ -37,13 +37,16 @@ async function collectRawCandidates(
   compiledSources: TailwindV4SourcePattern[] = [],
 ) {
   const rawCandidates = new Set<string>()
+  const extractOptions = options?.bareArbitraryValues === undefined
+    ? undefined
+    : { bareArbitraryValues: options.bareArbitraryValues }
 
   for (const candidate of options?.candidates ?? []) {
     rawCandidates.add(candidate)
   }
 
   for (const candidateSource of options?.sources ?? []) {
-    const candidates = await extractRawCandidatesWithPositions(candidateSource.content, candidateSource.extension)
+    const candidates = await extractRawCandidatesWithPositions(candidateSource.content, candidateSource.extension, extractOptions)
     for (const candidate of candidates) {
       rawCandidates.add(candidate.rawCandidate)
     }
@@ -51,7 +54,7 @@ async function collectRawCandidates(
 
   const filesystemSources = resolveScanSources(options, source, compiledRoot, compiledSources)
   if (filesystemSources.length > 0) {
-    for (const candidate of await extractRawCandidates(filesystemSources)) {
+    for (const candidate of await extractRawCandidates(filesystemSources, extractOptions)) {
       rawCandidates.add(candidate)
     }
   }
