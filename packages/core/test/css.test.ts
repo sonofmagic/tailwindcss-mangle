@@ -126,4 +126,38 @@ describe('css', () => {
     })
     expect(code).toMatchSnapshot()
   })
+
+  it('replaces escaped class selectors emitted by Tailwind v4', async () => {
+    const replaceMap = ctx.replaceMap
+    replaceMap.set('hover:dark:bg-neutral-800/30', 'tw-a')
+    replaceMap.set('group-hover:translate-x-1', 'tw-b')
+    ctx.classGenerator.generateClassName('hover:dark:bg-neutral-800/30')
+    ctx.classGenerator.generateClassName('group-hover:translate-x-1')
+
+    const testCase = `
+      .hover\\:dark\\:bg-neutral-800\\/30 {
+        &:hover {
+          @media (hover: hover) {
+            @media (prefers-color-scheme: dark) {
+              background-color: rgb(38 38 38 / .3);
+            }
+          }
+        }
+      }
+      .group-hover\\:translate-x-1 {
+        &:is(:where(.group):hover *) {
+          --tw-translate-x: .25rem;
+        }
+      }
+    `
+
+    const { code } = await cssHandler(testCase, {
+      ctx,
+    })
+
+    expect(code).toContain('.tw-a')
+    expect(code).toContain('.tw-b')
+    expect(code).not.toContain('.hover\\:dark\\:bg-neutral-800\\/30')
+    expect(code).not.toContain('.group-hover\\:translate-x-1')
+  })
 })

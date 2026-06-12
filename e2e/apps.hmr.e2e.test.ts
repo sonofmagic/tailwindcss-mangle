@@ -10,6 +10,7 @@ import {
   startViteDevServer,
   stopRunningCommand,
 } from './apps.hmr.shared'
+import { resolveChromiumLaunchOptions } from './playwright.shared'
 
 const runHmrE2E = process.env['TWM_APPS_E2E_HMR'] === '1'
 const basePort = 4400
@@ -28,7 +29,7 @@ describe.runIf(runHmrE2E)('apps hmr e2e', () => {
       }
 
       let devServer: Awaited<ReturnType<typeof startViteDevServer>> | undefined
-      const browser = await chromium.launch({ headless: true })
+      const browser = await chromium.launch(resolveChromiumLaunchOptions({ headless: true }))
 
       try {
         const seed = await seedHmrPatch(app.appDir)

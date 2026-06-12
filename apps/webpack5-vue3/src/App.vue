@@ -76,9 +76,8 @@ import HelloWorld from './components/HelloWorld'
 </script>
 
 <style lang="scss">
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

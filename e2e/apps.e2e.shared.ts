@@ -223,8 +223,8 @@ export async function ensureClassList(app: AppE2ECase) {
 }
 
 export async function buildApp(app: AppE2ECase) {
-  await runCommand('pnpm', ['--dir', app.appDir, 'run', app.buildScript ?? 'build'], {
-    cwd: repoRoot,
+  await runCommand('pnpm', ['run', app.buildScript ?? 'build'], {
+    cwd: app.appDir,
     env: {
       ...process.env,
       NODE_ENV: 'production',
@@ -234,16 +234,16 @@ export async function buildApp(app: AppE2ECase) {
 }
 
 export async function runTailwindcssPatch(app: AppE2ECase) {
-  await runCommand('pnpm', ['--dir', app.appDir, 'exec', 'tw-patch', 'install'], {
-    cwd: repoRoot,
+  await runCommand('pnpm', ['exec', 'tw-patch', 'install'], {
+    cwd: app.appDir,
     env: {
       ...process.env,
       NODE_ENV: 'production',
       ...app.env,
     },
   })
-  await runCommand('pnpm', ['--dir', app.appDir, 'exec', 'tw-patch', 'extract'], {
-    cwd: repoRoot,
+  await runCommand('pnpm', ['exec', 'tw-patch', 'extract'], {
+    cwd: app.appDir,
     env: {
       ...process.env,
       NODE_ENV: 'production',
@@ -281,7 +281,7 @@ export async function resolveUsageRoots(app: AppE2ECase) {
 
 export function resolveServeCommand(app: AppE2ECase, port: number) {
   const serve = app.serve ?? defaultServeConfig
-  return ['pnpm', ['--dir', app.appDir, serve.script, ...serve.args(port)]] as const
+  return ['pnpm', ['run', serve.script, ...serve.args(port)], { cwd: app.appDir }] as const
 }
 
 export const usageExt = new Set([

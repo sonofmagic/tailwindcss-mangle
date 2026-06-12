@@ -64,8 +64,8 @@ export const hmrCases: AppHmrCase[] = [
 ]
 
 export async function startViteDevServer(appDir: string, port: number) {
-  const child = spawnCommand('pnpm', ['--dir', appDir, 'dev', '--host', host, '--port', String(port)], {
-    cwd: repoRoot,
+  const child = spawnCommand('pnpm', ['run', 'dev', '--host', host, '--port', String(port)], {
+    cwd: appDir,
     env: {
       ...process.env,
       NODE_ENV: 'development',

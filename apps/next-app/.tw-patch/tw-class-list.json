@@ -1,7 +1,6 @@
 [
   "after:-z-20",
   "after:absolute",
-  "after:bg-gradient-conic",
   "after:blur-2xl",
   "after:content-['']",
   "after:dark:from-sky-900",
@@ -14,7 +13,6 @@
   "backdrop-blur-2xl",
   "before:-translate-x-1/2",
   "before:absolute",
-  "before:bg-gradient-radial",
   "before:blur-2xl",
   "before:content-['']",
   "before:dark:bg-gradient-to-br",

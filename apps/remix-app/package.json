@@ -7,7 +7,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "remix build",
+    "build": "node scripts/build-tailwind.mjs && remix build",
     "dev": "remix dev",
     "start": "remix-serve build/index.js",
     "typecheck": "tsc",

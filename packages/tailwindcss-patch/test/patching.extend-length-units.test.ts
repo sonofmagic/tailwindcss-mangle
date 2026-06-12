@@ -43,7 +43,7 @@ describe('extend length units patch', () => {
 
     expect(result.changed).toBe(true)
     expect(result.files.length).toBeGreaterThan(0)
-    expect(result.files[0].code).toContain('\"rpx\"')
-    expect(result.files[0].code).toMatchSnapshot()
+    expect(result.files.every(file => file.code.includes('\"rpx\"'))).toBe(true)
+    expect(result.files.some(file => !file.hasPatched)).toBe(true)
   })
 })

@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import process from 'node:process'
 import { chromium } from '@playwright/test'
 import { buildApp, cases, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
+import { resolveChromiumLaunchOptions } from './playwright.shared'
 import { spawnCommand } from './process'
 
 const runPlaywrightE2E = process.env['TWM_APPS_E2E_PLAYWRIGHT'] === '1'
@@ -53,11 +54,13 @@ async function startServer(appIndex: number) {
   const url = `http://127.0.0.1:${port}/`
   let cmd: string
   let args: string[]
+  let cwd = repoRoot
   let extraEnv: Record<string, string> = {}
 
   if (app.name === 'nuxt-app') {
     cmd = 'pnpm'
-    args = ['--dir', app.appDir, 'exec', 'node', '.output/server/index.mjs']
+    args = ['exec', 'node', '.output/server/index.mjs']
+    cwd = app.appDir
     extraEnv = {
       NITRO_HOST: '127.0.0.1',
       NITRO_PORT: String(port),
@@ -65,7 +68,8 @@ async function startServer(appIndex: number) {
   }
   else if (app.name === 'remix-app') {
     cmd = 'pnpm'
-    args = ['--dir', app.appDir, 'exec', 'remix-serve', 'build/index.js']
+    args = ['exec', 'remix-serve', 'build/index.js']
+    cwd = app.appDir
     extraEnv = {
       HOST: '127.0.0.1',
       PORT: String(port),
@@ -75,10 +79,11 @@ async function startServer(appIndex: number) {
     const serveCommand = resolveServeCommand(app, port)
     cmd = serveCommand[0]
     args = [...serveCommand[1]]
+    cwd = serveCommand[2].cwd
   }
 
   const child = spawnCommand(cmd, args, {
-    cwd: repoRoot,
+    cwd,
     env: {
       ...process.env,
       NODE_ENV: 'production',
@@ -132,9 +137,9 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
       }
 
       const { child, url } = await startServer(index)
-      const browser = await chromium.launch({
+      const browser = await chromium.launch(resolveChromiumLaunchOptions({
         headless: true,
-      })
+      }))
 
       try {
         const page = await browser.newPage()

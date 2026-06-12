@@ -93,6 +93,7 @@
   "py-4",
   "relative",
   "rounded-lg",
+  "static",
   "text-2xl",
   "text-center",
   "text-sm",

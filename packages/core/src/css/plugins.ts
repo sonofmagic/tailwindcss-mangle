@@ -7,6 +7,27 @@ export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
 
+function unescapeCssClassName(value: string) {
+  return value.replace(/\\([^\n\r\f0-9a-f])/gi, '$1')
+}
+
+function resolveReplacement(replaceMap: Map<string, string>, value: string) {
+  if (replaceMap.has(value)) {
+    return {
+      original: value,
+      replacement: replaceMap.get(value),
+    }
+  }
+
+  const unescapedValue = unescapeCssClassName(value)
+  if (unescapedValue !== value && replaceMap.has(unescapedValue)) {
+    return {
+      original: unescapedValue,
+      replacement: replaceMap.get(unescapedValue),
+    }
+  }
+}
+
 export function isVueScoped(s: parser.ClassName): boolean {
   if (s.parent) {
     const index = s.parent.nodes.indexOf(s)
@@ -33,13 +54,14 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
       root.walkRules((rule) => {
         parser((selectors) => {
           selectors.walkClasses((s) => {
-            if (s.value && replaceMap && replaceMap.has(s.value)) {
+            const resolved = s.value && replaceMap ? resolveReplacement(replaceMap, s.value) : undefined
+            if (resolved) {
               if (ignoreVueScoped && isVueScoped(s)) {
                 return
               }
-              const v = replaceMap.get(s.value)
+              const v = resolved.replacement
               if (v) {
-                if (ctx.isPreserveClass(s.value)) {
+                if (ctx.isPreserveClass(resolved.original)) {
                   rule.cloneBefore()
                 }
                 s.value = v
