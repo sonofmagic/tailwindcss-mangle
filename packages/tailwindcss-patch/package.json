@@ -89,10 +89,10 @@
     }
   },
   "dependencies": {
-    "@babel/generator": "^7.29.1",
-    "@babel/parser": "^7.29.3",
-    "@babel/traverse": "^7.29.0",
-    "@babel/types": "^7.29.0",
+    "@babel/generator": "^7.29.7",
+    "@babel/parser": "^7.29.7",
+    "@babel/traverse": "^7.29.7",
+    "@babel/types": "^7.29.7",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss/node": "^4.3.0",
     "@tailwindcss/oxide": "^4.3.0",
@@ -103,13 +103,13 @@
     "micromatch": "^4.0.8",
     "pathe": "^2.0.3",
     "postcss": "^8.5.15",
-    "semver": "^7.8.1",
-    "tailwindcss-config": "^1.1.5"
+    "semver": "^7.8.4",
+    "tailwindcss-config": "^2.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
-    "tailwindcss": "catalog:tailwindcss4",
+    "tailwindcss": "^4.3.0",
     "tailwindcss-3": "catalog:tailwindcss3",
     "tailwindcss-4": "catalog:tailwindcss4"
   }

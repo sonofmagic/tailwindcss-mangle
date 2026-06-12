@@ -14,12 +14,12 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^6.3.7"
+    "astro": "^6.4.6"
   },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.15",
-    "tailwindcss": "^3.4.14",
+    "tailwindcss": "^4.3.0",
     "tailwindcss-patch": "workspace:*",
     "unplugin-tailwindcss-mangle": "workspace:*"
   }

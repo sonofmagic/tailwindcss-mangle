@@ -15,20 +15,20 @@
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "@remix-run/node": "^2.13.1",
-    "@remix-run/react": "^2.13.1",
-    "@remix-run/serve": "^2.13.1",
-    "isbot": "^5.1.40",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "@remix-run/node": "^2.17.5",
+    "@remix-run/react": "^2.17.5",
+    "@remix-run/serve": "^2.17.5",
+    "isbot": "^5.1.42",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.13.1",
-    "@remix-run/eslint-config": "^2.13.1",
-    "@types/react": "^19.2.15",
+    "@remix-run/dev": "^2.17.5",
+    "@remix-run/eslint-config": "^2.17.5",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.4.0",
-    "tailwindcss": "^3.4.14",
+    "eslint": "^10.4.1",
+    "tailwindcss": "^4.3.0",
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3"
   }
