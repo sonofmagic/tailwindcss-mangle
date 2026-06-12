@@ -1,5 +1,13 @@
 # tailwindcss-patch
 
+## 9.4.3
+
+### Patch Changes
+
+- 🐛 **新增样式生成 API，支持直接从候选类和内联源码生成 Tailwind CSS v3/v4 样式，并提供可复用的 Tailwind CSS v3 raw 生成入口。** [`c2b86af`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c2b86af0e8a920a34cef985f0339487daa001a07) by @sonofmagic
+
+- 🐛 **deps: upgrade** [`92dc1d5`](https://github.com/sonofmagic/tailwindcss-mangle/commit/92dc1d5dee5d221bcb367aba0fc8a005935d8e18) by @sonofmagic
+
 ## 9.4.2
 
 ### Patch Changes

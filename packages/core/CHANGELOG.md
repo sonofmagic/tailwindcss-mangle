@@ -1,5 +1,13 @@
 # @tailwindcss-mangle/core
 
+## 5.1.5
+
+### Patch Changes
+
+- 🐛 **Fix CSS selector mangling for escaped Tailwind CSS v4 variant selectors.** [`ed1ff4f`](https://github.com/sonofmagic/tailwindcss-mangle/commit/ed1ff4ffc132db36160507964b7d54bf4cdef8f0) by @sonofmagic
+
+- 🐛 **deps: upgrade** [`92dc1d5`](https://github.com/sonofmagic/tailwindcss-mangle/commit/92dc1d5dee5d221bcb367aba0fc8a005935d8e18) by @sonofmagic
+
 ## 5.1.4
 
 ### Patch Changes
