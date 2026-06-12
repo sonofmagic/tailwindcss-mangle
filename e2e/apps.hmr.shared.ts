@@ -1,7 +1,7 @@
 import type { RunningCommand } from './process'
 import fs from 'node:fs/promises'
 import path from 'pathe'
-import { cases, createAppCommandEnv, hasCssSelector, readClassListFile, repoRoot, resolveClassListFile, resolveMapFile, runTailwindcssPatch } from './apps.e2e.shared'
+import { cases, createAppCommandEnv, createPnpmCommandArgs, hasCssSelector, readClassListFile, repoRoot, resolveClassListFile, resolveMapFile, runTailwindcssPatch } from './apps.e2e.shared'
 import { spawnCommand } from './process'
 
 export interface AppHmrCase {
@@ -63,7 +63,7 @@ export const hmrCases: AppHmrCase[] = [
 ]
 
 export async function startViteDevServer(appDir: string, port: number) {
-  const child = spawnCommand('pnpm', ['run', 'dev', '--host', host, '--port', String(port)], {
+  const child = spawnCommand('pnpm', createPnpmCommandArgs(['run', 'dev', '--host', host, '--port', String(port)]), {
     cwd: appDir,
     env: createAppCommandEnv({
       NODE_ENV: 'development',

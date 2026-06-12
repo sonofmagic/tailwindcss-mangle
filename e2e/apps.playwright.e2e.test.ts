@@ -2,7 +2,7 @@ import type { RunningCommand } from './process'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { chromium } from '@playwright/test'
-import { buildApp, cases, createAppCommandEnv, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
+import { buildApp, cases, createAppCommandEnv, createPnpmCommandArgs, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
 import { resolveChromiumLaunchOptions } from './playwright.shared'
 import { spawnCommand } from './process'
 
@@ -59,7 +59,7 @@ async function startServer(appIndex: number) {
 
   if (app.name === 'nuxt-app') {
     cmd = 'pnpm'
-    args = ['exec', 'node', '.output/server/index.mjs']
+    args = createPnpmCommandArgs(['exec', 'node', '.output/server/index.mjs'])
     cwd = app.appDir
     extraEnv = {
       NITRO_HOST: '127.0.0.1',
@@ -68,7 +68,7 @@ async function startServer(appIndex: number) {
   }
   else if (app.name === 'remix-app') {
     cmd = 'pnpm'
-    args = ['exec', 'remix-serve', 'build/index.js']
+    args = createPnpmCommandArgs(['exec', 'remix-serve', 'build/index.js'])
     cwd = app.appDir
     extraEnv = {
       HOST: '127.0.0.1',

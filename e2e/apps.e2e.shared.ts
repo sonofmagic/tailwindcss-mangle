@@ -34,6 +34,10 @@ export const repoRoot = path.resolve(__dirname, '..')
 const host = '127.0.0.1'
 export const appCommandPnpmfile = path.resolve(repoRoot, 'e2e/noop-pnpmfile.mjs')
 
+export function createPnpmCommandArgs(args: string[]) {
+  return [`--config.pnpmfile=${appCommandPnpmfile}`, ...args]
+}
+
 export function createAppCommandEnv(
   env: Record<string, string | undefined> = {},
 ): NodeJS.ProcessEnv {
@@ -235,7 +239,7 @@ export async function ensureClassList(app: AppE2ECase) {
 }
 
 export async function buildApp(app: AppE2ECase) {
-  await runCommand('pnpm', ['run', app.buildScript ?? 'build'], {
+  await runCommand('pnpm', createPnpmCommandArgs(['run', app.buildScript ?? 'build']), {
     cwd: app.appDir,
     env: createAppCommandEnv({
       NODE_ENV: 'production',
@@ -245,14 +249,14 @@ export async function buildApp(app: AppE2ECase) {
 }
 
 export async function runTailwindcssPatch(app: AppE2ECase) {
-  await runCommand('pnpm', ['exec', 'tw-patch', 'install'], {
+  await runCommand('pnpm', createPnpmCommandArgs(['exec', 'tw-patch', 'install']), {
     cwd: app.appDir,
     env: createAppCommandEnv({
       NODE_ENV: 'production',
       ...app.env,
     }),
   })
-  await runCommand('pnpm', ['exec', 'tw-patch', 'extract'], {
+  await runCommand('pnpm', createPnpmCommandArgs(['exec', 'tw-patch', 'extract']), {
     cwd: app.appDir,
     env: createAppCommandEnv({
       NODE_ENV: 'production',
@@ -290,7 +294,7 @@ export async function resolveUsageRoots(app: AppE2ECase) {
 
 export function resolveServeCommand(app: AppE2ECase, port: number) {
   const serve = app.serve ?? defaultServeConfig
-  return ['pnpm', ['run', serve.script, ...serve.args(port)], { cwd: app.appDir }] as const
+  return ['pnpm', createPnpmCommandArgs(['run', serve.script, ...serve.args(port)]), { cwd: app.appDir }] as const
 }
 
 export const usageExt = new Set([
