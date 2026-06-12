@@ -79,9 +79,12 @@ export type {
 } from './style-generator'
 export * from './types'
 export {
+  generateTailwindV3RawStyle,
   generateTailwindV3Style,
 } from './v3'
 export type {
+  TailwindV3RawStyleGenerateOptions,
+  TailwindV3RawStyleGenerateResult,
   TailwindV3StyleGenerateOptions,
   TailwindV3StyleGenerateResult,
   TailwindV3StyleLayer,

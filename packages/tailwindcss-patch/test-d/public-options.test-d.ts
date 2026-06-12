@@ -6,6 +6,7 @@ import {
   defineConfig,
   generateCustomStyle,
   generateTailwindStyle,
+  generateTailwindV3RawStyle,
   generateTailwindV3Style,
   generateTailwindV4Style,
   normalizeOptions,
@@ -21,6 +22,8 @@ import {
   type TailwindStyleGenerateOptions,
   type TailwindStyleGenerateResult,
   type TailwindStyleSource,
+  type TailwindV3RawStyleGenerateOptions,
+  type TailwindV3RawStyleGenerateResult,
   type TailwindV3StyleGenerateOptions,
   type TailwindV3StyleGenerateResult,
   type TailwindV4CssSource,
@@ -153,6 +156,17 @@ const v3StyleOptions: TailwindV3StyleGenerateOptions = {
 }
 
 expectAssignable<Promise<TailwindV3StyleGenerateResult>>(generateTailwindV3Style(v3StyleOptions))
+
+const v3RawStyleOptions: TailwindV3RawStyleGenerateOptions = {
+  css: '@tailwind utilities;',
+  cwd: 'apps/web',
+  packageName: 'tailwindcss',
+  candidates: ['text-red-500'],
+  sources: [styleSource],
+  directUtilitiesOnly: 'auto',
+}
+
+expectAssignable<Promise<TailwindV3RawStyleGenerateResult>>(generateTailwindV3RawStyle(v3RawStyleOptions))
 
 const customStyleResult = generateCustomStyle({
   candidates: ['text-red-500'],

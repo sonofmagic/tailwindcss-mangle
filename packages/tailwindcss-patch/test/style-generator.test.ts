@@ -8,6 +8,7 @@ import {
   escapeCssClassName,
   generateCustomStyle,
   generateTailwindStyle,
+  generateTailwindV3RawStyle,
   generateTailwindV3Style,
 } from '@/public-api'
 
@@ -114,6 +115,46 @@ describe('Tailwind style generator', () => {
     })
 
     expect(internal.css).toBe(postcssResult.css)
+  })
+
+  it('generates raw Tailwind v3 css from an entry source without the PostCSS plugin', async () => {
+    const result = await generateTailwindV3RawStyle({
+      cwd: packageRoot,
+      packageName: 'tailwindcss-3',
+      css: '@tailwind base; @tailwind components; @tailwind utilities;',
+      candidates: ['container', 'text-red-500'],
+      config: {
+        corePlugins: {
+          preflight: false,
+        },
+      },
+    })
+
+    expect(result.version).toBe(3)
+    expect(result.tokens).toEqual(new Set(['container', 'text-red-500']))
+    expect(result.classSet).toContain('container')
+    expect(result.classSet).toContain('text-red-500')
+    expect(result.css).toContain('.container')
+    expect(result.css).toContain('.text-red-500')
+    expect(result.dependencies).toEqual([])
+  })
+
+  it('keeps Tailwind v3 raw direct utilities output aligned with the high-level v3 generator', async () => {
+    const options = {
+      cwd: packageRoot,
+      packageName: 'tailwindcss-3',
+      candidates: ['rounded-[18px]', 'text-red-500', 'hover:bg-blue-500'],
+      config: {
+        corePlugins: {
+          preflight: false,
+        },
+      },
+    }
+    const raw = await generateTailwindV3RawStyle(options)
+    const highLevel = await generateTailwindV3Style(options)
+
+    expect(raw.css).toBe(highLevel.css)
+    expect(raw.classSet).toEqual(highLevel.classSet)
   })
 
   it('routes Tailwind v3 and v4 through the unified generator', async () => {

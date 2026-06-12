@@ -1,7 +1,10 @@
 export {
+  generateTailwindV3RawStyle,
   generateTailwindV3Style,
 } from './style-generator'
 export type {
+  TailwindV3RawStyleGenerateOptions,
+  TailwindV3RawStyleGenerateResult,
   TailwindV3StyleGenerateOptions,
   TailwindV3StyleGenerateResult,
   TailwindV3StyleLayer,
