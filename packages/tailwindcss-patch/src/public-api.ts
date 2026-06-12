@@ -59,9 +59,36 @@ export {
   runTailwindBuild,
 } from './install'
 export { default as logger } from './logger'
+export {
+  collectTailwindStyleCandidates,
+} from './style-candidates'
+export type {
+  TailwindStyleCandidateOptions,
+  TailwindStyleSource,
+} from './style-candidates'
+export {
+  generateCustomStyle,
+  generateTailwindStyle,
+} from './style-generator'
+export type {
+  CustomTailwindStyleGenerateContext,
+  CustomTailwindStyleGenerateOptions,
+  CustomTailwindStyleGenerateResult,
+  TailwindStyleGenerateOptions,
+  TailwindStyleGenerateResult,
+} from './style-generator'
 export * from './types'
 export {
+  generateTailwindV3Style,
+} from './v3'
+export type {
+  TailwindV3StyleGenerateOptions,
+  TailwindV3StyleGenerateResult,
+  TailwindV3StyleLayer,
+} from './v3'
+export {
   canonicalizeBareArbitraryValueCandidates,
+  collectTailwindV4StyleCandidates,
   createTailwindV4CompiledSourceEntries,
   createTailwindV4DefaultIgnoreSources,
   createTailwindV4Engine,
@@ -73,6 +100,7 @@ export {
   expandTailwindV4SourceEntryBraces,
   extractBareArbitraryValueSourceCandidates,
   extractBareArbitraryValueSourceCandidatesWithPositions,
+  generateTailwindV4Style,
   isBareArbitraryValuesEnabled,
   isFileExcludedByTailwindV4SourceEntries,
   isFileMatchedByTailwindV4SourceEntries,
@@ -104,6 +132,9 @@ export type {
   TailwindV4ResolvedSource,
   TailwindV4SourceOptions,
   TailwindV4SourcePattern,
+  TailwindV4StyleGenerateOptions,
+  TailwindV4StyleGenerateResult,
+  TailwindV4StyleSource,
 } from './v4'
 
 export function defineConfig<T extends TailwindcssMangleConfig>(config: T): T {

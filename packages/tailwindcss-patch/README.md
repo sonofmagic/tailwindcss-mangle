@@ -6,6 +6,7 @@ Modern tooling to patch Tailwind CSS, capture runtime contexts, and materialise 
 - Traverse Tailwind v4 projects by scanning CSS outputs and content sources.
 - Write class inventories to disk or keep them in memory for tooling integrations.
 - Control caching, filtering, and custom unit extensions from a single, typed entrypoint.
+- Generate Tailwind v3/v4 CSS, or fully custom CSS, directly from in-memory tokens and source snippets.
 
 ## Installation
 
@@ -114,6 +115,74 @@ Skip `next()` to fully replace a command (e.g. custom `init` or cache clearing b
 | `--format <json\|lines>` | Switch between JSON output (default) and newline-delimited text. |
 | `--css <file>`           | Provide a CSS entry file when working with Tailwind v4 projects. |
 | `--no-write`             | Skip writing to disk and only return the collected classes.      |
+
+### Style generation
+
+Use the style generator when you want `tailwindcss-patch` to act as the CSS engine and drive your own output format. Tailwind v4 uses `@tailwindcss/node`; Tailwind v3 uses Tailwind v3's internal JIT engine (`createContext` + `generateRules`) without running the Tailwind PostCSS plugin.
+
+```ts
+import { writeFile } from 'node:fs/promises'
+import { generateTailwindStyle } from 'tailwindcss-patch'
+
+const result = await generateTailwindStyle({
+  version: 4,
+  css: '@import "tailwindcss";',
+  candidates: ['text-red-500'],
+  sources: [
+    {
+      content: '<view class="min-h-screen rounded-[18px]"></view>',
+      extension: 'tsx',
+    },
+  ],
+})
+
+await writeFile('dist/style.css', result.css)
+await writeFile('dist/tokens.json', JSON.stringify([...result.tokens], null, 2))
+```
+
+Generate Tailwind v3 CSS from the same candidate pipeline:
+
+```ts
+import { generateTailwindStyle } from 'tailwindcss-patch'
+
+const result = await generateTailwindStyle({
+  version: 3,
+  candidates: ['text-red-500'],
+  sources: [
+    {
+      content: '<view class="min-h-screen rounded-[18px]"></view>',
+      extension: 'wxml',
+    },
+  ],
+  config: {
+    corePlugins: {
+      preflight: false,
+    },
+  },
+})
+```
+
+Or bypass Tailwind CSS output entirely and provide your own CSS generator:
+
+```ts
+import { escapeCssClassName, generateTailwindStyle } from 'tailwindcss-patch'
+
+const result = await generateTailwindStyle({
+  version: 'custom',
+  candidates: ['token-card'],
+  sources: [
+    {
+      content: '<view class="rounded-[18px]"></view>',
+      extension: 'wxml',
+    },
+  ],
+  generate({ tokens }) {
+    return [...tokens]
+      .map(token => `.${escapeCssClassName(token)}{--tw-token:"${token}"}`)
+      .join('\n')
+  },
+})
+```
 
 The CLI loads `tailwindcss-patch.config.ts` via `@tailwindcss-mangle/config`. v9 expects the modern `registry` shape; use `tw-patch migrate` before upgrading if your config still uses deprecated keys.
 

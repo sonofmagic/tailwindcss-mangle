@@ -4,6 +4,10 @@ import { expectAssignable, expectError, expectType } from 'tsd'
 import {
   TailwindcssPatcher,
   defineConfig,
+  generateCustomStyle,
+  generateTailwindStyle,
+  generateTailwindV3Style,
+  generateTailwindV4Style,
   normalizeOptions,
   splitCandidateTokens,
   type ApplyOptions,
@@ -14,9 +18,17 @@ import {
   type NormalizedTailwindCssPatchOptions,
   type TailwindCssOptions,
   type TailwindCssPatchOptions,
+  type TailwindStyleGenerateOptions,
+  type TailwindStyleGenerateResult,
+  type TailwindStyleSource,
+  type TailwindV3StyleGenerateOptions,
+  type TailwindV3StyleGenerateResult,
   type TailwindV4CssSource,
   type TailwindV4GenerateOptions,
   type TailwindV4SourcePattern,
+  type TailwindV4StyleGenerateOptions,
+  type TailwindV4StyleGenerateResult,
+  type TailwindV4StyleSource,
   type TailwindV2Options,
   type TailwindV3Options,
   type TailwindV4Options,
@@ -105,6 +117,70 @@ const v4GenerateOptions: TailwindV4GenerateOptions = {
 }
 
 expectAssignable<TailwindV4GenerateOptions['scanSources']>(v4GenerateOptions.scanSources)
+
+const v4StyleSource: TailwindV4StyleSource = {
+  file: 'pages/index.tsx',
+  extension: 'tsx',
+  content: '<view class="text-red-500"></view>',
+}
+
+const v4StyleOptions: TailwindV4StyleGenerateOptions = {
+  css: '@import "tailwindcss";',
+  candidates: ['text-red-500'],
+  sources: [v4StyleSource],
+  bareArbitraryValues: true,
+}
+
+expectAssignable<Promise<TailwindV4StyleGenerateResult>>(generateTailwindV4Style(v4StyleOptions))
+
+const styleSource: TailwindStyleSource = {
+  file: 'pages/index.wxml',
+  extension: 'wxml',
+  content: '<view class="text-red-500"></view>',
+}
+
+const v3StyleOptions: TailwindV3StyleGenerateOptions = {
+  cwd: 'apps/web',
+  packageName: 'tailwindcss',
+  candidates: ['text-red-500'],
+  sources: [styleSource],
+  config: {
+    theme: {
+      extend: {},
+    },
+  },
+  layers: ['utilities', 'variants'],
+}
+
+expectAssignable<Promise<TailwindV3StyleGenerateResult>>(generateTailwindV3Style(v3StyleOptions))
+
+const customStyleResult = generateCustomStyle({
+  candidates: ['text-red-500'],
+  sources: [styleSource],
+  generate(ctx) {
+    expectType<Set<string>>(ctx.tokens)
+    return [...ctx.tokens].join('\n')
+  },
+})
+
+expectAssignable<Promise<{ version: 'custom', css: string, tokens: Set<string> }>>(customStyleResult)
+
+const styleGenerateOptions: TailwindStyleGenerateOptions = {
+  version: 3,
+  candidates: ['text-red-500'],
+}
+
+expectAssignable<Promise<TailwindStyleGenerateResult>>(generateTailwindStyle(styleGenerateOptions))
+expectAssignable<Promise<TailwindStyleGenerateResult>>(generateTailwindStyle({
+  version: 4,
+  css: '@import "tailwindcss";',
+  candidates: ['text-red-500'],
+}))
+expectAssignable<Promise<TailwindStyleGenerateResult>>(generateTailwindStyle({
+  version: 'custom',
+  candidates: ['text-red-500'],
+  generate: () => '.text-red-500{}',
+}))
 
 const sourcePattern: TailwindV4SourcePattern = {
   base: 'apps/web',

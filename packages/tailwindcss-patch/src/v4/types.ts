@@ -1,3 +1,5 @@
+import type { TailwindStyleSource } from '../style-candidates'
+
 export interface TailwindV4SourceOptions {
   projectRoot?: string
   cwd?: string
@@ -28,6 +30,8 @@ export interface TailwindV4CandidateSource {
   content: string
   extension?: string
 }
+
+export interface TailwindV4StyleSource extends TailwindStyleSource {}
 
 export interface TailwindV4GenerateOptions {
   candidates?: Iterable<string>
@@ -65,6 +69,25 @@ export interface TailwindV4GenerateResult {
   dependencies: string[]
   sources: TailwindV4SourcePattern[]
   root: TailwindV4CompiledSourceRoot
+}
+
+export interface TailwindV4StyleGenerateOptions extends TailwindV4SourceOptions {
+  source?: TailwindV4ResolvedSource
+  candidates?: Iterable<string>
+  sources?: TailwindV4StyleSource[]
+  /**
+   * Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`.
+   */
+  bareArbitraryValues?: TailwindV4GenerateOptions['bareArbitraryValues']
+  /**
+   * Scans the compiled Tailwind CSS v4 source entries in addition to in-memory sources.
+   */
+  scanSources?: TailwindV4GenerateOptions['scanSources']
+}
+
+export interface TailwindV4StyleGenerateResult extends TailwindV4GenerateResult {
+  tokens: Set<string>
+  source: TailwindV4ResolvedSource
 }
 
 export interface TailwindV4DesignSystem {

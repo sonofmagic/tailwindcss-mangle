@@ -43,6 +43,10 @@ export {
   TAILWIND_V4_IGNORED_EXTENSIONS,
   TAILWIND_V4_IGNORED_FILES,
 } from './source-scan'
+export {
+  collectTailwindV4StyleCandidates,
+  generateTailwindV4Style,
+} from './style-generator'
 export type {
   TailwindV4CandidateSource,
   TailwindV4CompiledSourceRoot,
@@ -54,4 +58,7 @@ export type {
   TailwindV4ResolvedSource,
   TailwindV4SourceOptions,
   TailwindV4SourcePattern,
+  TailwindV4StyleGenerateOptions,
+  TailwindV4StyleGenerateResult,
+  TailwindV4StyleSource,
 } from './types'
