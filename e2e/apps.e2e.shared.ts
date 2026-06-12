@@ -32,6 +32,18 @@ export interface AppE2ECase {
 export const repoRoot = path.resolve(__dirname, '..')
 
 const host = '127.0.0.1'
+export const appCommandPnpmfile = path.resolve(repoRoot, 'e2e/noop-pnpmfile.mjs')
+
+export function createAppCommandEnv(
+  env: Record<string, string | undefined> = {},
+): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    NPM_CONFIG_PNPMFILE: appCommandPnpmfile,
+    npm_config_pnpmfile: appCommandPnpmfile,
+    ...env,
+  }
+}
 
 export const defaultServeConfig: AppServeConfig = {
   script: 'preview',
@@ -225,36 +237,27 @@ export async function ensureClassList(app: AppE2ECase) {
 export async function buildApp(app: AppE2ECase) {
   await runCommand('pnpm', ['run', app.buildScript ?? 'build'], {
     cwd: app.appDir,
-    env: {
-      ...process.env,
-      NPM_CONFIG_PNPMFILE: '',
-      npm_config_pnpmfile: '',
+    env: createAppCommandEnv({
       NODE_ENV: 'production',
       ...app.env,
-    },
+    }),
   })
 }
 
 export async function runTailwindcssPatch(app: AppE2ECase) {
   await runCommand('pnpm', ['exec', 'tw-patch', 'install'], {
     cwd: app.appDir,
-    env: {
-      ...process.env,
-      NPM_CONFIG_PNPMFILE: '',
-      npm_config_pnpmfile: '',
+    env: createAppCommandEnv({
       NODE_ENV: 'production',
       ...app.env,
-    },
+    }),
   })
   await runCommand('pnpm', ['exec', 'tw-patch', 'extract'], {
     cwd: app.appDir,
-    env: {
-      ...process.env,
-      NPM_CONFIG_PNPMFILE: '',
-      npm_config_pnpmfile: '',
+    env: createAppCommandEnv({
       NODE_ENV: 'production',
       ...app.env,
-    },
+    }),
   })
 }
 

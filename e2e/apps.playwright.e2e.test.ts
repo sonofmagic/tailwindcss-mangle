@@ -2,7 +2,7 @@ import type { RunningCommand } from './process'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { chromium } from '@playwright/test'
-import { buildApp, cases, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
+import { buildApp, cases, createAppCommandEnv, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
 import { resolveChromiumLaunchOptions } from './playwright.shared'
 import { spawnCommand } from './process'
 
@@ -84,12 +84,11 @@ async function startServer(appIndex: number) {
 
   const child = spawnCommand(cmd, args, {
     cwd,
-    env: {
-      ...process.env,
+    env: createAppCommandEnv({
       NODE_ENV: 'production',
       ...app.env,
       ...extraEnv,
-    },
+    }),
   })
 
   await waitForHttpReady(url, child)
