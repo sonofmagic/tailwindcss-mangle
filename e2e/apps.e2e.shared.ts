@@ -227,6 +227,7 @@ export async function buildApp(app: AppE2ECase) {
     cwd: app.appDir,
     env: {
       ...process.env,
+      NPM_CONFIG_PNPMFILE: '',
       npm_config_pnpmfile: '',
       NODE_ENV: 'production',
       ...app.env,
@@ -239,6 +240,7 @@ export async function runTailwindcssPatch(app: AppE2ECase) {
     cwd: app.appDir,
     env: {
       ...process.env,
+      NPM_CONFIG_PNPMFILE: '',
       npm_config_pnpmfile: '',
       NODE_ENV: 'production',
       ...app.env,
@@ -248,6 +250,7 @@ export async function runTailwindcssPatch(app: AppE2ECase) {
     cwd: app.appDir,
     env: {
       ...process.env,
+      NPM_CONFIG_PNPMFILE: '',
       npm_config_pnpmfile: '',
       NODE_ENV: 'production',
       ...app.env,
