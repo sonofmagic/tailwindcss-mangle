@@ -86,7 +86,7 @@ This is a **pnpm workspace** monorepo managed by **Turbo**. Key packages:
 
 ## Important Notes
 
-- **Node version**: Requires >=18.0.0
+- **Node version**: Requires >=22.13.0
 - **Package manager**: pnpm only (enforced by preinstall hook)
 - **Post-install**: Runs `tw-patch install` automatically
 - **Module system**: ES modules (`"type": "module"`)

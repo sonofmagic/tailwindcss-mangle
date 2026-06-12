@@ -13,7 +13,7 @@ inputs:
   node-version:
     description: Node.js version used when setup-node is enabled.
     required: false
-    default: '20'
+    default: '22.13'
   cache-dependency-path:
     description: Cache dependency path for actions/setup-node.
     required: false

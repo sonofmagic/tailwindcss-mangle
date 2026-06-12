@@ -53,7 +53,7 @@ jobs:
           setup-pnpm: 'true'
           setup-node: 'true'
           install-deps: 'true'
-          node-version: '20'
+          node-version: '22.13'
           cache-dependency-path: pnpm-lock.yaml
           install-command: pnpm install --frozen-lockfile
           scope: ${{ matrix.shard.name }}
