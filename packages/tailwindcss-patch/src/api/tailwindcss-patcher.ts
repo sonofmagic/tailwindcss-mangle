@@ -104,9 +104,11 @@ function createCollector(
   return new RuntimeCollector(packageInfo, options, majorVersion, snapshotFactory)
 }
 
-function getPackageInfoFromCwd(packageName: string, cwd: string): PackageInfo | undefined {
+function getPackageInfoFromCwd(packageName: string, cwd: string, resolvePaths: string[] = []): PackageInfo | undefined {
   try {
-    const packageJsonPath = createRequire(path.join(cwd, 'package.json')).resolve(`${packageName}/package.json`)
+    const packageJsonPath = createRequire(path.join(cwd, 'package.json')).resolve(`${packageName}/package.json`, {
+      paths: resolvePaths,
+    })
     const packageJson = fs.readJSONSync(packageJsonPath) as PackageInfo['packageJson']
     return {
       name: packageName,
@@ -124,7 +126,7 @@ function getPackageInfoFromCwd(packageName: string, cwd: string): PackageInfo | 
 function getTailwindPackageInfo(options: NormalizedTailwindCssPatchOptions) {
   const cwd = options.tailwind.cwd ?? options.projectRoot
   const cwdPackageInfo = options.tailwind.resolve?.paths?.length
-    ? getPackageInfoFromCwd(options.tailwind.packageName, cwd)
+    ? getPackageInfoFromCwd(options.tailwind.packageName, cwd, options.tailwind.resolve.paths)
     : undefined
   return cwdPackageInfo
     ?? getPackageInfoSync(

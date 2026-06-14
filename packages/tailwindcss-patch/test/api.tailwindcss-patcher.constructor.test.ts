@@ -85,6 +85,40 @@ describe('TailwindcssPatcher constructor branches', () => {
     expect(path.normalize(patcher.packageInfo.rootPath)).toBe(path.normalize(await fs.realpath(tailwindRoot)))
   })
 
+  it('resolves packages through tailwindcss.resolve.paths when cwd has no local install', async () => {
+    const dependencyRoot = path.join(tempDir, 'dependency-root')
+    const projectRoot = path.join(tempDir, 'project')
+    const tailwindRoot = path.join(dependencyRoot, 'node_modules/tailwindcss-3')
+
+    await fs.ensureDir(projectRoot)
+    await fs.ensureDir(tailwindRoot)
+    await fs.writeJson(path.join(tailwindRoot, 'package.json'), {
+      name: 'tailwindcss',
+      version: '3.4.19',
+      main: 'index.js',
+    })
+    await fs.writeFile(path.join(tailwindRoot, 'index.js'), 'module.exports = {}', 'utf8')
+
+    const { TailwindcssPatcher } = await import('@/api/tailwindcss-patcher')
+    const patcher = new TailwindcssPatcher({
+      projectRoot,
+      cache: false,
+      extract: {
+        write: false,
+      },
+      tailwindcss: {
+        packageName: 'tailwindcss-3',
+        version: 3,
+        resolve: {
+          paths: [dependencyRoot],
+        },
+      },
+    })
+
+    expect(patcher.packageInfo.version).toBe('3.4.19')
+    expect(path.normalize(patcher.packageInfo.rootPath)).toBe(path.normalize(await fs.realpath(tailwindRoot)))
+  })
+
   it('requires an explicit tailwindcss.version when the resolved package version is not inferable', async () => {
     const { TailwindcssPatcher } = await importPatcherWithPackageResolver(() => createPkgInfo('canary'))
     expect(() => new TailwindcssPatcher({
