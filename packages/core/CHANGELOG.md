@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/core
 
+## 5.1.6
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`55affa9`](https://github.com/sonofmagic/tailwindcss-mangle/commit/55affa90e092739cbe1025173e9b8637c50c59db) by @sonofmagic
+
 ## 5.1.5
 
 ### Patch Changes
