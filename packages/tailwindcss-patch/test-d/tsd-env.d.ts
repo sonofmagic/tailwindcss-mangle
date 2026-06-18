@@ -11,7 +11,3 @@ declare module 'cac' {
 
   export default function cac(name?: string): CAC
 }
-
-declare module '@tailwindcss/node' {
-  export const __unstable__loadDesignSystem: (...args: any[]) => Promise<any>
-}

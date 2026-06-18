@@ -1,4 +1,4 @@
-import type { SourceEntry } from '@tailwindcss/oxide'
+import type { TailwindV4SourcePattern as SourceEntry } from '@tailwindcss-mangle/engine/v4'
 import type { PackageInfo } from 'local-pkg'
 import type { NormalizedTailwindCssPatchOptions } from '../config'
 import type { PatchResult, TailwindCollector, TailwindMajorVersion } from '../runtime/collector'
@@ -9,6 +9,7 @@ import type {
   CacheReadMeta,
   ExtractResult,
   TailwindCssPatchOptions,
+  TailwindcssRuntimeContext,
   TailwindTokenByFileMap,
   TailwindTokenFileKey,
   TailwindTokenReport,
@@ -196,7 +197,7 @@ export class TailwindcssPatcher {
     return this.collector.getPatchStatus()
   }
 
-  getContexts() {
+  getContexts(): TailwindcssRuntimeContext[] {
     return this.collector.getContexts()
   }
 

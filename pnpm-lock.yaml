@@ -898,12 +898,6 @@ importers:
       '@tailwindcss-mangle/engine':
         specifier: workspace:*
         version: link:../engine
-      '@tailwindcss/node':
-        specifier: ^4.3.1
-        version: 4.3.1
-      '@tailwindcss/oxide':
-        specifier: ^4.3.1
-        version: 4.3.1
       cac:
         specifier: 6.7.14
         version: 6.7.14
@@ -916,9 +910,6 @@ importers:
       local-pkg:
         specifier: ^1.2.1
         version: 1.2.1
-      micromatch:
-        specifier: ^4.0.8
-        version: 4.0.8
       pathe:
         specifier: ^2.0.3
         version: 2.0.3

@@ -13,6 +13,6 @@ export default defineConfig({
   fixedExtension: false,
   deps: {
     skipNodeModulesBundle: true,
-    neverBundle: ['tailwindcss', '@tailwindcss/node', '@tailwindcss/oxide'],
+    neverBundle: ['tailwindcss'],
   },
 })

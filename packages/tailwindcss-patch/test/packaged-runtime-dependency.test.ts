@@ -127,18 +127,22 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
     await fs.rm(tempDir, { force: true, recursive: true })
   })
 
-  it('publishes @tailwindcss/oxide as a runtime dependency for package-manager installs', async () => {
+  it('delegates Tailwind v4 runtime dependencies to the engine package', async () => {
     const tarball = await packTailwindcssPatch()
+    const engineTarball = await packPackage(enginePackageDir)
     const manifest = JSON.parse(
       run('tar', ['-xOf', tarball, 'package/package.json'], repoRoot),
     )
-    const packageManifest = JSON.parse(
-      await fs.readFile(path.join(packageDir, 'package.json'), 'utf8'),
+    const engineManifest = JSON.parse(
+      run('tar', ['-xOf', engineTarball, 'package/package.json'], repoRoot),
     )
 
-    expect(manifest.dependencies['@tailwindcss/oxide']).toBe(
-      packageManifest.dependencies['@tailwindcss/oxide'],
-    )
+    expect(manifest.dependencies['@tailwindcss-mangle/engine']).toBe(engineManifest.version)
+    expect(manifest.dependencies['@tailwindcss/node']).toBeUndefined()
+    expect(manifest.dependencies['@tailwindcss/oxide']).toBeUndefined()
+    expect(manifest.dependencies.micromatch).toBeUndefined()
+    expect(engineManifest.dependencies['@tailwindcss/node']).toBeDefined()
+    expect(engineManifest.dependencies['@tailwindcss/oxide']).toBeDefined()
     expect(manifest.devDependencies?.['@tailwindcss/oxide']).toBeUndefined()
 
     const oxideManifestPath = require.resolve('@tailwindcss/oxide/package.json')
@@ -163,7 +167,9 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
       const require = createRequire(import.meta.url)
       const patchEntry = require.resolve('tailwindcss-patch')
       const patchRequire = createRequire(patchEntry)
-      const oxidePackageJson = patchRequire.resolve('@tailwindcss/oxide/package.json')
+      const engineEntry = patchRequire.resolve('@tailwindcss-mangle/engine')
+      const engineRequire = createRequire(engineEntry)
+      const oxidePackageJson = engineRequire.resolve('@tailwindcss/oxide/package.json')
       const patcher = new TailwindcssPatcher({
         projectRoot: cwd,
         cache: false,
