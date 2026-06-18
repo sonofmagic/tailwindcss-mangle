@@ -1,11 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "allowImportingTsExtensions": true
   },
   "include": ["src", "test"],
   "exclude": ["dist", "coverage", "node_modules", "test/fixtures/**/*"]
