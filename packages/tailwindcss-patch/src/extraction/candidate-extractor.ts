@@ -7,11 +7,11 @@ export {
   extractValidCandidates,
   groupTokensByFile,
   resolveProjectSourceFiles,
-} from '@tailwindcss-mangle/engine/extraction/candidate-extractor'
+} from '@tailwindcss-mangle/engine'
 export type {
   ExtractCandidateOptions,
   ExtractProjectCandidatesOptions,
   ExtractSourceCandidate,
   ExtractValidCandidatesOption,
   ResolveProjectSourceFilesOptions,
-} from '@tailwindcss-mangle/engine/extraction/candidate-extractor'
+} from '@tailwindcss-mangle/engine'

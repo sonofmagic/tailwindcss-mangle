@@ -27,97 +27,32 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./src/index.ts",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./style-candidates": {
-      "types": "./dist/style-candidates.d.ts",
-      "import": "./src/style-candidates.ts",
-      "require": "./dist/style-candidates.cjs"
-    },
-    "./style-generator": {
-      "types": "./dist/style-generator.d.ts",
-      "import": "./src/style-generator.ts",
-      "require": "./dist/style-generator.cjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.ts",
-      "import": "./src/types.ts",
-      "require": "./dist/types.cjs"
-    },
-    "./extraction/candidate-extractor": {
-      "types": "./dist/extraction/candidate-extractor.d.ts",
-      "import": "./src/extraction/candidate-extractor.ts",
-      "require": "./dist/extraction/candidate-extractor.cjs"
-    },
-    "./extraction/split-candidate-tokens": {
-      "types": "./dist/extraction/split-candidate-tokens.d.ts",
-      "import": "./src/extraction/split-candidate-tokens.ts",
-      "require": "./dist/extraction/split-candidate-tokens.cjs"
     },
     "./v3": {
       "types": "./dist/v3/index.d.ts",
-      "import": "./src/v3/index.ts",
+      "import": "./dist/v3/index.js",
       "require": "./dist/v3/index.cjs"
-    },
-    "./v3/style-generator": {
-      "types": "./dist/v3/style-generator.d.ts",
-      "import": "./src/v3/style-generator.ts",
-      "require": "./dist/v3/style-generator.cjs"
     },
     "./v4": {
       "types": "./dist/v4/index.d.ts",
-      "import": "./src/v4/index.ts",
+      "import": "./dist/v4/index.js",
       "require": "./dist/v4/index.cjs"
-    },
-    "./v4/bare-arbitrary-values": {
-      "types": "./dist/v4/bare-arbitrary-values.d.ts",
-      "import": "./src/v4/bare-arbitrary-values.ts",
-      "require": "./dist/v4/bare-arbitrary-values.cjs"
-    },
-    "./v4/candidates": {
-      "types": "./dist/v4/candidates.d.ts",
-      "import": "./src/v4/candidates.ts",
-      "require": "./dist/v4/candidates.cjs"
-    },
-    "./v4/engine": {
-      "types": "./dist/v4/engine.d.ts",
-      "import": "./src/v4/engine.ts",
-      "require": "./dist/v4/engine.cjs"
-    },
-    "./v4/node-adapter": {
-      "types": "./dist/v4/node-adapter.d.ts",
-      "import": "./src/v4/node-adapter.ts",
-      "require": "./dist/v4/node-adapter.cjs"
-    },
-    "./v4/source": {
-      "types": "./dist/v4/source.d.ts",
-      "import": "./src/v4/source.ts",
-      "require": "./dist/v4/source.cjs"
-    },
-    "./v4/source-scan": {
-      "types": "./dist/v4/source-scan.d.ts",
-      "import": "./src/v4/source-scan.ts",
-      "require": "./dist/v4/source-scan.cjs"
-    },
-    "./v4/style-generator": {
-      "types": "./dist/v4/style-generator.d.ts",
-      "import": "./src/v4/style-generator.ts",
-      "require": "./dist/v4/style-generator.cjs"
-    },
-    "./v4/types": {
-      "types": "./dist/v4/types.d.ts",
-      "import": "./src/v4/types.ts",
-      "require": "./dist/v4/types.cjs"
     }
   },
   "main": "./dist/index.cjs",
-  "module": "./src/index.ts",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
+      "v3": [
+        "./dist/v3/index.d.ts"
+      ],
+      "v4": [
+        "./dist/v4/index.d.ts"
+      ],
       "*": [
-        "./dist/*",
         "./dist/index.d.ts"
       ]
     }
@@ -142,85 +77,15 @@
         "import": "./dist/index.js",
         "require": "./dist/index.cjs"
       },
-      "./style-candidates": {
-        "types": "./dist/style-candidates.d.ts",
-        "import": "./dist/style-candidates.js",
-        "require": "./dist/style-candidates.cjs"
-      },
-      "./style-generator": {
-        "types": "./dist/style-generator.d.ts",
-        "import": "./dist/style-generator.js",
-        "require": "./dist/style-generator.cjs"
-      },
-      "./types": {
-        "types": "./dist/types.d.ts",
-        "import": "./dist/types.js",
-        "require": "./dist/types.cjs"
-      },
-      "./extraction/candidate-extractor": {
-        "types": "./dist/extraction/candidate-extractor.d.ts",
-        "import": "./dist/extraction/candidate-extractor.js",
-        "require": "./dist/extraction/candidate-extractor.cjs"
-      },
-      "./extraction/split-candidate-tokens": {
-        "types": "./dist/extraction/split-candidate-tokens.d.ts",
-        "import": "./dist/extraction/split-candidate-tokens.js",
-        "require": "./dist/extraction/split-candidate-tokens.cjs"
-      },
       "./v3": {
         "types": "./dist/v3/index.d.ts",
         "import": "./dist/v3/index.js",
         "require": "./dist/v3/index.cjs"
       },
-      "./v3/style-generator": {
-        "types": "./dist/v3/style-generator.d.ts",
-        "import": "./dist/v3/style-generator.js",
-        "require": "./dist/v3/style-generator.cjs"
-      },
       "./v4": {
         "types": "./dist/v4/index.d.ts",
         "import": "./dist/v4/index.js",
         "require": "./dist/v4/index.cjs"
-      },
-      "./v4/bare-arbitrary-values": {
-        "types": "./dist/v4/bare-arbitrary-values.d.ts",
-        "import": "./dist/v4/bare-arbitrary-values.js",
-        "require": "./dist/v4/bare-arbitrary-values.cjs"
-      },
-      "./v4/candidates": {
-        "types": "./dist/v4/candidates.d.ts",
-        "import": "./dist/v4/candidates.js",
-        "require": "./dist/v4/candidates.cjs"
-      },
-      "./v4/engine": {
-        "types": "./dist/v4/engine.d.ts",
-        "import": "./dist/v4/engine.js",
-        "require": "./dist/v4/engine.cjs"
-      },
-      "./v4/node-adapter": {
-        "types": "./dist/v4/node-adapter.d.ts",
-        "import": "./dist/v4/node-adapter.js",
-        "require": "./dist/v4/node-adapter.cjs"
-      },
-      "./v4/source": {
-        "types": "./dist/v4/source.d.ts",
-        "import": "./dist/v4/source.js",
-        "require": "./dist/v4/source.cjs"
-      },
-      "./v4/source-scan": {
-        "types": "./dist/v4/source-scan.d.ts",
-        "import": "./dist/v4/source-scan.js",
-        "require": "./dist/v4/source-scan.cjs"
-      },
-      "./v4/style-generator": {
-        "types": "./dist/v4/style-generator.d.ts",
-        "import": "./dist/v4/style-generator.js",
-        "require": "./dist/v4/style-generator.cjs"
-      },
-      "./v4/types": {
-        "types": "./dist/v4/types.d.ts",
-        "import": "./dist/v4/types.js",
-        "require": "./dist/v4/types.cjs"
       }
     },
     "main": "./dist/index.cjs",

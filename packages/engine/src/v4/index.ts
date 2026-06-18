@@ -5,6 +5,11 @@ export {
   isBareArbitraryValuesEnabled,
   resolveBareArbitraryValueCandidate,
 } from './bare-arbitrary-values.ts'
+export type {
+  BareArbitraryValueOptions,
+  BareArbitraryValueResolveResult,
+  BareArbitraryValueSourceCandidate,
+} from './bare-arbitrary-values.ts'
 export {
   canonicalizeBareArbitraryValueCandidates,
   extractTailwindV4InlineSourceCandidates,
@@ -14,6 +19,7 @@ export {
 export { createTailwindV4Engine } from './engine.ts'
 export {
   compileTailwindV4Source,
+  getTailwindV4DesignSystemCacheKey,
   loadTailwindV4DesignSystem,
   loadTailwindV4NodeModule,
 } from './node-adapter.ts'
@@ -25,9 +31,11 @@ export {
   createTailwindV4SourceExclusionMatcher,
   expandTailwindV4SourceEntries,
   expandTailwindV4SourceEntryBraces,
+  groupTailwindV4SourceEntriesByBase,
   isFileExcludedByTailwindV4SourceEntries,
   isFileMatchedByTailwindV4SourceEntries,
   mergeTailwindV4SourceEntries,
+  normalizeGlobPattern,
   normalizeTailwindV4ScannerSources,
   normalizeTailwindV4SourceEntries,
   resolveSourceScanPath,
@@ -37,10 +45,9 @@ export {
   TAILWIND_V4_IGNORED_CONTENT_DIRS,
   TAILWIND_V4_IGNORED_EXTENSIONS,
   TAILWIND_V4_IGNORED_FILES,
+  toPosixPath,
 } from './source-scan.ts'
-export {
-  resolveTailwindV4Source,
-} from './source.ts'
+export { resolveTailwindV4Source } from './source.ts'
 export {
   collectTailwindV4StyleCandidates,
   generateTailwindV4Style,

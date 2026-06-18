@@ -1,4 +1,4 @@
-import type { TailwindV4CssSource } from '@tailwindcss-mangle/engine/v4/types'
+import type { TailwindV4CssSource } from '@tailwindcss-mangle/engine/v4'
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageResolvingOptions } from 'local-pkg'
 import type { ILengthUnitsPatchOptions } from '../types'

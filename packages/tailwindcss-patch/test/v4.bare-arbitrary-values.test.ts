@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveBareArbitraryValueCandidate } from '@/v4/bare-arbitrary-values'
+import { resolveBareArbitraryValueCandidate } from '@/v4'
 
 describe('bare arbitrary value resolver', () => {
   it('resolves common UnoCSS-style bare arbitrary values', () => {

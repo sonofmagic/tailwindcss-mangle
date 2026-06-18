@@ -49,7 +49,11 @@ export interface ILengthUnitsPatchOptions {
   destPath?: string
 }
 
-export type PatchCheckStatus = 'applied' | 'not-applied' | 'skipped' | 'unsupported'
+export type PatchCheckStatus
+  = | 'applied'
+    | 'not-applied'
+    | 'skipped'
+    | 'unsupported'
 
 export type PatchName = 'exposeContext' | 'extendLengthUnits'
 
@@ -78,4 +82,4 @@ export type {
   TailwindTokenFileKey,
   TailwindTokenLocation,
   TailwindTokenReport,
-} from '@tailwindcss-mangle/engine/types'
+} from '@tailwindcss-mangle/engine'

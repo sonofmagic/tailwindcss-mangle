@@ -4,19 +4,9 @@
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     }
   },
-  "include": [
-    "src",
-    "test"
-  ],
-  "exclude": [
-    "dist",
-    "coverage",
-    "node_modules",
-    "test/fixtures/**/*"
-  ]
+  "include": ["src", "test"],
+  "exclude": ["dist", "coverage", "node_modules", "test/fixtures/**/*"]
 }
