@@ -3,6 +3,7 @@ export {
   generateTailwindV3Style,
 } from './style-generator.ts'
 export type {
+  TailwindV3ConfigInput,
   TailwindV3RawStyleGenerateOptions,
   TailwindV3RawStyleGenerateResult,
   TailwindV3StyleGenerateOptions,
