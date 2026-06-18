@@ -130,7 +130,7 @@ export function transformPostcssPlugin(content: string, { refProperty }: ExposeC
             t.variableDeclarator(
               refIdentifier,
               t.objectExpression([
-                t.objectProperty(t.identifier('value'), t.arrayExpression()),
+                t.objectProperty(t.identifier('value'), t.arrayExpression([])),
               ]),
             ),
           ]),

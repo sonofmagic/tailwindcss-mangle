@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Environment Setup
-Use Node.js 22.13 or newer and install dependencies with `pnpm` (enforced by `preinstall`). Run `pnpm install` from the repo root to link workspace packages and set up local post-install patches via `tw-patch`.
+Use Node.js 22.18.x or 24.11 or newer and install dependencies with `pnpm` (enforced by `preinstall`). Run `pnpm install` from the repo root to link workspace packages and set up local post-install patches via `tw-patch`.
 
 ## Project Structure & Module Organization
 Source lives in `packages/`, with `@tailwindcss-mangle/core` providing the transformation engine, `shared` for cross-package utils, `config` for preset defaults, `tailwindcss-patch` to shim Tailwind versions, and `unplugin-tailwindcss-mangle` for build-tool integrations. Example applications live under `apps/` for framework-specific smoke tests, while `website/` hosts the Astro-powered docs. Reusable scripts live in `scripts/`, and assets used by docs and samples are under `assets/`.

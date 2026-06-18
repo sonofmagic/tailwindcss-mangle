@@ -121,7 +121,7 @@ export function transformPostcssPluginV2(content: string, options: ExposeContext
             t.variableDeclarator(
               refIdentifier,
               t.objectExpression([
-                t.objectProperty(t.identifier('value'), t.arrayExpression()),
+                t.objectProperty(t.identifier('value'), t.arrayExpression([])),
               ]),
             ),
           ]),
