@@ -1,103 +1,15 @@
-import type { TailwindStyleSource } from '../style-candidates'
-
-export interface TailwindV4SourceOptions {
-  projectRoot?: string
-  cwd?: string
-  base?: string
-  baseFallbacks?: string[]
-  css?: string
-  cssSources?: TailwindV4CssSource[]
-  cssEntries?: string[]
-  packageName?: string
-}
-
-export interface TailwindV4CssSource {
-  css: string
-  base?: string
-  file?: string
-  dependencies?: string[]
-}
-
-export interface TailwindV4ResolvedSource {
-  projectRoot: string
-  base: string
-  baseFallbacks: string[]
-  css: string
-  dependencies: string[]
-}
-
-export interface TailwindV4CandidateSource {
-  content: string
-  extension?: string
-}
-
-export interface TailwindV4StyleSource extends TailwindStyleSource {}
-
-export interface TailwindV4GenerateOptions {
-  candidates?: Iterable<string>
-  sources?: TailwindV4CandidateSource[]
-  /**
-   * Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`.
-   */
-  bareArbitraryValues?: boolean | {
-    units?: string[]
-  }
-  /**
-   * 扫描文件系统 source entries 中的候选类名。
-   *
-   * - `true`：使用 Tailwind v4 编译入口解析出的 `@source` 列表。
-   * - `TailwindV4SourcePattern[]`：使用调用方显式传入的 source 列表。
-   */
-  scanSources?: boolean | TailwindV4SourcePattern[]
-}
-
-export type TailwindV4CompiledSourceRoot = null | 'none' | {
-  base: string
-  pattern: string
-}
-
-export interface TailwindV4SourcePattern {
-  base: string
-  pattern: string
-  negated: boolean
-}
-
-export interface TailwindV4GenerateResult {
-  css: string
-  classSet: Set<string>
-  rawCandidates: Set<string>
-  dependencies: string[]
-  sources: TailwindV4SourcePattern[]
-  root: TailwindV4CompiledSourceRoot
-}
-
-export interface TailwindV4StyleGenerateOptions extends TailwindV4SourceOptions {
-  source?: TailwindV4ResolvedSource
-  candidates?: Iterable<string>
-  sources?: TailwindV4StyleSource[]
-  /**
-   * Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`.
-   */
-  bareArbitraryValues?: TailwindV4GenerateOptions['bareArbitraryValues']
-  /**
-   * Scans the compiled Tailwind CSS v4 source entries in addition to in-memory sources.
-   */
-  scanSources?: TailwindV4GenerateOptions['scanSources']
-}
-
-export interface TailwindV4StyleGenerateResult extends TailwindV4GenerateResult {
-  tokens: Set<string>
-  source: TailwindV4ResolvedSource
-}
-
-export interface TailwindV4DesignSystem {
-  parseCandidate: (candidate: string) => unknown[]
-  candidatesToCss: (candidates: string[]) => Array<string | null | undefined>
-}
-
-export interface TailwindV4Engine {
-  source: TailwindV4ResolvedSource
-  loadDesignSystem: () => Promise<TailwindV4DesignSystem>
-  validateCandidates: (candidates: Iterable<string>) => Promise<Set<string>>
-  generate: (options?: TailwindV4GenerateOptions) => Promise<TailwindV4GenerateResult>
-}
+export type {
+  TailwindV4CandidateSource,
+  TailwindV4CompiledSourceRoot,
+  TailwindV4CssSource,
+  TailwindV4DesignSystem,
+  TailwindV4Engine,
+  TailwindV4GenerateOptions,
+  TailwindV4GenerateResult,
+  TailwindV4ResolvedSource,
+  TailwindV4SourceOptions,
+  TailwindV4SourcePattern,
+  TailwindV4StyleGenerateOptions,
+  TailwindV4StyleGenerateResult,
+  TailwindV4StyleSource,
+} from '@tailwindcss-mangle/engine/v4/types'

@@ -25,7 +25,7 @@
     "build:docs": "turbo run build --filter=./website",
     "lint": "eslint \"packages/**/*.ts\" packages/tailwindcss-patch/tsdown.config.mts \"e2e/**/*.ts\" scripts/check-package-boundaries.mjs --ignore-pattern \"packages/**/bench/**\" --ignore-pattern \"packages/**/test-d/**\" --fix",
     "preinstall": "npx only-allow pnpm",
-    "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
+    "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config @tailwindcss-mangle/engine tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
     "publish-packages": "pnpm run build && pnpm run test && changeset version && changeset publish",
     "-------": "-----------",
     "release": "changeset",

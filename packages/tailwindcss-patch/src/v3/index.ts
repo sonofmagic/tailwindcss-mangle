@@ -1,11 +1,11 @@
 export {
   generateTailwindV3RawStyle,
   generateTailwindV3Style,
-} from './style-generator'
+} from '@tailwindcss-mangle/engine/v3'
 export type {
   TailwindV3RawStyleGenerateOptions,
   TailwindV3RawStyleGenerateResult,
   TailwindV3StyleGenerateOptions,
   TailwindV3StyleGenerateResult,
   TailwindV3StyleLayer,
-} from './style-generator'
+} from '@tailwindcss-mangle/engine/v3'
