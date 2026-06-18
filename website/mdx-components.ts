@@ -6,7 +6,7 @@ const docsComponents = getDocsMDXComponents({
   pre: withIcons(Pre, { js: GitHubIcon }),
 })
 
-export const useMDXComponents: typeof getDocsMDXComponents = components => ({
+export const useMDXComponents: typeof getDocsMDXComponents = (components = {}) => ({
   ...docsComponents,
   ...components,
 })

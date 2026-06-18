@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: ['22.13', '24']
+        node-version: ['22.18', '24.11']
     runs-on: ${{ matrix.os }}
     # Remote Caching enabled - configure TURBO_TOKEN and TURBO_TEAM in repository settings
     env:
@@ -84,7 +84,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.18
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
@@ -117,7 +117,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.18
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
@@ -157,7 +157,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.18
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
