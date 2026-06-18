@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import fsSync, { promises as fs } from 'node:fs'
 import { createRequire } from 'node:module'
+import os from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
@@ -8,6 +9,7 @@ const require = createRequire(import.meta.url)
 const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../..')
 const configPackageDir = path.resolve(repoRoot, 'packages/config')
+const enginePackageDir = path.resolve(repoRoot, 'packages/engine')
 
 let tempDir: string
 
@@ -55,9 +57,11 @@ async function packTailwindcssPatch() {
 
 async function packConsumerInstallTarballs() {
   const configTarball = await packPackage(configPackageDir)
+  const engineTarball = await packPackage(enginePackageDir)
   const tailwindcssPatchTarball = await packTailwindcssPatch()
   return {
     config: configTarball,
+    engine: engineTarball,
     tailwindcssPatch: tailwindcssPatchTarball,
   }
 }
@@ -79,23 +83,30 @@ async function createProject(name: string) {
 
 function installProject(
   projectDir: string,
-  tarballs: { config: string, tailwindcssPatch: string },
+  tarballs: { config: string, engine: string, tailwindcssPatch: string },
   tailwindVersion: string,
 ) {
-  const packageJsonPath = path.join(projectDir, 'package.json')
-  const packageJson = JSON.parse(fsSync.readFileSync(packageJsonPath, 'utf8'))
-  packageJson.pnpm = {
-    ...packageJson.pnpm,
-    overrides: {
-      ...packageJson.pnpm?.overrides,
-      '@tailwindcss-mangle/config': `file:${tarballs.config}`,
-    },
-  }
-  fsSync.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8')
+  fsSync.writeFileSync(
+    path.join(projectDir, 'pnpm-workspace.yaml'),
+    [
+      'packages:',
+      '  - .',
+      'overrides:',
+      `  '@tailwindcss-mangle/config': 'file:${tarballs.config}'`,
+      `  '@tailwindcss-mangle/engine': 'file:${tarballs.engine}'`,
+      '',
+    ].join('\n'),
+    'utf8',
+  )
 
   runPnpm([
     'add',
-    '--ignore-workspace',
+    `@tailwindcss-mangle/config@file:${tarballs.config}`,
+    `@tailwindcss-mangle/engine@file:${tarballs.engine}`,
+  ], projectDir)
+
+  runPnpm([
+    'add',
     tarballs.tailwindcssPatch,
     `tailwindcss@${tailwindVersion}`,
   ], projectDir)
@@ -109,7 +120,7 @@ function runProjectScript(projectDir: string, source: string) {
 
 describe('packed tailwindcss-patch runtime dependencies', () => {
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(repoRoot, '.tmp-tw-patch-packaged-'))
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-packaged-'))
   })
 
   afterEach(async () => {
@@ -150,7 +161,9 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
       await fs.writeFile(path.join(cwd, 'page.html'), '<div class="text-red-500 font-bold unknown-token"></div>')
 
       const require = createRequire(import.meta.url)
-      const oxidePackageJson = require.resolve('@tailwindcss/oxide/package.json')
+      const patchEntry = require.resolve('tailwindcss-patch')
+      const patchRequire = createRequire(patchEntry)
+      const oxidePackageJson = patchRequire.resolve('@tailwindcss/oxide/package.json')
       const patcher = new TailwindcssPatcher({
         projectRoot: cwd,
         cache: false,

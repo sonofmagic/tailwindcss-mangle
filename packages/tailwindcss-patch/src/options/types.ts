@@ -1,7 +1,7 @@
+import type { TailwindV4CssSource } from '@tailwindcss-mangle/engine/v4/types'
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { PackageResolvingOptions } from 'local-pkg'
 import type { ILengthUnitsPatchOptions } from '../types'
-import type { TailwindV4CssSource } from '../v4/types'
 
 export type CacheStrategy = 'merge' | 'overwrite'
 export type CacheDriver = 'file' | 'memory' | 'noop'

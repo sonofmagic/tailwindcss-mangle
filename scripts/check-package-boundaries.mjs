@@ -67,12 +67,16 @@ const RULES = {
     allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/'],
   },
+  '@tailwindcss-mangle/engine': {
+    allowedInternal: [],
+    disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/', 'unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/', '@tailwindcss-mangle/core', '@tailwindcss-mangle/core/'],
+  },
   'unplugin-tailwindcss-mangle': {
     allowedInternal: ['@tailwindcss-mangle/core', '@tailwindcss-mangle/config', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/'],
   },
   'tailwindcss-patch': {
-    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/shared'],
+    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/', '@tailwindcss-mangle/core', '@tailwindcss-mangle/core/'],
   },
 }

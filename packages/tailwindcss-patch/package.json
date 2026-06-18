@@ -5,7 +5,7 @@
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.13.0"
   },
   "homepage": "https://mangle.icebreaker.top/",
   "repository": {
@@ -94,6 +94,7 @@
     "@babel/traverse": "^7.29.7",
     "@babel/types": "^7.29.7",
     "@tailwindcss-mangle/config": "workspace:*",
+    "@tailwindcss-mangle/engine": "workspace:*",
     "@tailwindcss/node": "^4.3.1",
     "@tailwindcss/oxide": "^4.3.1",
     "cac": "6.7.14",

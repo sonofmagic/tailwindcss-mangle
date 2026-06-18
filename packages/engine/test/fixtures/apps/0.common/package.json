@@ -1,0 +1,13 @@
+{
+  "name": "0.common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tw-init": "npx tw-patch init",
+    "tw-extract": "npx tw-patch extract"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
