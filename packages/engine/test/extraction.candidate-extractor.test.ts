@@ -515,15 +515,19 @@ describe('candidate extractor', () => {
 
     const grouped = groupTokensByFile(report)
     expect(Object.keys(grouped)).toEqual(expect.arrayContaining(['page.html', 'button.tsx']))
-    expect(grouped['page.html'].length).toBeGreaterThan(0)
-    expect(grouped['button.tsx'][0].relativeFile).toBe('button.tsx')
-    expect(grouped['button.tsx'][0].file).toBe('button.tsx')
+    const pageTokens = grouped['page.html']
+    const buttonTokens = grouped['button.tsx']
+    expect(pageTokens).toBeDefined()
+    expect(buttonTokens).toBeDefined()
+    expect(pageTokens?.length).toBeGreaterThan(0)
+    expect(buttonTokens?.[0]?.relativeFile).toBe('button.tsx')
+    expect(buttonTokens?.[0]?.file).toBe('button.tsx')
 
     const absoluteGrouped = groupTokensByFile(report, { key: 'absolute', stripAbsolutePaths: false })
     const absoluteKey = Object.keys(absoluteGrouped).find(key => key.endsWith('button.tsx'))
     expect(absoluteKey).toBeTruthy()
     if (absoluteKey) {
-      expect(absoluteGrouped[absoluteKey][0].file).toBe(absoluteKey)
+      expect(absoluteGrouped[absoluteKey]?.[0]?.file).toBe(absoluteKey)
     }
   })
 

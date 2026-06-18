@@ -54,6 +54,11 @@ interface TailwindV3SharedStateModule {
 
 type ResolveConfig = (config: Config) => Config
 
+export type TailwindV3ConfigInput = Partial<Config> & {
+  content?: unknown
+  corePlugins?: unknown
+}
+
 interface TailwindV3Offsets {
   sort: <T>(rules: Array<[unknown, T]>) => Array<[{
     layer: 'base' | 'components' | 'defaults' | 'utilities' | 'variants'
@@ -72,7 +77,7 @@ export interface TailwindV3StyleGenerateOptions extends TailwindStyleCandidateOp
   /**
    * Inline Tailwind v3 config. `content` is injected from collected candidates.
    */
-  config?: Partial<Config>
+  config?: TailwindV3ConfigInput
   /**
    * Generate all layers by default. Pass a subset to emit only selected layers.
    */
@@ -97,7 +102,7 @@ export interface TailwindV3RawStyleGenerateOptions extends TailwindStyleCandidat
   /**
    * Inline Tailwind v3 config. Candidate content is injected automatically.
    */
-  config?: Partial<Config>
+  config?: TailwindV3ConfigInput
   /**
    * Directly append generated utility rules when the CSS is exactly `@tailwind utilities;`.
    * This mirrors Tailwind v3's internal fast path and keeps output order aligned.
@@ -204,7 +209,7 @@ function createChangedContentEntries(candidates: Iterable<string>, sources: Tail
 }
 
 function createTailwindConfigWithContent(
-  config: Partial<Config> | undefined,
+  config: TailwindV3ConfigInput | undefined,
   tokens: Set<string>,
   sources: TailwindStyleSource[],
 ) {
@@ -259,8 +264,8 @@ function collectClassSet(context: TailwindcssRuntimeContext, notOnDemandCandidat
 function collectDependencyMessages(result: TailwindV3ProcessResult) {
   const dependencies = new Set<string>()
   for (const message of result.messages) {
-    const file = message.file
-    if (message.type === 'dependency' && typeof file === 'string') {
+    const file = message['file']
+    if (message['type'] === 'dependency' && typeof file === 'string') {
       dependencies.add(file)
     }
   }

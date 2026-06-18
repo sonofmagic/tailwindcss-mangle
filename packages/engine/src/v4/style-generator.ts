@@ -1,3 +1,4 @@
+import type { TailwindStyleCandidateOptions } from '../style-candidates.ts'
 import type {
   TailwindV4SourceOptions,
   TailwindV4StyleGenerateOptions,
@@ -23,7 +24,12 @@ function createSourceOptions(options: TailwindV4StyleGenerateOptions): TailwindV
 export async function collectTailwindV4StyleCandidates(
   options: Pick<TailwindV4StyleGenerateOptions, 'bareArbitraryValues' | 'candidates' | 'sources'>,
 ): Promise<Set<string>> {
-  return collectTailwindStyleCandidates(options)
+  const candidateOptions: TailwindStyleCandidateOptions = {
+    ...(options.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: options.bareArbitraryValues }),
+    ...(options.candidates === undefined ? {} : { candidates: options.candidates }),
+    ...(options.sources === undefined ? {} : { sources: options.sources }),
+  }
+  return collectTailwindStyleCandidates(candidateOptions)
 }
 
 export async function generateTailwindV4Style(

@@ -130,7 +130,8 @@
     "build": "tsdown",
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
-    "test:types": "pnpm build && tsd --typings dist/index.d.ts --files test-d/**/*.test-d.ts"
+    "typecheck": "tsc --noEmit",
+    "test:types": "pnpm typecheck && pnpm build && tsd --typings dist/index.d.ts --files test-d/**/*.test-d.ts"
   },
   "publishConfig": {
     "access": "public",
