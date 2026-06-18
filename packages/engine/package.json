@@ -1,7 +1,7 @@
 {
   "name": "@tailwindcss-mangle/engine",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Tailwind CSS candidate extraction and style generation engine for tailwindcss-mangle",
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",

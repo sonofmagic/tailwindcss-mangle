@@ -1,5 +1,17 @@
 # tailwindcss-patch
 
+## 9.5.0
+
+### Minor Changes
+
+- ✨ **新增独立的 Tailwind CSS 引擎包，承载候选类名提取、Tailwind v3/v4 样式生成、v4 source 扫描与 bare arbitrary value 解析能力。** [#211](https://github.com/sonofmagic/tailwindcss-mangle/pull/211) by @sonofmagic
+  - `tailwindcss-patch` 现在通过 `@tailwindcss-mangle/engine` 复用这些能力，并保留原有公共导出兼容性；同时将 Node.js 版本要求提升到 `>=22.13.0`。
+
+### Patch Changes
+
+- 📦 **Dependencies** [`3c71d6e`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3c71d6ee215eae7a4db8888c9272d11dfea9d327)
+  → `@tailwindcss-mangle/engine@0.1.0`
+
 ## 9.4.4
 
 ### Patch Changes
