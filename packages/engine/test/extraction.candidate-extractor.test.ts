@@ -5,6 +5,7 @@ import path from 'pathe'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
   extractProjectCandidatesWithPositions,
+  extractRawCandidates,
   extractRawCandidatesWithPositions,
   extractSourceCandidates,
   extractValidCandidates,
@@ -259,6 +260,25 @@ describe('candidate extractor', () => {
     })
 
     expect(files.map(file => path.relative(root, file)).sort()).toEqual(['src/page.html'])
+  })
+
+  it('invalidates raw candidate cache when scanned files change', async () => {
+    const root = await createTempDir('tw-engine-raw-cache-')
+    const file = path.join(root, 'src/page.html')
+    const sources = [{
+      base: root,
+      pattern: 'src/**/*.html',
+      negated: false,
+    }]
+
+    await writeTempFile(file, '<div class="text-red-500"></div>')
+    await expect(extractRawCandidates(sources)).resolves.toContain('text-red-500')
+
+    await new Promise(resolve => setTimeout(resolve, 5))
+    await writeTempFile(file, '<div class="text-sky-500"></div>')
+    const result = await extractRawCandidates(sources)
+    expect(result).toContain('text-sky-500')
+    expect(result).not.toContain('text-red-500')
   })
 
   it.each(['vue', 'uvue', 'nvue'])('extracts source candidates from mixed %s template and script content', async (extension) => {

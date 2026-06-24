@@ -22,6 +22,10 @@ import {
 
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
+const rawCandidateCache = new Map<string, {
+  fingerprint: string
+  candidates: string[]
+}>()
 
 function createOxideRuntimeDependencyError(cause: unknown) {
   return new Error(
@@ -348,6 +352,30 @@ function createCandidateCacheKey(
   return `${designSystemKey}:bare-arbitrary:${JSON.stringify(options.bareArbitraryValues)}`
 }
 
+function createRawCandidateCacheKey(sources: SourceEntry[] | undefined, options?: ExtractCandidateOptions) {
+  return JSON.stringify({
+    sources: sources ?? null,
+    bareArbitraryValues: options?.bareArbitraryValues ?? null,
+  })
+}
+
+async function createRawCandidateFileFingerprint(files: string[] | undefined) {
+  if (!files?.length) {
+    return ''
+  }
+
+  const entries = await Promise.all(files.map(async (file) => {
+    try {
+      const stats = await fs.stat(file)
+      return `${file}:${stats.size}:${stats.mtimeMs}`
+    }
+    catch {
+      return `${file}:missing`
+    }
+  }))
+  return entries.sort().join('|')
+}
+
 export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
@@ -431,16 +459,26 @@ export async function extractRawCandidates(
 ): Promise<string[]> {
   const { Scanner } = await getOxideModule()
   const scanner = new Scanner(sources === undefined ? {} : { sources })
+  const files = scanner.files ?? []
+  const cacheKey = createRawCandidateCacheKey(sources, options)
+  const fingerprint = await createRawCandidateFileFingerprint(files)
+  const cached = rawCandidateCache.get(cacheKey)
+  if (cached?.fingerprint === fingerprint) {
+    return [...cached.candidates]
+  }
 
   const candidates = new Set(scanner.scan())
   if (options?.bareArbitraryValues !== undefined && options.bareArbitraryValues !== false) {
-    await Promise.all((scanner.files ?? []).map(async (file) => {
+    await Promise.all(files.map(async (file) => {
       try {
         const content = await fs.readFile(file, 'utf8')
         // eslint-disable-next-line ts/no-use-before-define
         const extension = toExtension(file)
+        const jsStringStaticRanges = JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
+          ? createJsStringStaticRanges(content)
+          : undefined
         for (const candidate of extractBareArbitraryValueSourceCandidatesWithPositions(content, options.bareArbitraryValues)) {
-          if (shouldKeepSourceCandidate(content, extension, candidate)) {
+          if (shouldKeepSourceCandidate(content, extension, candidate, jsStringStaticRanges)) {
             candidates.add(candidate.rawCandidate)
           }
         }
@@ -450,7 +488,12 @@ export async function extractRawCandidates(
       }
     }))
   }
-  return [...candidates]
+  const result = [...candidates]
+  rawCandidateCache.set(cacheKey, {
+    fingerprint,
+    candidates: result,
+  })
+  return [...result]
 }
 
 export async function extractValidCandidates(options?: ExtractValidCandidatesOption) {
