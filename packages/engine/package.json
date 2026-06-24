@@ -66,7 +66,11 @@
     "test": "vitest run --coverage.enabled",
     "test:dev": "vitest",
     "typecheck": "tsc --noEmit",
-    "test:types": "pnpm typecheck && pnpm build && tsd --typings dist/index.d.ts --files test-d/**/*.test-d.ts"
+    "test:types": "pnpm typecheck && pnpm build && tsd --typings dist/index.d.ts --files test-d/**/*.test-d.ts",
+    "bench": "node --import tsx bench/performance.ts",
+    "bench:small": "cross-env TWM_ENGINE_BENCH_SCALE=small node --import tsx bench/performance.ts",
+    "bench:large": "cross-env TWM_ENGINE_BENCH_SCALE=large node --import tsx bench/performance.ts",
+    "bench:clean": "node --import tsx bench/performance.ts --clean"
   },
   "publishConfig": {
     "access": "public",

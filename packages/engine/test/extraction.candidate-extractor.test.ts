@@ -115,12 +115,23 @@ describe('candidate extractor', () => {
       [
         'document.body.append(`<div class="$' + '{className}">className</div>`)',
         'const className = "flex bg-yellow-300/30 w-[100px]"',
+        'const templateClass = `grid $' + '{invalidExpressionClass} gap-4 $' + '{condition ? "text-red-500" : "text-blue-500"} px-3`',
       ].join('\n'),
       'js',
     )
 
-    expect(result).toEqual(['flex', 'bg-yellow-300/30', 'w-[100px]'])
+    expect(result).toEqual(expect.arrayContaining([
+      'flex',
+      'bg-yellow-300/30',
+      'w-[100px]',
+      'grid',
+      'text-red-500',
+      'text-blue-500',
+      'gap-4',
+      'px-3',
+    ]))
     expect(result).not.toContain('className')
+    expect(result).not.toContain('invalidExpressionClass')
   })
 
   it('extracts CSS @apply params without directive tokens', async () => {

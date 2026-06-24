@@ -76,6 +76,11 @@ interface ExtractSourceCandidateWithContext extends ExtractSourceCandidate {
   localStart: number
 }
 
+interface JsStringStaticRange {
+  start: number
+  end: number
+}
+
 const HTML_ATTRIBUTE_NAME_CANDIDATE_RE = /^(?:class|className|hover-class|hoverClass)$/
 const CSS_DIRECTIVE_CANDIDATE_RE = /^@(?:apply|tailwind|source|config|plugin|theme|utility|custom-variant|variant)$/
 const CSS_APPLY_IMPORTANT = '!important'
@@ -123,10 +128,29 @@ function isCandidateInCssApplyParams(content: string, candidate: ExtractSourceCa
   return !/[;{}]/.test(boundary)
 }
 
-function isCandidateInsideJsStringStaticContent(content: string, start: number) {
+function skipQuotedJsContent(content: string, index: number, quote: '"' | '\'' | '`') {
+  index++
+  while (index < content.length) {
+    const char = content[index]
+    if (char === '\\') {
+      index += 2
+      continue
+    }
+    if (char === quote) {
+      return index + 1
+    }
+    index++
+  }
+  return index
+}
+
+function createJsStringStaticRanges(content: string) {
+  const ranges: JsStringStaticRange[] = []
   let quote: '"' | '\'' | '`' | undefined
+  let stringStart = -1
   let templateExpressionDepth = 0
-  for (let index = 0; index < start; index++) {
+
+  for (let index = 0; index < content.length; index++) {
     const char = content[index]
     const next = content[index + 1]
 
@@ -137,34 +161,11 @@ function isCandidateInsideJsStringStaticContent(content: string, start: number) 
 
     if (quote === '`' && templateExpressionDepth > 0) {
       if (char === '"' || char === '\'') {
-        const nestedQuote = char
-        index++
-        while (index < start) {
-          const nestedChar = content[index]
-          if (nestedChar === '\\') {
-            index += 2
-            continue
-          }
-          if (nestedChar === nestedQuote) {
-            break
-          }
-          index++
-        }
+        index = skipQuotedJsContent(content, index, char) - 1
         continue
       }
       if (char === '`') {
-        index++
-        while (index < start) {
-          const nestedChar = content[index]
-          if (nestedChar === '\\') {
-            index += 2
-            continue
-          }
-          if (nestedChar === '`') {
-            break
-          }
-          index++
-        }
+        index = skipQuotedJsContent(content, index, '`') - 1
         continue
       }
       if (char === '{') {
@@ -180,25 +181,59 @@ function isCandidateInsideJsStringStaticContent(content: string, start: number) 
 
     if (quote) {
       if (quote === '`' && char === '$' && next === '{') {
+        ranges.push({ start: stringStart, end: index })
         templateExpressionDepth = 1
         index++
         continue
       }
       if (char === quote) {
+        ranges.push({ start: stringStart, end: index })
         quote = undefined
+        stringStart = -1
       }
       continue
     }
 
     if (char === '"' || char === '\'' || char === '`') {
       quote = char
+      stringStart = index + 1
     }
   }
 
-  return quote !== undefined && templateExpressionDepth === 0
+  if (quote !== undefined && templateExpressionDepth === 0) {
+    ranges.push({ start: stringStart, end: content.length })
+  }
+  return ranges
 }
 
-function shouldKeepSourceCandidate(content: string, extension: string, candidate: ExtractSourceCandidate) {
+function isCandidateInsideJsStringStaticRanges(ranges: JsStringStaticRange[], start: number) {
+  let low = 0
+  let high = ranges.length - 1
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2)
+    const range = ranges[mid]
+    if (range === undefined) {
+      break
+    }
+    if (start < range.start) {
+      high = mid - 1
+      continue
+    }
+    if (start >= range.end) {
+      low = mid + 1
+      continue
+    }
+    return true
+  }
+  return false
+}
+
+function shouldKeepSourceCandidate(
+  content: string,
+  extension: string,
+  candidate: ExtractSourceCandidate,
+  jsStringStaticRanges?: JsStringStaticRange[],
+) {
   if (!candidate.rawCandidate || isCssDirectiveCandidate(candidate.rawCandidate)) {
     return false
   }
@@ -213,7 +248,7 @@ function shouldKeepSourceCandidate(content: string, extension: string, candidate
   }
   if (
     JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
-    && !isCandidateInsideJsStringStaticContent(content, candidate.start)
+    && !isCandidateInsideJsStringStaticRanges(jsStringStaticRanges ?? createJsStringStaticRanges(content), candidate.start)
   ) {
     return false
   }
@@ -349,9 +384,27 @@ export async function extractSourceCandidatesWithPositions(
   if (MIXED_TEMPLATE_SOURCE_EXTENSION_RE.test(normalizedExtension)) {
     candidates.push(...await extractMixedSourceScriptCandidates(content, options))
   }
+  const jsStringStaticRangesByContent = new Map<string, JsStringStaticRange[]>()
+  function getJsStringStaticRanges(candidate: ExtractSourceCandidateWithContext) {
+    if (!JS_LIKE_SOURCE_EXTENSION_RE.test(candidate.extension)) {
+      return undefined
+    }
+    const cached = jsStringStaticRangesByContent.get(candidate.content)
+    if (cached) {
+      return cached
+    }
+    const ranges = createJsStringStaticRanges(candidate.content)
+    jsStringStaticRangesByContent.set(candidate.content, ranges)
+    return ranges
+  }
   const seen = new Set<string>()
   return candidates.filter((candidate) => {
-    if (!shouldKeepSourceCandidate(candidate.content, candidate.extension, createLocalCandidate(candidate))) {
+    if (!shouldKeepSourceCandidate(
+      candidate.content,
+      candidate.extension,
+      createLocalCandidate(candidate),
+      getJsStringStaticRanges(candidate),
+    )) {
       return false
     }
     const key = `${candidate.start}:${candidate.end}:${candidate.rawCandidate}`
