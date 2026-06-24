@@ -19,6 +19,7 @@ const fixturesRoot = path.resolve(__dirname, 'fixtures')
 const tokenFixturesRoot = path.resolve(fixturesRoot, 'token-scan')
 const tailwindNodeBase = path.dirname(require.resolve('@tailwindcss/node'))
 const v42FeaturePattern = 'v4/features-4.2.html'
+const isWindows = process.platform === 'win32'
 
 const v42UtilityCandidates = [
   'text-shadow-md',
@@ -695,8 +696,10 @@ describe('candidate extractor', () => {
     const unreadableFile = path.join(root, 'src/unreadable.html')
     await writeTempFile(readableFile, '<div class="text-red-500"></div>')
     await writeTempFile(emptyFile, '<div></div>')
-    await writeTempFile(unreadableFile, '<div class="text-blue-500"></div>')
-    await fs.chmod(unreadableFile, 0o000)
+    if (!isWindows) {
+      await writeTempFile(unreadableFile, '<div class="text-blue-500"></div>')
+      await fs.chmod(unreadableFile, 0o000)
+    }
 
     const report = await extractProjectCandidatesWithPositions({
       cwd: root,
@@ -704,13 +707,20 @@ describe('candidate extractor', () => {
         { base: root, pattern: 'src/*.html', negated: false },
       ],
     })
-    await fs.chmod(unreadableFile, 0o600)
+    if (!isWindows) {
+      await fs.chmod(unreadableFile, 0o600)
+    }
 
-    expect(report.filesScanned).toBe(3)
+    expect(report.filesScanned).toBe(isWindows ? 2 : 3)
     expect(report.entries.map(entry => entry.rawCandidate)).toContain('text-red-500')
     expect(report.entries.map(entry => entry.rawCandidate)).not.toContain('text-blue-500')
-    expect(report.skippedFiles).toHaveLength(1)
-    expect(report.skippedFiles[0]?.file).toBe(unreadableFile)
+    if (isWindows) {
+      expect(report.skippedFiles).toHaveLength(0)
+    }
+    else {
+      expect(report.skippedFiles).toHaveLength(1)
+      expect(report.skippedFiles[0]?.file).toBe(unreadableFile)
+    }
   })
 
   it('resolves source files with explicit filters', async () => {
@@ -757,7 +767,7 @@ describe('candidate extractor', () => {
     }
 
     const relativeWithAbsoluteFiles = groupTokensByFile(report, { key: 'relative', stripAbsolutePaths: false })
-    expect(relativeWithAbsoluteFiles['button.tsx']?.[0]?.file).toContain(tokenFixturesRoot)
+    expect(path.normalize(relativeWithAbsoluteFiles['button.tsx']?.[0]?.file ?? '')).toContain(path.normalize(tokenFixturesRoot))
   })
 
   it('generates the CLI token command output', async () => {

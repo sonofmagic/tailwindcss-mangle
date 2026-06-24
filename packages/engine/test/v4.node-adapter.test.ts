@@ -33,6 +33,10 @@ async function writeTailwindNodePackage(root: string, moduleCode: string) {
   await writeFile(path.join(packageDir, 'index.js'), moduleCode)
 }
 
+function toPosixPath(file: string) {
+  return file.replaceAll('\\', '/')
+}
+
 afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map(tempDir => fs.rm(tempDir, { recursive: true, force: true })))
 })
@@ -70,13 +74,13 @@ describe('Tailwind v4 node adapter', () => {
     const secondBase = await createTempDir('tw-engine-node-design-second-')
     await writeTailwindNodePackage(projectRoot, `
       let calls = 0
-      const failBase = ${JSON.stringify(firstBase)}
+      const failBase = ${JSON.stringify(toPosixPath(firstBase))}
       export async function compile() {
         return { root: null, sources: [], build: () => '' }
       }
       export async function __unstable__loadDesignSystem(css, { base }) {
         calls += 1
-        if (base === failBase) throw new Error('first base failed')
+        if (base.replaceAll('\\\\', '/') === failBase) throw new Error('first base failed')
         return {
           calls,
           css,
@@ -101,7 +105,7 @@ describe('Tailwind v4 node adapter', () => {
     expect(first).toMatchObject({
       calls: 2,
       css: '@import "tailwindcss";',
-      base: secondBase,
+      base: toPosixPath(secondBase),
     })
   })
 
@@ -113,9 +117,9 @@ describe('Tailwind v4 node adapter', () => {
     await writeFile(path.join(projectRoot, 'node_modules/plain.css'), '.plain{}')
     await writeTailwindNodePackage(projectRoot, `
       import path from 'node:path'
-      const failBase = ${JSON.stringify(firstBase)}
+      const failBase = ${JSON.stringify(toPosixPath(firstBase))}
       export async function compile(css, options) {
-        if (options.base === failBase) throw new Error('first base failed')
+        if (options.base.replaceAll('\\\\', '/') === failBase) throw new Error('first base failed')
         const designSystemCss = await options.customCssResolver('design-system')
         const plainCss = await options.customCssResolver('plain.css')
         const relativeCss = await options.customCssResolver('./relative.css')
@@ -149,9 +153,9 @@ describe('Tailwind v4 node adapter', () => {
       dependencies: [path.join(projectRoot, 'seed.css')],
     })
 
-    expect(result.compiled.root).toEqual({ base: secondBase, pattern: './src' })
+    expect(result.compiled.root).toEqual({ base: toPosixPath(secondBase), pattern: './src' })
     expect(result.compiled.sources).toEqual([
-      { base: secondBase, pattern: './src/**/*.html', negated: false },
+      { base: toPosixPath(secondBase), pattern: './src/**/*.html', negated: false },
     ])
     expect(result.compiled.build(['text-red-500'])).toContain(path.join(projectRoot, 'node_modules/design-system/index.css'))
     expect(result.compiled.build(['text-red-500'])).toContain(path.join(projectRoot, 'node_modules/plain.css'))
