@@ -332,6 +332,47 @@ describe('candidate extractor', () => {
     expect(result).not.toContain('className')
   })
 
+  it('extracts source candidates from Vue bound class attributes', async () => {
+    const result = await extractSourceCandidates(
+      [
+        '<template>',
+        '<view :class="[active && \'text-red-500\', { \'bg-blue-500\': ok }, `gap-4 $' + '{ignored}`]" hover-class="opacity-80" />',
+        '</template>',
+      ].join('\n'),
+      'vue',
+    )
+
+    expect(result).toEqual(expect.arrayContaining([
+      'text-red-500',
+      'bg-blue-500',
+      'gap-4',
+      'opacity-80',
+    ]))
+    expect(result).not.toContain('active')
+    expect(result).not.toContain('ok')
+    expect(result).not.toContain('ignored')
+  })
+
+  it('extracts source candidates from Vue style @apply params', async () => {
+    const result = await extractSourceCandidates(
+      [
+        '<template><view class="text-sky-500"></view></template>',
+        '<style scoped>',
+        '.primary { @apply inline-flex items-center !important; }',
+        '</style>',
+      ].join('\n'),
+      'vue',
+    )
+
+    expect(result).toEqual(expect.arrayContaining([
+      'text-sky-500',
+      'inline-flex',
+      'items-center',
+    ]))
+    expect(result).not.toContain('primary')
+    expect(result).not.toContain('!important')
+  })
+
   it('filters valid Tailwind candidates using design system', async () => {
     const result = await extractValidCandidates({
       base: fixturesRoot,

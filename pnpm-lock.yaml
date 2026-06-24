@@ -859,6 +859,9 @@ importers:
       '@tailwindcss/oxide':
         specifier: ^4.3.1
         version: 4.3.1
+      htmlparser2:
+        specifier: 12.0.0
+        version: 12.0.0
       micromatch:
         specifier: ^4.0.8
         version: 4.0.8
