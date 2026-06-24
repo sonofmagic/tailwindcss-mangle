@@ -1,0 +1,76 @@
+name: Engine Cross Platform
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - '.github/workflows/engine-cross-platform.yml'
+      - 'packages/engine/**'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'pnpm-workspace.yaml'
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - '.github/workflows/engine-cross-platform.yml'
+      - 'packages/engine/**'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'pnpm-workspace.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  engine:
+    name: Engine (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build engine
+        run: pnpm --filter @tailwindcss-mangle/engine build
+
+      - name: Test engine
+        run: pnpm --filter @tailwindcss-mangle/engine exec vitest run --coverage.enabled=false
+
+      - name: Typecheck engine
+        run: pnpm --filter @tailwindcss-mangle/engine typecheck
+
+      - name: Run small benchmark
+        run: pnpm --filter @tailwindcss-mangle/engine bench:small
+
+      - name: Upload benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-benchmark-${{ runner.os }}
+          path: packages/engine/bench/reports/latest.md
+          if-no-files-found: error
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18.20.8
+
+      - name: Run Node 18 runtime smoke
+        run: node packages/engine/scripts/node18-smoke.mjs

@@ -70,7 +70,8 @@
     "bench": "node --import tsx bench/performance.ts",
     "bench:small": "cross-env TWM_ENGINE_BENCH_SCALE=small node --import tsx bench/performance.ts",
     "bench:large": "cross-env TWM_ENGINE_BENCH_SCALE=large node --import tsx bench/performance.ts",
-    "bench:clean": "node --import tsx bench/performance.ts --clean"
+    "bench:clean": "node --import tsx bench/performance.ts --clean",
+    "smoke:node18": "node scripts/node18-smoke.mjs"
   },
   "publishConfig": {
     "access": "public",
