@@ -8,11 +8,12 @@ export default defineConfig({
   },
   shims: true,
   format: ['cjs', 'esm'],
+  target: 'node18',
   clean: true,
   dts: true,
   fixedExtension: false,
   deps: {
-    skipNodeModulesBundle: true,
+    alwaysBundle: ['htmlparser2'],
     neverBundle: ['tailwindcss', '@tailwindcss/node', '@tailwindcss/oxide'],
   },
 })
