@@ -15,8 +15,14 @@ import {
   extractValidCandidates,
 } from '../src/extraction/candidate-extractor.ts'
 import {
+  canonicalizeBareArbitraryValueCandidates,
+  compileTailwindV4Source,
   createTailwindV4Engine,
+  extractTailwindV4InlineSourceCandidates,
+  loadTailwindV4DesignSystem,
+  replaceBareArbitraryValueSelectors,
   resolveTailwindV4Source,
+  resolveValidTailwindV4Candidates,
 } from '../src/v4/index.ts'
 
 interface BenchProfile {
@@ -53,6 +59,13 @@ interface BenchResult {
   medianMs: number
   p95Ms: number
   throughputMbPerSecond?: number
+  details: Record<string, string | number>
+}
+
+interface PhaseBenchResult {
+  scenario: string
+  samples: number
+  phases: Record<string, number>
   details: Record<string, string | number>
 }
 
@@ -448,6 +461,50 @@ async function benchmark<T>(
   }
 }
 
+function averagePhaseSamples(samples: Array<Record<string, number>>) {
+  const result: Record<string, number> = {}
+  for (const sample of samples) {
+    for (const [phase, duration] of Object.entries(sample)) {
+      result[phase] = (result[phase] ?? 0) + duration
+    }
+  }
+  for (const phase of Object.keys(result)) {
+    result[phase] = (result[phase] ?? 0) / samples.length
+  }
+  return result
+}
+
+async function benchmarkPhases<T>(
+  scenario: string,
+  profile: BenchProfile,
+  fn: () => Promise<{ phases: Record<string, number>, value: T }>,
+  details: (value: T) => Record<string, string | number>,
+): Promise<PhaseBenchResult> {
+  let latest: T | undefined
+  for (let i = 0; i < profile.warmups; i++) {
+    latest = (await fn()).value
+  }
+
+  const samples: Array<Record<string, number>> = []
+  for (let i = 0; i < profile.iterations; i++) {
+    ;(globalThis as { gc?: () => void }).gc?.()
+    const result = await fn()
+    samples.push(result.phases)
+    latest = result.value
+  }
+
+  if (latest === undefined) {
+    latest = (await fn()).value
+  }
+
+  return {
+    scenario,
+    samples: samples.length,
+    phases: averagePhaseSamples(samples),
+    details: details(latest),
+  }
+}
+
 function groupByExtension(files: GeneratedFile[]) {
   const groups = new Map<string, GeneratedFile[]>()
   for (const file of files) {
@@ -554,6 +611,127 @@ async function runProjectBenchmarks(dataset: DatasetSummary, profile: BenchProfi
   ]
 }
 
+async function runExtractValidCandidatesPhases(dataset: DatasetSummary, profile: BenchProfile): Promise<PhaseBenchResult> {
+  const sources = sourceEntries(dataset.root)
+  const source = await resolveTailwindV4Source({
+    projectRoot: packageRoot,
+    base: tailwindNodeBase,
+    css: '@import "tailwindcss";',
+  })
+
+  return benchmarkPhases(
+    'extractValidCandidates phase breakdown',
+    profile,
+    async () => {
+      const phases: Record<string, number> = {}
+      const designSystemResult = await time(() => loadTailwindV4DesignSystem(source))
+      phases.loadDesignSystemMs = designSystemResult.durationMs
+
+      const rawCandidatesResult = await time(() => extractRawCandidates(sources, { bareArbitraryValues: true }))
+      phases.scanRawCandidatesMs = rawCandidatesResult.durationMs
+
+      const inlineSourcesResult = await time(async () => extractTailwindV4InlineSourceCandidates(source.css))
+      phases.inlineSourcesMs = inlineSourcesResult.durationMs
+
+      const candidates = new Set(rawCandidatesResult.value)
+      for (const candidate of inlineSourcesResult.value.included) {
+        candidates.add(candidate)
+      }
+      for (const candidate of inlineSourcesResult.value.excluded) {
+        candidates.delete(candidate)
+      }
+
+      const validateResult = await time(async () => resolveValidTailwindV4Candidates(
+        designSystemResult.value,
+        candidates,
+        { bareArbitraryValues: true },
+      ))
+      phases.validateCandidatesMs = validateResult.durationMs
+
+      return {
+        phases,
+        value: {
+          rawCandidates: rawCandidatesResult.value.length,
+          validCandidates: validateResult.value.size,
+        },
+      }
+    },
+    value => ({
+      rawCandidates: value.rawCandidates,
+      validCandidates: value.validCandidates,
+    }),
+  )
+}
+
+async function runEngineGeneratePhases(dataset: DatasetSummary, profile: BenchProfile): Promise<PhaseBenchResult> {
+  const sources = sourceEntries(dataset.root)
+  const source = await resolveTailwindV4Source({
+    projectRoot: packageRoot,
+    base: tailwindNodeBase,
+    css: '@import "tailwindcss";',
+  })
+
+  return benchmarkPhases(
+    'createTailwindV4Engine.generate phase breakdown',
+    profile,
+    async () => {
+      const phases: Record<string, number> = {}
+      const compileResult = await time(() => compileTailwindV4Source(source))
+      phases.compileMs = compileResult.durationMs
+
+      const rawCandidatesResult = await time(async () => {
+        const rawCandidates = new Set<string>()
+        for (const candidate of await extractRawCandidates(sources, { bareArbitraryValues: true })) {
+          rawCandidates.add(candidate)
+        }
+        const inlineSources = extractTailwindV4InlineSourceCandidates(source.css)
+        for (const candidate of inlineSources.included) {
+          rawCandidates.add(candidate)
+        }
+        for (const candidate of inlineSources.excluded) {
+          rawCandidates.delete(candidate)
+        }
+        return rawCandidates
+      })
+      phases.collectRawCandidatesMs = rawCandidatesResult.durationMs
+
+      const designSystemResult = await time(() => loadTailwindV4DesignSystem(source))
+      phases.loadDesignSystemMs = designSystemResult.durationMs
+
+      const validateResult = await time(async () => resolveValidTailwindV4Candidates(
+        designSystemResult.value,
+        rawCandidatesResult.value,
+        { bareArbitraryValues: true },
+      ))
+      phases.validateCandidatesMs = validateResult.durationMs
+
+      const buildResult = await time(async () => {
+        const buildCandidates = canonicalizeBareArbitraryValueCandidates(validateResult.value, true)
+        return replaceBareArbitraryValueSelectors(
+          compileResult.value.compiled.build(buildCandidates),
+          validateResult.value,
+          true,
+        )
+      })
+      phases.buildCssMs = buildResult.durationMs
+
+      return {
+        phases,
+        value: {
+          rawCandidates: rawCandidatesResult.value.size,
+          classSet: validateResult.value.size,
+          cssKb: (Buffer.byteLength(buildResult.value) / 1024).toFixed(1),
+        },
+      }
+    },
+    value => ({
+      rawCandidates: value.rawCandidates,
+      classSet: value.classSet,
+      cssKb: value.cssKb,
+    }),
+  )
+}
+
 function formatMs(value: number) {
   return value.toFixed(2)
 }
@@ -580,7 +758,24 @@ function markdownTable(headers: string[], rows: Array<Array<string | number>>) {
   ].join('\n')
 }
 
-async function writeReport(dataset: DatasetSummary, profile: BenchProfile, results: BenchResult[]) {
+function phaseHeaders(phaseResults: PhaseBenchResult[]) {
+  const headers: string[] = []
+  for (const result of phaseResults) {
+    for (const phase of Object.keys(result.phases)) {
+      if (!headers.includes(phase)) {
+        headers.push(phase)
+      }
+    }
+  }
+  return headers
+}
+
+async function writeReport(
+  dataset: DatasetSummary,
+  profile: BenchProfile,
+  results: BenchResult[],
+  phaseResults: PhaseBenchResult[],
+) {
   const byExtension = [...groupByExtension(dataset.files)].map(([extension, files]) => [
     `.${extension}`,
     files.length,
@@ -596,6 +791,13 @@ async function writeReport(dataset: DatasetSummary, profile: BenchProfile, resul
     formatMs(result.medianMs),
     formatMs(result.p95Ms),
     formatThroughput(result.throughputMbPerSecond),
+    Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
+  ])
+  const phaseColumns = phaseHeaders(phaseResults)
+  const phaseRows = phaseResults.map(result => [
+    result.scenario,
+    result.samples,
+    ...phaseColumns.map(phase => formatMs(result.phases[phase] ?? 0)),
     Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
   ])
 
@@ -643,6 +845,13 @@ async function writeReport(dataset: DatasetSummary, profile: BenchProfile, resul
       resultRows,
     ),
     '',
+    '## Phase Breakdown',
+    '',
+    markdownTable(
+      ['Scenario', 'Samples', ...phaseColumns, 'Details'],
+      phaseRows,
+    ),
+    '',
     '## Notes',
     '',
     `- Fastest scenario by mean time: ${fastest?.scenario ?? 'n/a'} (${fastest ? formatMs(fastest.meanMs) : '0.00'} ms).`,
@@ -674,7 +883,11 @@ async function main() {
     ...await runContentExtractionBenchmarks(dataset, profile),
     ...await runProjectBenchmarks(dataset, profile),
   ]
-  await writeReport(dataset, profile, results)
+  const phaseResults = [
+    await runExtractValidCandidatesPhases(dataset, profile),
+    await runEngineGeneratePhases(dataset, profile),
+  ]
+  await writeReport(dataset, profile, results, phaseResults)
 
   console.log(`Generated ${dataset.files.length} benchmark files (${formatBytes(dataset.totalBytes)}) in ${path.relative(packageRoot, dataset.root)}`)
   console.table(results.map(result => ({
@@ -685,6 +898,13 @@ async function main() {
     medianMs: formatMs(result.medianMs),
     p95Ms: formatMs(result.p95Ms),
     mibPerSecond: formatThroughput(result.throughputMbPerSecond),
+    details: Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
+  })))
+  const phaseColumns = phaseHeaders(phaseResults)
+  console.table(phaseResults.map(result => ({
+    scenario: result.scenario,
+    samples: result.samples,
+    ...Object.fromEntries(phaseColumns.map(phase => [phase, formatMs(result.phases[phase] ?? 0)])),
     details: Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
   })))
   console.log(`Report written to ${path.relative(process.cwd(), reportFile)}`)

@@ -24,6 +24,7 @@ The benchmark measures:
 - `extractProjectCandidatesWithPositions` metadata scanning.
 - `extractValidCandidates` with Tailwind v4 validation.
 - `createTailwindV4Engine().generate` with filesystem scanning.
+- Phase breakdowns for `extractValidCandidates` and `createTailwindV4Engine().generate`.
 
 ## Sizing
 
