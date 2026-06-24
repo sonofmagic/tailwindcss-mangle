@@ -114,8 +114,12 @@ const JS_LIKE_SOURCE_EXTENSION_RE = /^[cm]?[jt]sx?$/
 const MIXED_TEMPLATE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue|svelte|mpx)$/
 const VUE_LIKE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue)$/
 const CSS_LIKE_SOURCE_EXTENSION_RE = /^(?:css|wxss|acss|jxss|ttss|qss|tyss|scss|sass|less|styl|stylus)$/
+const CLASS_LIKE_CANDIDATE_RE = /[:![\]#/%._\-\d]/
+const VUE_HTML_TEMPLATE_LANG_RE = /^(?:html)?$/i
 const SFC_SCRIPT_BLOCK_RE = /<script\b[^>]*>([\s\S]*?)<\/script>/gi
 const SFC_STYLE_BLOCK_RE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
+const SFC_TEMPLATE_BLOCK_RE = /<template\b([^>]*)>([\s\S]*?)<\/template>/gi
+const SFC_LANG_ATTRIBUTE_RE = /\blang\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/i
 
 function isWhitespace(value: string | undefined) {
   return value === ' ' || value === '\n' || value === '\r' || value === '\t' || value === '\f'
@@ -144,6 +148,19 @@ function isVueBoundAttributeName(name: string) {
   return HTML_BOUND_ATTRIBUTE_PREFIX_RE.test(name)
 }
 
+function normalizeVueTemplateLang(lang: string | undefined) {
+  return lang?.trim().toLowerCase() ?? ''
+}
+
+function getSfcBlockLang(attributes: string) {
+  const match = SFC_LANG_ATTRIBUTE_RE.exec(attributes)
+  return normalizeVueTemplateLang(match?.[1] ?? match?.[2] ?? match?.[3])
+}
+
+function isVueHtmlTemplateLang(lang: string) {
+  return VUE_HTML_TEMPLATE_LANG_RE.test(lang)
+}
+
 function isInsideHtmlTagText(content: string, candidate: ExtractSourceCandidate) {
   const open = content.lastIndexOf('<', candidate.start)
   const close = content.lastIndexOf('>', candidate.start)
@@ -156,6 +173,10 @@ function isInsideHtmlTagText(content: string, candidate: ExtractSourceCandidate)
 
 function isCssDirectiveCandidate(candidate: string) {
   return candidate === CSS_APPLY_IMPORTANT || CSS_DIRECTIVE_CANDIDATE_RE.test(candidate)
+}
+
+function isClassLikeCandidate(candidate: string) {
+  return CLASS_LIKE_CANDIDATE_RE.test(candidate)
 }
 
 function isCandidateInCssApplyParams(content: string, candidate: ExtractSourceCandidate) {
@@ -553,14 +574,46 @@ async function extractVueTemplateAttributeCandidates(content: string, options?: 
   ]
 }
 
+async function extractVueNonHtmlTemplateCandidates(content: string, options?: ExtractCandidateOptions) {
+  const candidates: ExtractSourceCandidateWithContext[] = []
+  SFC_TEMPLATE_BLOCK_RE.lastIndex = 0
+  let match = SFC_TEMPLATE_BLOCK_RE.exec(content)
+  while (match !== null) {
+    const attributes = match[1] ?? ''
+    const templateContent = match[2] ?? ''
+    const lang = getSfcBlockLang(attributes)
+    if (isVueHtmlTemplateLang(lang)) {
+      match = SFC_TEMPLATE_BLOCK_RE.exec(content)
+      continue
+    }
+
+    const templateStart = match.index + match[0].indexOf(templateContent)
+    // eslint-disable-next-line ts/no-use-before-define
+    const templateCandidates = await extractRawCandidatesWithPositions(templateContent, lang, options)
+    candidates.push(...templateCandidates.map(candidate => ({
+      content: templateContent,
+      extension: lang,
+      localStart: candidate.start,
+      rawCandidate: candidate.rawCandidate,
+      skipHtmlContextChecks: true,
+      start: candidate.start + templateStart,
+      end: candidate.end + templateStart,
+    })).filter(candidate => isClassLikeCandidate(candidate.rawCandidate)))
+    match = SFC_TEMPLATE_BLOCK_RE.exec(content)
+  }
+  return candidates
+}
+
 async function extractVueLikeSourceCandidates(content: string, options?: ExtractCandidateOptions) {
-  const [templateCandidates, scriptCandidates, styleCandidates] = await Promise.all([
+  const [templateCandidates, preprocessedTemplateCandidates, scriptCandidates, styleCandidates] = await Promise.all([
     extractVueTemplateAttributeCandidates(content, options),
+    extractVueNonHtmlTemplateCandidates(content, options),
     extractMixedSourceScriptCandidates(content, options),
     extractMixedSourceStyleCandidates(content, options),
   ])
   return [
     ...templateCandidates,
+    ...preprocessedTemplateCandidates,
     ...scriptCandidates,
     ...styleCandidates,
   ]

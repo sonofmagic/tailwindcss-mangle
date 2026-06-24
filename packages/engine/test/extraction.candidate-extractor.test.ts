@@ -8,6 +8,7 @@ import {
   extractRawCandidates,
   extractRawCandidatesWithPositions,
   extractSourceCandidates,
+  extractSourceCandidatesWithPositions,
   extractValidCandidates,
   groupTokensByFile,
   resolveProjectSourceFiles,
@@ -371,6 +372,28 @@ describe('candidate extractor', () => {
     ]))
     expect(result).not.toContain('primary')
     expect(result).not.toContain('!important')
+  })
+
+  it('extracts Vue non-html template candidates using the template language preprocessor', async () => {
+    const source = [
+      '<template lang="pug">',
+      '.bg-neutral-900.text-red-500 This is a test.',
+      '</template>',
+    ].join('\n')
+
+    const result = await extractSourceCandidates(source, 'vue')
+    const resultWithPositions = await extractSourceCandidatesWithPositions(source, 'vue')
+
+    expect(result).toEqual(expect.arrayContaining([
+      'bg-neutral-900',
+      'text-red-500',
+    ]))
+    expect(result).not.toContain('lang')
+    expect(result).not.toContain('pug')
+    expect(result).not.toContain('is')
+    expect(result).not.toContain('test')
+    expect(resultWithPositions.find(candidate => candidate.rawCandidate === 'bg-neutral-900')?.start)
+      .toBe(source.indexOf('bg-neutral-900'))
   })
 
   it('filters valid Tailwind candidates using design system', async () => {
