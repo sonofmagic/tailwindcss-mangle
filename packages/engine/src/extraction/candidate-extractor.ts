@@ -22,6 +22,7 @@ import {
 
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
+const RAW_CANDIDATE_CACHE_LIMIT = 32
 const rawCandidateCache = new Map<string, {
   fingerprint: string
   candidates: string[]
@@ -376,6 +377,31 @@ async function createRawCandidateFileFingerprint(files: string[] | undefined) {
   return entries.sort().join('|')
 }
 
+function getRawCandidateCacheEntry(cacheKey: string, fingerprint: string) {
+  const cached = rawCandidateCache.get(cacheKey)
+  if (cached?.fingerprint !== fingerprint) {
+    return undefined
+  }
+  rawCandidateCache.delete(cacheKey)
+  rawCandidateCache.set(cacheKey, cached)
+  return cached
+}
+
+function setRawCandidateCacheEntry(cacheKey: string, fingerprint: string, candidates: string[]) {
+  rawCandidateCache.set(cacheKey, {
+    fingerprint,
+    candidates,
+  })
+
+  while (rawCandidateCache.size > RAW_CANDIDATE_CACHE_LIMIT) {
+    const oldestKey = rawCandidateCache.keys().next().value
+    if (oldestKey === undefined) {
+      break
+    }
+    rawCandidateCache.delete(oldestKey)
+  }
+}
+
 export async function extractRawCandidatesWithPositions(
   content: string,
   extension: string = 'html',
@@ -462,8 +488,8 @@ export async function extractRawCandidates(
   const files = scanner.files ?? []
   const cacheKey = createRawCandidateCacheKey(sources, options)
   const fingerprint = await createRawCandidateFileFingerprint(files)
-  const cached = rawCandidateCache.get(cacheKey)
-  if (cached?.fingerprint === fingerprint) {
+  const cached = getRawCandidateCacheEntry(cacheKey, fingerprint)
+  if (cached) {
     return [...cached.candidates]
   }
 
@@ -489,10 +515,7 @@ export async function extractRawCandidates(
     }))
   }
   const result = [...candidates]
-  rawCandidateCache.set(cacheKey, {
-    fingerprint,
-    candidates: result,
-  })
+  setRawCandidateCacheEntry(cacheKey, fingerprint, result)
   return [...result]
 }
 

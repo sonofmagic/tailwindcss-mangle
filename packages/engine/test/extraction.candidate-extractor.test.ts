@@ -281,6 +281,36 @@ describe('candidate extractor', () => {
     expect(result).not.toContain('text-red-500')
   })
 
+  it('keeps raw candidate cache bounded with lru eviction', async () => {
+    const root = await createTempDir('tw-engine-raw-cache-lru-')
+    for (let index = 0; index < 33; index++) {
+      await writeTempFile(
+        path.join(root, `src/page-${index}.html`),
+        `<div class="text-red-${index === 0 ? '500' : '600'}"></div>`,
+      )
+    }
+
+    for (let index = 0; index < 33; index++) {
+      await extractRawCandidates([{
+        base: root,
+        pattern: `src/page-${index}.html`,
+        negated: false,
+      }])
+    }
+
+    const firstFile = path.join(root, 'src/page-0.html')
+    await new Promise(resolve => setTimeout(resolve, 5))
+    await writeTempFile(firstFile, '<div class="text-sky-500"></div>')
+
+    const result = await extractRawCandidates([{
+      base: root,
+      pattern: 'src/page-0.html',
+      negated: false,
+    }])
+    expect(result).toContain('text-sky-500')
+    expect(result).not.toContain('text-red-500')
+  })
+
   it.each(['vue', 'uvue', 'nvue'])('extracts source candidates from mixed %s template and script content', async (extension) => {
     const result = await extractSourceCandidates(
       [
