@@ -13,6 +13,21 @@ if (!oxideCandidates.includes('text-red-500') || !oxideCandidates.includes('hove
 }
 
 const engine = await import('../dist/index.js')
+const { Parser } = await import('../dist/htmlparser2.js')
+let sawClassAttribute = false
+const parser = new Parser({
+  onattribute(name, value) {
+    sawClassAttribute ||= name === 'class' && value === 'text-red-500'
+  },
+})
+
+parser.write('<div class="text-red-500"></div>')
+parser.end()
+
+if (!sawClassAttribute) {
+  throw new Error('Unexpected htmlparser2 subpath export behavior')
+}
+
 const vueCandidates = await engine.extractSourceCandidatesWithPositions(
   '<template><div class="text-red-500 hover:bg-blue-500"></div></template>',
   'vue',

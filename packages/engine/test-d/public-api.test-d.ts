@@ -1,4 +1,5 @@
 import { expectAssignable, expectType } from 'tsd'
+import { Parser } from '../dist/htmlparser2'
 import {
   collectTailwindStyleCandidates,
   createTailwindV4Engine,
@@ -13,6 +14,7 @@ import {
   type TailwindV4GenerateResult,
 } from '../dist/index'
 
+expectAssignable<typeof Parser>(Parser)
 expectType<string[]>(splitCandidateTokens('text-red-500'))
 expectType<Promise<string[]>>(extractSourceCandidates('<div class="text-red-500"></div>', 'html'))
 expectType<Promise<Array<{ rawCandidate: string, start: number, end: number }>>>(

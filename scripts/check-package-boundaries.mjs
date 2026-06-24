@@ -64,7 +64,7 @@ const RULES = {
     disallowedSpecifiers: ['unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/'],
   },
   '@tailwindcss-mangle/core': {
-    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/shared'],
+    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/'],
   },
   '@tailwindcss-mangle/engine': {

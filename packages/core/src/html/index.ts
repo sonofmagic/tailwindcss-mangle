@@ -1,5 +1,5 @@
 import type { IHandlerTransformResult, IHtmlHandlerOptions } from '../types'
-import { Parser } from 'htmlparser2'
+import { Parser } from '@tailwindcss-mangle/engine/htmlparser2'
 import MagicString from 'magic-string'
 import { makeRegex, splitCode } from '../shared'
 

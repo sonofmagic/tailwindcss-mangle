@@ -27,6 +27,21 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./htmlparser2": {
+      "types": "./dist/htmlparser2.d.ts",
+      "import": "./dist/htmlparser2.js",
+      "require": "./dist/htmlparser2.cjs"
+    },
+    "./htmlparser2/WritableStream": {
+      "types": "./dist/htmlparser2/WritableStream.d.ts",
+      "import": "./dist/htmlparser2/WritableStream.js",
+      "require": "./dist/htmlparser2/WritableStream.cjs"
+    },
+    "./htmlparser2/WebWritableStream": {
+      "types": "./dist/htmlparser2/WebWritableStream.d.ts",
+      "import": "./dist/htmlparser2/WebWritableStream.js",
+      "require": "./dist/htmlparser2/WebWritableStream.cjs"
+    },
     "./v3": {
       "types": "./dist/v3/index.d.ts",
       "import": "./dist/v3/index.js",
@@ -43,6 +58,15 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
+      "htmlparser2": [
+        "./dist/htmlparser2.d.ts"
+      ],
+      "htmlparser2/WritableStream": [
+        "./dist/htmlparser2/WritableStream.d.ts"
+      ],
+      "htmlparser2/WebWritableStream": [
+        "./dist/htmlparser2/WebWritableStream.d.ts"
+      ],
       "v3": [
         "./dist/v3/index.d.ts"
       ],
@@ -81,6 +105,21 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js",
         "require": "./dist/index.cjs"
+      },
+      "./htmlparser2": {
+        "types": "./dist/htmlparser2.d.ts",
+        "import": "./dist/htmlparser2.js",
+        "require": "./dist/htmlparser2.cjs"
+      },
+      "./htmlparser2/WritableStream": {
+        "types": "./dist/htmlparser2/WritableStream.d.ts",
+        "import": "./dist/htmlparser2/WritableStream.js",
+        "require": "./dist/htmlparser2/WritableStream.cjs"
+      },
+      "./htmlparser2/WebWritableStream": {
+        "types": "./dist/htmlparser2/WebWritableStream.d.ts",
+        "import": "./dist/htmlparser2/WebWritableStream.js",
+        "require": "./dist/htmlparser2/WebWritableStream.cjs"
       },
       "./v3": {
         "types": "./dist/v3/index.d.ts",

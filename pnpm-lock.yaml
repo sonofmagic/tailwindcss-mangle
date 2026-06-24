@@ -813,6 +813,9 @@ importers:
       '@tailwindcss-mangle/config':
         specifier: workspace:^
         version: link:../config
+      '@tailwindcss-mangle/engine':
+        specifier: workspace:^
+        version: link:../engine
       '@tailwindcss-mangle/shared':
         specifier: workspace:^
         version: link:../shared
@@ -825,9 +828,6 @@ importers:
       fs-extra:
         specifier: ^11.3.5
         version: 11.3.5
-      htmlparser2:
-        specifier: 12.0.0
-        version: 12.0.0
       magic-string:
         specifier: ^0.30.21
         version: 0.30.21
