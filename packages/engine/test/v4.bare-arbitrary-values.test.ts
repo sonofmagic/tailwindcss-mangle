@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { resolveBareArbitraryValueCandidate } from '@/v4/bare-arbitrary-values'
+import {
+  escapeCssClassName,
+  extractBareArbitraryValueSourceCandidates,
+  extractBareArbitraryValueSourceCandidatesWithPositions,
+  isBareArbitraryValuesEnabled,
+  resolveBareArbitraryValueCandidate,
+} from '@/v4/bare-arbitrary-values'
 
 describe('bare arbitrary value resolver', () => {
   it('resolves common UnoCSS-style bare arbitrary values', () => {
@@ -97,5 +103,92 @@ describe('bare arbitrary value resolver', () => {
       candidate: 'p-10px',
       canonicalCandidate: 'p-[10px]',
     })
+  })
+
+  it('reports whether bare arbitrary values are enabled after option normalization', () => {
+    expect(isBareArbitraryValuesEnabled(undefined)).toBe(false)
+    expect(isBareArbitraryValuesEnabled(false)).toBe(false)
+    expect(isBareArbitraryValuesEnabled({ units: [] })).toBe(false)
+    expect(isBareArbitraryValuesEnabled({ units: ['', 'px', 'px'] })).toBe(true)
+    expect(resolveBareArbitraryValueCandidate('p-1rem', { units: ['', 'rem'] })).toEqual({
+      candidate: 'p-1rem',
+      canonicalCandidate: 'p-[1rem]',
+    })
+  })
+
+  it('rejects unbalanced, already canonical, empty, and malformed bare arbitrary candidates', () => {
+    expect(resolveBareArbitraryValueCandidate('', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('w-[10px]', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('w-calc(100%))', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('content-"unterminated', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('-4px', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('p-', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('p-\\', true)).toBeUndefined()
+  })
+
+  it('handles escaped function and quoted values while resolving candidates', () => {
+    expect(resolveBareArbitraryValueCandidate('content-"hello\\nworld"', true)).toEqual({
+      candidate: 'content-"hello\\nworld"',
+      canonicalCandidate: 'content-["hellonworld"]',
+    })
+    expect(resolveBareArbitraryValueCandidate('w-calc("100%"_+_1rem)', true)).toEqual({
+      candidate: 'w-calc("100%"_+_1rem)',
+      canonicalCandidate: 'w-[calc("100%"_+_1rem)]',
+    })
+    expect(resolveBareArbitraryValueCandidate('w-calc(100%\\)_+_1rem)', true)).toBeUndefined()
+    expect(resolveBareArbitraryValueCandidate('w-calc("100\\")"_+_1rem)', true)).toBeUndefined()
+  })
+
+  it('extracts bare arbitrary source candidates with positions and deduped values', () => {
+    const source = [
+      '<view class="p-10% m-4rem text-var(--brand)">',
+      'w-calc(100%_-_1rem)\\nignored=value [w-1px]',
+      '`bg-#fff` bg-#fff',
+    ].join(' ')
+    const normalizedSource = source.replace(/\\[nrt]/g, ' ')
+
+    expect(extractBareArbitraryValueSourceCandidatesWithPositions(source, true)).toEqual([
+      { rawCandidate: 'p-10%', start: source.indexOf('p-10%'), end: source.indexOf('p-10%') + 'p-10%'.length },
+      { rawCandidate: 'm-4rem', start: source.indexOf('m-4rem'), end: source.indexOf('m-4rem') + 'm-4rem'.length },
+      { rawCandidate: 'text-var(--brand)', start: source.indexOf('text-var(--brand)'), end: source.indexOf('text-var(--brand)') + 'text-var(--brand)'.length },
+      { rawCandidate: 'w-calc(100%_-_1rem)', start: source.indexOf('w-calc(100%_-_1rem)'), end: source.indexOf('w-calc(100%_-_1rem)') + 'w-calc(100%_-_1rem)'.length },
+      { rawCandidate: 'w-1px', start: normalizedSource.indexOf('w-1px'), end: normalizedSource.indexOf('w-1px') + 'w-1px'.length },
+      { rawCandidate: 'bg-#fff', start: normalizedSource.indexOf('bg-#fff'), end: normalizedSource.indexOf('bg-#fff') + 'bg-#fff'.length },
+      { rawCandidate: 'bg-#fff', start: normalizedSource.lastIndexOf('bg-#fff'), end: normalizedSource.lastIndexOf('bg-#fff') + 'bg-#fff'.length },
+    ])
+    expect(extractBareArbitraryValueSourceCandidates(source, true)).toEqual([
+      'p-10%',
+      'm-4rem',
+      'text-var(--brand)',
+      'w-calc(100%_-_1rem)',
+      'w-1px',
+      'bg-#fff',
+    ])
+    expect(extractBareArbitraryValueSourceCandidates(source)).toEqual([])
+  })
+
+  it('tracks quoted bare arbitrary source tokens and escaped characters', () => {
+    const source = 'content-"hello world" w-calc(100%\\_+\\_1rem) `text-rgb(255,0,0)`'
+
+    expect(extractBareArbitraryValueSourceCandidatesWithPositions(source, true)).toEqual([
+      {
+        rawCandidate: 'w-calc(100%\\_+\\_1rem)',
+        start: source.indexOf('w-calc(100%\\_+\\_1rem)'),
+        end: source.indexOf('w-calc(100%\\_+\\_1rem)') + 'w-calc(100%\\_+\\_1rem)'.length,
+      },
+      {
+        rawCandidate: 'text-rgb(255,0,0)',
+        start: source.indexOf('text-rgb(255,0,0)'),
+        end: source.indexOf('text-rgb(255,0,0)') + 'text-rgb(255,0,0)'.length,
+      },
+    ])
+  })
+
+  it('escapes class selectors according to CSS escaping rules', () => {
+    expect(escapeCssClassName('\0')).toBe('\uFFFD')
+    expect(escapeCssClassName('1/2')).toBe('\\31 \\/2')
+    expect(escapeCssClassName('-1px')).toBe('-\\31 px')
+    expect(escapeCssClassName('hover:bg-[#fff]')).toBe('hover\\:bg-\\[\\#fff\\]')
+    expect(escapeCssClassName('中文')).toBe('中文')
   })
 })

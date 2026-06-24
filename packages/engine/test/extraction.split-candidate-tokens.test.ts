@@ -33,6 +33,10 @@ describe('split candidate tokens', () => {
       'before:content-["]"]',
       'before:content-[\']\']',
     ])
+    expect(splitCandidateTokens('before:content-["a\\"b"] text-red-500')).toEqual([
+      'before:content-["a\\"b"]',
+      'text-red-500',
+    ])
   })
 
   it('does not swallow later tokens when arbitrary values are malformed', () => {
@@ -62,10 +66,25 @@ describe('split candidate tokens', () => {
       'foo',
       'before:content-["bar"]',
     ])
+    expect(splitCandidateTokensFromIndex('foo before:content-["bar"]')).toEqual([
+      'foo',
+      'before:content-["bar"]',
+    ])
   })
 
   it('validates non-empty candidate-like tokens', () => {
     expect(isValidCandidateToken('text-red-500')).toBe(true)
     expect(isValidCandidateToken('"')).toBe(false)
+  })
+
+  it('keeps working after the split cache reaches its limit', () => {
+    for (let index = 0; index < 8200; index++) {
+      splitCandidateTokens(`token-${index}`)
+    }
+
+    expect(splitCandidateTokens('after-cache-clear text-red-500')).toEqual([
+      'after-cache-clear',
+      'text-red-500',
+    ])
   })
 })

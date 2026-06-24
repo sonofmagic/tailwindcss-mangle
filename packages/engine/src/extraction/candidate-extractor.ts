@@ -6,9 +6,14 @@ import type {
   TailwindTokenReport,
 } from '../types.ts'
 import type { BareArbitraryValueOptions } from '../v4/bare-arbitrary-values.ts'
+import type {
+  ExtractCandidateOptions,
+  ExtractSourceCandidate,
+  ExtractSourceCandidateWithContext,
+  JsStringStaticRange,
+} from './types.ts'
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
-import { Parser } from 'htmlparser2'
 import path from 'pathe'
 import {
   extractBareArbitraryValueSourceCandidatesWithPositions,
@@ -20,50 +25,40 @@ import {
   createTailwindV4CompiledSourceEntries,
   normalizeTailwindV4ScannerSources,
 } from '../v4/source-scan.ts'
+import { extractCssApplyCandidates } from './css.ts'
+import { createJsStringStaticRanges } from './js-string-ranges.ts'
+import { getOxideModule } from './oxide.ts'
+import {
+  buildLineOffsets,
+  createTokenLocation,
+  toExtension,
+} from './project-report.ts'
+import {
+  createRawCandidateCacheKey,
+  createRawCandidateFileFingerprint,
+  getRawCandidateCacheEntry,
+  setRawCandidateCacheEntry,
+} from './raw-candidate-cache.ts'
+import {
+  extractMixedSourceScriptCandidates,
+  extractVueLikeSourceCandidates,
+} from './sfc.ts'
+import {
+  createLocalCandidate,
+  CSS_LIKE_SOURCE_EXTENSION_RE,
+  dedupeCandidatesWithPositions,
+  JS_LIKE_SOURCE_EXTENSION_RE,
+  MIXED_TEMPLATE_SOURCE_EXTENSION_RE,
+  shouldKeepSourceCandidate,
+  VUE_LIKE_SOURCE_EXTENSION_RE,
+} from './source-filters.ts'
 
-let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
-const DEFAULT_RAW_CANDIDATE_CACHE_LIMIT = 64
-const RAW_CANDIDATE_CACHE_LIMIT = (() => {
-  const rawLimit = process.env['TWM_ENGINE_RAW_CANDIDATE_CACHE_LIMIT']
-  if (rawLimit === undefined) {
-    return DEFAULT_RAW_CANDIDATE_CACHE_LIMIT
-  }
-  const limit = Number.parseInt(rawLimit, 10)
-  return Number.isFinite(limit) && limit > 0 ? limit : DEFAULT_RAW_CANDIDATE_CACHE_LIMIT
-})()
-const rawCandidateCache = new Map<string, {
-  fingerprint: string
-  candidates: string[]
-}>()
 
-function createOxideRuntimeDependencyError(cause: unknown) {
-  return new Error(
-    [
-      '@tailwindcss-mangle/engine could not load @tailwindcss/oxide, which is required for source candidate scanning.',
-      'This dependency should be installed automatically by @tailwindcss-mangle/engine.',
-      'Reinstall dependencies without disabling optional dependencies, or install @tailwindcss/oxide@^4.2.4 manually if your package manager omitted it.',
-    ].join(' '),
-    { cause },
-  )
-}
-
-async function importOxide() {
-  try {
-    return await import('@tailwindcss/oxide')
-  }
-  catch (error) {
-    throw createOxideRuntimeDependencyError(error)
-  }
-}
-
-function getOxideModule() {
-  oxideImportPromise ??= importOxide()
-  oxideImportPromise.catch(() => {
-    oxideImportPromise = undefined
-  })
-  return oxideImportPromise
-}
+export type {
+  ExtractCandidateOptions,
+  ExtractSourceCandidate,
+} from './types.ts'
 
 export interface ExtractValidCandidatesOption {
   sources?: SourceEntry[]
@@ -74,551 +69,6 @@ export interface ExtractValidCandidatesOption {
   bareArbitraryValues?: boolean | BareArbitraryValueOptions
 }
 
-export interface ExtractCandidateOptions {
-  bareArbitraryValues?: boolean | BareArbitraryValueOptions
-}
-
-export interface ExtractSourceCandidate {
-  rawCandidate: string
-  start: number
-  end: number
-}
-
-interface ExtractSourceCandidateWithContext extends ExtractSourceCandidate {
-  content: string
-  extension: string
-  localStart: number
-  skipHtmlContextChecks?: boolean
-}
-
-interface JsStringStaticRange {
-  start: number
-  end: number
-}
-
-interface SourceSegment {
-  content: string
-  start: number
-}
-
-interface JoinedSourceSegment extends SourceSegment {
-  joinedStart: number
-}
-
-const HTML_ATTRIBUTE_NAME_CANDIDATE_RE = /^(?:class|className|hover-class|hoverClass)$/
-const HTML_BOUND_ATTRIBUTE_PREFIX_RE = /^(?::|v-bind:|bind:)/
-const CSS_DIRECTIVE_CANDIDATE_RE = /^@(?:apply|tailwind|source|config|plugin|theme|utility|custom-variant|variant)$/
-const CSS_APPLY_IMPORTANT = '!important'
-const CSS_APPLY_RE = /@apply\s+([^;{}]+)/g
-const JS_LIKE_SOURCE_EXTENSION_RE = /^[cm]?[jt]sx?$/
-const MIXED_TEMPLATE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue|svelte|mpx)$/
-const VUE_LIKE_SOURCE_EXTENSION_RE = /^(?:vue|uvue|nvue)$/
-const CSS_LIKE_SOURCE_EXTENSION_RE = /^(?:css|wxss|acss|jxss|ttss|qss|tyss|scss|sass|less|styl|stylus)$/
-const CLASS_LIKE_CANDIDATE_RE = /[:![\]#/%._\-\d]/
-const VUE_HTML_TEMPLATE_LANG_RE = /^(?:html)?$/i
-const SFC_SCRIPT_BLOCK_RE = /<script\b[^>]*>([\s\S]*?)<\/script>/gi
-const SFC_STYLE_BLOCK_RE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
-const SFC_TEMPLATE_BLOCK_RE = /<template\b([^>]*)>([\s\S]*?)<\/template>/gi
-const SFC_LANG_ATTRIBUTE_RE = /\blang\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/i
-
-function isWhitespace(value: string | undefined) {
-  return value === ' ' || value === '\n' || value === '\r' || value === '\t' || value === '\f'
-}
-
-function isHtmlAttributeNameCandidate(content: string, candidate: ExtractSourceCandidate) {
-  if (!HTML_ATTRIBUTE_NAME_CANDIDATE_RE.test(candidate.rawCandidate)) {
-    return false
-  }
-  let index = candidate.end
-  while (isWhitespace(content[index])) {
-    index++
-  }
-  return content[index] === '='
-}
-
-function normalizeVueBoundAttributeName(name: string) {
-  return name.replace(HTML_BOUND_ATTRIBUTE_PREFIX_RE, '')
-}
-
-function isVueClassAttributeNameCandidate(name: string) {
-  return HTML_ATTRIBUTE_NAME_CANDIDATE_RE.test(normalizeVueBoundAttributeName(name))
-}
-
-function isVueBoundAttributeName(name: string) {
-  return HTML_BOUND_ATTRIBUTE_PREFIX_RE.test(name)
-}
-
-function normalizeVueTemplateLang(lang: string | undefined) {
-  return lang?.trim().toLowerCase() ?? ''
-}
-
-function getSfcBlockLang(attributes: string) {
-  const match = SFC_LANG_ATTRIBUTE_RE.exec(attributes)
-  return normalizeVueTemplateLang(match?.[1] ?? match?.[2] ?? match?.[3])
-}
-
-function isVueHtmlTemplateLang(lang: string) {
-  return VUE_HTML_TEMPLATE_LANG_RE.test(lang)
-}
-
-function isInsideHtmlTagText(content: string, candidate: ExtractSourceCandidate) {
-  const open = content.lastIndexOf('<', candidate.start)
-  const close = content.lastIndexOf('>', candidate.start)
-  if (open > close) {
-    return false
-  }
-  const nextOpen = content.indexOf('<', candidate.end)
-  return nextOpen !== -1 && (nextOpen < content.indexOf('>', candidate.end) || !content.includes('>', candidate.end))
-}
-
-function isCssDirectiveCandidate(candidate: string) {
-  return candidate === CSS_APPLY_IMPORTANT || CSS_DIRECTIVE_CANDIDATE_RE.test(candidate)
-}
-
-function isClassLikeCandidate(candidate: string) {
-  return CLASS_LIKE_CANDIDATE_RE.test(candidate)
-}
-
-function isCandidateInCssApplyParams(content: string, candidate: ExtractSourceCandidate) {
-  const apply = content.lastIndexOf('@apply', candidate.start)
-  if (apply === -1) {
-    return false
-  }
-  const boundary = content.slice(apply + '@apply'.length, candidate.start)
-  return !/[;{}]/.test(boundary)
-}
-
-function skipQuotedJsContent(content: string, index: number, quote: '"' | '\'' | '`') {
-  index++
-  while (index < content.length) {
-    const char = content[index]
-    if (char === '\\') {
-      index += 2
-      continue
-    }
-    if (char === quote) {
-      return index + 1
-    }
-    index++
-  }
-  return index
-}
-
-function createJsStringStaticRanges(content: string) {
-  const ranges: JsStringStaticRange[] = []
-  let quote: '"' | '\'' | '`' | undefined
-  let stringStart = -1
-  let templateExpressionDepth = 0
-
-  for (let index = 0; index < content.length; index++) {
-    const char = content[index]
-    const next = content[index + 1]
-
-    if (quote && char === '\\') {
-      index++
-      continue
-    }
-
-    if (quote === '`' && templateExpressionDepth > 0) {
-      if (char === '"' || char === '\'') {
-        index = skipQuotedJsContent(content, index, char) - 1
-        continue
-      }
-      if (char === '`') {
-        index = skipQuotedJsContent(content, index, '`') - 1
-        continue
-      }
-      if (char === '{') {
-        templateExpressionDepth++
-        continue
-      }
-      if (char === '}') {
-        templateExpressionDepth--
-        continue
-      }
-      continue
-    }
-
-    if (quote) {
-      if (quote === '`' && char === '$' && next === '{') {
-        ranges.push({ start: stringStart, end: index })
-        templateExpressionDepth = 1
-        index++
-        continue
-      }
-      if (char === quote) {
-        ranges.push({ start: stringStart, end: index })
-        quote = undefined
-        stringStart = -1
-      }
-      continue
-    }
-
-    if (char === '"' || char === '\'' || char === '`') {
-      quote = char
-      stringStart = index + 1
-    }
-  }
-
-  if (quote !== undefined && templateExpressionDepth === 0) {
-    ranges.push({ start: stringStart, end: content.length })
-  }
-  return ranges
-}
-
-function isCandidateInsideJsStringStaticRanges(ranges: JsStringStaticRange[], start: number) {
-  let low = 0
-  let high = ranges.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const range = ranges[mid]
-    if (range === undefined) {
-      break
-    }
-    if (start < range.start) {
-      high = mid - 1
-      continue
-    }
-    if (start >= range.end) {
-      low = mid + 1
-      continue
-    }
-    return true
-  }
-  return false
-}
-
-function shouldKeepSourceCandidate(
-  content: string,
-  extension: string,
-  candidate: ExtractSourceCandidate,
-  jsStringStaticRanges?: JsStringStaticRange[],
-  skipHtmlContextChecks = false,
-) {
-  if (!candidate.rawCandidate || isCssDirectiveCandidate(candidate.rawCandidate)) {
-    return false
-  }
-  if (CSS_LIKE_SOURCE_EXTENSION_RE.test(extension) && !isCandidateInCssApplyParams(content, candidate)) {
-    return false
-  }
-  if (!skipHtmlContextChecks) {
-    if (isHtmlAttributeNameCandidate(content, candidate)) {
-      return false
-    }
-    if (isInsideHtmlTagText(content, candidate)) {
-      return false
-    }
-  }
-  if (
-    JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
-    && !isCandidateInsideJsStringStaticRanges(jsStringStaticRanges ?? createJsStringStaticRanges(content), candidate.start)
-  ) {
-    return false
-  }
-  return true
-}
-
-function createLocalCandidate(candidate: ExtractSourceCandidateWithContext): ExtractSourceCandidate {
-  return {
-    rawCandidate: candidate.rawCandidate,
-    start: candidate.localStart,
-    end: candidate.localStart + candidate.rawCandidate.length,
-  }
-}
-
-function dedupeCandidatesWithPositions(candidates: ExtractSourceCandidate[]) {
-  const seen = new Set<string>()
-  return candidates.filter((candidate) => {
-    const key = `${candidate.start}:${candidate.end}:${candidate.rawCandidate}`
-    if (seen.has(key)) {
-      return false
-    }
-    seen.add(key)
-    return true
-  })
-}
-
-function createBareArbitraryValueCandidateContexts(
-  content: string,
-  extension: string,
-  offset: number,
-  options?: ExtractCandidateOptions,
-): ExtractSourceCandidateWithContext[] {
-  return extractBareArbitraryValueSourceCandidatesWithPositions(content, options?.bareArbitraryValues)
-    .map(candidate => ({
-      content,
-      extension,
-      localStart: candidate.start,
-      rawCandidate: candidate.rawCandidate,
-      start: candidate.start + offset,
-      end: candidate.end + offset,
-    }))
-}
-
-async function extractCssApplyCandidates(content: string, extension: string, options?: ExtractCandidateOptions) {
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  CSS_APPLY_RE.lastIndex = 0
-  let match = CSS_APPLY_RE.exec(content)
-  while (match !== null) {
-    const applyParams = match[1] ?? ''
-    const applyParamsStart = match.index + match[0].indexOf(applyParams)
-    // eslint-disable-next-line ts/no-use-before-define
-    const applyCandidates = await extractRawCandidatesWithPositions(applyParams, extension)
-    candidates.push(...applyCandidates.map(candidate => ({
-      content: applyParams,
-      extension: 'html',
-      localStart: candidate.start,
-      rawCandidate: candidate.rawCandidate,
-      skipHtmlContextChecks: true,
-      start: candidate.start + applyParamsStart,
-      end: candidate.end + applyParamsStart,
-    })))
-    candidates.push(...createBareArbitraryValueCandidateContexts(applyParams, 'html', applyParamsStart, options))
-    match = CSS_APPLY_RE.exec(content)
-  }
-  return candidates
-}
-
-async function extractMixedSourceScriptCandidates(content: string, options?: ExtractCandidateOptions) {
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  SFC_SCRIPT_BLOCK_RE.lastIndex = 0
-  let match = SFC_SCRIPT_BLOCK_RE.exec(content)
-  while (match !== null) {
-    const scriptContent = match[1] ?? ''
-    const scriptStart = match.index + match[0].indexOf(scriptContent)
-    // eslint-disable-next-line ts/no-use-before-define
-    candidates.push(...await extractJsStringSourceCandidates(scriptContent, scriptStart, options))
-    match = SFC_SCRIPT_BLOCK_RE.exec(content)
-  }
-  return candidates
-}
-
-async function extractMixedSourceStyleCandidates(content: string, options?: ExtractCandidateOptions) {
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  SFC_STYLE_BLOCK_RE.lastIndex = 0
-  let match = SFC_STYLE_BLOCK_RE.exec(content)
-  while (match !== null) {
-    const styleContent = match[1] ?? ''
-    const styleStart = match.index + match[0].indexOf(styleContent)
-    const styleCandidates = await extractCssApplyCandidates(styleContent, 'css', options)
-    candidates.push(...styleCandidates.map(candidate => ({
-      content: candidate.content,
-      extension: candidate.extension,
-      localStart: candidate.localStart,
-      rawCandidate: candidate.rawCandidate,
-      start: candidate.start + styleStart,
-      end: candidate.end + styleStart,
-    })))
-    match = SFC_STYLE_BLOCK_RE.exec(content)
-  }
-  return candidates
-}
-
-function joinSourceSegments(segments: SourceSegment[]) {
-  const joinedSegments: JoinedSourceSegment[] = []
-  const parts: string[] = []
-  let joinedStart = 0
-
-  for (const segment of segments) {
-    if (parts.length > 0) {
-      parts.push('\n')
-      joinedStart++
-    }
-    parts.push(segment.content)
-    joinedSegments.push({
-      ...segment,
-      joinedStart,
-    })
-    joinedStart += segment.content.length
-  }
-
-  return {
-    content: parts.join(''),
-    segments: joinedSegments,
-  }
-}
-
-function findJoinedSourceSegment(segments: JoinedSourceSegment[], start: number) {
-  let low = 0
-  let high = segments.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const segment = segments[mid]
-    if (segment === undefined) {
-      break
-    }
-    if (start < segment.joinedStart) {
-      high = mid - 1
-      continue
-    }
-    if (start >= segment.joinedStart + segment.content.length) {
-      low = mid + 1
-      continue
-    }
-    return segment
-  }
-  return undefined
-}
-
-async function extractBatchedSourceSegmentCandidates(
-  segments: SourceSegment[],
-  extension: string,
-  options?: ExtractCandidateOptions,
-) {
-  if (segments.length === 0) {
-    return []
-  }
-
-  const joined = joinSourceSegments(segments)
-  // eslint-disable-next-line ts/no-use-before-define
-  const rawCandidates = await extractRawCandidatesWithPositions(joined.content, extension, options)
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  for (const candidate of rawCandidates) {
-    const segment = findJoinedSourceSegment(joined.segments, candidate.start)
-    if (segment === undefined || candidate.end > segment.joinedStart + segment.content.length) {
-      continue
-    }
-    const segmentOffset = candidate.start - segment.joinedStart
-    candidates.push({
-      content: joined.content,
-      extension,
-      localStart: candidate.start,
-      rawCandidate: candidate.rawCandidate,
-      skipHtmlContextChecks: true,
-      start: segment.start + segmentOffset,
-      end: segment.start + segmentOffset + candidate.rawCandidate.length,
-    })
-  }
-  return candidates
-}
-
-function createJsStringSourceSegments(
-  content: string,
-  offset: number,
-) {
-  return createJsStringStaticRanges(content)
-    .filter(range => range.end > range.start)
-    .map(range => ({
-      content: content.slice(range.start, range.end),
-      start: offset + range.start,
-    }))
-}
-
-async function extractJsStringSourceCandidates(
-  content: string,
-  offset: number,
-  options?: ExtractCandidateOptions,
-) {
-  const segments = createJsStringSourceSegments(content, offset)
-  return extractBatchedSourceSegmentCandidates(segments, 'html', options)
-}
-
-function findAttributeValueStart(attributeSource: string, value: string) {
-  const equalIndex = attributeSource.indexOf('=')
-  if (equalIndex === -1) {
-    return -1
-  }
-
-  let valueStart = equalIndex + 1
-  while (isWhitespace(attributeSource[valueStart])) {
-    valueStart++
-  }
-
-  const quote = attributeSource[valueStart]
-  if (quote === '"' || quote === '\'') {
-    valueStart++
-  }
-
-  const valueIndex = attributeSource.indexOf(value, valueStart)
-  return valueIndex === -1 ? valueStart : valueIndex
-}
-
-async function extractVueTemplateAttributeCandidates(content: string, options?: ExtractCandidateOptions) {
-  const htmlSegments: SourceSegment[] = []
-  const jsSegments: SourceSegment[] = []
-  const parser = new Parser({
-    onattribute(name, value) {
-      if (!value || !isVueClassAttributeNameCandidate(name)) {
-        return
-      }
-
-      const attributeStart = parser.startIndex
-      const attributeSource = content.slice(attributeStart, parser.endIndex + 1)
-      const valueStartInAttribute = findAttributeValueStart(attributeSource, value)
-      if (valueStartInAttribute === -1) {
-        return
-      }
-
-      const extension = isVueBoundAttributeName(name) ? 'js' : 'html'
-      const valueStart = attributeStart + valueStartInAttribute
-      const segments = extension === 'js' ? jsSegments : htmlSegments
-      segments.push({
-        content: value,
-        start: valueStart,
-      })
-    },
-  }, {
-    lowerCaseAttributeNames: false,
-  })
-
-  parser.write(content)
-  parser.end()
-  const jsStringSegments = jsSegments.flatMap(segment => createJsStringSourceSegments(segment.content, segment.start))
-  const [htmlCandidates, jsCandidates] = await Promise.all([
-    extractBatchedSourceSegmentCandidates(htmlSegments, 'html', options),
-    extractBatchedSourceSegmentCandidates(jsStringSegments, 'html', options),
-  ])
-  return [
-    ...htmlCandidates,
-    ...jsCandidates,
-  ]
-}
-
-async function extractVueNonHtmlTemplateCandidates(content: string, options?: ExtractCandidateOptions) {
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  SFC_TEMPLATE_BLOCK_RE.lastIndex = 0
-  let match = SFC_TEMPLATE_BLOCK_RE.exec(content)
-  while (match !== null) {
-    const attributes = match[1] ?? ''
-    const templateContent = match[2] ?? ''
-    const lang = getSfcBlockLang(attributes)
-    if (isVueHtmlTemplateLang(lang)) {
-      match = SFC_TEMPLATE_BLOCK_RE.exec(content)
-      continue
-    }
-
-    const templateStart = match.index + match[0].indexOf(templateContent)
-    // eslint-disable-next-line ts/no-use-before-define
-    const templateCandidates = await extractRawCandidatesWithPositions(templateContent, lang, options)
-    candidates.push(...templateCandidates.map(candidate => ({
-      content: templateContent,
-      extension: lang,
-      localStart: candidate.start,
-      rawCandidate: candidate.rawCandidate,
-      skipHtmlContextChecks: true,
-      start: candidate.start + templateStart,
-      end: candidate.end + templateStart,
-    })).filter(candidate => isClassLikeCandidate(candidate.rawCandidate)))
-    match = SFC_TEMPLATE_BLOCK_RE.exec(content)
-  }
-  return candidates
-}
-
-async function extractVueLikeSourceCandidates(content: string, options?: ExtractCandidateOptions) {
-  const [templateCandidates, preprocessedTemplateCandidates, scriptCandidates, styleCandidates] = await Promise.all([
-    extractVueTemplateAttributeCandidates(content, options),
-    extractVueNonHtmlTemplateCandidates(content, options),
-    extractMixedSourceScriptCandidates(content, options),
-    extractMixedSourceStyleCandidates(content, options),
-  ])
-  return [
-    ...templateCandidates,
-    ...preprocessedTemplateCandidates,
-    ...scriptCandidates,
-    ...styleCandidates,
-  ]
-}
-
 function createCandidateCacheKey(
   designSystemKey: string,
   options: Pick<ExtractValidCandidatesOption, 'bareArbitraryValues'>,
@@ -627,55 +77,6 @@ function createCandidateCacheKey(
     return designSystemKey
   }
   return `${designSystemKey}:bare-arbitrary:${JSON.stringify(options.bareArbitraryValues)}`
-}
-
-function createRawCandidateCacheKey(sources: SourceEntry[] | undefined, options?: ExtractCandidateOptions) {
-  return JSON.stringify({
-    sources: sources ?? null,
-    bareArbitraryValues: options?.bareArbitraryValues ?? null,
-  })
-}
-
-async function createRawCandidateFileFingerprint(files: string[] | undefined) {
-  if (!files?.length) {
-    return ''
-  }
-
-  const entries = await Promise.all(files.map(async (file) => {
-    try {
-      const stats = await fs.stat(file)
-      return `${file}:${stats.size}:${stats.mtimeMs}`
-    }
-    catch {
-      return `${file}:missing`
-    }
-  }))
-  return entries.sort().join('|')
-}
-
-function getRawCandidateCacheEntry(cacheKey: string, fingerprint: string) {
-  const cached = rawCandidateCache.get(cacheKey)
-  if (cached?.fingerprint !== fingerprint) {
-    return undefined
-  }
-  rawCandidateCache.delete(cacheKey)
-  rawCandidateCache.set(cacheKey, cached)
-  return cached
-}
-
-function setRawCandidateCacheEntry(cacheKey: string, fingerprint: string, candidates: string[]) {
-  rawCandidateCache.set(cacheKey, {
-    fingerprint,
-    candidates,
-  })
-
-  while (rawCandidateCache.size > RAW_CANDIDATE_CACHE_LIMIT) {
-    const oldestKey = rawCandidateCache.keys().next().value
-    if (oldestKey === undefined) {
-      break
-    }
-    rawCandidateCache.delete(oldestKey)
-  }
 }
 
 export async function extractRawCandidatesWithPositions(
@@ -703,9 +104,9 @@ export async function extractSourceCandidatesWithPositions(
 ): Promise<ExtractSourceCandidate[]> {
   const normalizedExtension = extension.replace(/^\./, '')
   const candidates: ExtractSourceCandidateWithContext[] = VUE_LIKE_SOURCE_EXTENSION_RE.test(normalizedExtension)
-    ? await extractVueLikeSourceCandidates(content, options)
+    ? await extractVueLikeSourceCandidates(content, extractRawCandidatesWithPositions, options)
     : CSS_LIKE_SOURCE_EXTENSION_RE.test(normalizedExtension)
-      ? await extractCssApplyCandidates(content, normalizedExtension, options)
+      ? await extractCssApplyCandidates(content, normalizedExtension, extractRawCandidatesWithPositions, options)
       : (await extractRawCandidatesWithPositions(content, normalizedExtension, options))
           .map(candidate => ({
             ...candidate,
@@ -717,7 +118,7 @@ export async function extractSourceCandidatesWithPositions(
     !VUE_LIKE_SOURCE_EXTENSION_RE.test(normalizedExtension)
     && MIXED_TEMPLATE_SOURCE_EXTENSION_RE.test(normalizedExtension)
   ) {
-    candidates.push(...await extractMixedSourceScriptCandidates(content, options))
+    candidates.push(...await extractMixedSourceScriptCandidates(content, extractRawCandidatesWithPositions, options))
   }
   const jsStringStaticRangesByContent = new Map<string, JsStringStaticRange[]>()
   function getJsStringStaticRanges(candidate: ExtractSourceCandidateWithContext) {
@@ -780,7 +181,7 @@ export async function extractRawCandidates(
     await Promise.all(files.map(async (file) => {
       try {
         const content = await fs.readFile(file, 'utf8')
-        // eslint-disable-next-line ts/no-use-before-define
+
         const extension = toExtension(file)
         const jsStringStaticRanges = JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
           ? createJsStringStaticRanges(content)
@@ -900,67 +301,6 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   return validCandidates
 }
 
-function buildLineOffsets(content: string) {
-  const offsets: number[] = [0]
-  for (let i = 0; i < content.length; i++) {
-    if (content[i] === '\n') {
-      offsets.push(i + 1)
-    }
-  }
-  // Push a sentinel to simplify bounds checks during binary search.
-  if (offsets[offsets.length - 1] !== content.length) {
-    offsets.push(content.length)
-  }
-  return offsets
-}
-
-function resolveLineMeta(content: string, offsets: number[], index: number) {
-  let low = 0
-  let high = offsets.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const start = offsets[mid]
-    if (start === undefined) {
-      break
-    }
-    const nextStart = offsets[mid + 1] ?? content.length
-
-    if (index < start) {
-      high = mid - 1
-      continue
-    }
-
-    if (index >= nextStart) {
-      low = mid + 1
-      continue
-    }
-
-    const line = mid + 1
-    const column = index - start + 1
-    const lineEnd = content.indexOf('\n', start)
-    const lineText = content.slice(start, lineEnd === -1 ? content.length : lineEnd)
-
-    return { line, column, lineText }
-  }
-
-  const lastStart = offsets[offsets.length - 2] ?? 0
-  return {
-    line: offsets.length - 1,
-    column: index - lastStart + 1,
-    lineText: content.slice(lastStart),
-  }
-}
-
-function toExtension(filename: string) {
-  const ext = path.extname(filename).replace(/^\./, '')
-  return ext || 'txt'
-}
-
-function toRelativeFile(cwd: string, filename: string) {
-  const relative = path.relative(cwd, filename)
-  return relative === '' ? path.basename(filename) : relative
-}
-
 export interface ExtractProjectCandidatesOptions {
   cwd?: string
   sources?: SourceEntry[]
@@ -1056,22 +396,17 @@ export async function extractProjectCandidatesWithPositions(
     }
 
     const offsets = buildLineOffsets(content)
-    const relativeFile = toRelativeFile(cwd, file)
 
     for (const match of matches) {
-      const info = resolveLineMeta(content, offsets, match.position)
-      entries.push({
-        rawCandidate: match.candidate,
+      entries.push(createTokenLocation({
+        cwd,
         file,
-        relativeFile,
+        content,
         extension,
-        start: match.position,
-        end: match.position + match.candidate.length,
-        length: match.candidate.length,
-        line: info.line,
-        column: info.column,
-        lineText: info.lineText,
-      })
+        candidate: match.candidate,
+        position: match.position,
+        offsets,
+      }))
     }
   }
 

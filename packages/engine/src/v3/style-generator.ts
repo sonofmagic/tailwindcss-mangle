@@ -149,7 +149,7 @@ function createDefaultTailwindV3Config(tokens: Set<string>): Config {
   }
 }
 
-function getDefaultExport<T>(module: { default?: T } | T): T {
+export function getDefaultExport<T>(module: { default?: T } | T): T {
   if (module && typeof module === 'object' && 'default' in module) {
     return module.default as T
   }
@@ -228,7 +228,7 @@ function isDirectUtilitiesOnlyCss(css: string) {
   return css.replace(/\s+/g, '') === '@tailwindutilities;'
 }
 
-function sortCandidates(candidates: Iterable<string>) {
+export function sortCandidates(candidates: Iterable<string>) {
   return [...candidates].sort((a, z) => {
     if (a === z) {
       return 0
@@ -261,7 +261,7 @@ function collectClassSet(context: TailwindcssRuntimeContext, notOnDemandCandidat
   return classSet
 }
 
-function collectDependencyMessages(result: TailwindV3ProcessResult) {
+export function collectDependencyMessages(result: TailwindV3ProcessResult) {
   const dependencies = new Set<string>()
   for (const message of result.messages) {
     const file = message['file']

@@ -42,6 +42,13 @@ describe('Tailwind v4 engine', () => {
     expect(result.css).toContain('.text-red-500')
   })
 
+  it('exposes the loaded design system through the engine API', async () => {
+    const engine = createTailwindV4Engine(await createDefaultSource())
+    const designSystem = await engine.loadDesignSystem()
+
+    expect(designSystem.parseCandidate('text-red-500').length).toBeGreaterThan(0)
+  })
+
   it('does not include invalid candidates in classSet', async () => {
     const engine = createTailwindV4Engine(await createDefaultSource())
     const result = await engine.generate({
@@ -367,6 +374,50 @@ describe('Tailwind v4 engine', () => {
     expect(source.css).toBe('@import "tailwindcss";')
     expect(result.classSet).toContain('w-4')
     expect(result.css).toContain('.w-4')
+  })
+
+  it('resolves default source options, relative bases, and non-PostCSS package imports', async () => {
+    const tempDir = await createTempDir()
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      cwd: 'app',
+      base: 'styles',
+      baseFallbacks: ['fallback', 'styles'],
+      packageName: '@scope/tailwind-preset',
+    })
+
+    expect(source).toEqual({
+      projectRoot: tempDir,
+      base: path.join(tempDir, 'styles'),
+      baseFallbacks: [
+        path.join(tempDir, 'fallback'),
+        tempDir,
+        path.join(tempDir, 'app'),
+      ],
+      css: '@import "@scope/tailwind-preset";',
+      dependencies: [],
+    })
+  })
+
+  it('resolves absolute CSS source dependencies and ignores empty fallback entries', async () => {
+    const tempDir = await createTempDir()
+    const cssFile = path.join(tempDir, 'styles/app.css')
+    const dependency = path.join(tempDir, 'dep.css')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      baseFallbacks: ['', tempDir],
+      cssSources: [
+        {
+          file: cssFile,
+          css: '@import "tailwindcss";',
+          dependencies: [dependency],
+        },
+      ],
+    })
+
+    expect(source.base).toBe(path.dirname(cssFile))
+    expect(source.baseFallbacks).toEqual([tempDir])
+    expect(source.dependencies).toEqual([cssFile, dependency])
   })
 
   it('uses the same validity check in validateCandidates and generate', async () => {

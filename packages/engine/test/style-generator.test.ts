@@ -179,6 +179,71 @@ describe('Tailwind style generator', () => {
     expect(v4.css).toContain('.text-red-500')
   })
 
+  it('routes custom generation through the unified generator', async () => {
+    const result = await generateTailwindStyle({
+      version: 'custom',
+      candidates: ['text-red-500'],
+      generate({ tokens }) {
+        return [...tokens].join(',')
+      },
+    })
+
+    expect(result).toEqual({
+      version: 'custom',
+      css: 'text-red-500',
+      tokens: new Set(['text-red-500']),
+      classSet: new Set(['text-red-500']),
+      sources: [],
+    })
+  })
+
+  it('supports Tailwind v3 raw PostCSS processing path when direct utilities are disabled', async () => {
+    const result = await generateTailwindV3RawStyle({
+      cwd: packageRoot,
+      packageName: 'tailwindcss-3',
+      directUtilitiesOnly: false,
+      css: '@tailwind utilities;',
+      candidates: ['text-red-500'],
+      config: {
+        corePlugins: {
+          preflight: false,
+        },
+      },
+    })
+
+    expect(result.css).toContain('.text-red-500')
+    expect(result.classSet).toContain('text-red-500')
+  })
+
+  it('feeds Tailwind v3 raw generation with user content and source defaults', async () => {
+    const result = await generateTailwindV3RawStyle({
+      cwd: packageRoot,
+      packageName: 'tailwindcss-3',
+      candidates: ['text-red-500', 'text-red-500'],
+      sources: [
+        {
+          content: '<div class="hover:bg-blue-500"></div>',
+        },
+      ],
+      config: {
+        content: [
+          {
+            raw: '<div class="underline"></div>',
+            extension: 'html',
+          },
+        ],
+        corePlugins: {
+          preflight: false,
+        },
+      },
+    })
+
+    expect(result.tokens).toEqual(new Set(['text-red-500', 'hover:bg-blue-500']))
+    expect(result.classSet).toEqual(new Set(['hover:bg-blue-500', 'text-red-500']))
+    expect(result.css).toContain('.hover\\:bg-blue-500:hover')
+    expect(result.css).toContain('.text-red-500')
+  })
+
   it('lets callers fully customize css generation', async () => {
     const generate = vi.fn(({ tokens }: { tokens: Set<string> }) => {
       return [...tokens]

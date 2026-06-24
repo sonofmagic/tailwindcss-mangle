@@ -396,6 +396,68 @@ describe('candidate extractor', () => {
       .toBe(source.indexOf('bg-neutral-900'))
   })
 
+  it('handles Vue template lang variants, unquoted attributes, and html template fast path', async () => {
+    const htmlSource = [
+      '<template lang=html>',
+      '<view class = text-green-500 :class="`px-4 $' + '{active ? \'text-red-500\' : \'text-blue-500\'}`" bind:class="ok && \'font-bold\'" />',
+      '</template>',
+    ].join('\n')
+    const pugSource = [
+      '<template lang=\'pug\'>',
+      '.bg-neutral-900.text-red-500',
+      '</template>',
+    ].join('\n')
+
+    await expect(extractSourceCandidates(htmlSource, '.vue')).resolves.toEqual(expect.arrayContaining([
+      'text-green-500',
+      'px-4',
+      'text-red-500',
+      'text-blue-500',
+      'font-bold',
+    ]))
+    await expect(extractSourceCandidates(pugSource, 'vue')).resolves.toEqual(expect.arrayContaining([
+      'bg-neutral-900',
+      'text-red-500',
+    ]))
+  })
+
+  it('extracts script blocks from mixed non-vue SFC-like sources', async () => {
+    const result = await extractSourceCandidates([
+      '<script>',
+      'const className = "grid grid-cols-2"',
+      '</script>',
+      '<template><div class="ignored-by-template-fast-path"></div></template>',
+    ].join('\n'), 'svelte')
+
+    expect(result).toEqual(expect.arrayContaining(['grid', 'grid-cols-2']))
+    expect(result).not.toContain('className')
+  })
+
+  it('handles escaped and unterminated JavaScript string ranges', async () => {
+    const result = await extractSourceCandidates([
+      'const escaped = "text-red-500 \\"not-end\\""',
+      'const template = `grid $' + '{(() => `ignored-template-expression`)} gap-4 $' + '{(() => ({ nested: "text-blue-500" }))()}`',
+      'const unterminated = "font-bold',
+    ].join('\n'), 'ts')
+
+    expect(result).toEqual(expect.arrayContaining([
+      'text-red-500',
+      'grid',
+      'text-blue-500',
+      'font-bold',
+      'ignored-template-expression',
+    ]))
+  })
+
+  it('filters HTML tag text, CSS directives, and CSS tokens outside @apply', async () => {
+    await expect(extractSourceCandidates('<view class="text-red-500">text-blue-500 <span></span></view>', 'html'))
+      .resolves
+      .toEqual(['text-red-500'])
+    await expect(extractSourceCandidates('@tailwind utilities; .x { color: red; } .y { @apply text-green-500; }', 'css'))
+      .resolves
+      .toEqual(['text-green-500'])
+  })
+
   it('filters valid Tailwind candidates using design system', async () => {
     const result = await extractValidCandidates({
       base: fixturesRoot,
@@ -626,6 +688,45 @@ describe('candidate extractor', () => {
     expect(tsxMatch?.lineText).toContain('className')
   })
 
+  it('reports skipped project files and omits files with no matches', async () => {
+    const root = await createTempDir('tw-engine-token-skipped-')
+    const readableFile = path.join(root, 'src/page.html')
+    const emptyFile = path.join(root, 'src/empty.html')
+    const unreadableFile = path.join(root, 'src/unreadable.html')
+    await writeTempFile(readableFile, '<div class="text-red-500"></div>')
+    await writeTempFile(emptyFile, '<div></div>')
+    await writeTempFile(unreadableFile, '<div class="text-blue-500"></div>')
+    await fs.chmod(unreadableFile, 0o000)
+
+    const report = await extractProjectCandidatesWithPositions({
+      cwd: root,
+      sources: [
+        { base: root, pattern: 'src/*.html', negated: false },
+      ],
+    })
+    await fs.chmod(unreadableFile, 0o600)
+
+    expect(report.filesScanned).toBe(3)
+    expect(report.entries.map(entry => entry.rawCandidate)).toContain('text-red-500')
+    expect(report.entries.map(entry => entry.rawCandidate)).not.toContain('text-blue-500')
+    expect(report.skippedFiles).toHaveLength(1)
+    expect(report.skippedFiles[0]?.file).toBe(unreadableFile)
+  })
+
+  it('resolves source files with explicit filters', async () => {
+    const root = await createTempDir('tw-engine-source-files-filter-')
+    await writeTempFile(path.join(root, 'src/page.html'), '<div class="text-green-500"></div>')
+    await writeTempFile(path.join(root, 'src/page.tsx'), 'export const cls = "text-blue-500"')
+
+    const files = await resolveProjectSourceFiles({
+      cwd: root,
+      sources: [{ base: root, pattern: 'src/**/*.{html,tsx}', negated: false }],
+      filter: file => file.endsWith('.tsx'),
+    })
+
+    expect(files.map(file => path.relative(root, file))).toEqual(['src/page.tsx'])
+  })
+
   it('groups token metadata by relative file path', async () => {
     const report = await extractProjectCandidatesWithPositions({
       cwd: tokenFixturesRoot,
@@ -654,6 +755,9 @@ describe('candidate extractor', () => {
     if (absoluteKey) {
       expect(absoluteGrouped[absoluteKey]?.[0]?.file).toBe(absoluteKey)
     }
+
+    const relativeWithAbsoluteFiles = groupTokensByFile(report, { key: 'relative', stripAbsolutePaths: false })
+    expect(relativeWithAbsoluteFiles['button.tsx']?.[0]?.file).toContain(tokenFixturesRoot)
   })
 
   it('generates the CLI token command output', async () => {

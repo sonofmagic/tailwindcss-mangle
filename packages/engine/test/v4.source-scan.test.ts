@@ -6,12 +6,20 @@ import {
   createTailwindV4CompiledSourceEntries,
   createTailwindV4DefaultIgnoreSources,
   createTailwindV4SourceEntryMatcher,
+  createTailwindV4SourceExclusionMatcher,
   expandTailwindV4SourceEntries,
+  expandTailwindV4SourceEntryBraces,
+  groupTailwindV4SourceEntriesByBase,
   isFileExcludedByTailwindV4SourceEntries,
   isFileMatchedByTailwindV4SourceEntries,
+  mergeTailwindV4SourceEntries,
+  normalizeGlobPattern,
   normalizeTailwindV4ScannerSources,
   normalizeTailwindV4SourceEntries,
+  resolveSourceScanPath,
+  resolveTailwindV4SourceBaseCandidates,
   resolveTailwindV4SourceEntry,
+  toPosixPath,
 } from '@/v4'
 
 const tempDirs: string[] = []
@@ -130,5 +138,161 @@ describe('Tailwind v4 source scan helpers', () => {
       { base: root, pattern: '**/package-lock.json', negated: true },
       { base: root, pattern: '**/.env.*', negated: true },
     ]))
+  })
+
+  it('normalizes path helpers and missing realpath fallbacks', async () => {
+    const root = await createTempDir('tw-engine-v4-source-paths-')
+    const existing = path.join(root, 'src')
+    const missing = path.join(root, 'missing')
+    await fs.mkdir(existing, { recursive: true })
+
+    expect(toPosixPath(`a${path.sep}b${path.sep}c`)).toBe('a/b/c')
+    expect(normalizeGlobPattern('./src/**/*.html')).toBe('src/**/*.html')
+    expect(resolveSourceScanPath(existing)).toBe(await fs.realpath(existing))
+    expect(resolveSourceScanPath(missing)).toBe(path.resolve(missing))
+  })
+
+  it('normalizes entries without explicit bases and with custom default patterns', async () => {
+    const root = await createTempDir('tw-engine-v4-source-defaults-')
+    await fs.mkdir(path.join(root, 'components'), { recursive: true })
+
+    const entries = await normalizeTailwindV4SourceEntries([
+      { base: '', pattern: './components', negated: false },
+    ], {
+      cwd: root,
+      defaultPattern: '**/*.vue',
+    })
+
+    expect(entries).toEqual([
+      {
+        base: path.join(root, 'components'),
+        pattern: '**/*.vue',
+        negated: false,
+      },
+    ])
+  })
+
+  it('handles absolute file source entries', async () => {
+    const root = await createTempDir('tw-engine-v4-source-absolute-')
+    const file = path.join(root, 'pages/index.html')
+    await writeTempFile(file)
+
+    await expect(resolveTailwindV4SourceEntry(file, root, false)).resolves.toEqual({
+      base: path.dirname(file),
+      pattern: path.basename(file),
+      negated: false,
+    })
+  })
+
+  it('expands nested and escaped brace source patterns', () => {
+    const root = '/project'
+
+    expect(expandTailwindV4SourceEntryBraces([
+      { base: root, pattern: 'src/{pages,{components,widgets}}/**/*.{vue,tsx}', negated: false },
+      { base: root, pattern: 'src/\\{literal\\}.html', negated: false },
+      { base: root, pattern: 'src/{unclosed.html', negated: false },
+    ])).toEqual([
+      { base: root, pattern: 'src/pages/**/*.vue', negated: false },
+      { base: root, pattern: 'src/pages/**/*.tsx', negated: false },
+      { base: root, pattern: 'src/components/**/*.vue', negated: false },
+      { base: root, pattern: 'src/components/**/*.tsx', negated: false },
+      { base: root, pattern: 'src/widgets/**/*.vue', negated: false },
+      { base: root, pattern: 'src/widgets/**/*.tsx', negated: false },
+      { base: root, pattern: 'src/\\{literal\\}.html', negated: false },
+      { base: root, pattern: 'src/{unclosed.html', negated: false },
+    ])
+  })
+
+  it('keeps unmatched brace patterns and escaped separators stable', () => {
+    const root = '/project'
+
+    expect(expandTailwindV4SourceEntryBraces([
+      { base: root, pattern: 'src/{foo\\,bar,baz}.html', negated: false },
+      { base: root, pattern: 'src/{foo,{bar,baz}.html', negated: false },
+    ])).toEqual([
+      { base: root, pattern: 'src/foo\\,bar.html', negated: false },
+      { base: root, pattern: 'src/baz.html', negated: false },
+      { base: root, pattern: 'src/{foo,{bar,baz}.html', negated: false },
+    ])
+  })
+
+  it('returns permissive and empty matchers for omitted source entries', () => {
+    expect(isFileMatchedByTailwindV4SourceEntries('/project/src/page.html', undefined)).toBe(true)
+    expect(isFileExcludedByTailwindV4SourceEntries('/project/src/page.html', undefined)).toBe(false)
+    expect(createTailwindV4SourceEntryMatcher(undefined)).toBeUndefined()
+    expect(createTailwindV4SourceExclusionMatcher(undefined)).toBeUndefined()
+  })
+
+  it('requires at least one positive source entry for matching', () => {
+    const entries = [
+      { base: '/project', pattern: '**/*.html', negated: true },
+    ]
+
+    expect(isFileMatchedByTailwindV4SourceEntries('/project/src/page.html', entries)).toBe(false)
+    expect(createTailwindV4SourceExclusionMatcher(entries)?.('/project/src/page.html')).toBe(true)
+  })
+
+  it('groups, merges, dedupes, and expands source entries by resolved base', async () => {
+    const root = await createTempDir('tw-engine-v4-source-group-')
+    const srcBase = path.join(root, 'src')
+    const adminBase = path.join(root, 'admin')
+    const entries = [
+      { base: srcBase, pattern: './**/*.html', negated: false },
+      { base: srcBase, pattern: '**/*.html', negated: false },
+      { base: adminBase, pattern: '**/*.vue', negated: false },
+      { base: root, pattern: 'src/legacy/**', negated: true },
+    ]
+
+    expect(groupTailwindV4SourceEntriesByBase(entries)).toEqual(new Map([
+      [path.resolve(srcBase), [
+        { base: path.resolve(srcBase), pattern: '**/*.html', negated: false },
+        { base: path.resolve(srcBase), pattern: '**/*.html', negated: false },
+      ]],
+      [path.resolve(adminBase), [
+        { base: path.resolve(adminBase), pattern: '**/*.vue', negated: false },
+      ]],
+      [path.resolve(root), [
+        { base: path.resolve(root), pattern: 'src/legacy/**', negated: true },
+      ]],
+    ]))
+
+    expect(mergeTailwindV4SourceEntries(entries, undefined)).toEqual([
+      { base: path.resolve(srcBase), pattern: '**/*.html', negated: false },
+      { base: path.resolve(adminBase), pattern: '**/*.vue', negated: false },
+      { base: path.resolve(root), pattern: 'src/legacy/**', negated: true },
+    ])
+
+    const expanded = await expandTailwindV4SourceEntries(entries, async ({ cwd, sources }) => {
+      if (cwd === path.resolve(srcBase)) {
+        expect(sources).toEqual([
+          { base: path.resolve(srcBase), pattern: '**/*.html', negated: false },
+          { base: path.resolve(srcBase), pattern: '**/*.html', negated: false },
+        ])
+        return [
+          path.join(srcBase, 'page.html'),
+          path.join(srcBase, 'legacy/page.html'),
+        ]
+      }
+      if (cwd === path.resolve(adminBase)) {
+        return [path.join(adminBase, 'panel.vue')]
+      }
+      return []
+    })
+
+    expect(expanded.sort()).toEqual([
+      path.resolve(adminBase, 'panel.vue'),
+      path.resolve(srcBase, 'page.html'),
+    ].sort())
+    await expect(expandTailwindV4SourceEntries([], async () => [])).resolves.toEqual([])
+  })
+
+  it('dedupes source base candidates while preserving useful fallbacks', () => {
+    const root = path.resolve('/project')
+    const fallback = path.resolve('/fallback')
+
+    expect(resolveTailwindV4SourceBaseCandidates(root, root, ['', fallback, fallback])).toEqual([
+      root,
+      fallback,
+    ])
   })
 })
