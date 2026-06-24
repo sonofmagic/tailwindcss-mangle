@@ -283,14 +283,14 @@ describe('candidate extractor', () => {
 
   it('keeps raw candidate cache bounded with lru eviction', async () => {
     const root = await createTempDir('tw-engine-raw-cache-lru-')
-    for (let index = 0; index < 33; index++) {
+    for (let index = 0; index < 65; index++) {
       await writeTempFile(
         path.join(root, `src/page-${index}.html`),
         `<div class="text-red-${index === 0 ? '500' : '600'}"></div>`,
       )
     }
 
-    for (let index = 0; index < 33; index++) {
+    for (let index = 0; index < 65; index++) {
       await extractRawCandidates([{
         base: root,
         pattern: `src/page-${index}.html`,

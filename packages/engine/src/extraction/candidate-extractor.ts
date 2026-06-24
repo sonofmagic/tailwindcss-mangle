@@ -23,7 +23,15 @@ import {
 
 let oxideImportPromise: ReturnType<typeof importOxide> | undefined
 const designSystemCandidateCache = new Map<string, Map<string, boolean>>()
-const RAW_CANDIDATE_CACHE_LIMIT = 32
+const DEFAULT_RAW_CANDIDATE_CACHE_LIMIT = 64
+const RAW_CANDIDATE_CACHE_LIMIT = (() => {
+  const rawLimit = process.env['TWM_ENGINE_RAW_CANDIDATE_CACHE_LIMIT']
+  if (rawLimit === undefined) {
+    return DEFAULT_RAW_CANDIDATE_CACHE_LIMIT
+  }
+  const limit = Number.parseInt(rawLimit, 10)
+  return Number.isFinite(limit) && limit > 0 ? limit : DEFAULT_RAW_CANDIDATE_CACHE_LIMIT
+})()
 const rawCandidateCache = new Map<string, {
   fingerprint: string
   candidates: string[]

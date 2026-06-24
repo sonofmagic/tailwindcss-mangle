@@ -69,6 +69,14 @@ interface PhaseBenchResult {
   details: Record<string, string | number>
 }
 
+interface RawCandidateCacheBenchResult {
+  workingSet: number
+  coldMs: number
+  warmMs: number
+  warmHeapDeltaKiB: number
+  candidates: number
+}
+
 const require = createRequire(import.meta.url)
 const benchDir = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(benchDir, '..')
@@ -732,6 +740,62 @@ async function runEngineGeneratePhases(dataset: DatasetSummary, profile: BenchPr
   )
 }
 
+async function runRawCandidateCacheBenchmarks(dataset: DatasetSummary): Promise<RawCandidateCacheBenchResult[]> {
+  const cacheRoot = path.join(dataset.root, 'cache-lru')
+  await fs.mkdir(cacheRoot, { recursive: true })
+  const workingSets = [16, 32, 64, 96]
+  const results: RawCandidateCacheBenchResult[] = []
+
+  for (const workingSet of workingSets) {
+    const sourceSets: SourceEntry[][] = []
+    const workingSetRoot = path.join(cacheRoot, `set-${workingSet}`)
+    await fs.mkdir(workingSetRoot, { recursive: true })
+    for (let index = 0; index < workingSet; index++) {
+      const content = [
+        '<main>',
+        ...Array.from({ length: 20 }, (_, blockIndex) => {
+          const seed = workingSet * 1000 + index * 100 + blockIndex
+          return `<section class="${classBundle(seed, 24)}" data-cache="${workingSet}-${index}-${blockIndex}"></section>`
+        }),
+        '</main>',
+      ].join('\n')
+      const file = path.join(workingSetRoot, `page-${index}.html`)
+      await fs.writeFile(file, content, 'utf8')
+      sourceSets.push([{
+        base: dataset.root,
+        pattern: path.relative(dataset.root, file),
+        negated: false,
+      }])
+    }
+    const sourcesList = sourceSets
+
+    const coldStart = performance.now()
+    let candidates = 0
+    for (const sources of sourcesList) {
+      candidates += (await extractRawCandidates(sources, { bareArbitraryValues: true })).length
+    }
+    const coldMs = performance.now() - coldStart
+
+    ;(globalThis as { gc?: () => void }).gc?.()
+    const heapStart = process.memoryUsage().heapUsed
+    const warmStart = performance.now()
+    let warmCandidates = 0
+    for (const sources of sourcesList) {
+      warmCandidates += (await extractRawCandidates(sources, { bareArbitraryValues: true })).length
+    }
+    ;(globalThis as { gc?: () => void }).gc?.()
+    results.push({
+      workingSet,
+      coldMs,
+      warmMs: performance.now() - warmStart,
+      warmHeapDeltaKiB: (process.memoryUsage().heapUsed - heapStart) / 1024,
+      candidates: warmCandidates || candidates,
+    })
+  }
+
+  return results
+}
+
 function formatMs(value: number) {
   return value.toFixed(2)
 }
@@ -775,6 +839,7 @@ async function writeReport(
   profile: BenchProfile,
   results: BenchResult[],
   phaseResults: PhaseBenchResult[],
+  cacheResults: RawCandidateCacheBenchResult[],
 ) {
   const byExtension = [...groupByExtension(dataset.files)].map(([extension, files]) => [
     `.${extension}`,
@@ -799,6 +864,13 @@ async function writeReport(
     result.samples,
     ...phaseColumns.map(phase => formatMs(result.phases[phase] ?? 0)),
     Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
+  ])
+  const cacheRows = cacheResults.map(result => [
+    result.workingSet,
+    formatMs(result.coldMs),
+    formatMs(result.warmMs),
+    result.warmHeapDeltaKiB.toFixed(1),
+    result.candidates,
   ])
 
   const sortedByMean = [...results].sort((a, b) => b.meanMs - a.meanMs)
@@ -852,6 +924,15 @@ async function writeReport(
       phaseRows,
     ),
     '',
+    '## Raw Candidate Cache LRU',
+    '',
+    `Current limit: ${intFromEnv('TWM_ENGINE_RAW_CANDIDATE_CACHE_LIMIT', 64)} entries.`,
+    '',
+    markdownTable(
+      ['Working set', 'Cold ms', 'Warm ms', 'Warm heap delta KiB', 'Candidates'],
+      cacheRows,
+    ),
+    '',
     '## Notes',
     '',
     `- Fastest scenario by mean time: ${fastest?.scenario ?? 'n/a'} (${fastest ? formatMs(fastest.meanMs) : '0.00'} ms).`,
@@ -887,7 +968,8 @@ async function main() {
     await runExtractValidCandidatesPhases(dataset, profile),
     await runEngineGeneratePhases(dataset, profile),
   ]
-  await writeReport(dataset, profile, results, phaseResults)
+  const cacheResults = await runRawCandidateCacheBenchmarks(dataset)
+  await writeReport(dataset, profile, results, phaseResults, cacheResults)
 
   console.log(`Generated ${dataset.files.length} benchmark files (${formatBytes(dataset.totalBytes)}) in ${path.relative(packageRoot, dataset.root)}`)
   console.table(results.map(result => ({
@@ -906,6 +988,13 @@ async function main() {
     samples: result.samples,
     ...Object.fromEntries(phaseColumns.map(phase => [phase, formatMs(result.phases[phase] ?? 0)])),
     details: Object.entries(result.details).map(([key, value]) => `${key}=${value}`).join(', '),
+  })))
+  console.table(cacheResults.map(result => ({
+    workingSet: result.workingSet,
+    coldMs: formatMs(result.coldMs),
+    warmMs: formatMs(result.warmMs),
+    warmHeapDeltaKiB: result.warmHeapDeltaKiB.toFixed(1),
+    candidates: result.candidates,
   })))
   console.log(`Report written to ${path.relative(process.cwd(), reportFile)}`)
 }
