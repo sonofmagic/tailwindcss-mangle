@@ -157,9 +157,10 @@ describe('Tailwind v4 node adapter', () => {
     expect(result.compiled.sources).toEqual([
       { base: toPosixPath(secondBase), pattern: './src/**/*.html', negated: false },
     ])
-    expect(result.compiled.build(['text-red-500'])).toContain(path.join(projectRoot, 'node_modules/design-system/index.css'))
-    expect(result.compiled.build(['text-red-500'])).toContain(path.join(projectRoot, 'node_modules/plain.css'))
-    expect(result.compiled.build(['text-red-500'])).toContain('undefined|undefined|undefined|text-red-500')
+    const builtCss = toPosixPath(result.compiled.build(['text-red-500']))
+    expect(builtCss).toContain(toPosixPath(path.join(projectRoot, 'node_modules/design-system/index.css')))
+    expect(builtCss).toContain(toPosixPath(path.join(projectRoot, 'node_modules/plain.css')))
+    expect(builtCss).toContain('undefined|undefined|undefined|text-red-500')
     expect(result.dependencies).toEqual(new Set([
       path.join(projectRoot, 'seed.css'),
       path.resolve('./relative-dependency.css'),
