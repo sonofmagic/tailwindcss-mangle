@@ -1,5 +1,14 @@
 # @tailwindcss-mangle/core
 
+## 5.1.7
+
+### Patch Changes
+
+- 🐛 **Export the bundled htmlparser2 API from `@tailwindcss-mangle/engine/htmlparser2` for packages that need the same Node.js 18-compatible parser entry.** [`5610e9b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/5610e9bcb49961d3dbb481989359d8e831d01a9d) by @sonofmagic
+  - Switch core HTML parsing to the engine-provided htmlparser2 entry instead of depending on htmlparser2 directly.
+- 📦 **Dependencies** [`5610e9b`](https://github.com/sonofmagic/tailwindcss-mangle/commit/5610e9bcb49961d3dbb481989359d8e831d01a9d)
+  → `@tailwindcss-mangle/engine@0.1.1`
+
 ## 5.1.6
 
 ### Patch Changes
