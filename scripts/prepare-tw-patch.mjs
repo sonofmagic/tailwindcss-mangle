@@ -22,7 +22,19 @@ if (missingArtifact) {
   process.exit(0)
 }
 
-execFileSync('tw-patch', ['install'], {
+const binPath = path.resolve(repoRoot, 'packages/tailwindcss-patch/bin/tw-patch.js')
+
+try {
+  execFileSync(process.execPath, [binPath, '--help'], {
+    stdio: 'ignore',
+  })
+}
+catch (error) {
+  const reason = error instanceof Error ? error.message : String(error)
+  console.log(`Skip tw-patch prepare because the local tw-patch CLI is not ready: ${reason}`)
+  process.exit(0)
+}
+
+execFileSync(process.execPath, [binPath, 'install'], {
   stdio: 'inherit',
-  shell: process.platform === 'win32',
 })
