@@ -28,7 +28,6 @@ jobs:
             .github/workflows/engine-cross-platform.yml
             .github/workflows/release.yml
             .github/workflows/workflow-lint.yml
-            packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml
