@@ -1,4 +1,5 @@
 import MagicString from 'magic-string'
+import { parse } from '@/babel'
 /* eslint-disable ts/no-require-imports */
 
 /* eslint-disable no-template-curly-in-string */
@@ -272,6 +273,26 @@ describe('js handler', async () => {
 
     }).code
     expect(code).toBe('const LINEFEED = "\\n";')
+  })
+
+  it('escapes generated class names inside string literals', async () => {
+    const testCase = 'const className = "bg-red-500";'
+    await ctx.initConfig({
+      classList: ['bg-red-500'],
+      transformerOptions: {
+        generator: {
+          customGenerate: () => 'tw-"quoted\\path\nnext\u2028line',
+        },
+      },
+    })
+
+    const { code } = jsHandler(testCase, {
+      ctx,
+      id: 'xxx',
+    })
+
+    expect(code).toBe('const className = "tw-\\"quoted\\\\path\\nnext\\u2028line";')
+    expect(() => parse(code)).not.toThrow()
   })
 
   it('preProcessJs case', () => {

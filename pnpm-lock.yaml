@@ -294,7 +294,7 @@ importers:
         version: 4.1.9(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@1.21.7)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
       webpack:
         specifier: ^5.108.3
-        version: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+        version: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
       webpack-build-utils:
         specifier: ^0.0.7
         version: 0.0.7(quill-delta@5.1.0)(rxjs@7.8.2)(tslib@2.8.1)
@@ -603,7 +603,7 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.1.2
-        version: 7.1.2(svelte@5.56.4(@typescript-eslint/types@8.62.0))(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 7.1.2(svelte@5.56.4(@typescript-eslint/types@8.62.1))(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
@@ -615,10 +615,10 @@ importers:
         version: 8.5.16
       svelte:
         specifier: ^5.56.4
-        version: 5.56.4(@typescript-eslint/types@8.62.0)
+        version: 5.56.4(@typescript-eslint/types@8.62.1)
       svelte-check:
         specifier: ^4.7.1
-        version: 4.7.1(picomatch@4.0.4)(svelte@5.56.4(@typescript-eslint/types@8.62.0))(typescript@6.0.3)
+        version: 4.7.1(picomatch@4.0.4)(svelte@5.56.4(@typescript-eslint/types@8.62.1))(typescript@6.0.3)
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.2
@@ -709,7 +709,7 @@ importers:
         version: 3.5.39(typescript@6.0.3)
       vue-router:
         specifier: ^5.1.0
-        version: 5.1.0(@vue/compiler-sfc@3.5.39)(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+        version: 5.1.0(@vue/compiler-sfc@3.5.39)(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.62.1
@@ -798,9 +798,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@ast-core/escape':
-        specifier: ^1.0.1
-        version: 1.0.1
       '@babel/parser':
         specifier: ^7.29.7
         version: 7.29.7
@@ -1102,9 +1099,6 @@ packages:
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
-
-  '@ast-core/escape@1.0.1':
-    resolution: {integrity: sha512-/kVjBkDzYrSW1S+gTBCuOfhnNkge9qZFJgLT+MOZdmPN4Vts36S60uU5br3ozoxpJ1eRGe6pGy7/EfcOpFFHlA==}
 
   '@astrojs/compiler-binding-darwin-arm64@0.2.3':
     resolution: {integrity: sha512-sJIHeL1ONXEBLob8ZaXfmX6iCftUno08G/cMXj2FJnL0xNbHuELcEq1mjxHVFHNgUYu4P7xJNm2mpc0zUEPoKw==}
@@ -19596,8 +19590,6 @@ snapshots:
       package-manager-detector: 1.6.0
       tinyexec: 1.2.4
 
-  '@ast-core/escape@1.0.1': {}
-
   '@astrojs/compiler-binding-darwin-arm64@0.2.3':
     optional: true
 
@@ -27931,12 +27923,12 @@ snapshots:
 
   '@sveltejs/load-config@0.2.0': {}
 
-  '@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.56.4(@typescript-eslint/types@8.62.0))(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.56.4(@typescript-eslint/types@8.62.1))(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       deepmerge: 4.3.1
       magic-string: 0.30.21
       obug: 2.1.1
-      svelte: 5.56.4(@typescript-eslint/types@8.62.0)
+      svelte: 5.56.4(@typescript-eslint/types@8.62.1)
       vite: 8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
       vitefu: 1.1.3(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
 
@@ -29636,9 +29628,9 @@ snapshots:
       '@vue/babel-preset-app': 5.0.9(@babel/core@7.29.0)(core-js@3.49.0)(vue@3.5.39(typescript@6.0.3))
       '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.39)(encoding@0.1.13)(esbuild@0.28.0)(html-minifier-terser@7.2.0)(lodash@4.18.1)(prettier@3.9.4)(sass-loader@17.0.0(sass@1.101.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)))(vue@3.5.39(typescript@6.0.3))(webpack-sources@3.5.0)
       '@vue/cli-shared-utils': 5.0.9(encoding@0.1.13)
-      babel-loader: 8.4.1(@babel/core@7.29.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      babel-loader: 8.4.1(@babel/core@7.29.0)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
       thread-loader: 3.0.4(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@swc/core'
@@ -29663,9 +29655,9 @@ snapshots:
       '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.39)(encoding@0.1.13)(esbuild@0.28.0)(html-minifier-terser@7.2.0)(lodash@4.18.1)(prettier@3.9.4)(sass-loader@17.0.0(sass@1.101.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)))(vue@3.5.39(typescript@6.0.3))(webpack-sources@3.5.0)
       '@vue/cli-shared-utils': 5.0.9(encoding@0.1.13)
       eslint: 10.6.0(jiti@2.7.0)
-      eslint-webpack-plugin: 3.2.0(eslint@10.6.0(jiti@2.7.0))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      eslint-webpack-plugin: 3.2.0(eslint@10.6.0(jiti@2.7.0))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
       globby: 11.1.0
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
       yorkie: 2.0.0
     transitivePeerDependencies:
       - '@minify-html/node'
@@ -29696,14 +29688,14 @@ snapshots:
       '@types/webpack-env': 1.18.8
       '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.39)(encoding@0.1.13)(esbuild@0.28.0)(html-minifier-terser@7.2.0)(lodash@4.18.1)(prettier@3.9.4)(sass-loader@17.0.0(sass@1.101.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)))(vue@3.5.39(typescript@6.0.3))(webpack-sources@3.5.0)
       '@vue/cli-shared-utils': 5.0.9(encoding@0.1.13)
-      babel-loader: 8.4.1(@babel/core@7.29.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
-      fork-ts-checker-webpack-plugin: 6.5.3(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      babel-loader: 8.4.1(@babel/core@7.29.0)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      fork-ts-checker-webpack-plugin: 6.5.3(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
       globby: 11.1.0
       thread-loader: 3.0.4(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
-      ts-loader: 9.5.4(typescript@6.0.3)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      ts-loader: 9.5.4(typescript@6.0.3)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
       typescript: 6.0.3
       vue: 3.5.39(typescript@6.0.3)
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@swc/core'
@@ -30804,7 +30796,7 @@ snapshots:
 
   b4a@1.8.1: {}
 
-  babel-loader@8.4.1(@babel/core@7.29.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+  babel-loader@8.4.1(@babel/core@7.29.0)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
       '@babel/core': 7.29.0
       find-cache-dir: 3.3.2
@@ -31769,7 +31761,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.8.1
     optionalDependencies:
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   css-minimizer-webpack-plugin@3.4.1(esbuild@0.28.0)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
@@ -33879,7 +33871,7 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint-webpack-plugin@3.2.0(eslint@10.6.0(jiti@2.7.0))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+  eslint-webpack-plugin@3.2.0(eslint@10.6.0(jiti@2.7.0))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
       '@types/eslint': 8.56.12
       eslint: 10.6.0(jiti@2.7.0)
@@ -33984,12 +33976,6 @@ snapshots:
   esquery@1.7.0:
     dependencies:
       estraverse: 5.3.0
-
-  esrap@2.2.13(@typescript-eslint/types@8.62.0):
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
-    optionalDependencies:
-      '@typescript-eslint/types': 8.62.0
 
   esrap@2.2.13(@typescript-eslint/types@8.62.1):
     dependencies:
@@ -34376,7 +34362,7 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  fork-ts-checker-webpack-plugin@6.5.3(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+  fork-ts-checker-webpack-plugin@6.5.3(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
       '@babel/code-frame': 7.29.0
       '@types/json-schema': 7.0.15
@@ -35087,7 +35073,7 @@ snapshots:
       pretty-error: 4.0.0
       tapable: 2.3.3
     optionalDependencies:
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   htmlparser2@12.0.0:
     dependencies:
@@ -37168,7 +37154,7 @@ snapshots:
     dependencies:
       schema-utils: 4.3.3
       tapable: 2.3.3
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   minimalistic-assert@1.0.1: {}
 
@@ -37230,6 +37216,18 @@ snapshots:
       lightningcss: 1.32.0
       postcss: 8.5.16
     optional: true
+
+  minimizer-webpack-plugin@5.6.1(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      jest-worker: 27.5.1
+      schema-utils: 4.3.3
+      terser: 5.48.0
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+    optionalDependencies:
+      esbuild: 0.28.1
+      html-minifier-terser: 7.2.0
+      postcss: 8.5.16
 
   minipass-collect@1.0.2:
     dependencies:
@@ -38731,7 +38729,7 @@ snapshots:
       postcss: 8.5.16
       semver: 7.8.1
     optionalDependencies:
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
     transitivePeerDependencies:
       - typescript
 
@@ -41082,7 +41080,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.7.1(picomatch@4.0.4)(svelte@5.56.4(@typescript-eslint/types@8.62.0))(typescript@6.0.3):
+  svelte-check@4.7.1(picomatch@4.0.4)(svelte@5.56.4(@typescript-eslint/types@8.62.1))(typescript@6.0.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@sveltejs/load-config': 0.2.0
@@ -41090,31 +41088,10 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.4)
       picocolors: 1.1.1
       sade: 1.8.1
-      svelte: 5.56.4(@typescript-eslint/types@8.62.0)
+      svelte: 5.56.4(@typescript-eslint/types@8.62.1)
       typescript: 6.0.3
     transitivePeerDependencies:
       - picomatch
-
-  svelte@5.56.4(@typescript-eslint/types@8.62.0):
-    dependencies:
-      '@jridgewell/remapping': 2.3.5
-      '@jridgewell/sourcemap-codec': 1.5.5
-      '@sveltejs/acorn-typescript': 1.0.10(acorn@8.17.0)
-      '@types/estree': 1.0.9
-      '@types/trusted-types': 2.0.7
-      acorn: 8.17.0
-      aria-query: 5.3.1
-      axobject-query: 4.1.0
-      clsx: 2.1.1
-      devalue: 5.8.1
-      esm-env: 1.2.2
-      esrap: 2.2.13(@typescript-eslint/types@8.62.0)
-      is-reference: 3.0.3
-      locate-character: 3.0.0
-      magic-string: 0.30.21
-      zimmerframe: 1.1.4
-    transitivePeerDependencies:
-      - '@typescript-eslint/types'
 
   svelte@5.56.4(@typescript-eslint/types@8.62.1):
     dependencies:
@@ -41480,7 +41457,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-loader@9.5.4(typescript@6.0.3)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+  ts-loader@9.5.4(typescript@6.0.3)(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
       chalk: 4.1.2
       enhanced-resolve: 5.24.0
@@ -42002,7 +41979,7 @@ snapshots:
       rolldown: 1.1.1
       rollup: 4.62.2
       vite: 8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@1.21.7)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.1.1)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.16)):
     dependencies:
@@ -42015,6 +41992,18 @@ snapshots:
       rollup: 4.62.2
       vite: 8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
       webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.16)
+
+  unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      picomatch: 4.0.4
+      webpack-virtual-modules: 0.6.2
+    optionalDependencies:
+      esbuild: 0.28.1
+      rolldown: 1.1.2
+      rollup: 4.62.2
+      vite: 8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.16)):
     dependencies:
@@ -42038,7 +42027,7 @@ snapshots:
       rolldown: 1.1.2
       rollup: 4.62.2
       vite: 8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-      webpack: 5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
+      webpack: 5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)
 
   unrouting@0.1.7:
     dependencies:
@@ -42695,7 +42684,7 @@ snapshots:
       - unloader
       - webpack
 
-  vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
+  vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)):
     dependencies:
       '@babel/generator': 8.0.0-rc.6
       '@vue-macros/common': 3.1.2(vue@3.5.39(typescript@6.0.3))
@@ -42711,7 +42700,7 @@ snapshots:
       picomatch: 4.0.4
       scule: 1.3.0
       tinyglobby: 0.2.17
-      unplugin: 3.3.0(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      unplugin: 3.3.0(esbuild@0.28.1)(rolldown@1.1.2)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.108.3(cssnano@5.1.15(postcss@8.5.16))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
       unplugin-utils: 0.3.1
       vue: 3.5.39(typescript@6.0.3)
       yaml: 2.9.0
@@ -42961,6 +42950,44 @@ snapshots:
       - postcss
       - uglify-js
     optional: true
+
+  webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16):
+    dependencies:
+      '@types/estree': 1.0.9
+      '@types/json-schema': 7.0.15
+      '@webassemblyjs/ast': 1.14.1
+      '@webassemblyjs/wasm-edit': 1.14.1
+      '@webassemblyjs/wasm-parser': 1.14.1
+      acorn: 8.17.0
+      acorn-import-phases: 1.0.4(acorn@8.17.0)
+      browserslist: 4.28.4
+      chrome-trace-event: 1.0.4
+      enhanced-resolve: 5.24.1
+      es-module-lexer: 2.2.0
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      graceful-fs: 4.2.11
+      loader-runner: 4.3.2
+      mime-db: 1.54.0
+      minimizer-webpack-plugin: 5.6.1(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16)(webpack@5.108.3(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.16))
+      neo-async: 2.6.2
+      schema-utils: 4.3.3
+      tapable: 2.3.3
+      watchpack: 2.5.2
+      webpack-sources: 3.5.0
+    transitivePeerDependencies:
+      - '@minify-html/node'
+      - '@swc/core'
+      - '@swc/css'
+      - '@swc/html'
+      - clean-css
+      - cssnano
+      - csso
+      - esbuild
+      - html-minifier-terser
+      - lightningcss
+      - postcss
+      - uglify-js
 
   websocket-driver@0.7.4:
     dependencies:
