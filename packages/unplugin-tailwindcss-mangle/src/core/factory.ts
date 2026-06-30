@@ -7,7 +7,7 @@ import path from 'pathe'
 import { pluginName } from '../constants'
 import { getGroupedEntries } from '../utils'
 
-const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.cjs' : './loader.cjs')
+const WEBPACK_LOADER = path.resolve(__dirname, __DEV__ ? '../../dist/loader.js' : './loader.js')
 const JS_LIKE_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.jsx', '.tsx'])
 const HTML_LIKE_EXTENSIONS = new Set(['.html', '.htm'])
 const CSS_LIKE_LANGS = new Set(['css', 'less', 'sass', 'scss', 'styl', 'stylus', 'pcss', 'postcss', 'sss'])

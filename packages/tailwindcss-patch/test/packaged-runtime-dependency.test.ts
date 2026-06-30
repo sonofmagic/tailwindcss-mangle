@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 const require = createRequire(import.meta.url)
 const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../..')
+const sharedPackageDir = path.resolve(repoRoot, 'packages/shared')
 const configPackageDir = path.resolve(repoRoot, 'packages/config')
 const enginePackageDir = path.resolve(repoRoot, 'packages/engine')
 const builtPackageDirectories = new Set<string>()
@@ -61,10 +62,12 @@ async function packTailwindcssPatch() {
 }
 
 async function packConsumerInstallTarballs() {
+  const sharedTarball = await packPackage(sharedPackageDir)
   const configTarball = await packPackage(configPackageDir)
   const engineTarball = await packPackage(enginePackageDir)
   const tailwindcssPatchTarball = await packTailwindcssPatch()
   return {
+    shared: sharedTarball,
     config: configTarball,
     engine: engineTarball,
     tailwindcssPatch: tailwindcssPatchTarball,
@@ -88,7 +91,7 @@ async function createProject(name: string) {
 
 function installProject(
   projectDir: string,
-  tarballs: { config: string, engine: string, tailwindcssPatch: string },
+  tarballs: { shared: string, config: string, engine: string, tailwindcssPatch: string },
   tailwindVersion: string,
 ) {
   fsSync.writeFileSync(
@@ -97,6 +100,7 @@ function installProject(
       'packages:',
       '  - .',
       'overrides:',
+      `  '@tailwindcss-mangle/shared': 'file:${tarballs.shared}'`,
       `  '@tailwindcss-mangle/config': 'file:${tarballs.config}'`,
       `  '@tailwindcss-mangle/engine': 'file:${tarballs.engine}'`,
       '',
@@ -106,6 +110,7 @@ function installProject(
 
   runPnpm([
     'add',
+    `@tailwindcss-mangle/shared@file:${tarballs.shared}`,
     `@tailwindcss-mangle/config@file:${tarballs.config}`,
     `@tailwindcss-mangle/engine@file:${tarballs.engine}`,
   ], projectDir)
