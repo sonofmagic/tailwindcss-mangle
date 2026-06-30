@@ -16,8 +16,8 @@
     "vue-router": "^5.1.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.62.0",
-    "@typescript-eslint/parser": "^8.62.0",
+    "@typescript-eslint/eslint-plugin": "^8.62.1",
+    "@typescript-eslint/parser": "^8.62.1",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "~5.0.8",
     "@vue/cli-plugin-router": "~5.0.8",
@@ -34,7 +34,7 @@
     "postcss": "^8.5.16",
     "sass": "^1.101.0",
     "sass-loader": "^17.0.0",
-    "tailwindcss": "^4.3.1",
+    "tailwindcss": "^4.3.2",
     "tailwindcss-patch": "workspace:*",
     "typescript": "~6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*"

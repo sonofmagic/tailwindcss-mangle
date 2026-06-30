@@ -18,7 +18,7 @@
     "postcss": "^8.5.16",
     "svelte": "^5.56.4",
     "svelte-check": "^4.7.1",
-    "tailwindcss": "^4.3.1",
+    "tailwindcss": "^4.3.2",
     "tailwindcss-patch": "workspace:*",
     "tslib": "^2.8.0",
     "typescript": "^6.0.3",
