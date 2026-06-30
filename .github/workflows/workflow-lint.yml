@@ -42,7 +42,7 @@ jobs:
           test -f "$action_path"
           test -f "$script_path"
 
-          rg -n "uses: ./packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report" \
+          grep -n "uses: ./packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report" \
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml \
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml \
             packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml
