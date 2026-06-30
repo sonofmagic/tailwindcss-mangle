@@ -1,5 +1,13 @@
 # @tailwindcss-mangle/engine
 
+## 0.1.2
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`c0f30dd`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c0f30dda0db7aec99b0289938eb8bbdee75a09ba) by @sonofmagic
+
+- 🐛 **deps: upgrade** [`3257c5c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3257c5c3455d8baad602bea9828c9eea3e9a0be4) by @sonofmagic
+
 ## 0.1.1
 
 ### Patch Changes
