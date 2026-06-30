@@ -1,5 +1,20 @@
 # unplugin-tailwindcss-mangle
 
+## 6.0.0
+
+### Major Changes
+
+- 🚀 **升级 packages 内 Babel 相关依赖到 Babel 8，并将受影响 packages 的 Node.js 运行要求提升到 22.18.0 及以上。** [`bb9ee58`](https://github.com/sonofmagic/tailwindcss-mangle/commit/bb9ee58006f744a349cf46abed84d0b0506a01f3) by @sonofmagic
+  - 除 `@tailwindcss-mangle/engine` 继续同时发布 CJS 和 ESM 外，其余 packages 改为仅发布 ESM 入口。
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`c0f30dd`](https://github.com/sonofmagic/tailwindcss-mangle/commit/c0f30dda0db7aec99b0289938eb8bbdee75a09ba) by @sonofmagic
+
+- 🐛 **deps: upgrade** [`3257c5c`](https://github.com/sonofmagic/tailwindcss-mangle/commit/3257c5c3455d8baad602bea9828c9eea3e9a0be4) by @sonofmagic
+- 📦 **Dependencies** [`bb9ee58`](https://github.com/sonofmagic/tailwindcss-mangle/commit/bb9ee58006f744a349cf46abed84d0b0506a01f3)
+  → `@tailwindcss-mangle/shared@5.0.0`, `@tailwindcss-mangle/config@8.0.0`, `@tailwindcss-mangle/core@6.0.0`
+
 ## 5.1.4
 
 ### Patch Changes
