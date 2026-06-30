@@ -1,9 +1,10 @@
 import { execFileSync } from 'node:child_process'
+import { pathToFileURL } from 'node:url'
 import path from 'pathe'
 import { describe, expect, it } from 'vitest'
 
 const packageDir = path.resolve(__dirname, '..')
-const distEntry = path.join(packageDir, 'dist/index.js')
+const distEntry = pathToFileURL(path.join(packageDir, 'dist/index.js')).href
 
 function runEsm(script: string) {
   return execFileSync(process.execPath, ['-e', script], {
