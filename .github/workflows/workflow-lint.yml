@@ -24,8 +24,14 @@ jobs:
         with:
           args: >-
             -color
-            .github/workflows/*.yml
-            packages/tailwindcss-patch/examples/github-actions/*.yml
+            .github/workflows/ci.yml
+            .github/workflows/engine-cross-platform.yml
+            .github/workflows/release.yml
+            .github/workflows/workflow-lint.yml
+            packages/tailwindcss-patch/examples/github-actions/actions/validate-migration-report/action.yml
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report.yml
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report-matrix.yml
+            packages/tailwindcss-patch/examples/github-actions/validate-migration-report-affected.yml
 
       - name: Validate example workflow wiring
         shell: bash
