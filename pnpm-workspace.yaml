@@ -31,5 +31,5 @@ catalogs:
     tailwindcss-3: npm:tailwindcss@^3.4.19
   tailwindcss4:
     tailwindcss: ^4.3.2
-    tailwindcss-4: npm:tailwindcss@^4.3.1
+    tailwindcss-4: npm:tailwindcss@^4.3.2
 minimumReleaseAge: 0

@@ -24,8 +24,8 @@ catalogs:
       specifier: ^4.3.2
       version: 4.3.2
     tailwindcss-4:
-      specifier: npm:tailwindcss@^4.3.1
-      version: 4.3.1
+      specifier: npm:tailwindcss@^4.3.2
+      version: 4.3.2
 
 importers:
 
@@ -928,7 +928,7 @@ importers:
         version: tailwindcss@3.4.19(tsx@4.22.4)(yaml@2.9.0)
       tailwindcss-4:
         specifier: catalog:tailwindcss4
-        version: tailwindcss@4.3.1
+        version: tailwindcss@4.3.2
 
   packages/unplugin-tailwindcss-mangle:
     dependencies:
@@ -17807,9 +17807,6 @@ packages:
     resolution: {integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
-
-  tailwindcss@4.3.1:
-    resolution: {integrity: sha512-hk+TB1m+K8CYNrP6rjQaq/Y+4Zylwpa87mLYBKCunwnnQ9p+fHb7kmSfGqyEJoxF/O6CDyABWVFEafNSYKll+Q==}
 
   tailwindcss@4.3.2:
     resolution: {integrity: sha512-WtctNNSH8A9jlMIqxzuYumOHU5uGZyRv0Q5svQl+oEPy5w84YpBxdb7MdqyiSPQge5jTJ6zFQLq0PFygdccSBA==}
@@ -41195,8 +41192,6 @@ snapshots:
     transitivePeerDependencies:
       - tsx
       - yaml
-
-  tailwindcss@4.3.1: {}
 
   tailwindcss@4.3.2: {}
 
