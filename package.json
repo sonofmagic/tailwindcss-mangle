@@ -8,10 +8,10 @@
     "node": ">=22.18.0"
   },
   "scripts": {
-    "build": "turbo run build --filter=./packages/*",
+    "build": "pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 run build",
     "dev": "pnpm -r run dev",
-    "test": "turbo run test --filter=./packages/*",
-    "test:types": "turbo run test:types --filter=./packages/*",
+    "test": "pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 run test",
+    "test:types": "pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 run test:types",
     "check:boundaries": "node scripts/check-package-boundaries.mjs",
     "lint:style": "pnpm exec stylelint \"{website,packages,apps}/**/*.{css,scss}\" --allow-empty-input --ignore-pattern \"packages/**/bench/generated/**\" --ignore-pattern \"apps/**/tailwind.generated.css\"",
     "test:e2e": "pnpm run test:e2e:apps",
