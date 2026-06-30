@@ -1,5 +1,4 @@
-const utwm = require('unplugin-tailwindcss-mangle/webpack')
-// import utwm from 'unplugin-tailwindcss-mangle'
+import utwm from 'unplugin-tailwindcss-mangle/webpack'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -22,4 +21,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+export default nextConfig

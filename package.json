@@ -13,7 +13,7 @@
     "test": "turbo run test --filter=./packages/*",
     "test:types": "turbo run test:types --filter=./packages/*",
     "check:boundaries": "node scripts/check-package-boundaries.mjs",
-    "lint:style": "pnpm exec stylelint \"{website,packages,apps}/**/*.{css,scss}\" --allow-empty-input --ignore-pattern \"packages/**/bench/generated/**\"",
+    "lint:style": "pnpm exec stylelint \"{website,packages,apps}/**/*.{css,scss}\" --allow-empty-input --ignore-pattern \"packages/**/bench/generated/**\" --ignore-pattern \"apps/**/tailwind.generated.css\"",
     "test:e2e": "pnpm run test:e2e:apps",
     "test:e2e:apps": "cross-env TWM_APPS_E2E=1 vitest run --config e2e/vitest.config.ts e2e/apps.e2e.test.ts",
     "test:e2e:pw": "pnpm run test:e2e:apps:pw",

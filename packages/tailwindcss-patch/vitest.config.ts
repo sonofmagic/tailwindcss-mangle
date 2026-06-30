@@ -10,6 +10,7 @@ export default defineProject({
       },
     ],
     globals: true,
+    fileParallelism: false,
     testTimeout: 60_000,
     setupFiles: ['./vitest.setup.ts'],
     coverage: {

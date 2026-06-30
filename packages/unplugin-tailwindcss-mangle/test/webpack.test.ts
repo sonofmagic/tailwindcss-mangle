@@ -161,7 +161,7 @@ describe('webpack plugin integration (unit)', () => {
 
     expect(module.loaders).toHaveLength(3)
     const inserted = module.loaders[1]
-    expect(String(inserted.loader)).toContain('loader.cjs')
+    expect(String(inserted.loader)).toContain('loader.js')
     expect(inserted.options?.ctx).toBe(getLatestCtx())
   })
 
