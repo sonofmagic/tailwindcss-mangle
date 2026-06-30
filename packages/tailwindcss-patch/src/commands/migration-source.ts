@@ -1,8 +1,8 @@
 import type { ObjectExpression, ObjectMethod, ObjectProperty } from '@babel/types'
 
-import generate from '@babel/generator'
 import { parse } from '@babel/parser'
 import * as t from '@babel/types'
+import { generate } from '../babel'
 
 const ROOT_LEGACY_KEYS = ['cwd', 'overwrite', 'tailwind', 'features', 'output', 'applyPatches'] as const
 

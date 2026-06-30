@@ -7,7 +7,7 @@ import { ignoreIdentifier } from '../constants'
 import { makeRegex, splitCode } from '../shared'
 
 function jsStringEscape(str: unknown): string {
-  return ('' + str).replaceAll(/[\n\r"'\\\u2028\u2029]/g, (character) => {
+  return (`${str}`).replaceAll(/[\n\r"'\\\u2028\u2029]/g, (character) => {
     switch (character) {
       case '"':
       case '\'':

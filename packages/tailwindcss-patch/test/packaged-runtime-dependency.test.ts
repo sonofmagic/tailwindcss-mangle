@@ -10,6 +10,7 @@ const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../..')
 const configPackageDir = path.resolve(repoRoot, 'packages/config')
 const enginePackageDir = path.resolve(repoRoot, 'packages/engine')
+const builtPackageDirectories = new Set<string>()
 
 let tempDir: string
 
@@ -46,6 +47,10 @@ function runPnpm(args: string[], cwd: string, timeout?: number) {
 async function packPackage(packageDirectory: string) {
   const packDir = path.join(tempDir, 'pack')
   await fs.mkdir(packDir, { recursive: true })
+  if (!builtPackageDirectories.has(packageDirectory)) {
+    runPnpm(['build'], packageDirectory)
+    builtPackageDirectories.add(packageDirectory)
+  }
   const output = runPnpm(['pack', '--json', '--pack-destination', path.relative(packageDirectory, packDir)], packageDirectory)
   const result = JSON.parse(output) as { filename: string }
   return result.filename
@@ -164,8 +169,7 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
       const cwd = process.cwd()
       await fs.writeFile(path.join(cwd, 'page.html'), '<div class="text-red-500 font-bold unknown-token"></div>')
 
-      const require = createRequire(import.meta.url)
-      const patchEntry = require.resolve('tailwindcss-patch')
+      const patchEntry = import.meta.resolve('tailwindcss-patch')
       const patchRequire = createRequire(patchEntry)
       const engineEntry = patchRequire.resolve('@tailwindcss-mangle/engine')
       const engineRequire = createRequire(engineEntry)

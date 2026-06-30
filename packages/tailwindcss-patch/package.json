@@ -5,7 +5,7 @@
   "author": "ice breaker <1324318532@qq.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.18.0"
   },
   "homepage": "https://mangle.icebreaker.top/",
   "repository": {
@@ -25,15 +25,15 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./migration-report.schema.json": "./schema/migration-report.schema.json",
     "./restore-result.schema.json": "./schema/restore-result.schema.json",
     "./validate-result.schema.json": "./schema/validate-result.schema.json"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "tw-patch": "bin/tw-patch.js",
@@ -49,7 +49,7 @@
     "dev": "tsdown --watch --sourcemap",
     "build": "tsdown",
     "test": "vitest run",
-    "test:types": "pnpm build && tsd --typings dist/index.d.mts --files test-d/**/*.test-d.ts",
+    "test:types": "pnpm build && tsd --typings dist/index.d.ts --files test-d/**/*.test-d.ts",
     "test:dev": "vitest",
     "bench:cold-start": "node --import tsx bench/cold-start.ts",
     "patch": "tsx dev/bin.ts install",
@@ -57,7 +57,10 @@
     "r1": "tsx dev/bin.ts extract --css index.css"
   },
   "tsd": {
-    "directory": "test-d"
+    "directory": "test-d",
+    "compilerOptions": {
+      "module": "NodeNext"
+    }
   },
   "publishConfig": {
     "access": "public",
@@ -69,15 +72,15 @@
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.mjs",
-        "require": "./dist/index.js"
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
       },
       "./migration-report.schema.json": "./schema/migration-report.schema.json",
       "./restore-result.schema.json": "./schema/restore-result.schema.json",
       "./validate-result.schema.json": "./schema/validate-result.schema.json"
     },
     "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
+    "module": "./dist/index.js",
     "types": "./dist/index.d.ts"
   },
   "peerDependencies": {
@@ -89,10 +92,10 @@
     }
   },
   "dependencies": {
-    "@babel/generator": "^7.29.7",
-    "@babel/parser": "^7.29.7",
-    "@babel/traverse": "^7.29.7",
-    "@babel/types": "^7.29.7",
+    "@babel/generator": "^8.0.0",
+    "@babel/parser": "^8.0.0",
+    "@babel/traverse": "^8.0.0",
+    "@babel/types": "^8.0.0",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss-mangle/engine": "workspace:*",
     "cac": "6.7.14",
@@ -110,5 +113,6 @@
     "tailwindcss": "^4.3.2",
     "tailwindcss-3": "catalog:tailwindcss3",
     "tailwindcss-4": "catalog:tailwindcss4"
-  }
+  },
+  "type": "module"
 }

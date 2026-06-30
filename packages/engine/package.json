@@ -97,6 +97,11 @@
     "bench:clean": "node --import tsx bench/performance.ts --clean",
     "smoke:node18": "node scripts/node18-smoke.mjs"
   },
+  "tsd": {
+    "compilerOptions": {
+      "module": "NodeNext"
+    }
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",

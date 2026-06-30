@@ -8,7 +8,7 @@ export default defineConfig({
   },
   shims: true,
   clean: true,
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   dts: true,
   fixedExtension: false,
   deps: {

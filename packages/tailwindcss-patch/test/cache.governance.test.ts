@@ -174,6 +174,7 @@ describe('cache governance', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
         resolve: {
           paths: [repoRoot],
         },
@@ -192,6 +193,7 @@ describe('cache governance', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
         resolve: {
           paths: [repoRoot],
         },

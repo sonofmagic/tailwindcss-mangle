@@ -12,7 +12,7 @@ export default defineConfig({
     'src/loader.ts',
   ],
   shims: true,
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   clean: true,
   dts: true,
   fixedExtension: false,

@@ -26,36 +26,36 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "default": "./dist/index.js"
     },
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js",
-      "require": "./dist/vite.cjs"
+      "default": "./dist/vite.js"
     },
     "./webpack": {
       "types": "./dist/webpack.d.ts",
       "import": "./dist/webpack.js",
-      "require": "./dist/webpack.cjs"
+      "default": "./dist/webpack.js"
     },
     "./rollup": {
       "types": "./dist/rollup.d.ts",
       "import": "./dist/rollup.js",
-      "require": "./dist/rollup.cjs"
+      "default": "./dist/rollup.js"
     },
     "./esbuild": {
       "types": "./dist/esbuild.d.ts",
       "import": "./dist/esbuild.js",
-      "require": "./dist/esbuild.cjs"
+      "default": "./dist/esbuild.js"
     },
     "./nuxt": {
       "types": "./dist/nuxt.d.ts",
       "import": "./dist/nuxt.js",
-      "require": "./dist/nuxt.cjs"
+      "default": "./dist/nuxt.js"
     },
     "./*": "./*"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "typesVersions": {
@@ -88,6 +88,11 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

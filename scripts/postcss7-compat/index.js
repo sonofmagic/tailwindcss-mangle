@@ -2,9 +2,9 @@ const fs = require('node:fs')
 const path = require('pathe')
 const postcss = require('postcss')
 const tailwindcss = require('tailwindcss')
-const { TailwindcssPatcher } = require('tailwindcss-patch')
 
 async function main() {
+  const { TailwindcssPatcher } = await import('tailwindcss-patch')
   const twPatcher = new TailwindcssPatcher()
   twPatcher.patch()
 

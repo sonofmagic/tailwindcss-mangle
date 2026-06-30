@@ -296,6 +296,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -365,6 +366,7 @@ describe('TailwindcssPatcher', () => {
       cache: false,
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -412,6 +414,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -438,6 +441,7 @@ describe('TailwindcssPatcher', () => {
       cache: false,
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -715,6 +719,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
         cwd: path.join(tempDir, 'base-v3-cwd'),
         config: path.join(tempDir, 'base-v3.config.js'),
         postcssPlugin: 'base-v3-plugin',
@@ -816,6 +821,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -854,6 +860,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 
@@ -882,6 +889,7 @@ describe('TailwindcssPatcher', () => {
       },
       tailwindcss: {
         version: 3,
+        packageName: 'tailwindcss-3',
       },
     })
 

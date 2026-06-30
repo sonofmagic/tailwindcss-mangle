@@ -1,22 +1,13 @@
-import type { CAC } from 'cac'
-import type { TailwindcssPatchCliMountOptions, TailwindcssPatchCliOptions } from './commands/types'
+import type { TailwindcssPatchCliOptions } from './commands/types'
 
-import { createRequire } from 'node:module'
-
-const require = createRequire(import.meta.url)
-
-type CliModule = typeof import('./commands/cli')
-
-function loadCliModule(): CliModule {
-  return require('./commands/cli-runtime.js') as CliModule
-}
+import { createTailwindcssPatchCli as createCli, mountTailwindcssPatchCommands as mountCommands } from './commands/cli'
 
 export * from './public-api'
 
-export function mountTailwindcssPatchCommands(cli: CAC, options: TailwindcssPatchCliMountOptions = {}) {
-  return loadCliModule().mountTailwindcssPatchCommands(cli, options)
+export function mountTailwindcssPatchCommands(...args: Parameters<typeof mountCommands>) {
+  return mountCommands(...args)
 }
 
 export function createTailwindcssPatchCli(options: TailwindcssPatchCliOptions = {}) {
-  return loadCliModule().createTailwindcssPatchCli(options)
+  return createCli(options)
 }

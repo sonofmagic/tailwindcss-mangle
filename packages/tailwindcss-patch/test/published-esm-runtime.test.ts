@@ -5,18 +5,18 @@ import { describe, expect, it } from 'vitest'
 const packageDir = path.resolve(__dirname, '..')
 const distEntry = path.join(packageDir, 'dist/index.js')
 
-function runCommonJs(script: string) {
+function runEsm(script: string) {
   return execFileSync(process.execPath, ['-e', script], {
     cwd: packageDir,
     encoding: 'utf8',
   }).trim()
 }
 
-describe('published CommonJS runtime entry', () => {
-  it('requires non-CLI runtime APIs without triggering ERR_REQUIRE_ESM', () => {
-    const output = runCommonJs(`
+describe('published ESM runtime entry', () => {
+  it('imports non-CLI runtime APIs', () => {
+    const output = runEsm(`
       ;(async () => {
-        const patch = require(${JSON.stringify(distEntry)})
+        const patch = await import(${JSON.stringify(distEntry)})
         const normalized = patch.normalizeOptions({ cache: false })
         const extracted = await patch.extractRawCandidatesWithPositions('<div class="text-red-500"></div>', 'html')
         const splitTokens = patch.splitCandidateTokens('before:content-["x"] text-red-500')
@@ -44,9 +44,10 @@ describe('published CommonJS runtime entry', () => {
     })
   })
 
-  it('creates the CLI on demand from the CommonJS entry', () => {
-    const output = runCommonJs(`
-      const patch = require(${JSON.stringify(distEntry)})
+  it('creates the CLI from the ESM entry', () => {
+    const output = runEsm(`
+      ;(async () => {
+      const patch = await import(${JSON.stringify(distEntry)})
       const cli = patch.createTailwindcssPatchCli({
         name: 'embedded',
         mountOptions: {
@@ -55,8 +56,12 @@ describe('published CommonJS runtime entry', () => {
       })
       console.log(JSON.stringify({
         name: cli.name,
-        commands: cli.commands.map(command => command.name),
-      }))
+          commands: cli.commands.map(command => command.name),
+        }))
+      })().catch((error) => {
+        console.error(error)
+        process.exit(1)
+      })
     `)
 
     expect(JSON.parse(output)).toEqual({

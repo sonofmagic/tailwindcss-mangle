@@ -1,5 +1,5 @@
 import { expectAssignable, expectType } from 'tsd'
-import { Parser } from '../dist/htmlparser2'
+import { Parser } from '../dist/htmlparser2.js'
 import {
   collectTailwindStyleCandidates,
   createTailwindV4Engine,
@@ -12,7 +12,7 @@ import {
   splitCandidateTokens,
   type TailwindStyleGenerateResult,
   type TailwindV4GenerateResult,
-} from '../dist/index'
+} from '../dist/index.js'
 
 expectAssignable<typeof Parser>(Parser)
 expectType<string[]>(splitCandidateTokens('text-red-500'))

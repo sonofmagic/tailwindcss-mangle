@@ -35,7 +35,7 @@ import {
   type TailwindV2Options,
   type TailwindV3Options,
   type TailwindV4Options,
-} from '..'
+} from '../dist/index.js'
 
 expectType<string[]>(splitCandidateTokens('before:content-["x"] text-red-500'))
 
