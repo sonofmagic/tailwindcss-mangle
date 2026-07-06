@@ -524,6 +524,33 @@ describe('Tailwind v4 engine', () => {
     expect(result.classSet).not.toContain('text-blue-500')
   })
 
+  it('strips @import source() roots when scanSources is disabled', async () => {
+    const tempDir = await createTempDir()
+    await fs.mkdir(path.join(tempDir, 'src'), { recursive: true })
+    await fs.writeFile(path.join(tempDir, 'src/index.html'), '<div class="text-red-500"></div>', 'utf8')
+    const source = await resolveTailwindV4Source({
+      projectRoot: tempDir,
+      base: tempDir,
+      baseFallbacks: [tailwindNodeBase],
+      css: [
+        '@import "tailwindcss" source("./src");',
+        '@source "./src/**/*.html";',
+      ].join('\n'),
+    })
+    const engine = createTailwindV4Engine(source)
+    const result = await engine.generate({
+      candidates: ['text-green-500'],
+      scanSources: false,
+    })
+
+    expect(result.root).toBeNull()
+    expect(result.sources).toEqual([])
+    expect(result.classSet).toContain('text-green-500')
+    expect(result.classSet).not.toContain('text-red-500')
+    expect(result.css).toContain('.text-green-500')
+    expect(result.css).not.toContain('.text-red-500')
+  })
+
   it('uses source(none) to disable automatic source detection when scanSources is true', async () => {
     const tempDir = await createTempDir()
     await fs.mkdir(path.join(tempDir, 'src'), { recursive: true })

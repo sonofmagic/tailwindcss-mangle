@@ -14,6 +14,7 @@ import {
 } from './candidates.ts'
 import { compileTailwindV4Source, loadTailwindV4DesignSystem } from './node-adapter.ts'
 import { createTailwindV4CompiledSourceEntries } from './source-scan.ts'
+import postcss from 'postcss'
 
 function resolveScanSources(
   options: TailwindV4GenerateOptions | undefined,
@@ -28,6 +29,40 @@ function resolveScanSources(
     return createTailwindV4CompiledSourceEntries(compiledRoot, compiledSources, source.base)
   }
   return []
+}
+
+function shouldCompileSourceEntries(options: TailwindV4GenerateOptions | undefined) {
+  return options?.scanSources === true
+}
+
+function stripCompiledSourceEntries(source: TailwindV4ResolvedSource): TailwindV4ResolvedSource {
+  if (!source.css.includes('@source') && !source.css.includes('source(')) {
+    return source
+  }
+  try {
+    const root = postcss.parse(source.css)
+    let changed = false
+    root.walkAtRules((rule) => {
+      if (rule.name === 'source') {
+        rule.remove()
+        changed = true
+        return
+      }
+      if (rule.name === 'import' && /\bsource\(/.test(rule.params)) {
+        rule.params = rule.params.replace(/\s+source\((?:[^()]|\([^()]*\))*\)/g, '')
+        changed = true
+      }
+    })
+    return changed
+      ? {
+          ...source,
+          css: root.toString(),
+        }
+      : source
+  }
+  catch {
+    return source
+  }
 }
 
 async function collectRawCandidates(
@@ -81,9 +116,12 @@ export function createTailwindV4Engine(source: TailwindV4ResolvedSource): Tailwi
       return resolveValidTailwindV4Candidates(designSystem, candidates)
     },
     async generate(options): Promise<TailwindV4GenerateResult> {
-      const { compiled, dependencies } = await compileTailwindV4Source(source)
+      const generateSource = shouldCompileSourceEntries(options)
+        ? source
+        : stripCompiledSourceEntries(source)
+      const { compiled, dependencies } = await compileTailwindV4Source(generateSource)
       const rawCandidates = await collectRawCandidates(source, options, compiled.root, compiled.sources)
-      const designSystem = await loadTailwindV4DesignSystem(source)
+      const designSystem = await loadTailwindV4DesignSystem(generateSource)
       const classSet = resolveValidTailwindV4Candidates(designSystem, rawCandidates, {
         ...(options?.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: options.bareArbitraryValues }),
       })
