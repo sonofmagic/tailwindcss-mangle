@@ -1,5 +1,12 @@
 # tailwindcss-patch
 
+## 10.0.1
+
+### Patch Changes
+
+- 📦 **Dependencies** [`8034bc2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8034bc2015823944c58f0649f127df2ac1ff3633)
+  → `@tailwindcss-mangle/engine@0.1.3`
+
 ## 10.0.0
 
 ### Major Changes

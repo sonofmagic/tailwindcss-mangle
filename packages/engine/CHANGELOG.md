@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/engine
 
+## 0.1.3
+
+### Patch Changes
+
+- 🐛 **Respect disabled Tailwind v4 source scanning by stripping compiled `@source` roots before generation.** [`8034bc2`](https://github.com/sonofmagic/tailwindcss-mangle/commit/8034bc2015823944c58f0649f127df2ac1ff3633) by @sonofmagic
+
 ## 0.1.2
 
 ### Patch Changes
