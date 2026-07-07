@@ -38,7 +38,7 @@ describe.runIf(runHmrE2E)('apps hmr e2e', () => {
         devServer = await startViteDevServer(app.appDir, basePort + index)
         const page = await browser.newPage()
         await page.goto(devServer.url, {
-          waitUntil: 'domcontentloaded',
+          waitUntil: 'load',
           timeout: 120_000,
         })
         await page.waitForFunction(() => {
