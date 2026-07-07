@@ -1,5 +1,12 @@
 # next-app
 
+## 0.1.22
+
+### Patch Changes
+
+- 📦 **Dependencies**
+  → `tailwindcss-patch@10.0.1`
+
 ## 0.1.21
 
 ### Patch Changes
