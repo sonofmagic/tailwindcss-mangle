@@ -18,7 +18,7 @@
     "@remix-run/node": "^2.17.5",
     "@remix-run/react": "^2.17.5",
     "@remix-run/serve": "^2.17.5",
-    "isbot": "^5.1.44",
+    "isbot": "^5.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -27,8 +27,8 @@
     "@remix-run/eslint-config": "^2.17.5",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.6.0",
-    "tailwindcss": "^4.3.2",
+    "eslint": "^10.7.0",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3"
   }

@@ -93,9 +93,9 @@
   },
   "dependencies": {
     "@babel/generator": "^8.0.0",
-    "@babel/parser": "^8.0.0",
-    "@babel/traverse": "^8.0.0",
-    "@babel/types": "^8.0.0",
+    "@babel/parser": "^8.0.4",
+    "@babel/traverse": "^8.0.4",
+    "@babel/types": "^8.0.4",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss-mangle/engine": "workspace:*",
     "cac": "6.7.14",
@@ -103,14 +103,14 @@
     "fs-extra": "^11.3.6",
     "local-pkg": "^1.2.1",
     "pathe": "^2.0.3",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.19",
     "semver": "^7.8.5",
     "tailwindcss-config": "^2.0.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.2",
-    "@tailwindcss/vite": "^4.3.2",
-    "tailwindcss": "^4.3.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-3": "catalog:tailwindcss3",
     "tailwindcss-4": "catalog:tailwindcss4"
   },

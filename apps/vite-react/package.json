@@ -15,7 +15,7 @@
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/system": "^2.2.6",
     "@nextui-org/theme": "^2.2.11",
-    "framer-motion": "^12.42.0",
+    "framer-motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"
@@ -24,12 +24,12 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
-    "autoprefixer": "^10.5.2",
-    "postcss": "^8.5.16",
-    "tailwindcss": "^4.3.2",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.19",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.1.0"
+    "vite": "^8.1.5"
   }
 }

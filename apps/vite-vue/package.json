@@ -11,18 +11,18 @@
     "tw-extract": "tw-patch extract"
   },
   "dependencies": {
-    "vue": "^3.5.39"
+    "vue": "^3.5.40"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.7",
-    "autoprefixer": "^10.5.2",
-    "postcss": "^8.5.16",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.19",
     "sass": "^1.101.0",
-    "tailwindcss": "^4.3.2",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
     "typescript": "^6.0.3",
     "unplugin-tailwindcss-mangle": "workspace:*",
-    "vite": "^8.1.0",
-    "vue-tsc": "^3.3.5"
+    "vite": "^8.1.5",
+    "vue-tsc": "^3.3.7"
   }
 }
