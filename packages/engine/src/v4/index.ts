@@ -17,6 +17,7 @@ export {
   resolveValidTailwindV4Candidates,
 } from './candidates.ts'
 export { createTailwindV4Engine } from './engine.ts'
+export { createTailwindGenerationSession } from './generation-session.ts'
 export {
   compileTailwindV4Source,
   getTailwindV4DesignSystemCacheKey,
@@ -53,6 +54,13 @@ export {
   generateTailwindV4Style,
 } from './style-generator.ts'
 export type {
+  CssFragment,
+  CssFragmentKind,
+  GenerationChange,
+  GenerationRequest,
+  SourceEntry,
+  TailwindGenerationArtifact,
+  TailwindGenerationSession,
   TailwindV4CandidateSource,
   TailwindV4CompiledSourceRoot,
   TailwindV4CssSource,

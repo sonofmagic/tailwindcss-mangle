@@ -1,150 +1,22 @@
 import type {
   TailwindV4Engine,
-  TailwindV4GenerateOptions,
   TailwindV4GenerateResult,
   TailwindV4ResolvedSource,
-  TailwindV4SourcePattern,
 } from './types.ts'
-import { extractRawCandidates, extractRawCandidatesWithPositions } from '../extraction/candidate-extractor.ts'
-import {
-  canonicalizeBareArbitraryValueCandidates,
-  extractTailwindV4InlineSourceCandidates,
-  replaceBareArbitraryValueSelectors,
-  resolveValidTailwindV4Candidates,
-} from './candidates.ts'
-import { compileTailwindV4Source, loadTailwindV4DesignSystem } from './node-adapter.ts'
-import { createTailwindV4CompiledSourceEntries } from './source-scan.ts'
-import postcss from 'postcss'
-
-function resolveScanSources(
-  options: TailwindV4GenerateOptions | undefined,
-  source: TailwindV4ResolvedSource,
-  compiledRoot: TailwindV4GenerateResult['root'],
-  compiledSources: TailwindV4SourcePattern[],
-) {
-  if (Array.isArray(options?.scanSources)) {
-    return options.scanSources
-  }
-  if (options?.scanSources === true) {
-    return createTailwindV4CompiledSourceEntries(compiledRoot, compiledSources, source.base)
-  }
-  return []
-}
-
-function shouldCompileSourceEntries(options: TailwindV4GenerateOptions | undefined) {
-  return options?.scanSources === true
-}
-
-function stripCompiledSourceEntries(source: TailwindV4ResolvedSource): TailwindV4ResolvedSource {
-  if (!source.css.includes('@source') && !source.css.includes('source(')) {
-    return source
-  }
-  try {
-    const root = postcss.parse(source.css)
-    let changed = false
-    root.walkAtRules((rule) => {
-      if (rule.name === 'source') {
-        rule.remove()
-        changed = true
-        return
-      }
-      if (rule.name === 'import' && /\bsource\(/.test(rule.params)) {
-        rule.params = rule.params.replace(/\s+source\((?:[^()]|\([^()]*\))*\)/g, '')
-        changed = true
-      }
-    })
-    return changed
-      ? {
-          ...source,
-          css: root.toString(),
-        }
-      : source
-  }
-  catch {
-    return source
-  }
-}
-
-async function collectRawCandidates(
-  source: TailwindV4ResolvedSource,
-  options: TailwindV4GenerateOptions | undefined,
-  compiledRoot: TailwindV4GenerateResult['root'],
-  compiledSources: TailwindV4SourcePattern[] = [],
-) {
-  const rawCandidates = new Set<string>()
-  const extractOptions = options?.bareArbitraryValues === undefined
-    ? undefined
-    : { bareArbitraryValues: options.bareArbitraryValues }
-
-  for (const candidate of options?.candidates ?? []) {
-    rawCandidates.add(candidate)
-  }
-
-  for (const candidateSource of options?.sources ?? []) {
-    const candidates = await extractRawCandidatesWithPositions(candidateSource.content, candidateSource.extension, extractOptions)
-    for (const candidate of candidates) {
-      rawCandidates.add(candidate.rawCandidate)
-    }
-  }
-
-  const filesystemSources = resolveScanSources(options, source, compiledRoot, compiledSources)
-  if (filesystemSources.length > 0) {
-    for (const candidate of await extractRawCandidates(filesystemSources, extractOptions)) {
-      rawCandidates.add(candidate)
-    }
-  }
-
-  const inlineSources = extractTailwindV4InlineSourceCandidates(source.css)
-  for (const candidate of inlineSources.included) {
-    rawCandidates.add(candidate)
-  }
-  for (const candidate of inlineSources.excluded) {
-    rawCandidates.delete(candidate)
-  }
-
-  return rawCandidates
-}
+import { createTailwindV4EngineGenerationSession } from './generation-session.ts'
 
 export function createTailwindV4Engine(source: TailwindV4ResolvedSource): TailwindV4Engine {
+  const session = createTailwindV4EngineGenerationSession(source)
   return {
     source,
     loadDesignSystem() {
-      return loadTailwindV4DesignSystem(source)
+      return session.loadDesignSystem()
     },
     async validateCandidates(candidates) {
-      const designSystem = await loadTailwindV4DesignSystem(source)
-      return resolveValidTailwindV4Candidates(designSystem, candidates)
+      return session.validateCandidates(candidates)
     },
-    async generate(options): Promise<TailwindV4GenerateResult> {
-      const generateSource = shouldCompileSourceEntries(options)
-        ? source
-        : stripCompiledSourceEntries(source)
-      const { compiled, dependencies } = await compileTailwindV4Source(generateSource)
-      const rawCandidates = await collectRawCandidates(source, options, compiled.root, compiled.sources)
-      const designSystem = await loadTailwindV4DesignSystem(generateSource)
-      const classSet = resolveValidTailwindV4Candidates(designSystem, rawCandidates, {
-        ...(options?.bareArbitraryValues === undefined ? {} : { bareArbitraryValues: options.bareArbitraryValues }),
-      })
-      const inlineSources = extractTailwindV4InlineSourceCandidates(source.css)
-      for (const candidate of inlineSources.excluded) {
-        classSet.delete(candidate)
-      }
-
-      const buildCandidates = canonicalizeBareArbitraryValueCandidates(classSet, options?.bareArbitraryValues)
-      const css = replaceBareArbitraryValueSelectors(
-        compiled.build(buildCandidates),
-        classSet,
-        options?.bareArbitraryValues,
-      )
-
-      return {
-        css,
-        classSet,
-        rawCandidates,
-        dependencies: Array.from(dependencies),
-        sources: compiled.sources,
-        root: compiled.root,
-      }
+    generate(options): Promise<TailwindV4GenerateResult> {
+      return session.generateLegacy(options)
     },
   }
 }

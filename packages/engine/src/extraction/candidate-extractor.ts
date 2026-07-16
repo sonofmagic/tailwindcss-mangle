@@ -176,7 +176,22 @@ export async function extractRawCandidates(
     return [...cached.candidates]
   }
 
-  const candidates = new Set(scanner.scan())
+  const scannedCandidates = scanner.scan()
+  if (scannedCandidates.length === 0 && files.length > 0) {
+    const changedContents = (await Promise.all(files.map(async (file) => {
+      try {
+        return {
+          content: await fs.readFile(file, 'utf8'),
+          extension: toExtension(file),
+        }
+      }
+      catch {
+        return undefined
+      }
+    }))).filter((entry): entry is { content: string, extension: string } => entry !== undefined)
+    scannedCandidates.push(...scanner.scanFiles(changedContents))
+  }
+  const candidates = new Set(scannedCandidates)
   if (options?.bareArbitraryValues !== undefined && options.bareArbitraryValues !== false) {
     await Promise.all(files.map(async (file) => {
       try {

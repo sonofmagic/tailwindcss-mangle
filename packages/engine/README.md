@@ -71,6 +71,36 @@ const result = await generateTailwindStyle({
 console.log(result.css);
 ```
 
+Reuse a Tailwind v4 compilation session when an integration needs structured
+PostCSS artifacts and explicit invalidation:
+
+```ts
+import {
+  createTailwindGenerationSession,
+  resolveTailwindV4Source,
+} from "@tailwindcss-mangle/engine";
+
+const source = await resolveTailwindV4Source({
+  projectRoot: process.cwd(),
+  css: '@import "tailwindcss";',
+});
+const session = createTailwindGenerationSession(source);
+const artifact = await session.generate({
+  candidates: ["text-red-500"],
+  sourceEntries: [
+    {
+      id: "virtual:page.wxml",
+      extension: "wxml",
+      content: '<view class="rounded-[18px]"></view>',
+    },
+  ],
+});
+
+console.log(artifact.fragments[0]?.root.toString());
+session.invalidate({ type: "dependencies" });
+session.dispose();
+```
+
 ### Generate Tailwind v3 CSS
 
 ```ts

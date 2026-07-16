@@ -130,36 +130,44 @@ export function getTailwindV4DesignSystemCacheKey(source: Pick<TailwindV4Resolve
   return createDesignSystemCacheKey(source.css, [source.base, ...source.baseFallbacks])
 }
 
-export async function loadTailwindV4DesignSystem(source: TailwindV4ResolvedSource): Promise<TailwindV4DesignSystem> {
+async function createTailwindV4DesignSystem(source: TailwindV4ResolvedSource): Promise<TailwindV4DesignSystem> {
   const bases = unique([source.base, ...source.baseFallbacks])
   if (bases.length === 0) {
     throw new Error('No base directories provided for Tailwind CSS v4 design system.')
   }
+  const node = await loadTailwindV4NodeModule([source.projectRoot, ...bases])
+  let lastError: unknown
 
-  const cacheKey = createDesignSystemCacheKey(source.css, bases)
+  for (const base of bases) {
+    try {
+      return await node.__unstable__loadDesignSystem(source.css, { base })
+    }
+    catch (error) {
+      lastError = error
+    }
+  }
+
+  if (lastError instanceof Error) {
+    throw lastError
+  }
+  throw new Error('Failed to load Tailwind CSS v4 design system.')
+}
+
+export async function loadTailwindV4DesignSystem(
+  source: TailwindV4ResolvedSource,
+  options?: { cache?: boolean },
+): Promise<TailwindV4DesignSystem> {
+  if (options?.cache === false) {
+    return createTailwindV4DesignSystem(source)
+  }
+
+  const cacheKey = getTailwindV4DesignSystemCacheKey(source)
   const cached = designSystemPromiseCache.get(cacheKey)
   if (cached) {
     return cached
   }
 
-  const promise = (async () => {
-    const node = await loadTailwindV4NodeModule([source.projectRoot, ...bases])
-    let lastError: unknown
-
-    for (const base of bases) {
-      try {
-        return await node.__unstable__loadDesignSystem(source.css, { base })
-      }
-      catch (error) {
-        lastError = error
-      }
-    }
-
-    if (lastError instanceof Error) {
-      throw lastError
-    }
-    throw new Error('Failed to load Tailwind CSS v4 design system.')
-  })()
+  const promise = createTailwindV4DesignSystem(source)
 
   designSystemPromiseCache.set(cacheKey, promise)
   promise.catch(() => {

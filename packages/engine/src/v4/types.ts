@@ -1,3 +1,4 @@
+import type { Root } from 'postcss'
 import type { TailwindStyleSource } from '../style-candidates.ts'
 
 export interface TailwindV4SourceOptions {
@@ -29,6 +30,51 @@ export interface TailwindV4ResolvedSource {
 export interface TailwindV4CandidateSource {
   content: string
   extension?: string
+}
+
+export interface SourceEntry extends TailwindV4CandidateSource {
+  id: string
+}
+
+export interface GenerationRequest {
+  candidates?: Iterable<string>
+  sourceEntries?: SourceEntry[]
+  /**
+   * Enables UnoCSS-style bare arbitrary values such as `p-10%` and `p-2.5px`.
+   */
+  bareArbitraryValues?: TailwindV4GenerateOptions['bareArbitraryValues']
+}
+
+export type GenerationChange
+  = | { type: 'all' }
+    | { type: 'candidates' }
+    | { type: 'sourceEntries' }
+    | { type: 'dependencies', paths?: Iterable<string> }
+    | { type: 'source', source: TailwindV4ResolvedSource }
+
+export type CssFragmentKind = 'tailwind' | 'theme' | 'preflight'
+
+export interface CssFragment {
+  id: string
+  kind: CssFragmentKind
+  root: Root
+  sourceId: string
+  order: number
+}
+
+export interface TailwindGenerationArtifact {
+  fragments: CssFragment[]
+  classSet: Set<string>
+  rawCandidates: Set<string>
+  dependencies: string[]
+  sourceEntries: SourceEntry[]
+}
+
+export interface TailwindGenerationSession {
+  readonly source: TailwindV4ResolvedSource
+  generate: (request?: GenerationRequest) => Promise<TailwindGenerationArtifact>
+  invalidate: (change: GenerationChange) => void
+  dispose: () => void
 }
 
 export interface TailwindV4StyleSource extends TailwindStyleSource {}

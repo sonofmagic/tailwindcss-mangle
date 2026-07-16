@@ -2,6 +2,7 @@ import { expectAssignable, expectType } from 'tsd'
 import { Parser } from '../dist/htmlparser2.js'
 import {
   collectTailwindStyleCandidates,
+  createTailwindGenerationSession,
   createTailwindV4Engine,
   extractSourceCandidates,
   extractSourceCandidatesWithPositions,
@@ -11,6 +12,8 @@ import {
   resolveTailwindV4Source,
   splitCandidateTokens,
   type TailwindStyleGenerateResult,
+  type TailwindGenerationArtifact,
+  type TailwindGenerationSession,
   type TailwindV4GenerateResult,
 } from '../dist/index.js'
 
@@ -38,6 +41,23 @@ expectType<Promise<TailwindV4GenerateResult>>(createTailwindV4Engine({
   dependencies: [],
 }).generate({
   candidates: ['text-red-500'],
+}))
+
+const generationSession = createTailwindGenerationSession({
+  projectRoot: process.cwd(),
+  base: process.cwd(),
+  baseFallbacks: [],
+  css: '@import "tailwindcss";',
+  dependencies: [],
+})
+expectAssignable<TailwindGenerationSession>(generationSession)
+expectType<Promise<TailwindGenerationArtifact>>(generationSession.generate({
+  candidates: ['text-red-500'],
+  sourceEntries: [{
+    id: 'virtual:page.html',
+    extension: 'html',
+    content: '<div class="bg-blue-500"></div>',
+  }],
 }))
 
 expectAssignable<Promise<{ css: string, classSet: Set<string> }>>(generateTailwindV3RawStyle({
