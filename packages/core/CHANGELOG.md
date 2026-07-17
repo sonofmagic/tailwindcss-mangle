@@ -1,5 +1,13 @@
 # @tailwindcss-mangle/core
 
+## 6.0.1
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`8755961`](https://github.com/sonofmagic/tailwindcss-mangle/commit/87559611db4ec070c6a6d3159b1ca7c5367a6eb2) by @sonofmagic
+- 📦 **Dependencies** [`8755961`](https://github.com/sonofmagic/tailwindcss-mangle/commit/87559611db4ec070c6a6d3159b1ca7c5367a6eb2)
+  → `@tailwindcss-mangle/engine@0.2.0`, `@tailwindcss-mangle/config@8.0.1`, `@tailwindcss-mangle/shared@5.0.1`
+
 ## 6.0.0
 
 ### Major Changes

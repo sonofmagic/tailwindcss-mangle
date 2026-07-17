@@ -1,5 +1,15 @@
 # @tailwindcss-mangle/engine
 
+## 0.2.0
+
+### Minor Changes
+
+- ✨ **新增可复用的 Tailwind 生成会话和结构化 CSS AST 产物 API，支持显式候选类、source entries、失效与释放，同时保持现有 `createTailwindV4Engine().generate()` 调用兼容，并增强 Oxide 文件扫描为空时的兼容处理。** [`0e45825`](https://github.com/sonofmagic/tailwindcss-mangle/commit/0e45825fae5bac9ba654aaa50602e60f4da03068) by @sonofmagic
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`8755961`](https://github.com/sonofmagic/tailwindcss-mangle/commit/87559611db4ec070c6a6d3159b1ca7c5367a6eb2) by @sonofmagic
+
 ## 0.1.3
 
 ### Patch Changes
