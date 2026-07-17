@@ -1,5 +1,11 @@
 # @tailwindcss-mangle/website
 
+## 1.1.5
+
+### Patch Changes
+
+- 🐛 **deps: upgrade** [`8755961`](https://github.com/sonofmagic/tailwindcss-mangle/commit/87559611db4ec070c6a6d3159b1ca7c5367a6eb2) by @sonofmagic
+
 ## 1.1.4
 
 ### Patch Changes
