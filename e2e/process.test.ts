@@ -27,6 +27,7 @@ const { spawn } = require('node:child_process');
 // can clean it up after the wrapper has gone away.
 const child = spawn(process.execPath, ['server.cjs', ...process.argv.slice(2)], {
   detached: process.platform === 'win32',
+  windowsHide: process.platform === 'win32',
   stdio: process.argv.includes('--ignore-stdio') ? 'ignore' : 'inherit',
 });
 child.on('error', error => { throw error; });
