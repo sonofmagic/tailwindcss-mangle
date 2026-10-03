@@ -22,7 +22,13 @@ server.listen(0, '127.0.0.1', () => {
 const wrapperSource = `
 const fs = require('node:fs');
 const { spawn } = require('node:child_process');
-const child = spawn(process.execPath, ['server.cjs', ...process.argv.slice(2)], { stdio: process.argv.includes('--ignore-stdio') ? 'ignore' : 'inherit' });
+// Windows terminates non-detached children when their parent exits. The
+// fixture models a daemon that survives its wrapper so the ownership helper
+// can clean it up after the wrapper has gone away.
+const child = spawn(process.execPath, ['server.cjs', ...process.argv.slice(2)], {
+  detached: process.platform === 'win32',
+  stdio: process.argv.includes('--ignore-stdio') ? 'ignore' : 'inherit',
+});
 child.on('error', error => { throw error; });
 if (process.argv.includes('--exit-wrapper')) {
   const timer = setInterval(() => {
