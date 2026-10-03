@@ -35,6 +35,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 public static class E2EOwnedJob {
+  static IntPtr job;
   [StructLayout(LayoutKind.Sequential)]
   struct BasicLimits {
     public long ProcessTime, JobTime;
@@ -63,10 +64,12 @@ public static class E2EOwnedJob {
   static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
   [DllImport("kernel32.dll")]
   static extern IntPtr GetCurrentProcess();
+  [DllImport("kernel32.dll", SetLastError = true)]
+  static extern bool QueryInformationJobObject(IntPtr job, int kind, IntPtr information, uint size, out uint returnLength);
   [DllImport("kernel32.dll")]
   static extern bool CloseHandle(IntPtr handle);
   public static void Attach() {
-    IntPtr job = CreateJobObject(IntPtr.Zero, null);
+    job = CreateJobObject(IntPtr.Zero, null);
     if (job == IntPtr.Zero) throw new Win32Exception();
     var limits = new ExtendedLimits();
     limits.Basic.Flags = 0x2000; // JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
@@ -83,10 +86,26 @@ public static class E2EOwnedJob {
       // Keep this non-inheritable handle open until the launcher exits.
     } finally { Marshal.FreeHGlobal(buffer); }
   }
+  public static void WaitForDescendants() {
+    const int headerSize = 8;
+    const int maxProcesses = 1024;
+    int size = headerSize + IntPtr.Size * maxProcesses;
+    IntPtr buffer = Marshal.AllocHGlobal(size);
+    try {
+      while (true) {
+        uint returnLength;
+        if (!QueryInformationJobObject(job, 3, buffer, (uint)size, out returnLength)) return;
+        uint assigned = (uint)Marshal.ReadInt32(buffer, 0);
+        if (assigned <= 1) return;
+        System.Threading.Thread.Sleep(25);
+      }
+    } finally { Marshal.FreeHGlobal(buffer); }
+  }
 }
 '@
 [E2EOwnedJob]::Attach()
 & $env:TWM_E2E_LAUNCHER_NODE -e "eval(Buffer.from(process.env.TWM_E2E_LAUNCHER_CODE, 'base64').toString())"
+if ($env:TWM_E2E_WAIT_FOR_DESCENDANTS -eq '1') { [E2EOwnedJob]::WaitForDescendants() }
 [Environment]::Exit($LASTEXITCODE)
 `
 
@@ -130,6 +149,7 @@ function spawnWindowsCommand(
       ...environment,
       TWM_E2E_LAUNCHER_NODE: process.execPath,
       TWM_E2E_LAUNCHER_CODE: Buffer.from(runner).toString('base64'),
+      TWM_E2E_WAIT_FOR_DESCENDANTS: waitForDescendantOutput ? '1' : '0',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
