@@ -24,6 +24,9 @@ describe('executeMigrationFile', () => {
       })
 
       expect(result.missing).toBe(false)
+      if (result.missing) {
+        throw new Error('expected an existing migration source file')
+      }
       expect(result.changed).toBe(true)
       expect(result.wrote).toBe(false)
       expect(result.backupWritten).toBe(false)
@@ -55,6 +58,9 @@ describe('executeMigrationFile', () => {
         wroteEntries,
       })
 
+      if (result.missing) {
+        throw new Error('expected an existing migration source file')
+      }
       expect(result.changed).toBe(true)
       expect(result.wrote).toBe(true)
       expect(result.backupWritten).toBe(true)

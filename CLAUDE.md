@@ -21,11 +21,15 @@ pnpm test
 # Run tests in watch mode
 pnpm test:dev
 
-# Lint and fix
+# Lint
 pnpm lint
 
-# Build, test, version, and publish packages
-pnpm publish-packages
+# Record a publishable change and inspect the release plan
+pnpm change
+pnpm release:plan
+
+# Validate packages, documentation, and all app integration suites
+pnpm release:verify
 
 # Package-specific development (example: core package)
 cd packages/core && pnpm dev      # Watch mode build
@@ -36,15 +40,16 @@ cd packages/core && pnpm test     # Run tests for this package only
 
 ### Monorepo Structure
 
-This is a **pnpm workspace** monorepo managed by **Turbo**. Key packages:
+This is a **pnpm workspace** monorepo whose shared tooling and releases are managed by **repoctl**. See `AGENTS.md` for the quality gate and `repoctl.config.ts` for tooling policy. Key packages:
 
-| Package | Purpose |
-|---------|---------|
-| `@tailwindcss-mangle/core` | Main transformation engine (CSS, HTML, JS processing) |
-| `@tailwindcss-mangle/shared` | Shared utilities and ClassGenerator implementation |
-| `@tailwindcss-mangle/config` | Configuration management using c12 |
-| `tailwindcss-patch` | Patches Tailwind CSS runtime to expose contexts (CLI: `tw-patch`) |
-| `unplugin-tailwindcss-mangle` | Build plugin for Vite/Webpack/Rollup/ESbuild |
+| Package                       | Purpose                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| `@tailwindcss-mangle/core`    | Main transformation engine (CSS, HTML, JS processing)                    |
+| `@tailwindcss-mangle/shared`  | Shared utilities and ClassGenerator implementation                       |
+| `@tailwindcss-mangle/config`  | Configuration management using c12                                       |
+| `@tailwindcss-mangle/engine`  | Candidate extraction and style generation, including the Node 18 runtime |
+| `tailwindcss-patch`           | Patches Tailwind CSS runtime to expose contexts (CLI: `tw-patch`)        |
+| `unplugin-tailwindcss-mangle` | Build plugin for Vite/Webpack/Rollup/ESbuild                             |
 
 ### Core Flow
 
@@ -79,15 +84,16 @@ This is a **pnpm workspace** monorepo managed by **Turbo**. Key packages:
 
 ### Build System
 
-- **Bundler**: tsup (TypeScript → ESM + CJS + .d.ts)
-- **Orchestration**: Turbo (handles dependencies and caching)
+- **Bundler**: tsdown (ESM and declarations; the engine also emits CJS)
+- **Orchestration**: Package builds run in workspace dependency order
 - **Outputs**: `dist/` folder in each package
-- **Entry Points**: Packages export from `src/` directly during dev, `dist/` when published
+- **Entry Points**: Runtime workspace imports and published imports resolve to `dist/`
 
 ## Important Notes
 
-- **Node version**: Requires >=22.13.0
+- **Node version**: Development requires >=22.22.1; engine runtime compatibility remains >=18.20
 - **Package manager**: pnpm only (enforced by preinstall hook)
-- **Post-install**: Runs `tw-patch install` automatically
+- **Install lifecycle**: Root preparation installs Git hooks; app preparation runs `tw-patch` or Nuxt setup only when built dependencies are ready
+- **Releases**: Native pnpm change intents, with repoctl managing Release PRs and publication. Use `pnpm release:plan` for read-only validation
 - **Module system**: ES modules (`"type": "module"`)
 - **Class filtering**: Uses `fast-sort` to process longer classes first (handles variants like `bg-red-500/50` before `bg-red-500`)

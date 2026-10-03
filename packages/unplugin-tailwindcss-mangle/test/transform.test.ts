@@ -48,7 +48,7 @@ vi.mock('@tailwindcss-mangle/core', () => {
 })
 
 async function createMainPlugin() {
-  const [prePlugin, mainPlugin] = factory() as any[]
+  const [prePlugin, mainPlugin] = factory(undefined, { framework: 'vite', versions: {} }) as any[]
   await prePlugin.buildStart?.()
   return mainPlugin
 }
@@ -63,7 +63,7 @@ describe('transform dispatch', () => {
       sources: {
         include: [/\.[cm]?[jt]sx?(?:$|\?)/],
       },
-    } as any) as any[]
+    }, { framework: 'vite', versions: {} }) as any[]
 
     expect(mainPlugin.transformInclude('/src/main.ts')).toBe(true)
     expect(mainPlugin.transformInclude('/src/index.html')).toBe(false)

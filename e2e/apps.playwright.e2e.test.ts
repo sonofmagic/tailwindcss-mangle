@@ -2,7 +2,9 @@ import type { RunningCommand } from './process'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { chromium } from '@playwright/test'
+import { onTestFinished } from 'vitest'
 import { buildApp, cases, createAppCommandEnv, createPnpmCommandArgs, ensureClassList, hasCssSelector, readClassListFile, readMappingFile, repoRoot, resolveClassListFile, resolveMapFile, resolveServeCommand, runTailwindcssPatch } from './apps.e2e.shared'
+import { snapshotFiles } from './files'
 import { resolveChromiumLaunchOptions } from './playwright.shared'
 import { spawnCommand } from './process'
 
@@ -18,7 +20,8 @@ async function waitForHttpReady(url: string, child: RunningCommand, timeoutMs = 
   let lastError: unknown
 
   while (Date.now() - startedAt < timeoutMs) {
-    if (child.exitCode !== null) {
+    if (child.exited) {
+      await child.stop()
       const result = await child.completed
       const output = [result.stdout, result.stderr]
         .filter(Boolean)
@@ -91,7 +94,13 @@ async function startServer(appIndex: number) {
     }),
   })
 
-  await waitForHttpReady(url, child)
+  try {
+    await waitForHttpReady(url, child)
+  }
+  catch (error) {
+    await child.stop()
+    throw error
+  }
   return {
     child,
     url,
@@ -99,14 +108,7 @@ async function startServer(appIndex: number) {
 }
 
 async function stopServer(child: RunningCommand) {
-  if (child.exitCode === null) {
-    child.kill('SIGTERM')
-    await Promise.race([child.completed, sleep(5000)])
-  }
-  if (child.exitCode === null) {
-    child.kill('SIGKILL')
-    await Promise.race([child.completed, sleep(3000)])
-  }
+  await child.stop()
 }
 
 describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
@@ -114,6 +116,7 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
     it(`verifies ${app.name} mangled classes in browser`, async () => {
       const classListFile = resolveClassListFile(app.appDir)
       const mapFile = resolveMapFile(app.appDir)
+      onTestFinished(await snapshotFiles([classListFile, mapFile]))
       await fs.rm(classListFile, { force: true })
       await fs.rm(mapFile, { force: true })
       await ensureClassList(app)
@@ -136,11 +139,12 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
       }
 
       const { child, url } = await startServer(index)
-      const browser = await chromium.launch(resolveChromiumLaunchOptions({
-        headless: true,
-      }))
+      let browser: Awaited<ReturnType<typeof chromium.launch>> | undefined
 
       try {
+        browser = await chromium.launch(resolveChromiumLaunchOptions({
+          headless: true,
+        }))
         const page = await browser.newPage()
         await page.goto(url, {
           waitUntil: 'domcontentloaded',
@@ -237,8 +241,12 @@ describe.runIf(runPlaywrightE2E)('apps playwright e2e', () => {
         ).toEqual([])
       }
       finally {
-        await browser.close()
-        await stopServer(child)
+        try {
+          await browser?.close()
+        }
+        finally {
+          await stopServer(child)
+        }
       }
     }, 420_000)
   }

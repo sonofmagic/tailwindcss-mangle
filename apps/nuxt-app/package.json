@@ -12,10 +12,9 @@
     "tw-extract": "tw-patch extract"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
-    "autoprefixer": "^10.5.4",
-    "nuxt": "^4.4.8",
-    "postcss": "^8.5.19",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.4",
+    "nuxt": "^4.5.2",
     "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
     "unplugin-tailwindcss-mangle": "workspace:*"

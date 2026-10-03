@@ -214,7 +214,7 @@ describe('js handler', async () => {
   })
 
   it('minified js with NODE_ENV', () => {
-    process.env.NODE_ENV = 'production'
+    process.env['NODE_ENV'] = 'production'
     const testCase = getTestCase('comment-ignore.js')
     const replaceMap = ctx.replaceMap
     replaceMap.set('ease-out', '1')

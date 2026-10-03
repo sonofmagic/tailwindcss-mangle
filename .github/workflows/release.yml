@@ -1,57 +1,132 @@
+# repoctl-managed: release/v2
 name: Release
 
 on:
   push:
     branches:
       - main
+      - alpha
+      - beta
+      - rc
+      - next
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Release operation
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - prepare
+          - publish
+          - publish-unpublished
+          - reconcile
+      package:
+        description: Package used for unpublished-version recovery
+        required: false
+        type: string
+      version:
+        description: Version used for unpublished-version recovery
+        required: false
+        type: string
+      dry-run:
+        description: Preview release reconciliation without changes
+        required: false
+        default: false
+        type: boolean
+      source-sha:
+        description: Original main commit to recover (publish modes only)
+        required: false
+        type: string
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
 env:
   HUSKY: 0
+  NPM_CONFIG_PROVENANCE: true
+  npm_config_registry: https://registry.npmjs.org
 
 permissions:
-  contents: write # to create release (changesets/action)
-  issues: write # to post issue comments (changesets/action)
-  pull-requests: write # to create pull request (changesets/action)
-  id-token: write # to use OpenID Connect token for provenance (changesets/action)
+  contents: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v6
+      - name: Validate GitHub App configuration
+        env:
+          APP_CLIENT_ID: ${{ vars.REPOCTL_APP_CLIENT_ID }}
+          APP_PRIVATE_KEY_CONFIGURED: ${{ secrets.REPOCTL_APP_PRIVATE_KEY != '' }}
+        run: |
+          if { [ -n "$APP_CLIENT_ID" ] && [ "$APP_PRIVATE_KEY_CONFIGURED" != 'true' ]; } ||
+             { [ -z "$APP_CLIENT_ID" ] && [ "$APP_PRIVATE_KEY_CONFIGURED" = 'true' ]; }; then
+            echo 'Configure both REPOCTL_APP_CLIENT_ID and REPOCTL_APP_PRIVATE_KEY.' >&2
+            exit 1
+          fi
 
-      - uses: pnpm/action-setup@v4
+      - name: Create GitHub App token
+        if: ${{ vars.REPOCTL_APP_CLIENT_ID != '' }}
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.REPOCTL_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REPOCTL_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout Repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token || secrets.REPOCTL_RELEASE_TOKEN || secrets.CHANGESETS_RELEASE_TOKEN || github.token }}
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install npm with trusted publishing support
+        run: npm install --global npm@11.16.0 --registry=https://registry.npmjs.org
 
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: pnpm publish-packages
+      - name: Install Chromium for release verification
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run repo release CI
         env:
-          # this doesn't work but semantic-release works
-          # see https://github.com/sonofmagic/npm-lib-rollup-template/blob/main/.github/workflows/release.yml#L46
-          # NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          npm_config_registry: https://registry.npmjs.org
-          # https://github.com/changesets/changesets/pull/1659
-          NPM_CONFIG_PROVENANCE: true
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.REPOCTL_RELEASE_TOKEN || secrets.CHANGESETS_RELEASE_TOKEN || github.token }}
+          REPO_RELEASE_MODE: ${{ inputs.mode || 'auto' }}
+          REPO_RELEASE_PACKAGE: ${{ inputs.package }}
+          REPO_RELEASE_VERSION: ${{ inputs.version }}
+          REPO_RELEASE_DRY_RUN: ${{ inputs.dry-run }}
+          REPO_RELEASE_RECOVERY_SOURCE_SHA: ${{ inputs.source-sha }}
+        run: pnpm exec repo release ci
 
+      - name: Preserve npm publish progress
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: npm-publish-progress-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            pnpm-publish-summary.json
+            repoctl-publish-progress.json
+            repoctl-release-progress.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        if: ${{ hashFiles('**/coverage/coverage-final.json') != '' }}
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

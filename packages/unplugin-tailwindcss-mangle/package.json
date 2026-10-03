@@ -69,23 +69,6 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "dev": "tsdown --watch --sourcemap",
-    "build": "tsdown",
-    "test": "vitest run --coverage.enabled",
-    "test:dev": "vitest",
-    "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts",
-    "test:e2e:pw": "TWM_APPS_E2E_PLAYWRIGHT=1 vitest run test/apps.playwright.e2e.test.ts"
-  },
-  "dependencies": {
-    "@rollup/pluginutils": "^5.4.0",
-    "@tailwindcss-mangle/config": "workspace:^",
-    "@tailwindcss-mangle/core": "workspace:^",
-    "@tailwindcss-mangle/shared": "workspace:^",
-    "is-css-request": "^1.0.1",
-    "magic-string": "^1.0.0",
-    "unplugin": "^3.3.0"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
@@ -94,5 +77,35 @@
   },
   "engines": {
     "node": ">=22.18.0"
+  },
+  "scripts": {
+    "dev": "tsdown --watch --sourcemap",
+    "build": "tsdown",
+    "test": "vitest run --coverage.enabled",
+    "test:dev": "vitest",
+    "test:e2e": "TWM_APPS_E2E=1 vitest run test/apps.e2e.test.ts",
+    "test:e2e:pw": "TWM_APPS_E2E_PLAYWRIGHT=1 vitest run test/apps.playwright.e2e.test.ts"
+  },
+  "peerDependencies": {
+    "vite": "*",
+    "webpack": "*"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.4.0",
+    "@tailwindcss-mangle/config": "workspace:^",
+    "@tailwindcss-mangle/core": "workspace:^",
+    "@tailwindcss-mangle/shared": "workspace:^",
+    "is-css-request": "^1.0.1",
+    "magic-string": "^1.4.2",
+    "pathe": "^2.0.3",
+    "unplugin": "^3.4.0"
   }
 }

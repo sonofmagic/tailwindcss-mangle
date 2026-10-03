@@ -8,19 +8,19 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "astro dev --ignore-lock",
+    "start": "astro dev --ignore-lock",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview --ignore-lock"
   },
   "dependencies": {
-    "astro": "^7.1.0"
+    "astro": "^7.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
-    "autoprefixer": "^10.5.4",
-    "postcss": "^8.5.19",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
     "unplugin-tailwindcss-mangle": "workspace:*"

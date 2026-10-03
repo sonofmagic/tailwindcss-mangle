@@ -1,4 +1,5 @@
 import type { Mock } from 'vitest'
+import type { Compiler } from 'webpack'
 import { Context } from '@tailwindcss-mangle/core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -145,12 +146,16 @@ describe('webpack plugin integration (unit)', () => {
 
   it('injects the webpack loader before postcss-loader', () => {
     const compiler = createFakeCompiler()
-    const [, mainPlugin, postPlugin] = factory() as any[]
+    const [, mainPlugin, postPlugin] = factory(undefined, {
+      framework: 'webpack',
+      versions: {},
+      webpack: { compiler: compiler as unknown as Compiler },
+    }) as any[]
     mainPlugin.webpack?.(compiler as any)
     postPlugin.webpack?.(compiler as any)
 
     const { loaderHook } = compiler.triggerCompilation()
-    const module = {
+    const module: { loaders: { loader: string, options?: { ctx: unknown } }[] } = {
       loaders: [
         { loader: 'style-loader' },
         { loader: 'postcss-loader' },
@@ -161,13 +166,17 @@ describe('webpack plugin integration (unit)', () => {
 
     expect(module.loaders).toHaveLength(3)
     const inserted = module.loaders[1]
-    expect(String(inserted.loader)).toContain('loader.js')
-    expect(inserted.options?.ctx).toBe(getLatestCtx())
+    expect(inserted?.loader).toContain('loader.js')
+    expect(inserted?.options?.ctx).toBe(getLatestCtx())
   })
 
   it('skips injection when postcss-loader is missing', () => {
     const compiler = createFakeCompiler()
-    const [, mainPlugin, postPlugin] = factory() as any[]
+    const [, mainPlugin, postPlugin] = factory(undefined, {
+      framework: 'webpack',
+      versions: {},
+      webpack: { compiler: compiler as unknown as Compiler },
+    }) as any[]
     mainPlugin.webpack?.(compiler as any)
     postPlugin.webpack?.(compiler as any)
 
@@ -183,7 +192,11 @@ describe('webpack plugin integration (unit)', () => {
 
   it('transforms css assets during processAssets', async () => {
     const compiler = createFakeCompiler()
-    const [, mainPlugin, postPlugin] = factory() as any[]
+    const [, mainPlugin, postPlugin] = factory(undefined, {
+      framework: 'webpack',
+      versions: {},
+      webpack: { compiler: compiler as unknown as Compiler },
+    }) as any[]
     mainPlugin.webpack?.(compiler as any)
     postPlugin.webpack?.(compiler as any)
 
@@ -209,7 +222,7 @@ describe('webpack plugin integration (unit)', () => {
       ctx: getLatestCtx(),
     })
     expect(compilation.updateAsset).toHaveBeenCalledTimes(1)
-    expect(updates[0][0]).toBe('style.css')
-    expect(String(updates[0][1])).toContain('/*handled*/body { color: red; }')
+    expect(updates[0]?.[0]).toBe('style.css')
+    expect(String(updates[0]?.[1])).toContain('/*handled*/body { color: red; }')
   })
 })

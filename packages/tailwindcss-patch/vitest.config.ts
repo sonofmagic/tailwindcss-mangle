@@ -1,21 +1,29 @@
 import path from 'pathe'
+import { defineVitestProjectConfig } from 'repoctl/tooling'
 import { defineProject } from 'vitest/config'
 
-export default defineProject({
-  test: {
-    alias: [
-      {
-        find: '@',
-        replacement: path.resolve(__dirname, './src'),
-      },
-    ],
-    globals: true,
-    fileParallelism: false,
-    testTimeout: 60_000,
-    setupFiles: ['./vitest.setup.ts'],
-    coverage: {
-      enabled: true,
-      all: false,
+export default defineProject(async () => {
+  const project = await defineVitestProjectConfig({
+    cwd: path.resolve(import.meta.dirname, '../..'),
+    options: {
+      alias: [
+        {
+          find: '@',
+          replacement: path.resolve(import.meta.dirname, './src'),
+        },
+      ],
     },
-  },
+  })
+
+  return {
+    ...project,
+    test: {
+      ...project.test,
+      fileParallelism: false,
+      setupFiles: ['./vitest.setup.ts'],
+      coverage: {
+        enabled: true,
+      },
+    },
+  }
 })

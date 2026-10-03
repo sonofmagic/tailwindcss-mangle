@@ -19,8 +19,8 @@ describe('command definitions', () => {
 
     for (const command of tailwindcssPatchCommands) {
       const cwdOption = definitions[command].optionDefs[0]
-      expect(cwdOption.flags).toBe('--cwd <dir>')
-      expect(cwdOption.config?.default).toBe(process.cwd())
+      expect(cwdOption?.flags).toBe('--cwd <dir>')
+      expect(cwdOption?.config?.default).toBe(process.cwd())
     }
   })
 

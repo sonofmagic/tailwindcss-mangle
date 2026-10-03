@@ -186,7 +186,7 @@ describe('migration handlers module', () => {
     } as any
 
     await expect(validateCommandDefaultHandler(ctx)).rejects.toBeInstanceOf(ValidateCommandError)
-    const payload = JSON.parse(logSpy.mock.calls.at(-1)?.[0] ?? '{}')
+    const payload = JSON.parse(String(logSpy.mock.calls.at(-1)?.[0] ?? '{}'))
     expect(payload).toMatchObject({
       ok: false,
       reason: 'missing-backups',

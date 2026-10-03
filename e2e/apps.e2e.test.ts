@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import { onTestFinished } from 'vitest'
 import {
   buildApp,
   cases,
@@ -15,14 +16,17 @@ import {
   resolveUsageRoots,
   runTailwindcssPatch,
 } from './apps.e2e.shared'
+import { snapshotFiles } from './files'
 
-const runAppsE2E = process.env.TWM_APPS_E2E === '1'
+const runAppsE2E = process.env['TWM_APPS_E2E'] === '1'
 
 describe.runIf(runAppsE2E)('apps integration e2e', () => {
   for (const app of cases) {
     it(`builds ${app.name} and validates tailwindcss-patch/unplugin output`, async () => {
       const classListFile = resolveClassListFile(app.appDir)
       const mapFile = resolveMapFile(app.appDir)
+      const restoreFiles = await snapshotFiles([classListFile, mapFile])
+      onTestFinished(restoreFiles)
 
       await fs.rm(classListFile, { force: true })
       await fs.rm(mapFile, { force: true })

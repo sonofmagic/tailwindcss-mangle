@@ -20,6 +20,6 @@ export default defineConfig({
     __DEV__: 'false',
   },
   deps: {
-    skipNodeModulesBundle: true,
+    neverBundle: true,
   },
 })

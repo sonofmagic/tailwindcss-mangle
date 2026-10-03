@@ -1,6 +1,7 @@
-import type babel from '@babel/core'
-// const t = babel.types
-export function getStringLiteralCalleeName(path: babel.NodePath<babel.types.StringLiteral>) {
+import type { NodePath } from '@babel/traverse'
+import type { StringLiteral, TemplateElement } from '@babel/types'
+
+export function getStringLiteralCalleeName(path: NodePath<StringLiteral>) {
   if (path.parentPath.isCallExpression()) {
     const callee = path.parentPath.get('callee')
     if (callee.isIdentifier()) {
@@ -9,7 +10,7 @@ export function getStringLiteralCalleeName(path: babel.NodePath<babel.types.Stri
   }
 }
 
-export function getTemplateElementCalleeName(path: babel.NodePath<babel.types.TemplateElement>) {
+export function getTemplateElementCalleeName(path: NodePath<TemplateElement>) {
   if (path.parentPath.isTemplateLiteral()) {
     const pp = path.parentPath
     if (pp.parentPath.isCallExpression()) {

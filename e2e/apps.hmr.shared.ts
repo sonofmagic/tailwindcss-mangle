@@ -74,47 +74,47 @@ export async function startViteDevServer(appDir: string, port: number) {
   const startedAt = Date.now()
   let lastError: unknown
 
-  while (Date.now() - startedAt < 120_000) {
-    if (child.exitCode !== null) {
-      const result = await child.completed
-      const output = [result.stdout, result.stderr]
-        .filter(Boolean)
-        .join('\n')
-        .trim()
-      throw new Error(`Dev server exited before ready at ${url}: ${output}`)
-    }
-
-    try {
-      const response = await fetch(url, {
-        signal: AbortSignal.timeout(3000),
-      })
-      if (response.status < 500) {
-        return {
-          child,
-          url,
-        }
+  try {
+    while (Date.now() - startedAt < 120_000) {
+      if (child.exited) {
+        await child.stop()
+        const result = await child.completed
+        const output = [result.stdout, result.stderr]
+          .filter(Boolean)
+          .join('\n')
+          .trim()
+        throw new Error(`Dev server exited before ready at ${url}: ${output}`)
       }
-      lastError = new Error(`status ${response.status}`)
-    }
-    catch (error) {
-      lastError = error
+
+      try {
+        const response = await fetch(url, {
+          signal: AbortSignal.timeout(3000),
+        })
+        if (response.status < 500) {
+          return {
+            child,
+            url,
+          }
+        }
+        lastError = new Error(`status ${response.status}`)
+      }
+      catch (error) {
+        lastError = error
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000))
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    throw new Error(`Timed out waiting for dev server ${url}. Last error: ${String(lastError)}`)
   }
-
-  throw new Error(`Timed out waiting for dev server ${url}. Last error: ${String(lastError)}`)
+  catch (error) {
+    await child.stop()
+    throw error
+  }
 }
 
 export async function stopRunningCommand(child: RunningCommand) {
-  if (child.exitCode === null) {
-    child.kill('SIGTERM')
-    await Promise.race([child.completed, new Promise(resolve => setTimeout(resolve, 5000))])
-  }
-  if (child.exitCode === null) {
-    child.kill('SIGKILL')
-    await Promise.race([child.completed, new Promise(resolve => setTimeout(resolve, 3000))])
-  }
+  await child.stop()
 }
 
 export async function snapshotDomClasses(page: import('@playwright/test').Page) {

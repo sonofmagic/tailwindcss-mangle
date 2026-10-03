@@ -172,9 +172,13 @@ describe('CacheStore context-aware behavior', () => {
       throw new Error('expected memory snapshot fingerprint')
     }
 
-    snapshot.contexts[fingerprint].values.push('mutated')
+    const contextSnapshot = snapshot.contexts[fingerprint]
+    if (!contextSnapshot) {
+      throw new Error('expected memory snapshot context')
+    }
+    contextSnapshot.values.push('mutated')
     const snapshot2 = store.readIndexSnapshot()
-    expect(snapshot2?.contexts[fingerprint].values).toEqual(['snap-a'])
+    expect(snapshot2?.contexts[fingerprint]?.values).toEqual(['snap-a'])
   })
 
   it('returns undefined snapshot for non-v2 file cache payloads', async () => {

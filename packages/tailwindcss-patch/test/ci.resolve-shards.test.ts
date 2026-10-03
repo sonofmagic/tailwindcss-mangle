@@ -232,19 +232,19 @@ describe('resolve-shards script', () => {
     const schema = await fs.readJSON(schemaPath) as Record<string, any>
     const snapshot = await fs.readJSON(dispatchSnapshotPath) as Record<string, any>
 
-    expect(schema.$schema).toContain('json-schema.org')
-    expect(schema.required).toEqual(
+    expect(schema['$schema']).toContain('json-schema.org')
+    expect(schema['required']).toEqual(
       expect.arrayContaining(['version', 'hasChanges', 'shards', 'matrix']),
     )
-    expect(schema.properties.version.const).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
-    expect(schema.properties.matrix.properties.shard.items.required).toEqual(
+    expect(schema['properties'].version.const).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
+    expect(schema['properties'].matrix.properties.shard.items.required).toEqual(
       expect.arrayContaining(['name', 'report_file']),
     )
 
-    expect(snapshot.version).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
-    expect(snapshot.hasChanges).toBe(true)
-    expect(snapshot.shards).toEqual(['root', 'apps', 'packages'])
-    expect(snapshot.matrix.shard).toEqual([
+    expect(snapshot['version']).toBe(mod.RESOLVE_SHARDS_RESULT_SCHEMA_VERSION)
+    expect(snapshot['hasChanges']).toBe(true)
+    expect(snapshot['shards']).toEqual(['root', 'apps', 'packages'])
+    expect(snapshot['matrix'].shard).toEqual([
       { name: 'root', report_file: '.tw-patch/migrate-report-root.json' },
       { name: 'apps', report_file: '.tw-patch/migrate-report-apps.json' },
       { name: 'packages', report_file: '.tw-patch/migrate-report-packages.json' },

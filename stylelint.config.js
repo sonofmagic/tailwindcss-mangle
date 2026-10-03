@@ -1,13 +1,3 @@
-import { icebreaker } from '@icebreakers/stylelint-config'
+import { defineStylelintConfig } from 'repoctl/tooling'
 
-export default {
-  ...icebreaker(),
-  overrides: [
-    {
-      files: ['**/*.module.css'],
-      rules: {
-        'selector-class-pattern': null,
-      },
-    },
-  ],
-}
+export default await defineStylelintConfig()

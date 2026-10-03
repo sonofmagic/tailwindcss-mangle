@@ -44,6 +44,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=22.18.0"
+  },
   "scripts": {
     "dev": "tsdown --watch --sourcemap",
     "build": "tsdown",
@@ -65,13 +68,13 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
+    "@rollup/pluginutils": "^5.4.0",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "c12": "^3.3.3",
-    "fs-extra": "^11.3.6",
+    "@tailwindcss/oxide": "^4.3.3",
+    "c12": "^3.3.4",
+    "fs-extra": "^11.4.1",
     "is-css-request": "^1.0.1",
+    "local-pkg": "^1.2.1",
     "pathe": "^2.0.3"
-  },
-  "engines": {
-    "node": ">=22.18.0"
   }
 }

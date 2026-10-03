@@ -77,6 +77,7 @@ describe('commands/validate', () => {
 
   it('classifies filesystem errno errors as io-error', () => {
     const summary = classifyValidateError({
+      name: 'Error',
       code: 'EPERM',
       message: 'Operation not permitted',
     } satisfies NodeJS.ErrnoException)

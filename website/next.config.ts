@@ -15,11 +15,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = withBundleAnalyzer(
   withNextra({
     reactStrictMode: true,
-    eslint: {
-      // Warning: This allows production builds to successfully complete even if
-      // your project has ESLint errors.
-      ignoreDuringBuilds: true,
-    },
     i18n: {
       locales: ['en', 'zh'],
       defaultLocale: 'en',
@@ -48,15 +43,15 @@ const nextConfig = withBundleAnalyzer(
       })
       return config
     },
-    experimental: {
-      turbo: {
-        rules: {
-          './app/_icons/*.svg': {
-            loaders: ['@svgr/webpack'],
-            as: '*.js',
-          },
+    turbopack: {
+      rules: {
+        './app/_icons/*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
         },
       },
+    },
+    experimental: {
       optimizePackageImports: [
         // '@app/_icons'
       ],

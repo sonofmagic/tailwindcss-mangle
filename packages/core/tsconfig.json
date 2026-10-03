@@ -11,5 +11,11 @@
   "include": [
     "src",
     "test"
+  ],
+  "exclude": [
+    "dist",
+    "coverage",
+    "node_modules",
+    "test/fixtures/**"
   ]
 }

@@ -1,17 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
 import nuxtPlugin from 'unplugin-tailwindcss-mangle/nuxt'
 
 export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
-  postcss: {
-    plugins: {
-      '@tailwindcss/postcss': {},
-      autoprefixer: {},
-    },
+  vite: {
+    plugins: [tailwindcss()],
   },
-  // https://github.com/nuxt/nuxt/issues/20428
-  experimental: {
-    inlineSSRStyles: false,
+  features: {
+    inlineStyles: false,
   },
   modules: [
     [

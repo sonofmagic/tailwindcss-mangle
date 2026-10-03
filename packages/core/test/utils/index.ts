@@ -14,15 +14,18 @@ function extractClassTokens(source: string) {
   const tokens = new Set<string>()
   const attrPattern = /(class|className)=(["'`])([^"'`]+)\2/g
   for (const match of source.matchAll(attrPattern)) {
-    match[3].split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
+    match[3]?.split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
   }
 
   const classListPattern = /classList\.add\(([^)]+)\)/g
   for (const match of source.matchAll(classListPattern)) {
     const inner = match[1]
+    if (!inner) {
+      continue
+    }
     const stringPattern = /(["'`])([^"'`]+)\1/g
     for (const strMatch of inner.matchAll(stringPattern)) {
-      strMatch[2].split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
+      strMatch[2]?.split(/\s+/).filter(Boolean).forEach(token => tokens.add(token))
     }
   }
 

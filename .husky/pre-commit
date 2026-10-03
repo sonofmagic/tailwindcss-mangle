@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 set -e
 
-pnpm exec lint-staged
+pnpm exec repo verify pre-commit

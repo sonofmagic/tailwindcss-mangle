@@ -9,7 +9,6 @@ shamefullyHoist: true
 gitChecks: false
 hoistPattern:
   - '!tailwindcss'
-packageManagerStrict: false
 publicHoistPattern:
   - '*@nextui-org/*'
 allowBuilds:
@@ -27,9 +26,24 @@ catalogs:
     tailwindcss: npm:@tailwindcss/postcss7-compat@^2.2.17
     tailwindcss2: npm:@tailwindcss/postcss7-compat@^2.2.17
   tailwindcss3:
-    tailwindcss: ^4.3.3
+    tailwindcss: ^3.4.19
     tailwindcss-3: npm:tailwindcss@^3.4.19
   tailwindcss4:
     tailwindcss: ^4.3.3
     tailwindcss-4: npm:tailwindcss@^4.3.3
 minimumReleaseAge: 0
+versioning:
+  changelog:
+    storage: repository
+
+overrides:
+  # Align Stylelint's parser peers with the newer css-calc it installs.
+  stylelint@17.16.0>@csstools/css-parser-algorithms: 4.0.2
+  stylelint@17.16.0>@csstools/css-tokenizer: 4.0.2
+  # repoctl 5.7.1 still scans through the pnpm 10 workspace package family.
+  '@icebreakers/monorepo@5.7.1>@pnpm/logger': 1001.0.1
+  '@icebreakers/monorepo@5.7.1>@pnpm/worker': 1000.6.11
+  # Tailwind 2's compatibility CLI requires a loader that supports PostCSS 7.
+  '@tailwindcss/postcss7-compat@2.2.17>postcss-load-config': 3.0.1
+  # This compatible patch release adds TypeScript 6 peer support for Nextra.
+  '@shikijs/twoslash@3.19.0>twoslash': 0.3.9

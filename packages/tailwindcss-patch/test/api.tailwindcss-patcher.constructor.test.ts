@@ -12,7 +12,7 @@ beforeEach(async () => {
 afterEach(async () => {
   vi.resetModules()
   vi.restoreAllMocks()
-  vi.unmock('local-pkg')
+  vi.doUnmock('local-pkg')
   await fs.remove(tempDir)
 })
 

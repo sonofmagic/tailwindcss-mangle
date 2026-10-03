@@ -10,6 +10,6 @@ export default defineConfig({
   dts: true,
   fixedExtension: false,
   deps: {
-    skipNodeModulesBundle: true,
+    neverBundle: true,
   },
 })

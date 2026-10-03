@@ -1,4 +1,3 @@
-import type { RollupOutput } from 'rollup'
 import path from 'pathe'
 import { build } from 'vite'
 import utwm from '@/vite'
@@ -6,12 +5,12 @@ import utwm from '@/vite'
 const appRoot = path.resolve(__dirname, 'fixtures/vite-repo')
 describe('vite build', () => {
   it('common build ', async () => {
-    const res = (await build({
+    const res = await build({
       root: appRoot,
       build: {
         write: false,
         cssMinify: false,
-        rollupOptions: {
+        rolldownOptions: {
           output: {
             entryFileNames: `[name].js`,
             chunkFileNames: `[name].js`,
@@ -26,12 +25,15 @@ describe('vite build', () => {
           },
         }),
       ],
-    })) as RollupOutput
+    })
+    if (Array.isArray(res) || !('output' in res)) {
+      throw new Error('Expected a single Vite build output')
+    }
     const output = res.output
     expect(output.length).toBe(3)
-    const jsFile = output[0]
-    expect(jsFile.type).toBe('chunk')
-    expect(jsFile.code).toContain('ease-out')
+    const jsFile = output.find(file => file.type === 'chunk')
+    expect(jsFile).toBeDefined()
+    expect(jsFile?.code).toContain('ease-out')
     const cssAsset = output.find(asset => asset.type === 'asset' && asset.fileName.endsWith('.css'))
     expect(cssAsset?.type).toBe('asset')
     if (cssAsset?.type === 'asset') {
@@ -42,12 +44,12 @@ describe('vite build', () => {
   })
 
   it('common build change class prefix', async () => {
-    const res = (await build({
+    const res = await build({
       root: appRoot,
       build: {
         write: false,
         cssMinify: false,
-        rollupOptions: {
+        rolldownOptions: {
           output: {
             entryFileNames: `[name].js`,
             chunkFileNames: `[name].js`,
@@ -65,12 +67,15 @@ describe('vite build', () => {
           },
         }),
       ],
-    })) as RollupOutput
+    })
+    if (Array.isArray(res) || !('output' in res)) {
+      throw new Error('Expected a single Vite build output')
+    }
     const output = res.output
     expect(output.length).toBe(3)
-    const jsFile = output[0]
-    expect(jsFile.type).toBe('chunk')
-    expect(jsFile.code).toContain('ease-out')
+    const jsFile = output.find(file => file.type === 'chunk')
+    expect(jsFile).toBeDefined()
+    expect(jsFile?.code).toContain('ease-out')
     const cssAsset = output.find(asset => asset.type === 'asset' && asset.fileName.endsWith('.css'))
     expect(cssAsset?.type).toBe('asset')
     if (cssAsset?.type === 'asset') {

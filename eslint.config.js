@@ -1,13 +1,3 @@
-import { icebreaker } from '@icebreakers/eslint-config'
+import { defineEslintConfig } from 'repoctl/tooling'
 
-export default icebreaker(
-  {
-    ignores: ['**/fixtures/**', 'website/public/_pagefind'],
-  },
-  {
-    rules: {
-      'dot-notation': 'off',
-      'prefer-arrow-callback': 'off',
-    },
-  },
-)
+export default await defineEslintConfig()

@@ -4,12 +4,12 @@ import path from 'pathe'
 import {
   hasDevCssSelector,
   hmrCases,
-  restoreSourceFile,
   seedHmrPatch,
   snapshotDomClasses,
   startViteDevServer,
   stopRunningCommand,
 } from './apps.hmr.shared'
+import { snapshotFiles } from './files'
 import { resolveChromiumLaunchOptions } from './playwright.shared'
 
 const runHmrE2E = process.env['TWM_APPS_E2E_HMR'] === '1'
@@ -22,14 +22,14 @@ describe.runIf(runHmrE2E)('apps hmr e2e', () => {
       const classListFile = path.resolve(app.appDir, '.tw-patch/tw-class-list.json')
       const mapFile = path.resolve(app.appDir, '.tw-patch/tw-map-list.json')
       const originalSource = await fs.readFile(sourceFile, 'utf8')
-      const originalClassList = await fs.readFile(classListFile, 'utf8').catch(() => undefined)
-      const originalMap = await fs.readFile(mapFile, 'utf8').catch(() => undefined)
+      const restoreFiles = await snapshotFiles([sourceFile, classListFile, mapFile])
       if (!originalSource.includes(app.beforeClass)) {
         throw new Error(`${app.name} source file does not contain ${app.beforeClass}`)
       }
 
       let devServer: Awaited<ReturnType<typeof startViteDevServer>> | undefined
       const browser = await chromium.launch(resolveChromiumLaunchOptions({ headless: true }))
+      const failures: unknown[] = []
 
       try {
         const seed = await seedHmrPatch(app.appDir)
@@ -106,24 +106,24 @@ describe.runIf(runHmrE2E)('apps hmr e2e', () => {
 
         expect(await hasDevCssSelector(page, app.afterClass)).toBe(true)
       }
+      catch (error) {
+        failures.push(error)
+      }
       finally {
-        await restoreSourceFile(sourceFile, originalSource)
-        if (originalClassList === undefined) {
-          await fs.rm(classListFile, { force: true })
+        const cleanupResults = await Promise.allSettled([
+          browser.close(),
+          ...(devServer ? [stopRunningCommand(devServer.child)] : []),
+        ])
+        failures.push(...cleanupResults.flatMap(result => result.status === 'rejected' ? [result.reason] : []))
+        try {
+          await restoreFiles()
         }
-        else {
-          await fs.writeFile(classListFile, originalClassList, 'utf8')
+        catch (error) {
+          failures.push(error)
         }
-        if (originalMap === undefined) {
-          await fs.rm(mapFile, { force: true })
-        }
-        else {
-          await fs.writeFile(mapFile, originalMap, 'utf8')
-        }
-        await browser.close()
-        if (devServer) {
-          await stopRunningCommand(devServer.child)
-        }
+      }
+      if (failures.length > 0) {
+        throw new AggregateError(failures, 'HMR E2E or resource cleanup failed')
       }
     }, 180_000)
   }

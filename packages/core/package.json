@@ -41,6 +41,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=22.18.0"
+  },
   "scripts": {
     "dev": "tsdown --watch --sourcemap",
     "build": "tsdown",
@@ -63,26 +66,22 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "@babel/parser": "^8.0.4",
-    "@babel/traverse": "^8.0.4",
-    "@babel/types": "^8.0.4",
+    "@babel/parser": "^8.0.6",
+    "@babel/traverse": "^8.0.6",
+    "@babel/types": "^8.0.6",
     "@tailwindcss-mangle/config": "workspace:^",
     "@tailwindcss-mangle/engine": "workspace:^",
     "@tailwindcss-mangle/shared": "workspace:^",
-    "@vue/compiler-sfc": "^3.5.40",
+    "@vue/compiler-sfc": "^3.5.43",
+    "defu": "^6.1.7",
     "fast-sort": "^3.4.1",
-    "fs-extra": "^11.3.6",
-    "magic-string": "^1.0.0",
+    "fs-extra": "^11.4.1",
+    "magic-string": "^1.4.2",
     "parse5": "^8.0.1",
     "pathe": "^2.0.3",
-    "postcss": "^8.5.19",
-    "postcss-selector-parser": "^7.1.4",
-    "svelte": "^5.56.5"
-  },
-  "devDependencies": {
-    "@types/parse5": "^7.0.0"
-  },
-  "engines": {
-    "node": ">=22.18.0"
+    "postcss": "^8.5.28",
+    "postcss-selector-parser": "^7.1.6",
+    "svelte": "^5.57.1",
+    "unplugin": "^3.4.0"
   }
 }

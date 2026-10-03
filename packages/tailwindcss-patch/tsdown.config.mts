@@ -12,7 +12,6 @@ export default defineConfig({
   dts: true,
   fixedExtension: false,
   deps: {
-    skipNodeModulesBundle: true,
-    neverBundle: ['tailwindcss'],
+    neverBundle: true,
   },
 })

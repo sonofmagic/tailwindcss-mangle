@@ -268,7 +268,7 @@ describe('mountTailwindcssPatchCommands', () => {
     const tokensCommand = cli.commands.find(command => command.name === 'tokens')
     expect(tokensCommand?.description).toBe('Custom tokens description')
     expect(tokensCommand?.options).toHaveLength(1)
-    expect(tokensCommand?.options?.[0].rawName).toBe('--preview')
+    expect(tokensCommand?.options?.[0]?.rawName).toBe('--preview')
   })
 
   it('runs migrate command with dry-run and custom config path', async () => {

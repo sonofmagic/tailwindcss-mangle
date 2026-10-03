@@ -40,7 +40,11 @@ const NodeTypes = {
 export function vueToTsx(code: string) {
   try {
     const parsed = parse(code)
-    const fileStr = new MagicString(`<template>${parsed.descriptor.template?.content}</template>` ?? '')
+    const template = parsed.descriptor.template
+    if (!template?.ast) {
+      return ''
+    }
+    const fileStr = new MagicString(`<template>${template.content}</template>`)
 
     const rewriteProp = (prop: BaseElementNode['props'][number]) => {
       if (prop.type === NodeTypes.DIRECTIVE && prop.exp?.type === NodeTypes.SIMPLE_EXPRESSION && prop.arg?.type === NodeTypes.SIMPLE_EXPRESSION) {
@@ -48,7 +52,7 @@ export function vueToTsx(code: string) {
       }
     }
 
-    const stack = [...parsed.descriptor.template!.ast.children]
+    const stack = [...template.ast.children]
     // recursion-free traversal
     while (stack.length > 0) {
       const node = stack.pop()

@@ -4,7 +4,7 @@
   "private": true,
   "sideEffects": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=22.22.1"
   },
   "scripts": {
     "build": "node scripts/build-tailwind.mjs && remix build",
@@ -18,18 +18,19 @@
     "@remix-run/node": "^2.17.5",
     "@remix-run/react": "^2.17.5",
     "@remix-run/serve": "^2.17.5",
-    "isbot": "^5.2.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "isbot": "^5.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.17.5",
     "@remix-run/eslint-config": "^2.17.5",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^10.7.0",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^8.57.1",
     "tailwindcss": "^4.3.3",
     "tailwindcss-patch": "workspace:*",
-    "typescript": "^6.0.3"
+    "typescript": "^5.9.3",
+    "vite": "^6.4.3"
   }
 }
