@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.4.0",
-    "@tailwindcss-mangle/shared": "workspace:^",
+    "@tailwindcss-mangle/shared": "workspace:*",
     "@tailwindcss/oxide": "^4.3.3",
     "c12": "^3.3.4",
     "fs-extra": "^11.4.1",

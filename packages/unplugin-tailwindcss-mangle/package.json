@@ -100,9 +100,9 @@
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.4.0",
-    "@tailwindcss-mangle/config": "workspace:^",
-    "@tailwindcss-mangle/core": "workspace:^",
-    "@tailwindcss-mangle/shared": "workspace:^",
+    "@tailwindcss-mangle/config": "workspace:*",
+    "@tailwindcss-mangle/core": "workspace:*",
+    "@tailwindcss-mangle/shared": "workspace:*",
     "is-css-request": "^1.0.1",
     "magic-string": "^1.4.2",
     "pathe": "^2.0.3",
