@@ -5,7 +5,7 @@ import type {
   TailwindV4ResolvedSource,
   TailwindV4SourcePattern,
 } from './types.ts'
-import postcss from 'postcss'
+import { stripCompiledSourceEntriesNative } from '@tailwindcss-mangle/native'
 import { extractRawCandidates, extractRawCandidatesWithPositions } from '../extraction/candidate-extractor.ts'
 import { extractTailwindV4InlineSourceCandidates } from './candidates.ts'
 import { createTailwindV4CompiledSourceEntries } from './source-scan.ts'
@@ -64,30 +64,8 @@ export function stripCompiledSourceEntries(source: TailwindV4ResolvedSource): Ta
   if (!source.css.includes('@source') && !source.css.includes('source(')) {
     return source
   }
-  try {
-    const root = postcss.parse(source.css)
-    let changed = false
-    root.walkAtRules((rule) => {
-      if (rule.name === 'source') {
-        rule.remove()
-        changed = true
-        return
-      }
-      if (rule.name === 'import' && /\bsource\(/.test(rule.params)) {
-        rule.params = rule.params.replace(/\s+source\((?:[^()]|\([^()]*\))*\)/g, '')
-        changed = true
-      }
-    })
-    return changed
-      ? {
-          ...source,
-          css: root.toString(),
-        }
-      : source
-  }
-  catch {
-    return source
-  }
+  const result = stripCompiledSourceEntriesNative(source.css)
+  return result.changed ? { ...source, css: result.css } : source
 }
 
 export async function collectRawCandidates(

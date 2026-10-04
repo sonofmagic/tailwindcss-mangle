@@ -165,4 +165,27 @@ describe('cache context fingerprint', () => {
     expect(reasons.some(x => x.includes('tailwind-package version changed'))).toBe(true)
     expect(reasons.some(x => x.includes('patch options hash changed'))).toBe(true)
   })
+
+  it('preserves JavaScript dynamic-value and sparse-array fingerprint semantics', () => {
+    const normalized = normalizeOptions({ projectRoot: tempDir })
+    const packageInfo = toPackageInfo(path.join(tempDir, 'package'), '4.3.3')
+    const optionsHash = (probe: unknown) => {
+      Object.assign(normalized.features, { probe })
+      return createCacheContextDescriptor(normalized, packageInfo, 4).metadata.optionsHash
+    }
+    const callable = () => 'value'
+    expect(optionsHash(callable)).toBe(optionsHash(String(callable)))
+    expect(optionsHash(Symbol('token'))).toBe(optionsHash('Symbol(token)'))
+    expect(optionsHash(12n)).toBe(optionsHash('12'))
+    expect(optionsHash(/tailwind/gi)).toBe(optionsHash({}))
+    expect(optionsHash(Number.NaN)).toBe(optionsHash(null))
+    expect(optionsHash(Number.POSITIVE_INFINITY)).toBe(optionsHash(null))
+    expect(optionsHash({ a: 1, absent: undefined })).toBe(optionsHash({ a: 1 }))
+    expect(optionsHash([undefined])).toBe(optionsHash(['undefined']))
+    expect(optionsHash(Array.from({ length: 2 }))).not.toBe(optionsHash(Array.from({ length: 1 })))
+    const sparse = Array.from({ length: 2 })
+    delete sparse[0]
+    expect(optionsHash(sparse)).not.toBe(optionsHash([undefined, undefined]))
+    expect(optionsHash({ 中文: 1, a: 2, 10: 3, 2: 4 })).toBe(optionsHash({ 2: 4, 10: 3, a: 2, 中文: 1 }))
+  })
 })

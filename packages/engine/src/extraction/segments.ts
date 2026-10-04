@@ -1,4 +1,5 @@
 import type { ExtractCandidateOptions, ExtractSourceCandidateWithContext, JoinedSourceSegment, SourceSegment } from './types.ts'
+import { joinSourceSegmentsNative, remapSourceCandidatesNative } from '@tailwindcss-mangle/native'
 import { extractBareArbitraryValueSourceCandidatesWithPositions } from '../v4/bare-arbitrary-values.ts'
 
 export function createBareArbitraryValueCandidateContexts(
@@ -19,27 +20,8 @@ export function createBareArbitraryValueCandidateContexts(
 }
 
 export function joinSourceSegments(segments: SourceSegment[]) {
-  const joinedSegments: JoinedSourceSegment[] = []
-  const parts: string[] = []
-  let joinedStart = 0
-
-  for (const segment of segments) {
-    if (parts.length > 0) {
-      parts.push('\n')
-      joinedStart++
-    }
-    parts.push(segment.content)
-    joinedSegments.push({
-      ...segment,
-      joinedStart,
-    })
-    joinedStart += segment.content.length
-  }
-
-  return {
-    content: parts.join(''),
-    segments: joinedSegments,
-  }
+  const joined = joinSourceSegmentsNative(segments)
+  return { content: joined.content, segments: joined.segments as JoinedSourceSegment[] }
 }
 
 export function findJoinedSourceSegment(segments: JoinedSourceSegment[], start: number) {
@@ -80,22 +62,10 @@ export async function extractBatchedSourceSegmentCandidates(
 
   const joined = joinSourceSegments(segments)
   const rawCandidates = await extractRawCandidatesWithPositions(joined.content, extension, options)
-  const candidates: ExtractSourceCandidateWithContext[] = []
-  for (const candidate of rawCandidates) {
-    const segment = findJoinedSourceSegment(joined.segments, candidate.start)
-    if (segment === undefined || candidate.end > segment.joinedStart + segment.content.length) {
-      continue
-    }
-    const segmentOffset = candidate.start - segment.joinedStart
-    candidates.push({
-      content: joined.content,
-      extension,
-      localStart: candidate.start,
-      rawCandidate: candidate.rawCandidate,
-      skipHtmlContextChecks: true,
-      start: segment.start + segmentOffset,
-      end: segment.start + segmentOffset + candidate.rawCandidate.length,
-    })
-  }
-  return candidates
+  return remapSourceCandidatesNative(joined.segments, rawCandidates).map(candidate => ({
+    ...candidate,
+    content: joined.content,
+    extension,
+    skipHtmlContextChecks: true,
+  }))
 }

@@ -1,0 +1,206 @@
+name: Native Rust
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Exact source revision for native artifacts
+        required: false
+        type: string
+        default: ''
+    outputs:
+      native_required:
+        value: ${{ jobs.prepare.outputs.native_required }}
+      source_sha:
+        value: ${{ jobs.prepare.outputs.source_sha }}
+      targets:
+        value: ${{ jobs.prepare.outputs.targets }}
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Resolve native source
+    runs-on: ubuntu-latest
+    outputs:
+      native_required: ${{ steps.source.outputs.native_required }}
+      source_sha: ${{ steps.source.outputs.source_sha }}
+      targets: ${{ steps.source.outputs.targets }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - name: Inspect source requirements
+        id: source
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const { execFileSync } = require('node:child_process')
+          const source = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
+          const required = fs.existsSync('packages/native/package.json')
+          const targets = required ? require('./packages/native/package.json').napi.targets.slice().sort() : []
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `native_required=${required}\nsource_sha=${source}\ntargets=${JSON.stringify(targets)}\n`)
+          NODE
+
+  binary:
+    needs: prepare
+    if: needs.prepare.outputs.native_required == 'true'
+    name: Native (${{ matrix.target }})
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: windows-11-arm
+            target: aarch64-pc-windows-msvc
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-musl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.source_sha }}
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.22.1
+          cache: pnpm
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Install build dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts --filter @tailwindcss-mangle/native
+      - name: Check Rust formatting
+        run: cargo fmt --all --check
+      - name: Test Rust kernels
+        run: cargo test --workspace --locked
+      - name: Lint Rust kernels
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: Build macOS and Windows
+        if: runner.os != 'Linux'
+        run: pnpm --filter @tailwindcss-mangle/native build
+      - name: Build Linux glibc with compatible toolchain
+        if: runner.os == 'Linux' && !contains(matrix.target, 'musl')
+        run: pnpm --filter @tailwindcss-mangle/native build --use-napi-cross
+      - name: Build Linux musl
+        if: contains(matrix.target, 'musl')
+        run: >-
+          docker run --rm -v "$PWD:/work" -w /work rust:1.95-alpine sh -ec
+          'apk add --no-cache nodejs npm build-base;
+          npm install --global @napi-rs/cli@3.10.6;
+          RUSTFLAGS="-C target-feature=-crt-static" napi build --cwd packages/native --platform --release --manifest-path ../../crates/mangle-native/Cargo.toml --output-dir . --js index.cjs'
+      - name: Smoke musl on Node 18
+        if: contains(matrix.target, 'musl')
+        timeout-minutes: 2
+        run: docker run --rm -e TWM_EXPECT_BINDING_TARGET=native -v "$PWD:/work" -w /work node:18-alpine node packages/native/smoke.cjs
+      - name: Setup Node 18 for ABI compatibility
+        if: ${{ !contains(matrix.target, 'musl') && matrix.target != 'aarch64-pc-windows-msvc' }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 18.20.8
+      - name: Smoke native ABI
+        if: ${{ !contains(matrix.target, 'musl') }}
+        timeout-minutes: 2
+        env:
+          TWM_EXPECT_BINDING_TARGET: native
+        run: node packages/native/smoke.cjs
+      - name: Test native artifact lifecycle
+        env:
+          TWM_TEST_NATIVE_TARGET: ${{ matrix.target }}
+        run: node scripts/native-artifacts.test.mjs
+      - name: Record tested native artifact
+        run: node scripts/native-artifacts.mjs record ${{ matrix.target }}
+      - name: Upload native binary
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-${{ matrix.target }}
+          path: |
+            packages/native/*.node
+            packages/native/native-artifact.${{ matrix.target }}.json
+          if-no-files-found: error
+          retention-days: 7
+
+  wasm:
+    needs: prepare
+    if: needs.prepare.outputs.native_required == 'true'
+    name: Portable Rust WASI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.source_sha }}
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.22.1
+          cache: pnpm
+      - name: Install Rust WASI target
+        run: rustup target add wasm32-wasip1-threads
+      - name: Install build dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts --filter @tailwindcss-mangle/native
+      - name: Build portable Rust kernels
+        run: pnpm --filter @tailwindcss-mangle/native build --target wasm32-wasip1-threads
+      - name: Keep the production WASI binary
+        run: >-
+          node -e "require('node:fs').rmSync('packages/native/mangle.wasm32-wasi.debug.wasm', { force: true })"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 18.20.8
+      - name: Install production dependencies with strict Node 18 engines
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const manifest = require('./packages/native/package.json')
+          const directory = path.join(process.env.RUNNER_TEMP, 'native-node18-consumer')
+          fs.mkdirSync(directory, { recursive: true })
+          fs.writeFileSync(path.join(directory, 'package.json'), JSON.stringify({
+            name: 'native-node18-consumer',
+            private: true,
+            engines: manifest.engines,
+            dependencies: manifest.dependencies,
+          }))
+          for (const name of ['index.cjs', 'mangle.wasm32-wasi.wasm', 'mangle.wasi.cjs', 'wasi-worker.mjs']) {
+            fs.copyFileSync(path.join('packages/native', name), path.join(directory, name))
+          }
+          NODE
+          npm install --prefix "$RUNNER_TEMP/native-node18-consumer" --engine-strict --ignore-scripts --no-audit --no-fund
+      - name: Smoke WASI on Node 18
+        timeout-minutes: 2
+        env:
+          NAPI_RS_FORCE_WASI: error
+          TWM_EXPECT_BINDING_TARGET: wasm32-wasi
+        run: node packages/native/smoke.cjs "$RUNNER_TEMP/native-node18-consumer/index.cjs"
+      - name: Test portable artifact lifecycle
+        env:
+          TWM_TEST_NATIVE_TARGET: wasm32-wasip1-threads
+        run: node scripts/native-artifacts.test.mjs
+      - name: Record tested portable artifact
+        run: node scripts/native-artifacts.mjs record wasm32-wasip1-threads
+      - name: Upload portable binary and loader
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-wasm32-wasi
+          path: |
+            packages/native/mangle.wasm32-wasi.wasm
+            packages/native/mangle.wasi.cjs
+            packages/native/wasi-worker.mjs
+            packages/native/index.cjs
+            packages/native/index.d.ts
+            packages/native/native-artifact.wasm32-wasip1-threads.json
+          if-no-files-found: error
+          retention-days: 7

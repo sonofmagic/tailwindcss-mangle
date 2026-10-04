@@ -93,12 +93,9 @@
     }
   },
   "dependencies": {
-    "@babel/generator": "^8.0.6",
-    "@babel/parser": "^8.0.6",
-    "@babel/traverse": "^8.0.6",
-    "@babel/types": "^8.0.6",
     "@tailwindcss-mangle/config": "workspace:*",
     "@tailwindcss-mangle/engine": "workspace:*",
+    "@tailwindcss-mangle/native": "workspace:*",
     "@tailwindcss-mangle/shared": "workspace:*",
     "cac": "7.0.0",
     "consola": "^3.4.2",
@@ -110,6 +107,10 @@
     "tailwindcss-config": "^2.0.5"
   },
   "devDependencies": {
+    "@babel/generator": "^8.0.6",
+    "@babel/parser": "^8.0.6",
+    "@babel/traverse": "^8.0.6",
+    "@babel/types": "^8.0.6",
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "tailwindcss": "^4.3.3",

@@ -125,4 +125,31 @@ describe('Tailwind v4 candidate helpers', () => {
     expect(() => extractTailwindV4InlineSourceCandidates('@source inline("p-{1..3");'))
       .toThrow('not balanced')
   })
+
+  it('reads nested at-rules while ignoring comments and declaration values', () => {
+    const result = extractTailwindV4InlineSourceCandidates([
+      '/* @source inline("comment"); */',
+      '.x { color: @source inline("declaration"); --content: { @source inline("custom-value"); }; }',
+      '@media screen { a:hover { @source inline("nested"); } }',
+    ].join('\n'))
+    expect(result.included).toEqual(new Set(['nested']))
+    expect(() => extractTailwindV4InlineSourceCandidates('/* unfinished')).toThrow()
+  })
+
+  it('replaces class selectors without modifying declaration strings, attributes, or longer classes', () => {
+    const css = '.p-\\[10\\%\\], :is(.p-\\[10\\%\\]) { content: ".p-\\[10\\%\\]"; } [class=".p-\\[10\\%\\]"] {} .p-\\[10\\%\\]-suffix {}'
+    expect(replaceBareArbitraryValueSelectors(css, ['p-10%'], true)).toBe(
+      '.p-10\\%, :is(.p-10\\%) { content: ".p-\\[10\\%\\]"; } [class=".p-\\[10\\%\\]"] {} .p-\\[10\\%\\]-suffix {}',
+    )
+  })
+
+  it('preserves tolerant single-alias handling and rejects invalid CSS when expanding multiple aliases', () => {
+    expect(replaceBareArbitraryValueSelectors('.p-\\[10\\%\\] {', ['p-10%'], true)).toBe('.p-10\\% {')
+    expect(() => replaceBareArbitraryValueSelectors('.bg-\\[\\#fff\\] {', ['bg-#fff', 'bg-\\#fff'], true)).toThrow()
+  })
+
+  it('expands aliases inside selector functions before a following top-level comma', () => {
+    expect(replaceBareArbitraryValueSelectors(':is(.unused, .bg-\\[\\#fff\\]),.other {}', ['bg-#fff', 'bg-\\#fff'], true))
+      .toBe(':is(.unused, .bg-\\#fff), :is(.unused, .bg-\\\\\\#fff), .other {}')
+  })
 })

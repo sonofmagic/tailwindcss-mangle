@@ -35,10 +35,11 @@ For users trying version `2.3.0` of `unplugin-tailwindcss-mangle`, it has been t
 
 ## Contributing
 
-Use Node.js 22.22.1 or newer and pnpm 12.8.1. The workspace uses [repoctl](https://github.com/icelib/repoctl) for shared tooling and release management.
+Use Node.js 22.22.1 or newer, pnpm 12.8.1, and Rust 1.95.0. `rust-toolchain.toml` pins the compiler used by the native kernels. Published npm packages include prebuilt kernels; application users do not need a Rust compiler. The workspace uses [repoctl](https://github.com/icelib/repoctl) for shared tooling and release management.
 
 ```sh
 pnpm install
+rustup show active-toolchain
 pnpm build
 pnpm lint
 pnpm lint:style
@@ -58,3 +59,5 @@ Dependency upgrades retain these compatibility constraints:
 - Version-specific overrides in `pnpm-workspace.yaml` align upstream peer dependency families. Recheck them with `pnpm peers check` when upgrading their parent packages.
 
 For a publishable package change, run `pnpm change` to add a change intent and `pnpm release:plan` to inspect the release plan. The managed release workflow prepares Release PRs and publishes their merged versions. See the [release policy](./docs/release/release-group-policy.md) for validation and prerelease commands.
+
+See [the Rust architecture](docs/rust-architecture.md) for native boundaries, ABI compatibility, distribution, and performance measurement.

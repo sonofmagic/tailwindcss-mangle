@@ -1,56 +1,10 @@
 import type { TailwindTokenLocation } from '../types.ts'
+import { buildLineOffsetsNative, resolveLineMetaNative, resolveLineMetasNative } from '@tailwindcss-mangle/native'
 import path from 'pathe'
 
-export function buildLineOffsets(content: string) {
-  const offsets: number[] = [0]
-  for (let i = 0; i < content.length; i++) {
-    if (content[i] === '\n') {
-      offsets.push(i + 1)
-    }
-  }
-  // Push a sentinel to simplify bounds checks during binary search.
-  if (offsets[offsets.length - 1] !== content.length) {
-    offsets.push(content.length)
-  }
-  return offsets
-}
-
-export function resolveLineMeta(content: string, offsets: number[], index: number) {
-  let low = 0
-  let high = offsets.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const start = offsets[mid]
-    if (start === undefined) {
-      break
-    }
-    const nextStart = offsets[mid + 1] ?? content.length
-
-    if (index < start) {
-      high = mid - 1
-      continue
-    }
-
-    if (index >= nextStart) {
-      low = mid + 1
-      continue
-    }
-
-    const line = mid + 1
-    const column = index - start + 1
-    const lineEnd = content.indexOf('\n', start)
-    const lineText = content.slice(start, lineEnd === -1 ? content.length : lineEnd)
-
-    return { line, column, lineText }
-  }
-
-  const lastStart = offsets[offsets.length - 2] ?? 0
-  return {
-    line: offsets.length - 1,
-    column: index - lastStart + 1,
-    lineText: content.slice(lastStart),
-  }
-}
+export const buildLineOffsets = buildLineOffsetsNative
+export const resolveLineMeta = resolveLineMetaNative
+export const resolveLineMetas = resolveLineMetasNative
 
 export function toExtension(filename: string) {
   const ext = path.extname(filename).replace(/^\./, '')

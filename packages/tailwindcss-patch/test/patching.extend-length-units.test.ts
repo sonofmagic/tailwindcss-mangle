@@ -46,4 +46,27 @@ describe('extend length units patch', () => {
     expect(result.files.every(file => file.code.includes('\"rpx\"'))).toBe(true)
     expect(result.files.some(file => !file.hasPatched)).toBe(true)
   })
+
+  it('adds the missing v4 units when another requested unit is already present', async () => {
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tailwindcss-4-partial-'))
+    const file = path.join(tempDir, 'dist/lib.js')
+    await fs.outputFile(file, 'const units = ["cm", "mm", "rpx"];')
+    const options = { enabled: true, units: ['rpx', 'upx', 'upx'], overwrite: true }
+    const first = applyExtendLengthUnitsPatchV4(tempDir, options)
+    expect(first.changed).toBe(true)
+    expect(await fs.readFile(file, 'utf8')).toBe('const units = ["cm","mm","rpx","upx"];')
+    const second = applyExtendLengthUnitsPatchV4(tempDir, options)
+    expect(second.changed).toBe(false)
+    expect(second.files[0]?.hasPatched).toBe(true)
+  })
+
+  it('does not mistake comments or strings for a v4 unit array', async () => {
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tailwindcss-4-decoy-'))
+    const content = '// ["cm","mm"]\nconst text = \'["cm","mm"]\';'
+    const file = path.join(tempDir, 'dist/lib.js')
+    await fs.outputFile(file, content)
+    const result = applyExtendLengthUnitsPatchV4(tempDir, { enabled: true, units: ['rpx'], overwrite: true })
+    expect(result).toEqual({ changed: false, files: [] })
+    expect(await fs.readFile(file, 'utf8')).toBe(content)
+  })
 })

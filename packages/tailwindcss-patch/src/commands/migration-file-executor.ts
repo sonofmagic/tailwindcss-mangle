@@ -1,4 +1,5 @@
 import type { ConfigFileMigrationEntry } from './migration-types'
+import { restoreConfigEntriesNative, rollbackMigrationWritesNative, writeMigrationFileNative } from '@tailwindcss-mangle/native'
 import fs from 'fs-extra'
 
 import path from 'pathe'
@@ -38,19 +39,13 @@ export type ExecuteMigrationFileResult
   }
 
 export async function rollbackWrittenEntries(wroteEntries: MigrationWrittenEntry[]) {
-  let rollbackCount = 0
-  for (const written of [...wroteEntries].reverse()) {
-    try {
-      await fs.writeFile(written.file, written.source, 'utf8')
-      written.entry.written = false
-      written.entry.rolledBack = true
-      rollbackCount += 1
-    }
-    catch {
-      // Continue best-effort rollback to avoid leaving even more partial state.
-    }
+  const restored = await rollbackMigrationWritesNative(wroteEntries.map(({ file, source }) => ({ file, source })))
+  for (const index of restored) {
+    const written = wroteEntries[index]!
+    written.entry.written = false
+    written.entry.rolledBack = true
   }
-  return rollbackCount
+  return restored.length
 }
 
 export async function executeMigrationFile(options: ExecuteMigrationFileOptions): Promise<ExecuteMigrationFileResult> {
@@ -95,16 +90,13 @@ export async function executeMigrationFile(options: ExecuteMigrationFileOptions)
 
   let backupWritten = false
   try {
-    if (backupDirectory) {
-      const backupRelativePath = resolveBackupRelativePath(cwd, file)
-      const backupFile = path.resolve(backupDirectory, backupRelativePath)
-      await fs.ensureDir(path.dirname(backupFile))
-      await fs.writeFile(backupFile, source, 'utf8')
+    const backupFile = backupDirectory
+      ? path.resolve(backupDirectory, resolveBackupRelativePath(cwd, file))
+      : undefined
+    backupWritten = await writeMigrationFileNative(file, source, migrated.code, backupFile)
+    if (backupFile) {
       entry.backupFile = backupFile
-      backupWritten = true
     }
-
-    await fs.writeFile(file, migrated.code, 'utf8')
     entry.written = true
     wroteEntries.push({ file, source, entry })
 
@@ -143,47 +135,8 @@ export interface RestoreEntriesResult {
 }
 
 export async function restoreConfigEntries(entries: RestoreReportEntry[], dryRun: boolean): Promise<RestoreEntriesResult> {
-  let scannedEntries = 0
-  let restorableEntries = 0
-  let restoredFiles = 0
-  let missingBackups = 0
-  let skippedEntries = 0
-  const restored: string[] = []
-
-  for (const entry of entries) {
-    scannedEntries += 1
-    const targetFile = entry.file ? path.resolve(entry.file) : undefined
-    const backupFile = entry.backupFile ? path.resolve(entry.backupFile) : undefined
-
-    if (!targetFile || !backupFile) {
-      skippedEntries += 1
-      continue
-    }
-
-    restorableEntries += 1
-
-    const backupExists = await fs.pathExists(backupFile)
-    if (!backupExists) {
-      missingBackups += 1
-      continue
-    }
-
-    if (!dryRun) {
-      const backupContent = await fs.readFile(backupFile, 'utf8')
-      await fs.ensureDir(path.dirname(targetFile))
-      await fs.writeFile(targetFile, backupContent, 'utf8')
-    }
-
-    restoredFiles += 1
-    restored.push(targetFile)
-  }
-
-  return {
-    scannedEntries,
-    restorableEntries,
-    restoredFiles,
-    missingBackups,
-    skippedEntries,
-    restored,
-  }
+  return restoreConfigEntriesNative(entries.map(entry => ({
+    ...(entry.file ? { file: path.resolve(entry.file) } : {}),
+    ...(entry.backupFile ? { backupFile: path.resolve(entry.backupFile) } : {}),
+  })), dryRun)
 }

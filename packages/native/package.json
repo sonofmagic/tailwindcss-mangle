@@ -1,0 +1,61 @@
+{
+  "name": "@tailwindcss-mangle/native",
+  "version": "0.1.0",
+  "description": "Rust transformation and extraction kernels for tailwindcss-mangle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/tailwindcss-mangle.git",
+    "directory": "packages/native"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.cjs"
+    }
+  },
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "files": [
+    "*.node",
+    "index.cjs",
+    "index.d.ts",
+    "mangle.wasi.cjs",
+    "mangle.wasm32-wasi.wasm",
+    "wasi-worker.mjs"
+  ],
+  "engines": {
+    "node": ">=18.20.0"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "cargo test --manifest-path ../../crates/mangle-native/Cargo.toml",
+    "prepack": "node ../../scripts/check-native-artifacts.mjs"
+  },
+  "dependencies": {
+    "@emnapi/core": "1.11.3",
+    "@emnapi/runtime": "1.11.3",
+    "@napi-rs/wasm-runtime": "1.1.6"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "3.10.6",
+    "emnapi": "1.11.3"
+  },
+  "napi": {
+    "binaryName": "mangle",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "aarch64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+      "aarch64-unknown-linux-musl",
+      "wasm32-wasip1-threads"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

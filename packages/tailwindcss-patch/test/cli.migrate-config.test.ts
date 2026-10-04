@@ -251,26 +251,16 @@ describe('migrateConfigFiles', () => {
       await fs.writeFile(first, `export default { registry: { output: { file: 'first.json' } } }\n`, 'utf8')
       await fs.writeFile(second, `export default { registry: { output: { file: 'second.json' } } }\n`, 'utf8')
 
-      const originalWriteFile = fs.writeFile.bind(fs)
-      let migrationWriteCount = 0
-      const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(async (...args) => {
-        const [target] = args
-        const filePath = String(target)
-        if (filePath === first || filePath === second) {
-          migrationWriteCount += 1
-          if (migrationWriteCount === 2) {
-            throw new Error('simulated write failure')
-          }
-        }
-        return originalWriteFile(...args)
-      })
+      const backupDir = path.resolve(cwd, 'backups')
+      // The second backup collides with a directory, producing a real write
+      // failure after the first config has already been migrated.
+      await fs.ensureDir(path.join(backupDir, 'tailwindcss-mangle.config.ts.bak'))
 
       await expect(migrateConfigFiles({
         cwd,
+        backupDir,
         files: ['tailwindcss-patch.config.ts', 'tailwindcss-mangle.config.ts'],
-      })).rejects.toThrow('Failed to write migrated config')
-
-      writeSpy.mockRestore()
+      })).rejects.toThrow('Rolled back 1 previously written file(s).')
 
       const firstAfter = await fs.readFile(first, 'utf8')
       const secondAfter = await fs.readFile(second, 'utf8')

@@ -150,6 +150,7 @@
     }
   },
   "dependencies": {
+    "@tailwindcss-mangle/native": "workspace:*",
     "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/oxide": "^4.3.3",
     "micromatch": "^4.0.8",

@@ -207,4 +207,20 @@ describe('CacheStore context-aware behavior', () => {
     expect(result.meta.reason).toBe('hit')
     expect(result.data.has('plain-memory')).toBe(true)
   })
+
+  it('reflects updates to caller-owned enablement and context without losing native memory state', async () => {
+    const normalized = await createStoreOptions(path.join(tempDir, 'mutable-project'), path.join(tempDir, '.cache'), 'memory')
+    const context = createCacheContextDescriptor(normalized, toPackageInfo(tempDir, '3.4.19'), 3)
+    const store = new CacheStore(normalized.cache, context)
+    await store.write(new Set(['retained']))
+    normalized.cache.enabled = false
+    expect((await store.readWithMeta()).meta.reason).toBe('cache-disabled')
+    normalized.cache.enabled = true
+    expect(await store.read()).toEqual(new Set(['retained']))
+    const fingerprint = context.fingerprint
+    context.fingerprint = 'new-context'
+    expect((await store.readWithMeta()).meta.reason).toBe('context-mismatch')
+    context.fingerprint = fingerprint
+    expect(await store.read()).toEqual(new Set(['retained']))
+  })
 })

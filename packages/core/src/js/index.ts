@@ -1,168 +1,25 @@
 import type { StringLiteral, TemplateElement } from '@babel/types'
+import type MagicString from 'magic-string'
 import type { IHandlerTransformResult, IJsHandlerOptions } from '../types'
-import { sort } from 'fast-sort'
-import MagicString from 'magic-string'
-import { parse, traverse } from '../babel'
-import { ignoreIdentifier } from '../constants'
-import { makeRegex, splitCode } from '../shared'
+import { escapeJsStringNative } from '@tailwindcss-mangle/native'
+import { transformWithNative } from '../native'
 
-function jsStringEscape(str: unknown): string {
-  return (`${str}`).replaceAll(/[\n\r"'\\\u2028\u2029]/g, (character) => {
-    switch (character) {
-      case '"':
-      case '\'':
-      case '\\': {
-        return `\\${character}`
-      }
-      case '\n': {
-        return '\\n'
-      }
-      case '\r': {
-        return '\\r'
-      }
-      case '\u2028': {
-        return '\\u2028'
-      }
-      case '\u2029': {
-        return '\\u2029'
-      }
-      default: {
-        return character
-      }
-    }
-  })
-}
-
+/** Compatibility entry point for callers transforming an existing literal. */
 export function handleValue(raw: string, node: StringLiteral | TemplateElement, options: IJsHandlerOptions, ms: MagicString, offset: number, escape: boolean) {
-  const { ctx, splitQuote = true, id } = options
-  const { replaceMap, classGenerator: clsGen } = ctx
-
-  const array = splitCode(raw, {
-    splitQuote,
-  })
-  let rawString = raw
-  let needUpdate = false
-  for (const v of array) {
-    if (replaceMap.has(v)) {
-      let ignoreFlag = false
-      if (Array.isArray(node.leadingComments)) {
-        ignoreFlag = node.leadingComments.findIndex(x => x.value.includes('tw-mangle') && x.value.includes('ignore')) > -1
-      }
-
-      if (!ignoreFlag) {
-        const gen = clsGen.generateClassName(v)
-        rawString = rawString.replace(makeRegex(v), gen.name)
-        ctx.addToUsedBy(v, id)
-        needUpdate = true
-      }
-    }
+  if (node.leadingComments?.some(comment => comment.value.includes('tw-mangle') && comment.value.includes('ignore'))) {
+    return raw
   }
-  if (needUpdate && typeof node.start === 'number' && typeof node.end === 'number') {
+  const value = transformWithNative(raw, { ...options, splitQuote: options.splitQuote ?? true }, 'text').code
+  if (raw !== value && typeof node.start === 'number' && typeof node.end === 'number') {
     const start = node.start + offset
     const end = node.end - offset
-
-    if (start < end && raw !== rawString) {
-      ms.update(start, end, escape ? jsStringEscape(rawString) : rawString)
+    if (start < end) {
+      ms.update(start, end, escape ? escapeJsStringNative(value) : value)
     }
   }
-  return rawString
+  return value
 }
 
 export function jsHandler(rawSource: string | MagicString, options: IJsHandlerOptions): IHandlerTransformResult {
-  const ms: MagicString = typeof rawSource === 'string' ? new MagicString(rawSource) : rawSource
-  let ast
-  try {
-    ast = parse(ms.original, {
-      sourceType: 'unambiguous',
-      plugins: ['jsx', 'typescript'],
-    })
-  }
-  catch {
-    return {
-      code: ms.original,
-    }
-  }
-  const { ctx } = options
-
-  traverse(ast, {
-    StringLiteral: {
-      enter(p) {
-        const n = p.node
-        if (
-          typeof n.value === 'string'
-          && p.isDirectiveLiteral?.()
-          && n.value.startsWith('use ')
-        ) {
-          return
-        }
-        handleValue(n.value, n, options, ms, 1, true)
-      },
-    },
-    TemplateElement: {
-      enter(p) {
-        const n = p.node
-        if (p.parentPath.isTemplateLiteral()) {
-          if (
-            (p.parentPath.parentPath.isTaggedTemplateExpression()
-              && p.parentPath.parentPath.get('tag').isIdentifier({
-                name: ignoreIdentifier,
-              }))) {
-            const { splitQuote = true } = options
-            const array = splitCode(n.value.raw, {
-              splitQuote,
-            })
-            for (const item of array) {
-              ctx.addPreserveClass(item)
-            }
-
-            return
-          }
-        }
-
-        handleValue(n.value.raw, n, options, ms, 0, false)
-      },
-    },
-    CallExpression: {
-      enter(p) {
-        const callee = p.get('callee')
-        if (callee.isIdentifier() && ctx.isPreserveFunction(callee.node.name)) {
-          p.traverse({
-            StringLiteral: {
-              enter(path) {
-                const node = path.node
-                const value = node.value
-                const arr = sort(splitCode(value)).desc(x => x.length)
-
-                for (const str of arr) {
-                  if (ctx.replaceMap.has(str)) {
-                    ctx.addPreserveClass(str)
-                  }
-                }
-              },
-            },
-            TemplateElement: {
-              enter(path) {
-                const node = path.node
-                const value = node.value.raw
-                const arr = sort(splitCode(value)).desc(x => x.length)
-
-                for (const str of arr) {
-                  if (ctx.replaceMap.has(str)) {
-                    ctx.addPreserveClass(str)
-                  }
-                }
-              },
-            },
-          })
-        }
-      },
-    },
-  })
-
-  return {
-    code: ms.toString(),
-    get map() {
-      return ms.generateMap()
-    },
-  }
+  return transformWithNative(rawSource, options, 'js')
 }

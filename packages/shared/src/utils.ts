@@ -1,3 +1,4 @@
+import { defaultMangleClassFilterNative, stripEscapeSequenceNative } from '@tailwindcss-mangle/native'
 import { createDefu } from 'defu'
 
 export { defu } from 'defu'
@@ -19,19 +20,8 @@ export const preserveClassNames = [
   // https://tailwindcss.com/docs/transition-timing-function end
 ]
 
-const preserveClassNamesMap = preserveClassNames.reduce<Record<(typeof preserveClassNames)[number], true>>((acc, cur) => {
-  acc[cur] = true
-  return acc
-}, {})
-
 export function defaultMangleClassFilter(className: string) {
-  if (preserveClassNamesMap[className]) {
-    return false
-  }
-  // ignore className like 'filter','container'
-  // it may be dangerous to mangle/rename all StringLiteral , so use /-/ test for only those with /-/ like:
-  // bg-[#123456] w-1 etc...
-  return /[:-]/.test(className)
+  return defaultMangleClassFilterNative(className)
 }
 
 export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]> {
@@ -62,7 +52,7 @@ export function groupBy<T>(arr: T[], cb: (arg: T) => string): Record<string, T[]
 export const acceptChars = [...'abcdefghijklmnopqrstuvwxyz']
 
 export function stripEscapeSequence(words: string) {
-  return words.replaceAll('\\', '')
+  return stripEscapeSequenceNative(words)
 }
 
 export function isRegexp(value: unknown) {

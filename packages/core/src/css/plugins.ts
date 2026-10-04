@@ -1,32 +1,11 @@
 import type { PluginCreator } from 'postcss'
+import type parser from 'postcss-selector-parser'
 import type { ICssHandlerOptions } from '../types'
 import defu from 'defu'
-import parser from 'postcss-selector-parser'
 
 export type PostcssMangleTailwindcssPlugin = PluginCreator<ICssHandlerOptions>
 
 const postcssPlugin = 'postcss-mangle-tailwindcss-plugin'
-
-function unescapeCssClassName(value: string) {
-  return value.replace(/\\([^\n\r\f0-9a-f])/gi, '$1')
-}
-
-function resolveReplacement(replaceMap: Map<string, string>, value: string) {
-  if (replaceMap.has(value)) {
-    return {
-      original: value,
-      replacement: replaceMap.get(value),
-    }
-  }
-
-  const unescapedValue = unescapeCssClassName(value)
-  if (unescapedValue !== value && replaceMap.has(unescapedValue)) {
-    return {
-      original: unescapedValue,
-      replacement: replaceMap.get(unescapedValue),
-    }
-  }
-}
 
 export function isVueScoped(s: parser.ClassName): boolean {
   if (s.parent) {
@@ -46,32 +25,19 @@ export const transformSelectorPostcssPlugin: PluginCreator<ICssHandlerOptions> =
     ignoreVueScoped: true,
   })
 
-  const replaceMap = ctx.replaceMap
-
   return {
     postcssPlugin,
     Once(root) {
+      const native = ctx.getNativeContext('css')
       root.walkRules((rule) => {
-        parser((selectors) => {
-          selectors.walkClasses((s) => {
-            const resolved = s.value && replaceMap ? resolveReplacement(replaceMap, s.value) : undefined
-            if (resolved) {
-              if (ignoreVueScoped && isVueScoped(s)) {
-                return
-              }
-              const v = resolved.replacement
-              if (v) {
-                if (ctx.isPreserveClass(resolved.original)) {
-                  rule.cloneBefore()
-                }
-                s.value = v
-              }
-            }
-          })
-        }).transformSync(rule, {
-          lossless: false,
-          updateSelector: true,
-        })
+        const result = native.transformSelector(rule.selector, ignoreVueScoped)
+        if (!result.valid) {
+          throw rule.error('Unable to parse the CSS selector')
+        }
+        for (let index = 0; index < result.preserveCount; index++) {
+          rule.cloneBefore()
+        }
+        rule.selector = result.code
       })
     },
 

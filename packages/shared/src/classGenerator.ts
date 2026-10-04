@@ -1,7 +1,8 @@
 import type { IClassGenerator, IClassGeneratorContextItem, IClassGeneratorOptions } from './types'
 
 import process from 'node:process'
-import { acceptChars, regExpTest, stripEscapeSequence } from './utils'
+import { defaultClassNameNative } from '@tailwindcss-mangle/native'
+import { regExpTest, stripEscapeSequence } from './utils'
 
 export class ClassGenerator implements IClassGenerator {
   public newClassMap: Record<string, IClassGeneratorContextItem>
@@ -18,25 +19,7 @@ export class ClassGenerator implements IClassGenerator {
   }
 
   defaultClassGenerate() {
-    const chars = []
-    let rest = (this.newClassSize - (this.newClassSize % acceptChars.length)) / acceptChars.length
-    if (rest > 0) {
-      while (true) {
-        rest -= 1
-        const m = rest % acceptChars.length
-        const c = acceptChars[m]
-        chars.push(c)
-        rest -= m
-        if (rest === 0) {
-          break
-        }
-        rest /= acceptChars.length
-      }
-    }
-    const prefixIndex = this.newClassSize % acceptChars.length
-
-    const newClassName = `${this.classPrefix}${acceptChars[prefixIndex]}${chars.join('')}`
-    return newClassName
+    return defaultClassNameNative(this.newClassSize, this.classPrefix)
   }
 
   ignoreClassName(className: string): boolean {

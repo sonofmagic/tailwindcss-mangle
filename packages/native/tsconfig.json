@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "skipLibCheck": false
+  },
+  "include": ["index.d.ts"]
+}

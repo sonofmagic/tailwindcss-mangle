@@ -3,7 +3,7 @@ import MagicString from 'magic-string'
 import { parse } from 'svelte/compiler'
 import { cssHandler } from '../css'
 import { jsHandler } from '../js'
-import { makeRegex, splitCode } from '../shared'
+import { transformWithNative } from '../native'
 
 interface ISvelteHandlerOptions extends IJsHandlerOptions {}
 
@@ -13,7 +13,7 @@ async function processSvelteAst(
   ctx: any,
   id?: string,
 ): Promise<void> {
-  const { replaceMap, classGenerator } = ctx
+  const { replaceMap } = ctx
   const stylePromises: Promise<void>[] = []
 
   // Walk the AST and process class-related nodes
@@ -27,20 +27,9 @@ async function processSvelteAst(
       for (const attrValue of node.value) {
         if (attrValue.type === 'Text') {
           const classValue = attrValue.data
-          const arr = splitCode(classValue, { splitQuote: false })
-          let newValue = classValue
-          let needUpdate = false
-
-          for (const v of arr) {
-            if (replaceMap.has(v)) {
-              const gen = classGenerator.generateClassName(v)
-              newValue = newValue.replace(makeRegex(v), gen.name)
-              if (id) {
-                ctx.addToUsedBy(v, id)
-              }
-              needUpdate = true
-            }
-          }
+          const options = id === undefined ? { ctx } : { ctx, id }
+          const newValue = transformWithNative(classValue, options, 'text').code
+          const needUpdate = newValue !== classValue
 
           if (needUpdate) {
             const start = attrValue.start

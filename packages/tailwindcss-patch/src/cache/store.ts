@@ -1,18 +1,9 @@
 import type { NormalizedCacheOptions } from '../options/types'
-import type {
-  CacheClearOptions,
-  CacheClearResult,
-  CacheContextDescriptor,
-  CacheIndexEntry,
-  CacheIndexFileV2,
-  CacheReadMeta,
-  CacheReadResult,
-} from './types'
+import type { CacheClearOptions, CacheClearResult, CacheContextDescriptor, CacheIndexFileV2, CacheReadMeta, CacheReadResult } from './types'
 import process from 'node:process'
+import { NativeCacheState } from '@tailwindcss-mangle/native'
 import fs from 'fs-extra'
 import logger from '../logger'
-import { explainContextMismatch } from './context'
-import { CACHE_SCHEMA_VERSION } from './types'
 
 interface ParsedCacheFileV2 {
   kind: 'v2'
@@ -43,48 +34,21 @@ function isAccessDenied(error: unknown): error is NodeJS.ErrnoException {
     && Boolean(error.code && ['EPERM', 'EBUSY', 'EACCES'].includes(error.code))
 }
 
-function toStringArray(value: unknown): string[] {
-  if (!Array.isArray(value)) {
-    return []
-  }
-
-  return value.filter((item): item is string => typeof item === 'string')
+interface WritePlan {
+  kind: 'skip' | 'memory' | 'file'
+  payload?: CacheIndexFileV2 | string[]
 }
 
-function asObject(value: unknown): Record<string, unknown> | undefined {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return undefined
-  }
-  return value as Record<string, unknown>
-}
-
-function toReadMeta(meta: CacheReadMeta): CacheReadMeta {
-  return {
-    ...meta,
-    details: [...meta.details],
-  }
-}
-
-function cloneEntry(entry: CacheIndexEntry): CacheIndexEntry {
-  return {
-    context: {
-      ...entry.context,
-    },
-    values: [...entry.values],
-    updatedAt: entry.updatedAt,
-  }
+interface ClearPlan {
+  action: 'none' | 'remove' | 'write'
+  result: CacheClearResult
+  payload?: CacheIndexFileV2
 }
 
 export class CacheStore {
   private readonly driver: NormalizedCacheOptions['driver']
   private readonly lockPath: string
-  private memoryCache: Set<string> | null = null
-  private memoryIndex: CacheIndexFileV2 | null = null
-  private lastReadMeta: CacheReadMeta = {
-    hit: false,
-    reason: 'context-not-found',
-    details: [],
-  }
+  private readonly state: NativeCacheState
 
   constructor(
     private readonly options: NormalizedCacheOptions,
@@ -92,18 +56,11 @@ export class CacheStore {
   ) {
     this.driver = options.driver ?? 'file'
     this.lockPath = `${this.options.path}.lock`
+    this.state = new NativeCacheState(options.enabled, this.driver, context === undefined ? undefined : JSON.stringify(context))
   }
 
-  private isContextAware() {
-    return this.context !== undefined
-  }
-
-  private createEmptyIndex(): CacheIndexFileV2 {
-    return {
-      schemaVersion: CACHE_SCHEMA_VERSION,
-      updatedAt: new Date().toISOString(),
-      contexts: {},
-    }
+  private normalizeIndexFile(payload: unknown): ParsedCacheFile {
+    return JSON.parse(this.state.normalizeIndex(JSON.stringify(payload))) as ParsedCacheFile
   }
 
   private async ensureDir() {
@@ -302,116 +259,6 @@ export class CacheStore {
     }
   }
 
-  private normalizeContextEntry(value: unknown): CacheIndexEntry | undefined {
-    const record = asObject(value)
-    if (!record) {
-      return undefined
-    }
-
-    const values = toStringArray(record['values'])
-    if (values.length === 0) {
-      return undefined
-    }
-
-    const contextRecord = asObject(record['context'])
-    if (!contextRecord) {
-      return undefined
-    }
-
-    const {
-      fingerprintVersion,
-      projectRootRealpath,
-      processCwdRealpath,
-      cacheCwdRealpath,
-      tailwindConfigPath,
-      tailwindConfigMtimeMs,
-      tailwindPackageRootRealpath,
-      tailwindPackageVersion,
-      patcherVersion,
-      majorVersion,
-      optionsHash,
-    } = contextRecord
-
-    if (
-      fingerprintVersion !== 1
-      || typeof projectRootRealpath !== 'string'
-      || typeof processCwdRealpath !== 'string'
-      || typeof cacheCwdRealpath !== 'string'
-      || typeof tailwindPackageRootRealpath !== 'string'
-      || typeof tailwindPackageVersion !== 'string'
-      || typeof patcherVersion !== 'string'
-      || (majorVersion !== 2 && majorVersion !== 3 && majorVersion !== 4)
-      || typeof optionsHash !== 'string'
-    ) {
-      return undefined
-    }
-
-    const normalized: CacheIndexEntry = {
-      context: {
-        fingerprintVersion,
-        projectRootRealpath,
-        processCwdRealpath,
-        cacheCwdRealpath,
-        ...(typeof tailwindConfigPath === 'string' ? { tailwindConfigPath } : {}),
-        ...(typeof tailwindConfigMtimeMs === 'number' ? { tailwindConfigMtimeMs } : {}),
-        tailwindPackageRootRealpath,
-        tailwindPackageVersion,
-        patcherVersion,
-        majorVersion,
-        optionsHash,
-      },
-      values,
-      updatedAt: typeof record['updatedAt'] === 'string' ? record['updatedAt'] : new Date(0).toISOString(),
-    }
-
-    return normalized
-  }
-
-  private normalizeIndexFile(payload: unknown): ParsedCacheFile {
-    if (Array.isArray(payload)) {
-      return {
-        kind: 'legacy',
-        data: toStringArray(payload),
-      }
-    }
-
-    const record = asObject(payload)
-    if (!record) {
-      return { kind: 'invalid' }
-    }
-
-    if (record['schemaVersion'] !== CACHE_SCHEMA_VERSION) {
-      return { kind: 'invalid' }
-    }
-
-    const contextsRecord = asObject(record['contexts'])
-    if (!contextsRecord) {
-      return { kind: 'invalid' }
-    }
-
-    const contexts: CacheIndexFileV2['contexts'] = {}
-
-    for (const [fingerprint, value] of Object.entries(contextsRecord)) {
-      if (typeof fingerprint !== 'string' || !fingerprint) {
-        continue
-      }
-      const entry = this.normalizeContextEntry(value)
-      if (!entry) {
-        continue
-      }
-      contexts[fingerprint] = entry
-    }
-
-    return {
-      kind: 'v2',
-      data: {
-        schemaVersion: CACHE_SCHEMA_VERSION,
-        updatedAt: typeof record['updatedAt'] === 'string' ? record['updatedAt'] : new Date(0).toISOString(),
-        contexts,
-      },
-    }
-  }
-
   private async readParsedCacheFile(cleanupInvalid: boolean): Promise<ParsedCacheFile> {
     try {
       if (!(await fs.pathExists(this.options.path))) {
@@ -486,16 +333,7 @@ export class CacheStore {
     }
   }
 
-  private findProjectMatch(index: CacheIndexFileV2) {
-    if (!this.context) {
-      return undefined
-    }
-
-    const current = this.context.metadata.projectRootRealpath
-    return Object.entries(index.contexts).find(([, entry]) => entry.context.projectRootRealpath === current)
-  }
-
-  private async writeIndexFile(index: CacheIndexFileV2): Promise<string | undefined> {
+  private async writeIndexFile(index: CacheIndexFileV2 | string[]): Promise<string | undefined> {
     const tempPath = this.createTempPath()
 
     try {
@@ -516,7 +354,7 @@ export class CacheStore {
     }
   }
 
-  private writeIndexFileSync(index: CacheIndexFileV2): string | undefined {
+  private writeIndexFileSync(index: CacheIndexFileV2 | string[]): string | undefined {
     const tempPath = this.createTempPath()
 
     try {
@@ -537,904 +375,119 @@ export class CacheStore {
     }
   }
 
-  async write(data: Set<string>): Promise<string | undefined> {
-    if (!this.options.enabled) {
-      return undefined
-    }
+  private refreshContext() {
+    this.state.configure(this.options.enabled, this.context === undefined ? undefined : JSON.stringify(this.context))
+  }
 
-    if (this.driver === 'noop') {
-      return undefined
-    }
+  private prepareWrite(data: Set<string>, parsed?: ParsedCacheFile): WritePlan {
+    this.refreshContext()
+    return JSON.parse(this.state.prepareWrite([...data], parsed === undefined ? undefined : JSON.stringify(parsed), new Date().toISOString())) as WritePlan
+  }
 
-    if (this.driver === 'memory') {
-      if (!this.isContextAware()) {
-        this.memoryCache = new Set(data)
-        return 'memory'
-      }
-
-      const index = this.memoryIndex ?? this.createEmptyIndex()
-      if (!this.context) {
-        return 'memory'
-      }
-      index.contexts[this.context.fingerprint] = {
-        context: {
-          ...this.context.metadata,
-        },
-        values: Array.from(data),
-        updatedAt: new Date().toISOString(),
-      }
-      index.updatedAt = new Date().toISOString()
-      this.memoryIndex = index
+  private async applyWrite(plan: WritePlan): Promise<string | undefined> {
+    if (plan.kind === 'memory') {
       return 'memory'
     }
+    return plan.kind === 'file' && plan.payload ? this.writeIndexFile(plan.payload) : undefined
+  }
 
-    if (!this.isContextAware()) {
-      const tempPath = this.createTempPath()
-      try {
-        await this.ensureDir()
-        await fs.writeJSON(tempPath, Array.from(data))
-        const replaced = await this.replaceCacheFile(tempPath)
-        if (replaced) {
-          return this.options.path
-        }
-
-        await this.cleanupTempFile(tempPath)
-        return undefined
-      }
-      catch (error) {
-        await this.cleanupTempFile(tempPath)
-        logger.error('Unable to persist Tailwind class cache', error)
-        return undefined
-      }
+  private applyWriteSync(plan: WritePlan): string | undefined {
+    if (plan.kind === 'memory') {
+      return 'memory'
     }
+    return plan.kind === 'file' && plan.payload ? this.writeIndexFileSync(plan.payload) : undefined
+  }
 
-    const result = await this.withFileLock(async () => {
-      const parsed = await this.readParsedCacheFile(false)
-      const index = parsed.kind === 'v2' ? parsed.data : this.createEmptyIndex()
-
-      if (this.context) {
-        index.contexts[this.context.fingerprint] = {
-          context: {
-            ...this.context.metadata,
-          },
-          values: Array.from(data),
-          updatedAt: new Date().toISOString(),
-        }
-      }
-
-      index.updatedAt = new Date().toISOString()
-      return this.writeIndexFile(index)
-    })
-
-    return result
+  async write(data: Set<string>): Promise<string | undefined> {
+    if (this.options.enabled && this.driver === 'file' && this.context) {
+      return this.withFileLock(async () => this.applyWrite(this.prepareWrite(data, await this.readParsedCacheFile(false))))
+    }
+    return this.applyWrite(this.prepareWrite(data))
   }
 
   writeSync(data: Set<string>): string | undefined {
-    if (!this.options.enabled) {
-      return undefined
+    if (this.options.enabled && this.driver === 'file' && this.context) {
+      return this.withFileLockSync(() => this.applyWriteSync(this.prepareWrite(data, this.readParsedCacheFileSync(false))))
     }
+    return this.applyWriteSync(this.prepareWrite(data))
+  }
 
-    if (this.driver === 'noop') {
-      return undefined
-    }
-
-    if (this.driver === 'memory') {
-      if (!this.isContextAware()) {
-        this.memoryCache = new Set(data)
-        return 'memory'
-      }
-
-      const index = this.memoryIndex ?? this.createEmptyIndex()
-      if (!this.context) {
-        return 'memory'
-      }
-      index.contexts[this.context.fingerprint] = {
-        context: {
-          ...this.context.metadata,
-        },
-        values: Array.from(data),
-        updatedAt: new Date().toISOString(),
-      }
-      index.updatedAt = new Date().toISOString()
-      this.memoryIndex = index
-      return 'memory'
-    }
-
-    if (!this.isContextAware()) {
-      const tempPath = this.createTempPath()
-      try {
-        this.ensureDirSync()
-        fs.writeJSONSync(tempPath, Array.from(data))
-        const replaced = this.replaceCacheFileSync(tempPath)
-        if (replaced) {
-          return this.options.path
-        }
-
-        this.cleanupTempFileSync(tempPath)
-        return undefined
-      }
-      catch (error) {
-        this.cleanupTempFileSync(tempPath)
-        logger.error('Unable to persist Tailwind class cache', error)
-        return undefined
-      }
-    }
-
-    const result = this.withFileLockSync(() => {
-      const parsed = this.readParsedCacheFileSync(false)
-      const index = parsed.kind === 'v2' ? parsed.data : this.createEmptyIndex()
-
-      if (this.context) {
-        index.contexts[this.context.fingerprint] = {
-          context: {
-            ...this.context.metadata,
-          },
-          values: Array.from(data),
-          updatedAt: new Date().toISOString(),
-        }
-      }
-
-      index.updatedAt = new Date().toISOString()
-      return this.writeIndexFileSync(index)
-    })
-
-    return result
+  private resolveRead(parsed?: ParsedCacheFile): CacheReadResult {
+    this.refreshContext()
+    const result = JSON.parse(this.state.read(parsed === undefined ? undefined : JSON.stringify(parsed))) as { data: string[], meta: CacheReadMeta }
+    return { data: new Set(result.data), meta: result.meta }
   }
 
   async readWithMeta(): Promise<CacheReadResult> {
-    if (!this.options.enabled) {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'cache-disabled',
-          details: ['cache disabled'],
-        },
-      }
-    }
-
-    if (this.driver === 'noop') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'noop-driver',
-          details: ['cache driver is noop'],
-        },
-      }
-    }
-
-    if (this.driver === 'memory') {
-      if (!this.isContextAware()) {
-        const cache = new Set(this.memoryCache ?? [])
-        return {
-          data: cache,
-          meta: {
-            hit: cache.size > 0,
-            reason: cache.size > 0 ? 'hit' : 'context-not-found',
-            details: cache.size > 0 ? ['memory cache hit'] : ['memory cache miss'],
-          },
-        }
-      }
-
-      const index = this.memoryIndex
-      if (!index || !this.context) {
-        return {
-          data: new Set(),
-          meta: {
-            hit: false,
-            reason: 'context-not-found',
-            ...(this.context?.fingerprint === undefined ? {} : { fingerprint: this.context.fingerprint }),
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: ['no in-memory cache index for current context'],
-          },
-        }
-      }
-
-      const entry = index.contexts[this.context.fingerprint]
-      if (entry) {
-        return {
-          data: new Set(entry.values),
-          meta: {
-            hit: true,
-            reason: 'hit',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: ['memory cache hit'],
-          },
-        }
-      }
-
-      const projectMatch = this.findProjectMatch(index)
-      if (projectMatch && this.context) {
-        const [, matchedEntry] = projectMatch
-        return {
-          data: new Set(),
-          meta: {
-            hit: false,
-            reason: 'context-mismatch',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: explainContextMismatch(this.context.metadata, matchedEntry.context),
-          },
-        }
-      }
-
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-not-found',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: CACHE_SCHEMA_VERSION,
-          details: ['context fingerprint not found in memory cache index'],
-        },
-      }
-    }
-
-    const parsed = await this.readParsedCacheFile(true)
-
-    if (parsed.kind === 'empty') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'file-missing',
-          details: ['cache file not found'],
-        },
-      }
-    }
-
-    if (parsed.kind === 'invalid') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'invalid-schema',
-          details: ['cache schema invalid and has been reset'],
-        },
-      }
-    }
-
-    if (!this.isContextAware()) {
-      if (parsed.kind === 'legacy') {
-        return {
-          data: new Set(parsed.data),
-          meta: {
-            hit: parsed.data.length > 0,
-            reason: parsed.data.length > 0 ? 'hit' : 'context-not-found',
-            details: ['legacy cache format'],
-          },
-        }
-      }
-
-      const union = Object.values(parsed.data.contexts).flatMap(entry => entry.values)
-      return {
-        data: new Set(union),
-        meta: {
-          hit: union.length > 0,
-          reason: union.length > 0 ? 'hit' : 'context-not-found',
-          schemaVersion: parsed.data.schemaVersion,
-          details: ['context-less read merged all cache entries'],
-        },
-      }
-    }
-
-    if (parsed.kind === 'legacy') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'legacy-schema',
-          ...(this.context?.fingerprint === undefined ? {} : { fingerprint: this.context.fingerprint }),
-          details: ['legacy cache schema detected; rebuilding cache with context fingerprint'],
-        },
-      }
-    }
-
-    if (!this.context) {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-not-found',
-          details: ['cache context missing'],
-        },
-      }
-    }
-
-    const entry = parsed.data.contexts[this.context.fingerprint]
-    if (entry) {
-      const mismatchReasons = explainContextMismatch(this.context.metadata, entry.context)
-      if (mismatchReasons.length === 0) {
-        return {
-          data: new Set(entry.values),
-          meta: {
-            hit: true,
-            reason: 'hit',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: parsed.data.schemaVersion,
-            details: [`context fingerprint ${this.context.fingerprint.slice(0, 12)} matched`],
-          },
-        }
-      }
-
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-mismatch',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: parsed.data.schemaVersion,
-          details: mismatchReasons,
-        },
-      }
-    }
-
-    const projectMatch = this.findProjectMatch(parsed.data)
-    if (projectMatch) {
-      const [matchedFingerprint, matchedEntry] = projectMatch
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-mismatch',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: parsed.data.schemaVersion,
-          details: [
-            `nearest context fingerprint: ${matchedFingerprint.slice(0, 12)}`,
-            ...explainContextMismatch(this.context.metadata, matchedEntry.context),
-          ],
-        },
-      }
-    }
-
-    return {
-      data: new Set(),
-      meta: {
-        hit: false,
-        reason: 'context-not-found',
-        fingerprint: this.context.fingerprint,
-        schemaVersion: parsed.data.schemaVersion,
-        details: ['context fingerprint not found in cache index'],
-      },
-    }
+    return this.resolveRead(this.options.enabled && this.driver === 'file' ? await this.readParsedCacheFile(true) : undefined)
   }
 
   readWithMetaSync(): CacheReadResult {
-    if (!this.options.enabled) {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'cache-disabled',
-          details: ['cache disabled'],
-        },
-      }
-    }
-
-    if (this.driver === 'noop') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'noop-driver',
-          details: ['cache driver is noop'],
-        },
-      }
-    }
-
-    if (this.driver === 'memory') {
-      if (!this.isContextAware()) {
-        const cache = new Set(this.memoryCache ?? [])
-        return {
-          data: cache,
-          meta: {
-            hit: cache.size > 0,
-            reason: cache.size > 0 ? 'hit' : 'context-not-found',
-            details: cache.size > 0 ? ['memory cache hit'] : ['memory cache miss'],
-          },
-        }
-      }
-
-      const index = this.memoryIndex
-      if (!index || !this.context) {
-        return {
-          data: new Set(),
-          meta: {
-            hit: false,
-            reason: 'context-not-found',
-            ...(this.context?.fingerprint === undefined ? {} : { fingerprint: this.context.fingerprint }),
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: ['no in-memory cache index for current context'],
-          },
-        }
-      }
-
-      const entry = index.contexts[this.context.fingerprint]
-      if (entry) {
-        return {
-          data: new Set(entry.values),
-          meta: {
-            hit: true,
-            reason: 'hit',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: ['memory cache hit'],
-          },
-        }
-      }
-
-      const projectMatch = this.findProjectMatch(index)
-      if (projectMatch && this.context) {
-        const [, matchedEntry] = projectMatch
-        return {
-          data: new Set(),
-          meta: {
-            hit: false,
-            reason: 'context-mismatch',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: CACHE_SCHEMA_VERSION,
-            details: explainContextMismatch(this.context.metadata, matchedEntry.context),
-          },
-        }
-      }
-
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-not-found',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: CACHE_SCHEMA_VERSION,
-          details: ['context fingerprint not found in memory cache index'],
-        },
-      }
-    }
-
-    const parsed = this.readParsedCacheFileSync(true)
-
-    if (parsed.kind === 'empty') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'file-missing',
-          details: ['cache file not found'],
-        },
-      }
-    }
-
-    if (parsed.kind === 'invalid') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'invalid-schema',
-          details: ['cache schema invalid and has been reset'],
-        },
-      }
-    }
-
-    if (!this.isContextAware()) {
-      if (parsed.kind === 'legacy') {
-        return {
-          data: new Set(parsed.data),
-          meta: {
-            hit: parsed.data.length > 0,
-            reason: parsed.data.length > 0 ? 'hit' : 'context-not-found',
-            details: ['legacy cache format'],
-          },
-        }
-      }
-
-      const union = Object.values(parsed.data.contexts).flatMap(entry => entry.values)
-      return {
-        data: new Set(union),
-        meta: {
-          hit: union.length > 0,
-          reason: union.length > 0 ? 'hit' : 'context-not-found',
-          schemaVersion: parsed.data.schemaVersion,
-          details: ['context-less read merged all cache entries'],
-        },
-      }
-    }
-
-    if (parsed.kind === 'legacy') {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'legacy-schema',
-          ...(this.context?.fingerprint === undefined ? {} : { fingerprint: this.context.fingerprint }),
-          details: ['legacy cache schema detected; rebuilding cache with context fingerprint'],
-        },
-      }
-    }
-
-    if (!this.context) {
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-not-found',
-          details: ['cache context missing'],
-        },
-      }
-    }
-
-    const entry = parsed.data.contexts[this.context.fingerprint]
-    if (entry) {
-      const mismatchReasons = explainContextMismatch(this.context.metadata, entry.context)
-      if (mismatchReasons.length === 0) {
-        return {
-          data: new Set(entry.values),
-          meta: {
-            hit: true,
-            reason: 'hit',
-            fingerprint: this.context.fingerprint,
-            schemaVersion: parsed.data.schemaVersion,
-            details: [`context fingerprint ${this.context.fingerprint.slice(0, 12)} matched`],
-          },
-        }
-      }
-
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-mismatch',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: parsed.data.schemaVersion,
-          details: mismatchReasons,
-        },
-      }
-    }
-
-    const projectMatch = this.findProjectMatch(parsed.data)
-    if (projectMatch) {
-      const [matchedFingerprint, matchedEntry] = projectMatch
-      return {
-        data: new Set(),
-        meta: {
-          hit: false,
-          reason: 'context-mismatch',
-          fingerprint: this.context.fingerprint,
-          schemaVersion: parsed.data.schemaVersion,
-          details: [
-            `nearest context fingerprint: ${matchedFingerprint.slice(0, 12)}`,
-            ...explainContextMismatch(this.context.metadata, matchedEntry.context),
-          ],
-        },
-      }
-    }
-
-    return {
-      data: new Set(),
-      meta: {
-        hit: false,
-        reason: 'context-not-found',
-        fingerprint: this.context.fingerprint,
-        schemaVersion: parsed.data.schemaVersion,
-        details: ['context fingerprint not found in cache index'],
-      },
-    }
+    return this.resolveRead(this.options.enabled && this.driver === 'file' ? this.readParsedCacheFileSync(true) : undefined)
   }
 
   async read(): Promise<Set<string>> {
     const result = await this.readWithMeta()
-    this.lastReadMeta = toReadMeta(result.meta)
-    return new Set(result.data)
+    this.state.rememberReadMeta(JSON.stringify(result.meta))
+    return result.data
   }
 
   readSync(): Set<string> {
     const result = this.readWithMetaSync()
-    this.lastReadMeta = toReadMeta(result.meta)
-    return new Set(result.data)
+    this.state.rememberReadMeta(JSON.stringify(result.meta))
+    return result.data
   }
 
   getLastReadMeta(): CacheReadMeta {
-    return toReadMeta(this.lastReadMeta)
+    return JSON.parse(this.state.getLastReadMeta()) as CacheReadMeta
   }
 
-  private countEntriesFromParsed(parsed: ParsedCacheFile): { contexts: number, entries: number } {
-    if (parsed.kind === 'legacy') {
-      return {
-        contexts: parsed.data.length ? 1 : 0,
-        entries: parsed.data.length,
-      }
-    }
+  private prepareClear(scope: 'current' | 'all', parsed?: ParsedCacheFile): ClearPlan {
+    this.refreshContext()
+    return JSON.parse(this.state.prepareClear(scope, parsed === undefined ? undefined : JSON.stringify(parsed), new Date().toISOString())) as ClearPlan
+  }
 
-    if (parsed.kind === 'v2') {
-      const values = Object.values(parsed.data.contexts)
-      return {
-        contexts: values.length,
-        entries: values.reduce((acc, item) => acc + item.values.length, 0),
-      }
+  private async applyClear(plan: ClearPlan): Promise<CacheClearResult> {
+    if (plan.action === 'remove') {
+      await fs.remove(this.options.path)
     }
+    else if (plan.action === 'write' && plan.payload) {
+      await this.writeIndexFile(plan.payload)
+    }
+    return plan.result
+  }
 
-    return {
-      contexts: 0,
-      entries: 0,
+  private applyClearSync(plan: ClearPlan): CacheClearResult {
+    if (plan.action === 'remove') {
+      fs.removeSync(this.options.path)
     }
+    else if (plan.action === 'write' && plan.payload) {
+      this.writeIndexFileSync(plan.payload)
+    }
+    return plan.result
   }
 
   async clear(options?: CacheClearOptions): Promise<CacheClearResult> {
     const scope = options?.scope ?? 'current'
-
-    if (!this.options.enabled || this.driver === 'noop') {
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved: 0,
-        contextsRemoved: 0,
-      }
+    if (this.options.enabled && this.driver === 'file') {
+      return await this.withFileLock(async () => this.applyClear(this.prepareClear(scope, await this.readParsedCacheFile(false))))
+        ?? { scope, filesRemoved: 0, entriesRemoved: 0, contextsRemoved: 0 }
     }
-
-    if (this.driver === 'memory') {
-      if (!this.isContextAware() || scope === 'all') {
-        const entriesRemoved = this.memoryCache?.size ?? (this.memoryIndex ? this.countEntriesFromParsed({ kind: 'v2', data: this.memoryIndex }).entries : 0)
-        const contextsRemoved = this.memoryIndex ? Object.keys(this.memoryIndex.contexts).length : (this.memoryCache?.size ? 1 : 0)
-        this.memoryCache = null
-        this.memoryIndex = null
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved,
-          contextsRemoved,
-        }
-      }
-
-      if (!this.context || !this.memoryIndex) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entry = this.memoryIndex.contexts[this.context.fingerprint]
-      if (!entry) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entriesRemoved = entry.values.length
-      delete this.memoryIndex.contexts[this.context.fingerprint]
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved,
-        contextsRemoved: 1,
-      }
-    }
-
-    const result = await this.withFileLock(async () => {
-      const parsed = await this.readParsedCacheFile(false)
-      if (parsed.kind === 'empty') {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      if (!this.isContextAware() || scope === 'all') {
-        const counts = this.countEntriesFromParsed(parsed)
-        await fs.remove(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved: counts.entries,
-          contextsRemoved: counts.contexts,
-        }
-      }
-
-      if (parsed.kind !== 'v2' || !this.context) {
-        const counts = this.countEntriesFromParsed(parsed)
-        await fs.remove(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved: counts.entries,
-          contextsRemoved: counts.contexts,
-        }
-      }
-
-      const entry = parsed.data.contexts[this.context.fingerprint]
-      if (!entry) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entriesRemoved = entry.values.length
-      delete parsed.data.contexts[this.context.fingerprint]
-      const remain = Object.keys(parsed.data.contexts).length
-      if (remain === 0) {
-        await fs.remove(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved,
-          contextsRemoved: 1,
-        }
-      }
-
-      parsed.data.updatedAt = new Date().toISOString()
-      await this.writeIndexFile(parsed.data)
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved,
-        contextsRemoved: 1,
-      }
-    })
-
-    return result ?? {
-      scope,
-      filesRemoved: 0,
-      entriesRemoved: 0,
-      contextsRemoved: 0,
-    }
+    return this.applyClear(this.prepareClear(scope))
   }
 
   clearSync(options?: CacheClearOptions): CacheClearResult {
     const scope = options?.scope ?? 'current'
-
-    if (!this.options.enabled || this.driver === 'noop') {
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved: 0,
-        contextsRemoved: 0,
-      }
+    if (this.options.enabled && this.driver === 'file') {
+      return this.withFileLockSync(() => this.applyClearSync(this.prepareClear(scope, this.readParsedCacheFileSync(false))))
+        ?? { scope, filesRemoved: 0, entriesRemoved: 0, contextsRemoved: 0 }
     }
-
-    if (this.driver === 'memory') {
-      if (!this.isContextAware() || scope === 'all') {
-        const entriesRemoved = this.memoryCache?.size ?? (this.memoryIndex ? this.countEntriesFromParsed({ kind: 'v2', data: this.memoryIndex }).entries : 0)
-        const contextsRemoved = this.memoryIndex ? Object.keys(this.memoryIndex.contexts).length : (this.memoryCache?.size ? 1 : 0)
-        this.memoryCache = null
-        this.memoryIndex = null
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved,
-          contextsRemoved,
-        }
-      }
-
-      if (!this.context || !this.memoryIndex) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entry = this.memoryIndex.contexts[this.context.fingerprint]
-      if (!entry) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entriesRemoved = entry.values.length
-      delete this.memoryIndex.contexts[this.context.fingerprint]
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved,
-        contextsRemoved: 1,
-      }
-    }
-
-    const result = this.withFileLockSync(() => {
-      const parsed = this.readParsedCacheFileSync(false)
-      if (parsed.kind === 'empty') {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      if (!this.isContextAware() || scope === 'all') {
-        const counts = this.countEntriesFromParsed(parsed)
-        fs.removeSync(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved: counts.entries,
-          contextsRemoved: counts.contexts,
-        }
-      }
-
-      if (parsed.kind !== 'v2' || !this.context) {
-        const counts = this.countEntriesFromParsed(parsed)
-        fs.removeSync(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved: counts.entries,
-          contextsRemoved: counts.contexts,
-        }
-      }
-
-      const entry = parsed.data.contexts[this.context.fingerprint]
-      if (!entry) {
-        return {
-          scope,
-          filesRemoved: 0,
-          entriesRemoved: 0,
-          contextsRemoved: 0,
-        }
-      }
-
-      const entriesRemoved = entry.values.length
-      delete parsed.data.contexts[this.context.fingerprint]
-      const remain = Object.keys(parsed.data.contexts).length
-      if (remain === 0) {
-        fs.removeSync(this.options.path)
-        return {
-          scope,
-          filesRemoved: 1,
-          entriesRemoved,
-          contextsRemoved: 1,
-        }
-      }
-
-      parsed.data.updatedAt = new Date().toISOString()
-      this.writeIndexFileSync(parsed.data)
-      return {
-        scope,
-        filesRemoved: 0,
-        entriesRemoved,
-        contextsRemoved: 1,
-      }
-    })
-
-    return result ?? {
-      scope,
-      filesRemoved: 0,
-      entriesRemoved: 0,
-      contextsRemoved: 0,
-    }
+    return this.applyClearSync(this.prepareClear(scope))
   }
 
   readIndexSnapshot(): CacheIndexFileV2 | undefined {
-    if (this.driver === 'memory') {
-      return this.memoryIndex
-        ? {
-            ...this.memoryIndex,
-            contexts: Object.fromEntries(Object.entries(this.memoryIndex.contexts).map(([key, value]) => [key, cloneEntry(value)])),
-          }
-        : undefined
-    }
-
-    const parsed = this.readParsedCacheFileSync(false)
-    if (parsed.kind !== 'v2') {
-      return undefined
-    }
-
-    return {
-      ...parsed.data,
-      contexts: Object.fromEntries(Object.entries(parsed.data.contexts).map(([key, value]) => [key, cloneEntry(value)])),
-    }
+    const parsed = this.driver === 'memory' ? undefined : this.readParsedCacheFileSync(false)
+    const snapshot = this.state.snapshot(parsed === undefined ? undefined : JSON.stringify(parsed))
+    return snapshot == null ? undefined : JSON.parse(snapshot) as CacheIndexFileV2
   }
 }

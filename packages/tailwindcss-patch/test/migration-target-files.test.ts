@@ -17,6 +17,31 @@ async function createTempDir(prefix: string) {
   return dir
 }
 
+// Differential oracle: the pre-native glob compiler used non-Unicode JS regexes.
+function legacyGlobRegex(glob: string) {
+  const normalized = glob.trim().replace(/\\/g, '/').replace(/^\.\/+/, '').replace(/^\/+/, '')
+  let pattern = ''
+  for (let index = 0; index < normalized.length; index += 1) {
+    const char = normalized[index]!
+    if (char === '*') {
+      if (normalized[index + 1] === '*') {
+        pattern += '.*'
+        index += 1
+      }
+      else {
+        pattern += '[^/]*'
+      }
+    }
+    else if (char === '?') {
+      pattern += '[^/]'
+    }
+    else {
+      pattern += '\\^$+?.()|{}[]'.includes(char) ? `\\${char}` : char
+    }
+  }
+  return new RegExp(`^${pattern}$`)
+}
+
 afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map(dir => fs.remove(dir)))
 })
@@ -72,6 +97,43 @@ describe('migration target files', () => {
     expect(filtered).toEqual([
       '/repo/packages/a/tailwindcss-patch.config.ts',
     ])
+  })
+
+  it('preserves legacy UTF-16 glob matching for include and exclude filters', () => {
+    const cwd = '/repo'
+    const directories = ['a', 'ab', '中', '😀', '😀a', '🧩😀', '\u{1002F}', '[a]', 'a.b', 'a\nb', 'a\rb', 'a\u2028b', 'a\u2029b', 'a/nested']
+    const relativeFiles = directories.map(directory => `apps/${directory}/tailwindcss-patch.config.ts`)
+    const files = relativeFiles.map(file => `${cwd}/${file}`)
+    const patterns = [
+      '?',
+      '??',
+      '???',
+      '*',
+      '**',
+      '***',
+      '*?',
+      '?*',
+      '?*?',
+      '**?*',
+      '😀',
+      '😀?',
+      '?😀',
+      '\u{1002F}',
+      '[a]',
+      'a.b',
+    ].map(directory => `apps/${directory}/tailwindcss-patch.config.ts`)
+
+    for (const pattern of patterns) {
+      const oracle = legacyGlobRegex(pattern)
+      const included = files.filter((_, index) => oracle.test(relativeFiles[index]!))
+      const excluded = files.filter((_, index) => !oracle.test(relativeFiles[index]!))
+      expect(filterTargetFiles(files, cwd, [pattern]), `include ${pattern}`).toEqual(included)
+      expect(filterTargetFiles(files, cwd, undefined, [pattern]), `exclude ${pattern}`).toEqual(excluded)
+    }
+
+    const astralFile = `${cwd}/apps/😀/tailwindcss-patch.config.ts`
+    expect(filterTargetFiles([astralFile], cwd, ['apps/?/tailwindcss-patch.config.ts'])).toEqual([])
+    expect(filterTargetFiles([astralFile], cwd, ['apps/??/tailwindcss-patch.config.ts'])).toEqual([astralFile])
   })
 
   it('builds backup-relative paths for internal and external files', () => {

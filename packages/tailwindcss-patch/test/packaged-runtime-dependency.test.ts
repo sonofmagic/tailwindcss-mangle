@@ -8,8 +8,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 const require = createRequire(import.meta.url)
 const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../..')
-const sharedPackageDir = path.resolve(repoRoot, 'packages/shared')
-const configPackageDir = path.resolve(repoRoot, 'packages/config')
 const enginePackageDir = path.resolve(repoRoot, 'packages/engine')
 const builtPackageDirectories = new Set<string>()
 
@@ -61,17 +59,76 @@ async function packTailwindcssPatch() {
   return packPackage(packageDir)
 }
 
-async function packConsumerInstallTarballs() {
-  const sharedTarball = await packPackage(sharedPackageDir)
-  const configTarball = await packPackage(configPackageDir)
-  const engineTarball = await packPackage(enginePackageDir)
-  const tailwindcssPatchTarball = await packTailwindcssPatch()
-  return {
-    shared: sharedTarball,
-    config: configTarball,
-    engine: engineTarball,
-    tailwindcssPatch: tailwindcssPatchTarball,
+interface RuntimePackageManifest {
+  name: string
+  files?: string[]
+  dependencies?: Record<string, string>
+  optionalDependencies?: Record<string, string>
+  devDependencies?: Record<string, string>
+  scripts?: Record<string, string>
+}
+
+async function readPackageManifest(directory: string): Promise<RuntimePackageManifest> {
+  return JSON.parse(await fs.readFile(path.join(directory, 'package.json'), 'utf8'))
+}
+
+async function createHostNativeFixture(directory: string, manifest: RuntimePackageManifest) {
+  const fixture = path.join(tempDir, 'native-host-fixture')
+  await fs.mkdir(fixture, { recursive: true })
+  // This isolated consumer fixture validates the current host's real payload
+  // and runtime dependencies. The actual native package's prepack gate still
+  // requires every platform plus WASI before any distribution can be packed.
+  // Copy only publishable files, never the workspace node_modules directory.
+  for await (const file of fs.glob(manifest.files ?? [], { cwd: directory })) {
+    const target = path.join(fixture, file)
+    await fs.mkdir(path.dirname(target), { recursive: true })
+    await fs.cp(path.join(directory, file), target, { recursive: true })
   }
+  await fs.writeFile(path.join(fixture, 'package.json'), `${JSON.stringify({
+    ...manifest,
+    private: true,
+    scripts: undefined,
+    devDependencies: undefined,
+  }, null, 2)}\n`, 'utf8')
+  return fixture
+}
+
+async function prepareConsumerPackages() {
+  const workspacePackages = new Map<string, { directory: string, manifest: RuntimePackageManifest }>()
+  const packagesDirectory = path.join(repoRoot, 'packages')
+  for await (const manifestFile of fs.glob('*/package.json', { cwd: packagesDirectory })) {
+    const directory = path.dirname(path.join(packagesDirectory, manifestFile))
+    const manifest = await readPackageManifest(directory)
+    workspacePackages.set(manifest.name, { directory, manifest })
+  }
+
+  const artifacts: Record<string, string> = {}
+  const visiting = new Set<string>()
+  async function prepare(name: string) {
+    if (artifacts[name]) {
+      return
+    }
+    if (visiting.has(name)) {
+      throw new Error(`Circular workspace runtime dependency: ${name}`)
+    }
+    const pkg = workspacePackages.get(name)
+    if (!pkg) {
+      throw new Error(`Missing workspace runtime dependency: ${name}`)
+    }
+    visiting.add(name)
+    const runtimeDependencies = { ...pkg.manifest.dependencies, ...pkg.manifest.optionalDependencies }
+    for (const [dependency, range] of Object.entries(runtimeDependencies)) {
+      if (range.startsWith('workspace:')) {
+        await prepare(dependency)
+      }
+    }
+    artifacts[name] = name === '@tailwindcss-mangle/native'
+      ? await createHostNativeFixture(pkg.directory, pkg.manifest)
+      : await packPackage(pkg.directory)
+    visiting.delete(name)
+  }
+  await prepare('tailwindcss-patch')
+  return artifacts
 }
 
 async function createProject(name: string) {
@@ -86,12 +143,12 @@ async function createProject(name: string) {
     }, null, 2)}\n`,
     'utf8',
   )
-  return projectDir
+  return fs.realpath(projectDir)
 }
 
 function installProject(
   projectDir: string,
-  tarballs: { shared: string, config: string, engine: string, tailwindcssPatch: string },
+  artifacts: Record<string, string>,
   tailwindVersion: string,
 ) {
   fsSync.writeFileSync(
@@ -100,24 +157,17 @@ function installProject(
       'packages:',
       '  - .',
       'overrides:',
-      `  '@tailwindcss-mangle/shared': 'file:${tarballs.shared}'`,
-      `  '@tailwindcss-mangle/config': 'file:${tarballs.config}'`,
-      `  '@tailwindcss-mangle/engine': 'file:${tarballs.engine}'`,
+      ...Object.entries(artifacts).map(([name, artifact]) => `  ${JSON.stringify(name)}: ${JSON.stringify(`file:${artifact}`)}`),
       '',
     ].join('\n'),
     'utf8',
   )
 
+  // Install only the consumer's public dependencies. All internal packages
+  // must resolve transitively through their published dependency declarations.
   runPnpm([
     'add',
-    `@tailwindcss-mangle/shared@file:${tarballs.shared}`,
-    `@tailwindcss-mangle/config@file:${tarballs.config}`,
-    `@tailwindcss-mangle/engine@file:${tarballs.engine}`,
-  ], projectDir)
-
-  runPnpm([
-    'add',
-    tarballs.tailwindcssPatch,
+    artifacts['tailwindcss-patch']!,
     `tailwindcss@${tailwindVersion}`,
   ], projectDir)
 }
@@ -128,7 +178,7 @@ function runProjectScript(projectDir: string, source: string) {
   return JSON.parse(run(process.execPath, [scriptPath], projectDir))
 }
 
-describe('packed tailwindcss-patch runtime dependencies', () => {
+describe('packed tailwindcss-patch consumers with an isolated host-native runtime', () => {
   beforeEach(async () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tw-patch-packaged-'))
   })
@@ -161,9 +211,9 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
   })
 
   it('runs source candidate scanning from a clean Tailwind CSS v3.4.19 project without explicitly installing oxide', async () => {
-    const tarballs = await packConsumerInstallTarballs()
+    const artifacts = await prepareConsumerPackages()
     const projectDir = await createProject('tailwind-v3-consumer')
-    installProject(projectDir, tarballs, '3.4.19')
+    installProject(projectDir, artifacts, '3.4.19')
 
     const result = runProjectScript(projectDir, `
       import fs from 'node:fs/promises'
@@ -178,6 +228,11 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
       const patchRequire = createRequire(patchEntry)
       const engineEntry = patchRequire.resolve('@tailwindcss-mangle/engine')
       const engineRequire = createRequire(engineEntry)
+      const nativeEntry = engineRequire.resolve('@tailwindcss-mangle/native')
+      const nativeRealPath = await fs.realpath(nativeEntry)
+      const nativeManifest = JSON.parse(await fs.readFile(path.join(path.dirname(nativeEntry), 'package.json'), 'utf8'))
+      const nativeRequire = createRequire(nativeEntry)
+      const nativeDependencies = Object.keys(nativeManifest.dependencies ?? {}).map(name => nativeRequire.resolve(name))
       const oxidePackageJson = engineRequire.resolve('@tailwindcss/oxide/package.json')
       const patcher = new TailwindcssPatcher({
         projectRoot: cwd,
@@ -193,20 +248,27 @@ describe('packed tailwindcss-patch runtime dependencies', () => {
       console.log(JSON.stringify({
         majorVersion: patcher.majorVersion,
         hasOxidePackage: oxidePackageJson.includes('node_modules'),
+        nativeRealPath,
+        nativeDependencies,
         rawCandidates: report.entries.map(entry => entry.rawCandidate),
       }))
     `)
 
     expect(result.majorVersion).toBe(3)
     expect(result.hasOxidePackage).toBe(true)
+    expect(path.relative(projectDir, result.nativeRealPath)).toMatch(/^node_modules[/\\]/)
+    expect(result.nativeDependencies.length).toBeGreaterThan(0)
+    for (const dependency of result.nativeDependencies) {
+      expect(path.relative(projectDir, dependency)).toMatch(/^node_modules[/\\]/)
+    }
     expect(result.rawCandidates).toContain('text-red-500')
     expect(result.rawCandidates).toContain('font-bold')
   })
 
   it('keeps the Tailwind CSS v4 oxide source scanner path working from a clean project', async () => {
-    const tarballs = await packConsumerInstallTarballs()
+    const artifacts = await prepareConsumerPackages()
     const projectDir = await createProject('tailwind-v4-consumer')
-    installProject(projectDir, tarballs, '4.2.4')
+    installProject(projectDir, artifacts, '4.2.4')
 
     const result = runProjectScript(projectDir, `
       import { createTailwindV4Engine, resolveTailwindV4Source } from 'tailwindcss-patch'

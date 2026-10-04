@@ -37,5 +37,10 @@ dist
 vite.config.ts.timestamp-*.mjs
 config.ts.timestamp-*.mjs
 .vite-inspect
+/target/
+packages/native/*.node
+packages/native/*.wasm
+packages/native/*.wasi.cjs
+packages/native/wasi-worker.mjs
 apps/astro-app/.astro
 apps/vite-lit/types

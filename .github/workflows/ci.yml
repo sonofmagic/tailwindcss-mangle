@@ -11,6 +11,10 @@ permissions:
   contents: read
 
 jobs:
+  native:
+    name: Native artifacts
+    uses: ./.github/workflows/native.yml
+
   build:
     name: Build and Test
     timeout-minutes: 25
@@ -40,6 +44,9 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -58,6 +65,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Compare native JavaScript transformations with Babel
+        run: node crates/mangle-native/tests/js-differential.mjs
 
       - name: Typecheck packages
         run: pnpm typecheck
@@ -92,6 +102,9 @@ jobs:
           node-version: 24
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -129,6 +142,9 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -161,6 +177,9 @@ jobs:
           node-version: 22.22.1
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -201,6 +220,9 @@ jobs:
           node-version: 22.22.1
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

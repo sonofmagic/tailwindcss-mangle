@@ -2,7 +2,7 @@
 
 ## Environment Setup
 
-Use Node.js 22.22.1 or newer and the pinned pnpm 12.8.1 version from `packageManager`. Run `pnpm install` from the repo root to link workspace packages and install Git hooks. Repository tooling is configured through `repoctl.config.ts` and the public `repoctl` package; do not add direct dependencies on the legacy `@icebreakers/monorepo` CLI or individual Icebreakers config packages.
+Use Node.js 22.22.1 or newer, the pinned pnpm 12.8.1 version from `packageManager`, and Rust 1.95.0 from `rust-toolchain.toml`. Run `pnpm install` from the repo root to link workspace packages and install Git hooks. Repository tooling is configured through `repoctl.config.ts` and the public `repoctl` package; do not add direct dependencies on the legacy `@icebreakers/monorepo` CLI or individual Icebreakers config packages.
 
 App prepare scripts apply local `tw-patch` and Nuxt setup only when their built workspace dependencies are ready. Keep their CI and `TWM_SKIP_*` guards. Build packages before running integration tests. The engine separately supports Node.js 18.20; its runtime support must not inherit the repository toolchain minimum.
 
@@ -23,13 +23,15 @@ Source lives in `packages/`, with `@tailwindcss-mangle/core` providing class tra
 
 ## Coding Style & Naming Conventions
 
-The codebase is TypeScript-first with strict ESM modules. ESLint, Stylelint, Commitlint, lint-staged, and Vitest consume the repoctl presets. Keep repository-specific aliases, exclusions, and rule overrides in the local configuration. Prefer PascalCase for exported classes (e.g., `ClassGenerator`) and camelCase for functions and variables. Keep filenames lowercase with dashes or dots (`css/index.ts`, `test/utils.ts`).
+Computation lives in `crates/mangle-native` and is exposed through `packages/native`; TypeScript ESM modules preserve npm and framework APIs. Keep parser, transformation, extraction, cache data, and migration algorithms in Rust. JavaScript callbacks, framework compiler APIs, and host filesystem/error adapters stay in TypeScript. ESLint, Stylelint, Commitlint, lint-staged, and Vitest consume the repoctl presets. Keep repository-specific aliases, exclusions, and rule overrides in the local configuration. Prefer PascalCase for exported classes (e.g., `ClassGenerator`) and camelCase for functions and variables. Keep filenames lowercase with dashes or dots (`css/index.ts`, `test/utils.ts`).
 
 ## AI Code Gate
 
 Any AI-generated code must satisfy the same quality gate as human-written code before it is considered complete:
 
 - `pnpm lint`
+- `pnpm lint:rust` (Rust formatting and Clippy)
+- `pnpm test:native` (Rust kernel tests)
 - `pnpm lint:style`
 - package-specific `pnpm test:types` when the touched package exposes public types
 - run the relevant TypeScript validation for the touched project
@@ -49,3 +51,9 @@ Follow Conventional Commits enforced by Commitlint (e.g., `feat(core): add selec
 ## Release & Automation Notes
 
 repoctl orchestrates releases through the managed `release/v2` workflow and `repo release ci`. pnpm owns versioning, changelogs, and intent consumption. `.changeset/` retains change intents and release history; do not recreate the removed Changesets `config.json` or add `changesets/action`. Use `pnpm release:plan` for read-only validation, not a release CI invocation. Run `pnpm release:verify` before release preparation; only the release workflow should prepare Release PRs or publish packages during ordinary development. See `docs/release/release-group-policy.md` for release and compatibility requirements. Renovate keeps dependencies current; document intentional compatibility pins.
+
+## Native Kernel Guidelines
+
+N-API uses level 6 so the engine continues to run on Node 18.20. Keep UTF-8 byte offsets inside parsers and explicitly convert to UTF-16 offsets at the JavaScript boundary. Do not expose full Rust ASTs or call back into JavaScript for each token. Preserve class generation order, mutable Context maps, preserve-class side effects, and custom generator callbacks. Build `@tailwindcss-mangle/native` before direct package tests after Rust changes. Keep Babel only as a development-time differential oracle.
+
+The native workflow builds macOS/Windows/Linux binaries for x64 and arm64 (including Linux musl), plus a portable Rust WASI backend. Release must assemble and verify every artifact before packing; never publish a package containing only the build host binary. Run Node 18 ABI smoke tests, including the forced WASI path.

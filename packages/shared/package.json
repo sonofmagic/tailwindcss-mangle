@@ -67,6 +67,7 @@
     "test:dev": "vitest"
   },
   "dependencies": {
+    "@tailwindcss-mangle/native": "workspace:*",
     "defu": "^6.1.7"
   }
 }

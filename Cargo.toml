@@ -1,0 +1,13 @@
+[workspace]
+members = ["crates/mangle-native"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+repository = "https://github.com/sonofmagic/tailwindcss-mangle"
+
+[profile.release]
+lto = "thin"
+strip = "symbols"

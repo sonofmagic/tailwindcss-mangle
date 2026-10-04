@@ -1,7 +1,6 @@
 import type { ExtractCandidateOptions, ExtractSourceCandidateWithContext } from './types.ts'
+import { extractCssApplySegmentsNative } from '@tailwindcss-mangle/native'
 import { createBareArbitraryValueCandidateContexts } from './segments.ts'
-
-const CSS_APPLY_RE = /@apply\s+([^;{}]+)/g
 
 export async function extractCssApplyCandidates(
   content: string,
@@ -14,11 +13,9 @@ export async function extractCssApplyCandidates(
   options?: ExtractCandidateOptions,
 ) {
   const candidates: ExtractSourceCandidateWithContext[] = []
-  CSS_APPLY_RE.lastIndex = 0
-  let match = CSS_APPLY_RE.exec(content)
-  while (match !== null) {
-    const applyParams = match[1] ?? ''
-    const applyParamsStart = match.index + match[0].indexOf(applyParams)
+  for (const segment of extractCssApplySegmentsNative(content)) {
+    const applyParams = segment.content
+    const applyParamsStart = segment.start
     const applyCandidates = await extractRawCandidatesWithPositions(applyParams, extension)
     candidates.push(...applyCandidates.map(candidate => ({
       content: applyParams,
@@ -30,7 +27,6 @@ export async function extractCssApplyCandidates(
       end: candidate.end + applyParamsStart,
     })))
     candidates.push(...createBareArbitraryValueCandidateContexts(applyParams, 'html', applyParamsStart, options))
-    match = CSS_APPLY_RE.exec(content)
   }
   return candidates
 }

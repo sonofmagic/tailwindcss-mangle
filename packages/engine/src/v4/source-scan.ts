@@ -3,6 +3,7 @@ import type { TailwindV4CompiledSourceRoot, TailwindV4SourcePattern } from './ty
 import { realpathSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import process from 'node:process'
+import { expandSourceEntryBracesNative, groupSourceEntriesNative, mergeSourceEntriesNative, normalizeGlobPatternNative, splitStaticGlobPrefixNative, uniqueStringsNative } from '@tailwindcss-mangle/native'
 import micromatch from 'micromatch'
 import path from 'pathe'
 
@@ -45,17 +46,7 @@ export const TAILWIND_V4_IGNORED_FILES = [
 export const TAILWIND_V4_AUTO_SOURCE_SCAN_PATTERN = '**/*'
 
 function uniqueResolvedPaths(values: Iterable<string | undefined>) {
-  const result: string[] = []
-  for (const value of values) {
-    if (!value) {
-      continue
-    }
-    const resolved = path.resolve(value)
-    if (!result.includes(resolved)) {
-      result.push(resolved)
-    }
-  }
-  return result
+  return uniqueStringsNative([...values].filter((value): value is string => Boolean(value)).map(value => path.resolve(value)))
 }
 
 export function toPosixPath(value: string) {
@@ -72,35 +63,7 @@ export function resolveSourceScanPath(value: string) {
   }
 }
 
-export function normalizeGlobPattern(pattern: string) {
-  return pattern.startsWith('./') ? pattern.slice(2) : pattern
-}
-
-function hasGlobMagic(value: string) {
-  return /[*?[\]{}()!+@]/.test(value)
-}
-
-function splitStaticGlobPrefix(pattern: string) {
-  const normalized = normalizeGlobPattern(pattern)
-  const segments = normalized.split(/[\\/]+/)
-  const prefix: string[] = []
-  const rest: string[] = []
-  let reachedGlob = false
-
-  for (const segment of segments) {
-    if (!reachedGlob && segment && !hasGlobMagic(segment)) {
-      prefix.push(segment)
-      continue
-    }
-    reachedGlob = true
-    rest.push(segment)
-  }
-
-  return {
-    prefix,
-    rest,
-  }
-}
+export const normalizeGlobPattern = normalizeGlobPatternNative
 
 async function pathExistsAsDirectory(file: string) {
   try {
@@ -179,7 +142,7 @@ export async function resolveTailwindV4SourceEntry(
     }
   }
 
-  const { prefix, rest } = splitStaticGlobPrefix(sourcePath)
+  const { prefix, rest } = splitStaticGlobPrefixNative(sourcePath)
   if (prefix.length > 0 && rest.length > 0) {
     return {
       base: path.resolve(base, ...prefix),
@@ -212,77 +175,8 @@ export async function normalizeTailwindV4SourceEntries(
     )))
 }
 
-function expandBracePattern(pattern: string): string[] {
-  const index = pattern.indexOf('{')
-  if (index === -1) {
-    return [pattern]
-  }
-
-  const rest = pattern.slice(index)
-  let depth = 0
-  let endIndex = -1
-  for (let i = 0; i < rest.length; i++) {
-    const char = rest[i]
-    if (char === '\\') {
-      i += 1
-      continue
-    }
-    if (char === '{') {
-      depth += 1
-      continue
-    }
-    if (char === '}') {
-      depth -= 1
-      if (depth === 0) {
-        endIndex = i
-        break
-      }
-    }
-  }
-  if (endIndex === -1) {
-    return [pattern]
-  }
-
-  const prefix = pattern.slice(0, index)
-  const inner = rest.slice(1, endIndex)
-  const suffix = rest.slice(endIndex + 1)
-  const parts: string[] = []
-  const stack: string[] = []
-  let lastPos = 0
-  for (let i = 0; i < inner.length; i++) {
-    const char = inner[i]
-    if (char === '\\') {
-      i += 1
-      continue
-    }
-    if (char === '{') {
-      stack.push('}')
-      continue
-    }
-    if (char === '}' && stack[stack.length - 1] === '}') {
-      stack.pop()
-      continue
-    }
-    if (char === ',' && stack.length === 0) {
-      parts.push(inner.slice(lastPos, i))
-      lastPos = i + 1
-    }
-  }
-  parts.push(inner.slice(lastPos))
-
-  return parts.flatMap(part =>
-    expandBracePattern(`${prefix}${part}${suffix}`))
-}
-
 export function expandTailwindV4SourceEntryBraces(sources: TailwindV4SourcePattern[]): TailwindV4SourcePattern[] {
-  return sources.flatMap((source) => {
-    const base = path.resolve(source.base)
-    return expandBracePattern(source.pattern).map(pattern => ({
-      base,
-      pattern,
-      negated: source.negated,
-    }))
-  })
+  return expandSourceEntryBracesNative(sources.map(source => ({ ...source, base: path.resolve(source.base) })))
 }
 
 export function normalizeTailwindV4ScannerSources(
@@ -366,18 +260,8 @@ export function createTailwindV4SourceExclusionMatcher(entries: TailwindV4Source
 }
 
 export function groupTailwindV4SourceEntriesByBase(entries: TailwindV4SourcePattern[]) {
-  const entriesByBase = new Map<string, TailwindV4SourcePattern[]>()
-  for (const entry of entries) {
-    const base = path.resolve(entry.base)
-    const group = entriesByBase.get(base) ?? []
-    group.push({
-      ...entry,
-      base,
-      pattern: normalizeGlobPattern(entry.pattern),
-    })
-    entriesByBase.set(base, group)
-  }
-  return entriesByBase
+  return new Map(groupSourceEntriesNative(entries.map(entry => ({ ...entry, base: path.resolve(entry.base) })))
+    .map(group => [group.base, group.entries]))
 }
 
 export async function expandTailwindV4SourceEntries(
@@ -403,24 +287,8 @@ export async function expandTailwindV4SourceEntries(
 }
 
 export function mergeTailwindV4SourceEntries(...entries: Array<TailwindV4SourcePattern[] | undefined>) {
-  const result: TailwindV4SourcePattern[] = []
-  const seen = new Set<string>()
-  for (const group of entries) {
-    for (const entry of group ?? []) {
-      const normalized = {
-        base: path.resolve(entry.base),
-        pattern: normalizeGlobPattern(entry.pattern),
-        negated: entry.negated,
-      }
-      const key = JSON.stringify(normalized)
-      if (seen.has(key)) {
-        continue
-      }
-      seen.add(key)
-      result.push(normalized)
-    }
-  }
-  return result
+  return mergeSourceEntriesNative(entries.flatMap(group => group ?? [])
+    .map(entry => ({ ...entry, base: path.resolve(entry.base) })))
 }
 
 export function resolveTailwindV4SourceBaseCandidates(

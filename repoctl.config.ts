@@ -29,7 +29,7 @@ export default defineMonorepoConfig({
   },
   tooling: {
     eslint: {
-      ignores: ['**/fixtures/**', 'website/public/_pagefind'],
+      ignores: ['**/fixtures/**', 'website/public/_pagefind', 'packages/native/index.cjs', 'packages/native/index.d.ts'],
       configs: [
         {
           rules: {

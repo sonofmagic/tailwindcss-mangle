@@ -11,10 +11,6 @@ export default defineProject(async () => {
           find: '@',
           replacement: path.resolve(import.meta.dirname, './src'),
         },
-        {
-          find: '@tailwindcss-mangle/engine/htmlparser2',
-          replacement: path.resolve(import.meta.dirname, '../engine/src/htmlparser2.ts'),
-        },
       ],
     },
   })

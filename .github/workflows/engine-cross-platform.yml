@@ -6,6 +6,11 @@ on:
     paths:
       - .github/workflows/engine-cross-platform.yml
       - 'packages/engine/**'
+      - 'packages/native/**'
+      - 'crates/**'
+      - Cargo.toml
+      - Cargo.lock
+      - rust-toolchain.toml
       - pnpm-lock.yaml
       - package.json
       - pnpm-workspace.yaml
@@ -16,6 +21,11 @@ on:
     paths:
       - .github/workflows/engine-cross-platform.yml
       - 'packages/engine/**'
+      - 'packages/native/**'
+      - 'crates/**'
+      - Cargo.toml
+      - Cargo.lock
+      - rust-toolchain.toml
       - pnpm-lock.yaml
       - package.json
       - pnpm-workspace.yaml
@@ -49,11 +59,14 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build engine
-        run: pnpm --filter @tailwindcss-mangle/engine build
+        run: pnpm --filter @tailwindcss-mangle/engine... build
 
       - name: Test engine
         run: pnpm --filter @tailwindcss-mangle/engine exec vitest run --coverage.enabled=false

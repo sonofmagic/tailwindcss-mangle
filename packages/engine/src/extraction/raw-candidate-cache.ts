@@ -1,7 +1,7 @@
 import type { SourceEntry } from '@tailwindcss/oxide'
 import type { ExtractCandidateOptions } from './types.ts'
-import { promises as fs } from 'node:fs'
 import process from 'node:process'
+import { createRawCandidateFileFingerprintNative, NativeRawCandidateCache } from '@tailwindcss-mangle/native'
 
 const DEFAULT_RAW_CANDIDATE_CACHE_LIMIT = 64
 export function resolveRawCandidateCacheLimit(rawLimit: string | undefined) {
@@ -14,10 +14,7 @@ export function resolveRawCandidateCacheLimit(rawLimit: string | undefined) {
 
 const RAW_CANDIDATE_CACHE_LIMIT = resolveRawCandidateCacheLimit(process.env['TWM_ENGINE_RAW_CANDIDATE_CACHE_LIMIT'])
 
-const rawCandidateCache = new Map<string, {
-  fingerprint: string
-  candidates: string[]
-}>()
+const rawCandidateCache = new NativeRawCandidateCache(RAW_CANDIDATE_CACHE_LIMIT)
 
 export function createRawCandidateCacheKey(sources: SourceEntry[] | undefined, options?: ExtractCandidateOptions) {
   return JSON.stringify({
@@ -27,43 +24,13 @@ export function createRawCandidateCacheKey(sources: SourceEntry[] | undefined, o
 }
 
 export async function createRawCandidateFileFingerprint(files: string[] | undefined) {
-  if (!files?.length) {
-    return ''
-  }
-
-  const entries = await Promise.all(files.map(async (file) => {
-    try {
-      const stats = await fs.stat(file)
-      return `${file}:${stats.size}:${stats.mtimeMs}`
-    }
-    catch {
-      return `${file}:missing`
-    }
-  }))
-  return entries.sort().join('|')
+  return files?.length ? createRawCandidateFileFingerprintNative(files) : ''
 }
 
 export function getRawCandidateCacheEntry(cacheKey: string, fingerprint: string) {
-  const cached = rawCandidateCache.get(cacheKey)
-  if (cached?.fingerprint !== fingerprint) {
-    return undefined
-  }
-  rawCandidateCache.delete(cacheKey)
-  rawCandidateCache.set(cacheKey, cached)
-  return cached
+  return rawCandidateCache.get(cacheKey, fingerprint) ?? undefined
 }
 
 export function setRawCandidateCacheEntry(cacheKey: string, fingerprint: string, candidates: string[]) {
-  rawCandidateCache.set(cacheKey, {
-    fingerprint,
-    candidates,
-  })
-
-  while (rawCandidateCache.size > RAW_CANDIDATE_CACHE_LIMIT) {
-    const oldestKey = rawCandidateCache.keys().next().value
-    if (oldestKey === undefined) {
-      break
-    }
-    rawCandidateCache.delete(oldestKey)
-  }
+  rawCandidateCache.set(cacheKey, fingerprint, candidates)
 }

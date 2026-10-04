@@ -56,7 +56,7 @@ const SHARED_BANNED_IO_MODULES = new Set([
  */
 const RULES = {
   '@tailwindcss-mangle/shared': {
-    allowedInternal: [],
+    allowedInternal: ['@tailwindcss-mangle/native'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/', 'unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/'],
   },
   '@tailwindcss-mangle/config': {
@@ -64,11 +64,11 @@ const RULES = {
     disallowedSpecifiers: ['unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/'],
   },
   '@tailwindcss-mangle/core': {
-    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
+    allowedInternal: ['@tailwindcss-mangle/native', '@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/'],
   },
   '@tailwindcss-mangle/engine': {
-    allowedInternal: [],
+    allowedInternal: ['@tailwindcss-mangle/native'],
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/', 'unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/', '@tailwindcss-mangle/core', '@tailwindcss-mangle/core/'],
   },
   'unplugin-tailwindcss-mangle': {
@@ -76,7 +76,7 @@ const RULES = {
     disallowedSpecifiers: ['tailwindcss-patch', 'tailwindcss-patch/'],
   },
   'tailwindcss-patch': {
-    allowedInternal: ['@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
+    allowedInternal: ['@tailwindcss-mangle/native', '@tailwindcss-mangle/config', '@tailwindcss-mangle/engine', '@tailwindcss-mangle/shared'],
     disallowedSpecifiers: ['unplugin-tailwindcss-mangle', 'unplugin-tailwindcss-mangle/', '@tailwindcss-mangle/core', '@tailwindcss-mangle/core/'],
   },
 }

@@ -23,12 +23,12 @@
     "test:e2e:all": "pnpm run test:e2e:apps && pnpm run test:e2e:apps:pw && pnpm run test:e2e:apps:hmr",
     "test:dev": "vitest",
     "build:docs": "turbo run build --filter=./website",
-    "lint": "eslint \"packages/**/*.ts\" packages/tailwindcss-patch/tsdown.config.mts \"e2e/**/*.ts\" \"*.config.{js,ts}\" scripts/check-package-boundaries.mjs scripts/clean.mjs scripts/postcss7-compat/index.js --ignore-pattern \"packages/**/bench/**\" --ignore-pattern \"packages/**/test-d/**\" --fix",
+    "lint": "eslint \"packages/**/*.ts\" packages/tailwindcss-patch/tsdown.config.mts \"e2e/**/*.ts\" \"*.config.{js,ts}\" scripts/check-package-boundaries.mjs scripts/clean.mjs scripts/postcss7-compat/index.js --ignore-pattern \"packages/**/bench/**\" --ignore-pattern \"packages/**/test-d/**\" --fix packages/native/build.mjs packages/native/smoke.cjs scripts/native-artifacts*.mjs scripts/check-native-artifacts.mjs crates/mangle-native/tests/js-differential.mjs",
     "preinstall": "npx only-allow pnpm",
     "sync": "cnpm sync @tailwindcss-mangle/shared @tailwindcss-mangle/config @tailwindcss-mangle/engine tailwindcss-patch unplugin-tailwindcss-mangle @tailwindcss-mangle/core",
     "publish-packages": "repo release stable publish",
     "release": "pnpm change",
-    "release:verify": "pnpm lint && pnpm lint:style && pnpm check:boundaries && pnpm build && pnpm typecheck && pnpm test:types && pnpm test && pnpm build:docs && pnpm test:e2e:all",
+    "release:verify": "pnpm lint && pnpm lint:rust && pnpm lint:style && pnpm check:boundaries && pnpm build && pnpm typecheck && pnpm test:types && pnpm test && pnpm build:docs && pnpm test:e2e:all",
     "pr": "repo release pre enter alpha",
     "pr:beta": "repo release pre enter beta",
     "pr:rc": "repo release pre enter rc",
@@ -47,7 +47,9 @@
     "repo:init": "repo init",
     "repo:new": "repo new",
     "repo:check": "repo check",
-    "repo:doctor": "repo doctor"
+    "repo:doctor": "repo doctor",
+    "lint:rust": "cargo fmt --all --check && cargo clippy --workspace --all-targets --locked -- -D warnings",
+    "test:native": "cargo test --workspace --locked"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",

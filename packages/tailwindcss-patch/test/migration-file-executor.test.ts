@@ -96,24 +96,19 @@ describe('executeMigrationFile', () => {
       })
       expect(firstResult.wrote).toBe(true)
 
-      const originalWriteFile = fs.writeFile.bind(fs)
-      const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(async (...args) => {
-        const [target] = args
-        if (String(target) === second) {
-          throw new Error('simulated write failure')
-        }
-        return originalWriteFile(...args)
-      })
+      // A real filesystem failure exercises the native transaction and rollback
+      // on every platform without depending on the JS fs implementation.
+      const invalidBackupDirectory = path.join(cwd, 'not-a-directory')
+      await fs.writeFile(invalidBackupDirectory, 'occupied', 'utf8')
 
       await expect(executeMigrationFile({
         cwd,
         file: second,
+        backupDirectory: invalidBackupDirectory,
         dryRun: false,
         rollbackOnError: true,
         wroteEntries,
       })).rejects.toThrow('Rolled back 1 previously written file(s).')
-
-      writeSpy.mockRestore()
 
       expect(wroteEntries[0]?.entry.written).toBe(false)
       expect(wroteEntries[0]?.entry.rolledBack).toBe(true)

@@ -15,10 +15,12 @@
     "@nextui-org/react": "^2.6.11",
     "@nextui-org/system": "^2.4.6",
     "@nextui-org/theme": "^2.4.5",
+    "clsx": "^2.1.1",
     "framer-motion": "^14.0.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "tailwind-merge": "^2.6.1"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",

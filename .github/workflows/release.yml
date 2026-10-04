@@ -55,7 +55,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  native:
+    name: Native artifacts
+    uses: ./.github/workflows/native.yml
+    with:
+      ref: ${{ inputs.source-sha || github.sha }}
+
   release:
+    needs: native
     name: Release
     runs-on: ubuntu-latest
     steps:
@@ -98,11 +105,30 @@ jobs:
       - name: Install npm with trusted publishing support
         run: npm install --global npm@11.16.0 --registry=https://registry.npmjs.org
 
+      - name: Setup pinned Rust toolchain
+        run: rustup show active-toolchain
+
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium for release verification
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Download native artifacts
+        if: needs.native.outputs.native_required == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: native-*
+          path: ${{ runner.temp }}/tailwindcss-mangle-native
+          merge-multiple: true
+
+      - name: Verify native distribution
+        if: needs.native.outputs.native_required == 'true'
+        env:
+          TWM_NATIVE_ARTIFACTS_DIR: ${{ runner.temp }}/tailwindcss-mangle-native
+          TWM_NATIVE_ARTIFACTS_SOURCE_SHA: ${{ needs.native.outputs.source_sha }}
+          TWM_NATIVE_SOURCE_TARGETS: ${{ needs.native.outputs.targets }}
+        run: node scripts/check-native-artifacts.mjs "$TWM_NATIVE_ARTIFACTS_DIR" "$TWM_NATIVE_ARTIFACTS_SOURCE_SHA" "$TWM_NATIVE_SOURCE_TARGETS"
 
       - name: Run repo release CI
         env:
@@ -112,6 +138,8 @@ jobs:
           REPO_RELEASE_VERSION: ${{ inputs.version }}
           REPO_RELEASE_DRY_RUN: ${{ inputs.dry-run }}
           REPO_RELEASE_RECOVERY_SOURCE_SHA: ${{ inputs.source-sha }}
+          TWM_NATIVE_ARTIFACTS_DIR: ${{ needs.native.outputs.native_required == 'true' && format('{0}/tailwindcss-mangle-native', runner.temp) || '' }}
+          TWM_NATIVE_ARTIFACTS_SOURCE_SHA: ${{ needs.native.outputs.source_sha }}
         run: pnpm exec repo release ci
 
       - name: Preserve npm publish progress

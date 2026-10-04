@@ -4,11 +4,10 @@ import type {
   NormalizedTailwindCssPatchOptions,
 } from '../options/types'
 import type { PatchStatusEntry, PatchStatusReport } from '../types'
-import * as t from '@babel/types'
+import { inspectLengthUnitsNative } from '@tailwindcss-mangle/native'
 import fs from 'fs-extra'
 import path from 'pathe'
 
-import { parse, traverse } from '../babel'
 import { transformPostcssPluginV2, transformProcessTailwindFeaturesReturnContextV2 } from './operations/export-context/postcss-v2'
 import { transformPostcssPlugin, transformProcessTailwindFeaturesReturnContext } from './operations/export-context/postcss-v3'
 import { applyExtendLengthUnitsPatchV4 } from './operations/extend-length-units'
@@ -24,33 +23,7 @@ function inspectLengthUnitsArray(
   variableName: string,
   units: string[],
 ) {
-  const ast = parse(content)
-  let found = false
-  let missingUnits: string[] = []
-
-  traverse(ast, {
-    Identifier(path) {
-      if (
-        path.node.name === variableName
-        && t.isVariableDeclarator(path.parent)
-        && t.isArrayExpression(path.parent.init)
-      ) {
-        found = true
-        const existing = new Set(
-          path.parent.init.elements
-            .map(element => (t.isStringLiteral(element) ? element.value : undefined))
-            .filter(Boolean) as string[],
-        )
-        missingUnits = units.filter(unit => !existing.has(unit))
-        path.stop()
-      }
-    },
-  })
-
-  return {
-    found,
-    missingUnits,
-  }
+  return inspectLengthUnitsNative(content, variableName, units)
 }
 
 function checkExposeContextPatch(context: PatchStatusContext): PatchStatusEntry {

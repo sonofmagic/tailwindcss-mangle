@@ -1,11 +1,12 @@
 import type { TransformerMappingEntry, TransformerOptions } from '@tailwindcss-mangle/config'
 import process from 'node:process'
 import { getConfig } from '@tailwindcss-mangle/config'
+import { ClassGenerator, defaultMangleClassFilter, escapeStringRegexp } from '@tailwindcss-mangle/shared'
 import { defu } from 'defu'
 import { sort } from 'fast-sort'
 import fs from 'fs-extra'
 import { dirname, isAbsolute, resolve } from 'pathe'
-import { ClassGenerator, defaultMangleClassFilter, escapeStringRegexp } from '../shared'
+import { getNativeState } from '../native-context'
 
 interface InitConfigOptions {
   cwd?: string
@@ -38,6 +39,10 @@ export class Context {
 
   isPreserveClass(className: string) {
     return this.preserveClassNamesSet.has(className)
+  }
+
+  getNativeContext(kind: 'css' | 'code' = 'code') {
+    return getNativeState(this, kind).native
   }
 
   addPreserveClass(className: string) {

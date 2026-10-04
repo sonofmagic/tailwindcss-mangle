@@ -1,8 +1,8 @@
 import type { PackageInfo } from 'local-pkg'
 import type { NormalizedTailwindCssPatchOptions } from '../options/types'
 import type { CacheContextDescriptor, CacheContextMetadata } from './types'
-import { createHash } from 'node:crypto'
 import process from 'node:process'
+import { explainCacheContextMismatchNative, hashStableCacheValueNative } from '@tailwindcss-mangle/native'
 import fs from 'fs-extra'
 import path from 'pathe'
 import { pkgVersion } from '../constants'
@@ -82,36 +82,30 @@ function resolveTailwindConfigPath(
   return undefined
 }
 
-function stableSerialize(input: unknown): string {
-  if (input === null) {
-    return 'null'
-  }
+type StableHostValue = string | { items: StableHostValue[] } | { entries: Array<[string, StableHostValue]> }
 
-  if (typeof input === 'string') {
+// Preserve the host's JSON scalar spellings, dynamic values and locale ordering.
+// Rust owns canonical assembly and hashing; sparse array holes stay holes here.
+function toStableHostValue(input: unknown): StableHostValue {
+  if (input === null || typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
     return JSON.stringify(input)
   }
-
-  if (typeof input === 'number' || typeof input === 'boolean') {
-    return JSON.stringify(input)
-  }
-
   if (Array.isArray(input)) {
-    return `[${input.map(item => stableSerialize(item)).join(',')}]`
+    return { items: input.map(item => toStableHostValue(item)) }
   }
-
   if (typeof input === 'object') {
-    const entries = Object.entries(input as Record<string, unknown>)
-      .filter(([, value]) => value !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, value]) => `${JSON.stringify(key)}:${stableSerialize(value)}`)
-    return `{${entries.join(',')}}`
+    return {
+      entries: Object.entries(input as Record<string, unknown>)
+        .filter(([, value]) => value !== undefined)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, value]) => [JSON.stringify(key), toStableHostValue(value)]),
+    }
   }
-
   return JSON.stringify(String(input))
 }
 
-function hash(input: string): string {
-  return createHash('sha256').update(input).digest('hex')
+function hashStableValue(input: unknown) {
+  return hashStableCacheValueNative(JSON.stringify(toStableHostValue(input)))
 }
 
 function toFingerprintOptions(normalized: NormalizedTailwindCssPatchOptions) {
@@ -147,7 +141,7 @@ export function createCacheContextDescriptor(
   const tailwindConfigPath = resolveTailwindConfigPath(options, majorVersion)
   const tailwindConfigMtimeMs = resolveFileMtimeMsSync(tailwindConfigPath)
 
-  const optionsHash = hash(stableSerialize(toFingerprintOptions(options)))
+  const optionsHash = hashStableValue(toFingerprintOptions(options))
 
   const metadata: CacheContextMetadata = {
     fingerprintVersion: CACHE_FINGERPRINT_VERSION,
@@ -163,7 +157,7 @@ export function createCacheContextDescriptor(
     optionsHash,
   }
 
-  const fingerprint = hash(stableSerialize(metadata))
+  const fingerprint = hashStableValue(metadata)
 
   return {
     fingerprint,
@@ -175,38 +169,5 @@ export function explainContextMismatch(
   current: CacheContextMetadata,
   cached: CacheContextMetadata,
 ): string[] {
-  const reasons: string[] = []
-
-  if (current.projectRootRealpath !== cached.projectRootRealpath) {
-    reasons.push(`project-root changed: ${cached.projectRootRealpath} -> ${current.projectRootRealpath}`)
-  }
-  if (current.processCwdRealpath !== cached.processCwdRealpath) {
-    reasons.push(`process-cwd changed: ${cached.processCwdRealpath} -> ${current.processCwdRealpath}`)
-  }
-  if (current.cacheCwdRealpath !== cached.cacheCwdRealpath) {
-    reasons.push(`cache-cwd changed: ${cached.cacheCwdRealpath} -> ${current.cacheCwdRealpath}`)
-  }
-  if ((current.tailwindConfigPath ?? '') !== (cached.tailwindConfigPath ?? '')) {
-    reasons.push(`tailwind-config path changed: ${cached.tailwindConfigPath ?? '<none>'} -> ${current.tailwindConfigPath ?? '<none>'}`)
-  }
-  if ((current.tailwindConfigMtimeMs ?? -1) !== (cached.tailwindConfigMtimeMs ?? -1)) {
-    reasons.push('tailwind-config mtime changed')
-  }
-  if (current.tailwindPackageRootRealpath !== cached.tailwindPackageRootRealpath) {
-    reasons.push(`tailwind-package root changed: ${cached.tailwindPackageRootRealpath} -> ${current.tailwindPackageRootRealpath}`)
-  }
-  if (current.tailwindPackageVersion !== cached.tailwindPackageVersion) {
-    reasons.push(`tailwind-package version changed: ${cached.tailwindPackageVersion} -> ${current.tailwindPackageVersion}`)
-  }
-  if (current.patcherVersion !== cached.patcherVersion) {
-    reasons.push(`patcher version changed: ${cached.patcherVersion} -> ${current.patcherVersion}`)
-  }
-  if (current.majorVersion !== cached.majorVersion) {
-    reasons.push(`major version changed: ${cached.majorVersion} -> ${current.majorVersion}`)
-  }
-  if (current.optionsHash !== cached.optionsHash) {
-    reasons.push(`patch options hash changed: ${cached.optionsHash.slice(0, 12)} -> ${current.optionsHash.slice(0, 12)}`)
-  }
-
-  return reasons
+  return explainCacheContextMismatchNative(JSON.stringify(current), JSON.stringify(cached))
 }

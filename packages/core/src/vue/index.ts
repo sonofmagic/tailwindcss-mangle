@@ -1,9 +1,9 @@
 import type { IHandlerTransformResult, IJsHandlerOptions } from '../types'
-import { compileTemplate, parse } from '@vue/compiler-sfc'
+import { parse } from '@vue/compiler-sfc'
 import MagicString from 'magic-string'
 import { cssHandler } from '../css'
 import { jsHandler } from '../js'
-import { makeRegex, splitCode } from '../shared'
+import { nativeEdits } from '../native'
 
 interface IVueHandlerOptions extends IJsHandlerOptions {
   preserveScoped?: boolean
@@ -15,69 +15,11 @@ async function processTemplate(
   ctx: any,
   id?: string,
 ): Promise<void> {
-  const { replaceMap, classGenerator } = ctx
-
-  if (!template.ast) {
-    try {
-      compileTemplate({
-        source: template.content,
-        filename: id || 'unknown.vue',
-        id: `${id || 'unknown'}?template`,
-      })
-      // If compilation succeeds, process the original template content
-      // using a string-based approach for class attributes
-    }
-    catch {
-      return
-    }
-  }
-
-  // Process static class attributes in template
-  const classAttrRegex = /\sclass\s*=\s*["']([^"']+)["']/g
-
-  // We need to search within the template section
-  const templateStart = template.loc.start.offset
-  const templateEnd = template.loc.end.offset
-  const templateContent = ms.original.slice(templateStart, templateEnd)
-
-  const replacements: Array<{ start: number, end: number, value: string }> = []
-
-  for (const match of templateContent.matchAll(classAttrRegex)) {
-    const fullMatch = match[0]
-    const classValue = match[1]
-    if (classValue === undefined) {
-      continue
-    }
-    const offset = match.index
-
-    const arr = splitCode(classValue, { splitQuote: false })
-    let newValue = classValue
-    let needUpdate = false
-
-    for (const v of arr) {
-      if (replaceMap.has(v)) {
-        const gen = classGenerator.generateClassName(v)
-        newValue = newValue.replace(makeRegex(v), gen.name)
-        if (id) {
-          ctx.addToUsedBy(v, id)
-        }
-        needUpdate = true
-      }
-    }
-
-    if (needUpdate) {
-      const classValueStart = fullMatch.indexOf(classValue)
-      replacements.push({
-        start: templateStart + offset + classValueStart,
-        end: templateStart + offset + classValueStart + classValue.length,
-        value: newValue,
-      })
-    }
-  }
-
-  // Apply all replacements
-  for (const replacement of replacements) {
-    ms.update(replacement.start, replacement.end, replacement.value)
+  const start = template.loc.start.offset
+  const content = ms.original.slice(start, template.loc.end.offset)
+  const options = id === undefined ? { ctx } : { ctx, id }
+  for (const edit of nativeEdits(content, options, 'html').edits) {
+    ms.update(start + edit.start, start + edit.end, edit.content)
   }
 }
 

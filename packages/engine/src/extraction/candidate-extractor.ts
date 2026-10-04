@@ -10,14 +10,13 @@ import type {
   ExtractCandidateOptions,
   ExtractSourceCandidate,
   ExtractSourceCandidateWithContext,
-  JsStringStaticRange,
 } from './types.ts'
 import { promises as fs } from 'node:fs'
 import process from 'node:process'
 import path from 'pathe'
 import {
   extractBareArbitraryValueSourceCandidatesWithPositions,
-  resolveBareArbitraryValueCandidate,
+  resolveBareArbitraryValueCandidates,
 } from '../v4/bare-arbitrary-values.ts'
 import { extractTailwindV4InlineSourceCandidates, resolveValidTailwindV4Candidates } from '../v4/candidates.ts'
 import { compileTailwindV4Source, getTailwindV4DesignSystemCacheKey, loadTailwindV4DesignSystem } from '../v4/node-adapter.ts'
@@ -26,12 +25,11 @@ import {
   normalizeTailwindV4ScannerSources,
 } from '../v4/source-scan.ts'
 import { extractCssApplyCandidates } from './css.ts'
-import { createJsStringStaticRanges } from './js-string-ranges.ts'
 import { getOxideModule } from './oxide.ts'
 import {
-  buildLineOffsets,
-  createTokenLocation,
+  resolveLineMetas,
   toExtension,
+  toRelativeFile,
 } from './project-report.ts'
 import {
   createRawCandidateCacheKey,
@@ -47,9 +45,8 @@ import {
   createLocalCandidate,
   CSS_LIKE_SOURCE_EXTENSION_RE,
   dedupeCandidatesWithPositions,
-  JS_LIKE_SOURCE_EXTENSION_RE,
+  filterSourceCandidates,
   MIXED_TEMPLATE_SOURCE_EXTENSION_RE,
-  shouldKeepSourceCandidate,
   VUE_LIKE_SOURCE_EXTENSION_RE,
 } from './source-filters.ts'
 
@@ -120,37 +117,36 @@ export async function extractSourceCandidatesWithPositions(
   ) {
     candidates.push(...await extractMixedSourceScriptCandidates(content, extractRawCandidatesWithPositions, options))
   }
-  const jsStringStaticRangesByContent = new Map<string, JsStringStaticRange[]>()
-  function getJsStringStaticRanges(candidate: ExtractSourceCandidateWithContext) {
-    if (!JS_LIKE_SOURCE_EXTENSION_RE.test(candidate.extension)) {
-      return undefined
+  // Group candidates by source context so each buffer crosses the native boundary once.
+  const groups = new Map<string, Map<string, Array<{ index: number, candidate: ExtractSourceCandidateWithContext }>>>()
+  for (const [index, candidate] of candidates.entries()) {
+    let byExtension = groups.get(candidate.content)
+    if (!byExtension) {
+      byExtension = new Map()
+      groups.set(candidate.content, byExtension)
     }
-    const cached = jsStringStaticRangesByContent.get(candidate.content)
-    if (cached) {
-      return cached
-    }
-    const ranges = createJsStringStaticRanges(candidate.content)
-    jsStringStaticRangesByContent.set(candidate.content, ranges)
-    return ranges
+    const key = `${candidate.extension}:${candidate.skipHtmlContextChecks === true}`
+    const group = byExtension.get(key) ?? []
+    group.push({ index, candidate })
+    byExtension.set(key, group)
   }
-  const seen = new Set<string>()
-  return candidates.filter((candidate) => {
-    if (!shouldKeepSourceCandidate(
-      candidate.content,
-      candidate.extension,
-      createLocalCandidate(candidate),
-      getJsStringStaticRanges(candidate),
-      candidate.skipHtmlContextChecks,
-    )) {
-      return false
+  const kept = new Set<number>()
+  for (const [sourceContent, byExtension] of groups) {
+    for (const group of byExtension.values()) {
+      const first = group[0]!.candidate
+      for (const index of filterSourceCandidates(
+        sourceContent,
+        first.extension,
+        group.map(({ candidate }) => createLocalCandidate(candidate)),
+        first.skipHtmlContextChecks,
+      )) {
+        kept.add(group[index]!.index)
+      }
     }
-    const key = `${candidate.start}:${candidate.end}:${candidate.rawCandidate}`
-    if (seen.has(key)) {
-      return false
-    }
-    seen.add(key)
-    return true
-  }).map(({ rawCandidate, start, end }) => ({ rawCandidate, start, end }))
+  }
+  return dedupeCandidatesWithPositions(candidates
+    .filter((_, index) => kept.has(index))
+    .map(({ rawCandidate, start, end }) => ({ rawCandidate, start, end })))
 }
 
 export async function extractSourceCandidates(
@@ -198,13 +194,9 @@ export async function extractRawCandidates(
         const content = await fs.readFile(file, 'utf8')
 
         const extension = toExtension(file)
-        const jsStringStaticRanges = JS_LIKE_SOURCE_EXTENSION_RE.test(extension)
-          ? createJsStringStaticRanges(content)
-          : undefined
-        for (const candidate of extractBareArbitraryValueSourceCandidatesWithPositions(content, options.bareArbitraryValues)) {
-          if (shouldKeepSourceCandidate(content, extension, candidate, jsStringStaticRanges)) {
-            candidates.add(candidate.rawCandidate)
-          }
+        const bareCandidates = extractBareArbitraryValueSourceCandidatesWithPositions(content, options.bareArbitraryValues)
+        for (const index of filterSourceCandidates(content, extension, bareCandidates)) {
+          candidates.add(bareCandidates[index]!.rawCandidate)
         }
       }
       catch {
@@ -269,7 +261,8 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
   const validCandidates: string[] = []
   const uncachedCandidates: string[] = []
 
-  for (const rawCandidate of candidates) {
+  const bareCandidates = resolveBareArbitraryValueCandidates(candidates, providedOptions.bareArbitraryValues)
+  for (const [index, rawCandidate] of candidates.entries()) {
     const cached = candidateCache.get(rawCandidate)
     if (cached === true) {
       validCandidates.push(rawCandidate)
@@ -280,7 +273,7 @@ export async function extractValidCandidates(options?: ExtractValidCandidatesOpt
       continue
     }
 
-    const bareArbitrary = resolveBareArbitraryValueCandidate(rawCandidate, providedOptions.bareArbitraryValues)
+    const bareArbitrary = bareCandidates[index]
     if (
       designSystem.parseCandidate(rawCandidate).length > 0
       || (bareArbitrary && designSystem.parseCandidate(bareArbitrary.canonicalCandidate).length > 0)
@@ -410,18 +403,19 @@ export async function extractProjectCandidatesWithPositions(
       continue
     }
 
-    const offsets = buildLineOffsets(content)
-
-    for (const match of matches) {
-      entries.push(createTokenLocation({
-        cwd,
+    const locations = resolveLineMetas(content, matches.map(match => match.position))
+    const relativeFile = toRelativeFile(cwd, file)
+    for (const [index, match] of matches.entries()) {
+      entries.push({
+        rawCandidate: match.candidate,
         file,
-        content,
+        relativeFile,
         extension,
-        candidate: match.candidate,
-        position: match.position,
-        offsets,
-      }))
+        start: match.position,
+        end: match.position + match.candidate.length,
+        length: match.candidate.length,
+        ...locations[index]!,
+      })
     }
   }
 

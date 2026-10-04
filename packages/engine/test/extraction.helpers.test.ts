@@ -291,6 +291,8 @@ describe('extraction helper modules', () => {
         sources: [{ base: root, pattern: '*.html', negated: false }],
         bareArbitraryValues: true,
       }))
+    const fileStats = await fs.stat(file)
+    await expect(createRawCandidateFileFingerprint([file])).resolves.toBe(`${file}:${fileStats.size}:${fileStats.mtimeMs}`)
     await expect(createRawCandidateFileFingerprint(undefined)).resolves.toBe('')
     await expect(createRawCandidateFileFingerprint([file, path.join(root, 'missing.html')]))
       .resolves
