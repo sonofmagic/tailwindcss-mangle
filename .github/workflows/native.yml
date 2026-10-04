@@ -97,8 +97,12 @@ jobs:
         run: pnpm --filter @tailwindcss-mangle/native build --use-napi-cross
       - name: Build Linux musl
         if: contains(matrix.target, 'musl')
+        # These are native Alpine builds; override napi's ARM64 cross-linker default.
         run: >-
-          docker run --rm -v "$PWD:/work" -w /work rust:1.95-alpine sh -ec
+          docker run --rm -v "$PWD:/work" -w /work
+          -e CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=gcc
+          -e CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=gcc
+          rust:1.95-alpine sh -ec
           'apk add --no-cache nodejs npm build-base;
           npm install --global @napi-rs/cli@3.10.6;
           RUSTFLAGS="-C target-feature=-crt-static" napi build --cwd packages/native --platform --release --manifest-path ../../crates/mangle-native/Cargo.toml --output-dir . --js index.cjs'
