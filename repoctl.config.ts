@@ -25,6 +25,9 @@ export default defineMonorepoConfig({
         ],
       },
       qualityScripts: ['release:verify'],
+      hooks: {
+        afterPublish: [{ script: 'release:sync-npmmirror', continueOnError: true, idempotent: true }],
+      },
     },
   },
   tooling: {
