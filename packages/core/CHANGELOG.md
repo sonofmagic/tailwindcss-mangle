@@ -1,5 +1,17 @@
 # @tailwindcss-mangle/core
 
+## 6.0.2
+
+### Patch Changes
+
+- Refresh runtime and build dependencies and unify repository tooling and release management on repoctl. Preserve Tailwind CSS 2, 3, and 4 integration coverage and the engine's Node.js 18 runtime compatibility.
+
+- Move transformation, candidate processing, patching, configuration migration, and cache computation into Rust kernels while preserving the npm APIs and Tailwind 2/3/4 integrations. Ship prebuilt N-API binaries and a portable Rust WASI backend, retaining the engine's Node.js 18 runtime support. Preserve mutable contexts, custom JavaScript callbacks, usage tracking, and source locations across the native boundary.
+
+- Updated dependencies:
+  - @tailwindcss-mangle/config@8.0.2
+  - @tailwindcss-mangle/shared@5.0.2
+
 ## 6.0.1
 
 ### Patch Changes
