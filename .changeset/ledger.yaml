@@ -1,0 +1,33 @@
+"@tailwindcss-mangle/config@8.0.2":
+  dir: packages/config
+  intents:
+    - refresh-dependencies-repoctl
+"@tailwindcss-mangle/core@6.0.2":
+  dir: packages/core
+  intents:
+    - refresh-dependencies-repoctl
+    - rust-native-kernels
+"@tailwindcss-mangle/engine@0.2.1":
+  dir: packages/engine
+  intents:
+    - refresh-dependencies-repoctl
+    - rust-native-kernels
+"@tailwindcss-mangle/native@0.1.0":
+  dir: packages/native
+  intents:
+    - rust-native-kernels
+"@tailwindcss-mangle/shared@5.0.2":
+  dir: packages/shared
+  intents:
+    - refresh-dependencies-repoctl
+    - rust-native-kernels
+tailwindcss-patch@10.0.3:
+  dir: packages/tailwindcss-patch
+  intents:
+    - refresh-dependencies-repoctl
+    - rust-native-kernels
+unplugin-tailwindcss-mangle@6.0.2:
+  dir: packages/unplugin-tailwindcss-mangle
+  intents:
+    - refresh-dependencies-repoctl
+    - rust-native-kernels

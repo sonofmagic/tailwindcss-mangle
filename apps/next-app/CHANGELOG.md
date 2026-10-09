@@ -1,5 +1,13 @@
 # next-app
 
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies:
+  - tailwindcss-patch@10.0.3
+  - unplugin-tailwindcss-mangle@6.0.2
+
 ## 0.1.23
 
 ### Patch Changes

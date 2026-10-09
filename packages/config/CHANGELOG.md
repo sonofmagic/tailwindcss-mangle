@@ -1,5 +1,14 @@
 # @tailwindcss-mangle/config
 
+## 8.0.2
+
+### Patch Changes
+
+- Refresh runtime and build dependencies and unify repository tooling and release management on repoctl. Preserve Tailwind CSS 2, 3, and 4 integration coverage and the engine's Node.js 18 runtime compatibility.
+
+- Updated dependencies:
+  - @tailwindcss-mangle/shared@5.0.2
+
 ## 8.0.1
 
 ### Patch Changes
